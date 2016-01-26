@@ -10,14 +10,16 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>sample-commons-mq</artifactId>
+	<artifactId>sample-commons-xml</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>commons-mq</artifactId>
+			<artifactId>commons-xml</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

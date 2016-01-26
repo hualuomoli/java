@@ -13,6 +13,10 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>commons-util</module>
+		<module>commons-json</module>
+		<module>commons-xml</module>
+		<module>commons-http</module>
 		<module>commons-mq</module>
 		<module>modules-base</module>
 	</modules>
