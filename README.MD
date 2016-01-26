@@ -22,7 +22,7 @@ JAVA编译工具，使用版本1.7.67
 
 ## 如何使用
 
-使用命令`git clone -b web http://github.com/hualuomoli/plat`下载项目到本地<br>
+使用命令`git clone http://github.com/hualuomoli/java`下载项目到本地<br>
 运行`bin/install.bat`安装jar包到本地仓库<br>
-导入demo项目到Eclipse，启动，打开浏览器输入http://ip:port/project/login查看效果
+导入sample/modules-base项目到Eclipse，启动，打开浏览器输入http://ip:port/project/login查看效果
 
