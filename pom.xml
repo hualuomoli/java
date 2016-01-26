@@ -9,8 +9,6 @@
 
 	<modules>
 		<module>commons</module>
-		<module>modules</module>
-		<module>sample</module>
 	</modules>
 
 	<properties>
