@@ -19,6 +19,7 @@
 		<module>commons-xml</module>
 		<module>commons-http</module>
 		<module>commons-mq</module>
+		<module>commons-raml</module>
 		<!-- all -->
 		<module>commons-all</module>
 	</modules>
