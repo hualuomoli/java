@@ -11,7 +11,7 @@ CREATE TABLE `demo` (
   `age` int(3) DEFAULT NULL,
   `address` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='demo';
+) COMMENT='demo';
 
 -- ----------------------------
 -- Records of demo

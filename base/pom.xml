@@ -18,6 +18,7 @@
 		<!-- JDBC -->
 		<druid.version>1.0.15</druid.version>
 		<mysql.driver.version>5.1.30</mysql.driver.version>
+		<h2.driver.version>1.4.190</h2.driver.version>
 		<!-- security -->
 		<shiro.version>1.2.3</shiro.version>
 
@@ -143,6 +144,12 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.driver.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.driver.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<!-- 4、Spring Web -->
