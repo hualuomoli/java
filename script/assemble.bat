@@ -2,13 +2,14 @@
 
 cd %~dp0
 rem set bat script path
+cd ..
 set batPath=%cd%
 
-SET CLASSPATH=%CLASSPATH%;%cd%\all.jar
+SET CLASSPATH=%CLASSPATH%;%batPath%\script\assemble.jar
 
-set destPath=%cd%\web-all
-set tempPomFileName=%cd%\pom.xml
-set modules=%cd%\commons,%cd%\base,%cd%\web
+set destPath=%batPath%\web-all
+set tempPomFileName=%batPath%\script\pom.xml
+set modules=%batPath%\commons,%batPath%\base,%batPath%\web
 set groupId=com.github.hualuomoli
 
 
