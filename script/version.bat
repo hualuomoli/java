@@ -5,7 +5,7 @@ rem set bat script path
 cd ..
 set batPath=%cd%
 
-set /p version=ÇëÊäÈëĞÂ°æ±¾ºÅ£º
+set /p version=please input new version£º
 echo.
 
 
