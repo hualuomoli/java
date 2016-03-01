@@ -1,9 +1,9 @@
-package com.github.hualuomoli.base.demo.mapper;
+package com.github.hualuomoli.web.demo.mapper;
 
 import java.util.List;
 
-import com.github.hualuomoli.base.demo.entity.Demo;
 import com.github.hualuomoli.base.stereotype.Mapper;
+import com.github.hualuomoli.web.demo.entity.Demo;
 
 @Mapper
 public interface DemoMapper {

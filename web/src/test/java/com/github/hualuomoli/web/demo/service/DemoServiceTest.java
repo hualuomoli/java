@@ -1,13 +1,13 @@
-package com.github.hualuomoli.base.demo.service;
+package com.github.hualuomoli.web.demo.service;
 
 import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.hualuomoli.base.demo.entity.Demo;
 import com.github.hualuomoli.base.entity.Pagination;
-import com.github.hualuomoli.base.junit4.SpringTestRunner;
+import com.github.hualuomoli.web.demo.entity.Demo;
+import com.github.hualuomoli.web.junit.SpringTestRunner;
 
 public class DemoServiceTest extends SpringTestRunner {
 

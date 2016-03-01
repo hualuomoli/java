@@ -1,13 +1,13 @@
-package com.github.hualuomoli.base.demo.service;
+package com.github.hualuomoli.web.demo.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.hualuomoli.base.demo.entity.Demo;
-import com.github.hualuomoli.base.demo.mapper.DemoMapper;
 import com.github.hualuomoli.base.entity.Pagination;
+import com.github.hualuomoli.web.demo.entity.Demo;
+import com.github.hualuomoli.web.demo.mapper.DemoMapper;
 
 @Service
 public class DemoServiceImpl implements DemoService {

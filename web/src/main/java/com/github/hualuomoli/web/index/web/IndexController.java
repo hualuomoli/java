@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.index.web;
+package com.github.hualuomoli.web.index.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

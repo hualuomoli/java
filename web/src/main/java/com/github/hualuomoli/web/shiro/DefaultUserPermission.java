@@ -1,10 +1,11 @@
-package com.github.hualuomoli.base.shiro;
+package com.github.hualuomoli.web.shiro;
 
 import java.util.Collection;
 import java.util.Set;
 
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 
+import com.github.hualuomoli.base.shiro.UserPermission;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 

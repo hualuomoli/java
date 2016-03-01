@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.demo.entity;
+package com.github.hualuomoli.web.demo.entity;
 
 import com.github.hualuomoli.base.entity.BaseEntity;
 

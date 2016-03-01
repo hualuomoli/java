@@ -8,7 +8,7 @@
 
 	<description>Shiro Configuration</description>
 
-	<bean id="userPermission" class="com.github.hualuomoli.base.shiro.DefaultUserPermission">
+	<bean id="userPermission" class="com.github.hualuomoli.web.shiro.DefaultUserPermission">
 	</bean>
 
 

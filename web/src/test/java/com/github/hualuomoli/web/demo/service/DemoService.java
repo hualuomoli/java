@@ -1,9 +1,9 @@
-package com.github.hualuomoli.base.demo.service;
+package com.github.hualuomoli.web.demo.service;
 
 import java.util.List;
 
-import com.github.hualuomoli.base.demo.entity.Demo;
 import com.github.hualuomoli.base.entity.Pagination;
+import com.github.hualuomoli.web.demo.entity.Demo;
 
 public interface DemoService {
 
