@@ -8,7 +8,7 @@ set batPath=%cd%
 SET CLASSPATH=%CLASSPATH%;%batPath%\script\assemble.jar
 
 set destPath=%batPath%\web-all
-set tempPomFileName=%batPath%\script\pom.xml
+set tempPomFileName=%batPath%\script\pom.txt
 set modules=%batPath%\commons,%batPath%\base,%batPath%\web
 set groupId=com.github.hualuomoli
 
