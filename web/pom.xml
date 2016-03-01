@@ -9,6 +9,7 @@
 	<packaging>war</packaging>
 
 	<properties>
+		<spring.version>4.0.8.RELEASE</spring.version>
 		<jdk.version>1.7</jdk.version>
 		<project.encoding>UTF-8</project.encoding>
 	</properties>
@@ -16,10 +17,25 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>plugins</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
