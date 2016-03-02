@@ -5,12 +5,12 @@ import java.util.Set;
 
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 
-import com.github.hualuomoli.base.shiro.UserPermission;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
  * implements demo
+ * 
  * @author liubaoquan
  *
  */

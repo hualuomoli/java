@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.hualuomoli.base.shiro.ShiroUtils;
 import com.github.hualuomoli.commons.json.JsonMapper;
+import com.github.hualuomoli.web.shiro.ShiroUtils;
 import com.google.common.collect.Maps;
 
 @Controller

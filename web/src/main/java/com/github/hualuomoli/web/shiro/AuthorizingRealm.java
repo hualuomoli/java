@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.shiro;
+package com.github.hualuomoli.web.shiro;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
