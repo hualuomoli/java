@@ -12,6 +12,7 @@
 
 		<!-- activeMQ -->
 		<activemq.version>5.11.0</activemq.version>
+		<xmemcached.verson>2.0.0</xmemcached.verson>
 
 		<!-- spring -->
 		<spring.version>4.0.8.RELEASE</spring.version>
@@ -37,6 +38,11 @@
 			<artifactId>spring-jms</artifactId>
 			<version>${spring.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.xmemcached</groupId>
+			<artifactId>xmemcached</artifactId>
+			<version>${xmemcached.verson}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
