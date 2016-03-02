@@ -19,6 +19,9 @@
 		<druid.version>1.0.15</druid.version>
 		<mysql.driver.version>5.1.30</mysql.driver.version>
 		<h2.driver.version>1.4.190</h2.driver.version>
+		<mongodb.driver.version>2.10.1</mongodb.driver.version>
+		<!-- mongodb -->
+		<mongodb-spring.version>1.2.1.RELEASE</mongodb-spring.version>
 		<!-- security -->
 		<shiro.version>1.2.3</shiro.version>
 
@@ -152,6 +155,21 @@
 			<version>${h2.driver.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongodb.driver.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- mongodb -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${mongodb-spring.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-mongodb-cross-store</artifactId> 
+			<version>${mongodb-spring.version}</version> <scope>compile</scope> </dependency> -->
 		<!-- 4、Spring Web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
