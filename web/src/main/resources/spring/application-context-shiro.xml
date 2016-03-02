@@ -15,7 +15,7 @@
 		<property name="realm" ref="authorizingRealm" />
 	</bean>
 
-	<bean id="authorizingRealm" class="com.github.hualuomoli.base.shiro.AuthorizingRealm">
+	<bean id="authorizingRealm" class="com.github.hualuomoli.web.shiro.AuthorizingRealm">
 		<property name="userPermission" ref="userPermission" />
 	</bean>
 
