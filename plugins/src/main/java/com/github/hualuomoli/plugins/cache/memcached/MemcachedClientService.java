@@ -13,7 +13,7 @@ public class MemcachedClientService implements CacheService {
 	}
 
 	@Override
-	public boolean isInitialized() {
+	public boolean isOk() {
 		return true;
 	}
 

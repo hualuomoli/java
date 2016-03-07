@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 public interface CacheService {
 
 	public static final Logger logger = LoggerFactory.getLogger(CacheService.class);
-	public static final int MAX_EXP = 30 * 24 * 60 * 60;
+	public static final int MAX_EXP = 30 * 24 * 60 * 60; // 30 days
 
 	/** 是否已经实例化 */
-	boolean isInitialized();
+	boolean isOk();
 
 	/** 设置值 */
 	boolean set(String key, Object value);
