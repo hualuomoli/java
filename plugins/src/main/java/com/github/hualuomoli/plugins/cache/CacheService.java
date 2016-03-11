@@ -19,12 +19,27 @@ public interface CacheService {
 	boolean set(String key, Object value);
 
 	/** 设置值 */
-	boolean set(String key, int exp, Object value);
+	boolean set(String key, Object value, int exp);
 
 	/** 获取值 */
 	<T> T get(String key);
 
+	/** 删除 */
+	boolean delete(String key);
+
+	/** 所有符合条件的key */
+	// Collection<String> keys(String partern);
+
+	/** 是否存在 */
+	boolean keyExists(String key);
+
 	/** 加 */
-	Long plus(String key, Long number);
+	long plus(String key);
+
+	/** 加 */
+	long plus(String key, long number);
+
+	/** 清空缓存 */
+	void clearAll();
 
 }

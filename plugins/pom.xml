@@ -13,7 +13,7 @@
 		<!-- MQ -->
 		<activemq.version>5.11.0</activemq.version>
 		<!-- CACHE -->
-		<xmemcached.verson>2.0.0</xmemcached.verson>
+		<Memcached-Java-Client.version>3.0.2</Memcached-Java-Client.version>
 		<spring-data-redis.version>1.0.2.RELEASE</spring-data-redis.version>
 		<jedis.version>2.1.0</jedis.version>
 
@@ -47,9 +47,9 @@
 		</dependency>
 		<!-- memcached -->
 		<dependency>
-			<groupId>com.googlecode.xmemcached</groupId>
-			<artifactId>xmemcached</artifactId>
-			<version>${xmemcached.verson}</version>
+			<groupId>com.whalin</groupId>
+			<artifactId>Memcached-Java-Client</artifactId>
+			<version>${Memcached-Java-Client.version}</version>
 		</dependency>
 		<!-- redis -->
 		<dependency>

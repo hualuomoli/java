@@ -25,7 +25,7 @@ public class RedisCacheServiceTest {
 		logger.debug("set string {}", redisCacheService.set(key, strValue));
 		logger.debug("get key {}", redisCacheService.get(key));
 
-		logger.debug("set string 5 second {}", redisCacheService.set(key, 5, strValue));
+		logger.debug("set string 5 second {}", redisCacheService.set(key, strValue, 5));
 		Thread.sleep(6000);
 		logger.debug("sleep 6 second. get key {}", redisCacheService.get(key));
 

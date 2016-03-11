@@ -32,7 +32,7 @@ public class RedisCacheService implements CacheService {
 	}
 
 	@Override
-	public boolean set(String key, int exp, Object value) {
+	public boolean set(String key, Object value, int exp) {
 		String success = jedis.setex(key.getBytes(), exp, this.serialize(value));
 		return StringUtils.equals(OK, success);
 	}
@@ -43,8 +43,32 @@ public class RedisCacheService implements CacheService {
 	}
 
 	@Override
-	public Long plus(String key, Long number) {
+	public boolean delete(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public long plus(String key) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean keyExists(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public long plus(String key, long number) {
 		return jedis.incrBy(key.getBytes(), number);
+	}
+
+	@Override
+	public void clearAll() {
+		// TODO Auto-generated method stub
+
 	}
 
 	//////////////////////////////////////////
