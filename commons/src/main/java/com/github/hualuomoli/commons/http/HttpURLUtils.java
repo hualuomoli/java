@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpURLUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpURLUtils.class);
 
 	// charset
 	public static final String CHARSET_UTF8 = "UTF-8";
