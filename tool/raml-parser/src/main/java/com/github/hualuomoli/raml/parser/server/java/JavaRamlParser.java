@@ -138,7 +138,8 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("/**");
 
 		buffer.append("\n").append(" * ").append(resource.getDisplayName());
-		buffer.append("\n").append(" * ").append("@Description ").append(resource.getDescription());
+		buffer.append("\n").append(" * ").append("@Description ")
+				.append(this.trimDescription(resource.getDescription()));
 		buffer.append("\n").append(" * ").append("@Author ").append(this.getAuthor());
 		buffer.append("\n").append(" * ").append("@Date ")
 				.append(new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
@@ -165,7 +166,7 @@ public class JavaRamlParser extends RamlParserAbs {
 
 		buffer.append("\n");
 		buffer.append("  ");
-		buffer.append("private static final Logger logger = LoggerFactory.getLogger(FarmerController.class);");
+		buffer.append("private static final Logger logger = LoggerFactory.getLogger(" + className + ".class);");
 
 		// add services
 		buffer.append("\n");
@@ -224,7 +225,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("  /**");
 		// description
 		if (StringUtils.isNotBlank(action.getDescription())) {
-			String[] descriptions = action.getDescription().replaceAll("\\*", "").split("\\n");
+			String[] descriptions = this.trimDescription(action.getDescription()).split("\\n");
 			for (String description : descriptions) {
 				buffer.append("\n");
 				buffer.append("   * ");
@@ -237,7 +238,7 @@ public class JavaRamlParser extends RamlParserAbs {
 			buffer.append("   * @param ");
 			buffer.append(uriParameter.getDisplayName());
 			buffer.append(" ");
-			buffer.append(uriParameter.getDescription());
+			buffer.append(this.trimDescription(uriParameter.getDescription()));
 		}
 		buffer.append("\n");
 		buffer.append("   */");
@@ -285,7 +286,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		for (UriParameter uriParameter : uriParameters.values()) {
 			buffer.append("\n");
 			buffer.append("    ").append("logger.debug(\"");
-			buffer.append(uriParameter.getDescription());
+			buffer.append(this.trimDescription(uriParameter.getDescription()));
 			buffer.append("[");
 			buffer.append(uriParameter.getDisplayName());
 			buffer.append("]");
@@ -300,7 +301,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		for (QueryParameter queryParameter : queryParameters.values()) {
 			buffer.append("\n");
 			buffer.append("    ").append("logger.debug(\"");
-			buffer.append(queryParameter.getDescription());
+			buffer.append(this.trimDescription(queryParameter.getDescription()));
 			buffer.append("[");
 			buffer.append(queryParameter.getDisplayName());
 			buffer.append("]");
@@ -324,7 +325,7 @@ public class JavaRamlParser extends RamlParserAbs {
 						for (FormParameter formParameter : formParameterList) {
 							buffer.append("\n");
 							buffer.append("    ").append("logger.debug(\"");
-							buffer.append(formParameter.getDescription());
+							buffer.append(this.trimDescription(formParameter.getDescription()));
 							buffer.append("[");
 							buffer.append(formParameter.getDisplayName());
 							buffer.append("]");
@@ -458,6 +459,14 @@ public class JavaRamlParser extends RamlParserAbs {
 			buffer.append(list.get(i).substring(0, 1).toUpperCase()).append(list.get(i).substring(1));
 		}
 		return buffer.toString();
+	}
+
+	// trime description
+	private String trimDescription(String description) {
+		if (StringUtils.isBlank(description)) {
+			return StringUtils.EMPTY;
+		}
+		return description.replaceAll("\\*", "").replaceAll("\"", "\\\\\"");
 	}
 
 }

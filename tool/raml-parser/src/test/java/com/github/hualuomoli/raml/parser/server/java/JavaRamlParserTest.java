@@ -18,6 +18,10 @@ public class JavaRamlParserTest {
 			protected String getCopyTemplateFolder() {
 				return "F:/github/hualuomoli/java/web-all";
 			};
+
+			public String getProjectName() {
+				return "web-raml";
+			};
 		}.parse("raml/api.raml", "F:/output");
 	}
 
