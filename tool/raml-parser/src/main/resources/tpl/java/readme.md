@@ -1,1 +1,1 @@
-# JAVA 模板存放路径
+# JAVA web项目默认存放路径，可以通过重写getCopyTemplateFolder方法设置自定义路径
