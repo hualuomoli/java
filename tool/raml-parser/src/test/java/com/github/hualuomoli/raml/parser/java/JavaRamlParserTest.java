@@ -1,6 +1,8 @@
-package com.github.hualuomoli.raml.parser.server.java;
+package com.github.hualuomoli.raml.parser.java;
 
 import org.junit.Test;
+
+import com.github.hualuomoli.raml.parser.java.JavaRamlParser;
 
 public class JavaRamlParserTest {
 

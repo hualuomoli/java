@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.server.java;
+package com.github.hualuomoli.raml.parser.java;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.server.RamlParserServer;
+import com.github.hualuomoli.raml.parser.RamlParserAbs;
 import com.google.common.collect.Lists;
 
-public class JavaRamlParser extends RamlParserServer {
+public class JavaRamlParser extends RamlParserAbs {
 
 	// package
 	public String getPkg() {
@@ -90,7 +90,7 @@ public class JavaRamlParser extends RamlParserServer {
 	}
 
 	@Override
-	public Object getHeader(Raml raml, Resource resource) {
+	public StringBuilder getHeader(Raml raml, Resource resource) {
 		StringBuilder buffer = new StringBuilder();
 		String packageName = getPkg() + ".api." + this.getApiPackageName(resource.getRelativeUri());
 		String className = this.getApiClassName(resource.getRelativeUri()) + "Controller";
@@ -149,7 +149,7 @@ public class JavaRamlParser extends RamlParserServer {
 	}
 
 	@Override
-	public Object getFooter() {
+	public StringBuilder getFooter() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("\n");
 		buffer.append("\n");
@@ -166,7 +166,7 @@ public class JavaRamlParser extends RamlParserServer {
 	}
 
 	// get action service
-	public StringBuilder getService(Action action, Resource resource, String outputPath) {
+	public StringBuilder getData(Action action, Resource resource, String outputPath) {
 		StringBuilder buffer = new StringBuilder();
 		Map<String, UriParameter> uriParameters = resource.getUriParameters();
 

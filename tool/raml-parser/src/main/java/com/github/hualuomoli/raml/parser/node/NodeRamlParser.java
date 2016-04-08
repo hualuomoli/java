@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.server.node;
+package com.github.hualuomoli.raml.parser.node;
 
 import java.util.List;
 import java.util.Map;
@@ -13,13 +13,13 @@ import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.server.RamlParserServer;
+import com.github.hualuomoli.raml.parser.RamlParserAbs;
 import com.google.common.collect.Lists;
 
-public class NodeRamlParser extends RamlParserServer {
+public class NodeRamlParser extends RamlParserAbs {
 
 	@Override
-	public Object getHeader(Raml raml, Resource resource) {
+	public StringBuilder getHeader(Raml raml, Resource resource) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("\n").append("var express = require('express');");
 		buffer.append("\n").append("var util = require('util');");
@@ -35,7 +35,7 @@ public class NodeRamlParser extends RamlParserServer {
 	}
 
 	@Override
-	public Object getFooter() {
+	public StringBuilder getFooter() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("\n\n").append("module.exports = router;");
 		return buffer;
@@ -57,7 +57,7 @@ public class NodeRamlParser extends RamlParserServer {
 			buffer.append("\n");
 			buffer.append("  ");
 			buffer.append("app.use('");
-			buffer.append(relativeUri);
+			buffer.append(relativeUri.replaceAll("[}]", "").replaceAll("[{]", ":"));
 			buffer.append("', ");
 
 			buffer.append("require('./");
@@ -73,7 +73,7 @@ public class NodeRamlParser extends RamlParserServer {
 	}
 
 	@Override
-	public StringBuilder getService(Action action, Resource resource, String outputPath) {
+	public StringBuilder getData(Action action, Resource resource, String outputPath) {
 		// TODO Auto-generated method stub
 		StringBuilder buffer = new StringBuilder();
 
