@@ -1,6 +1,7 @@
 package com.github.hualuomoli.raml.parser.server.java;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,12 +41,79 @@ public class JavaRamlParser extends RamlParserAbs {
 	}
 
 	@Override
-	protected void config() {
+	protected String getCopyTemplateFolder() {
+		return getResourceFilePath("tpl/java");
+	}
+
+	public String getProjectName() {
+		return "api-web";
+	}
+
+	@Override
+	public void config(Raml raml, String outputPath) {
+		String filename;
+		List<String> regexes = Lists.newArrayList();
+		List<String> replaces = Lists.newArrayList();
+
+		// pom.xml
+		regexes.clear();
+		replaces.clear();
+		filename = "pom.xml";
+		regexes.add("<groupId>com.github.hualuomoli</groupId>");
+		replaces.add("<groupId>" + this.getPkg() + "</groupId>");
+		regexes.add("<artifactId>web-all</artifactId>");
+		replaces.add("<artifactId>" + this.getProjectName() + "</artifactId>");
+		regexes.add("<version>1.4.0</version>");
+		replaces.add("<version>" + raml.getVersion() + "</version>");
+		this.replaceContent(outputPath, filename, regexes, replaces);
+
+		// src/main/resources/mvc/spring-mvc-core.xml
+		regexes.clear();
+		replaces.clear();
+		filename = "src/main/resources/mvc/spring-mvc-core.xml";
+		regexes.add("base-package=\"com.github.hualuomoli\"");
+		replaces.add("base-package=\"com.github.hualuomoli," + this.getPkg() + "\"");
+		this.replaceContent(outputPath, filename, regexes, replaces);
+
+		// spring
+		// src/main/resources/spring/application-context-core.xml
+		regexes.clear();
+		replaces.clear();
+		filename = "src/main/resources/spring/application-context-core.xml";
+		regexes.add("base-package=\"com.github.hualuomoli\"");
+		replaces.add("base-package=\"com.github.hualuomoli," + this.getPkg() + "\"");
+		this.replaceContent(outputPath, filename, regexes, replaces);
+
+		// src/main/resources/spring/application-context-core.xml
+		regexes.clear();
+		replaces.clear();
+		filename = "src/main/resources/spring/application-context-orm.xml";
+		regexes.add("value=\"com.github.hualuomoli\"");
+		replaces.add("value=\"com.github.hualuomoli," + this.getPkg() + "\"");
+		this.replaceContent(outputPath, filename, regexes, replaces);
+
+	}
+
+	// replace content
+	public void replaceContent(String outputPath, String filename, List<String> regexes, List<String> replaces) {
+		if (regexes == null || replaces == null || regexes.size() != replaces.size()) {
+			return;
+		}
+		try {
+			File file = new File(outputPath, filename);
+			String content = FileUtils.readFileToString(file, "UTF-8");
+			for (int i = 0; i < regexes.size(); i++) {
+				content = content.replaceAll(regexes.get(i), replaces.get(i));
+			}
+			FileUtils.writeStringToFile(file, content, "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	@Override
-	protected void parse(Raml raml, Resource resource, String outputPath) throws Exception {
+	public void parse(Raml raml, Resource resource, String outputPath) throws Exception {
 		StringBuilder buffer = new StringBuilder();
 		String packageName = getPkg() + ".api." + this.getApiPackageName(resource.getRelativeUri());
 		String className = this.getApiClassName(resource.getRelativeUri()) + "Controller";
@@ -338,7 +406,7 @@ public class JavaRamlParser extends RamlParserAbs {
 	}
 
 	// get api package name
-	protected String getApiPackageName(String uri) {
+	private String getApiPackageName(String uri) {
 		// remove /api
 		// remove /{....}
 		return uri.substring(this.getApiStart().length()).replaceAll("/\\{.*\\}", "").substring(1).replaceAll("/", ".");

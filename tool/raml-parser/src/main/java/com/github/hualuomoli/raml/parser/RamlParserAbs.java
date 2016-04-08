@@ -1,7 +1,9 @@
 package com.github.hualuomoli.raml.parser;
 
+import java.io.File;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.raml.model.Raml;
 import org.raml.model.Resource;
 import org.raml.parser.visitor.RamlDocumentBuilder;
@@ -13,15 +15,24 @@ public abstract class RamlParserAbs implements RamlParser {
 	}
 
 	public void parse(Raml raml, String outputPath) throws Exception {
+		// delete output
+		FileUtils.deleteDirectory(new File(outputPath));
+		// copy template
+		FileUtils.copyDirectory(new File(this.getCopyTemplateFolder()), new File(outputPath));
+		// crate server
 		Map<String, Resource> resources = raml.getResources();
 		for (Resource resource : resources.values()) {
 			this.parse(raml, resource, outputPath);
 		}
-		this.config();
+		// config server
+		this.config(raml, outputPath);
 	}
 
 	// config
-	protected abstract void config();
+	protected abstract void config(Raml raml, String outputPath);
+
+	// template folder
+	protected abstract String getCopyTemplateFolder();
 
 	/**
 	 * parse

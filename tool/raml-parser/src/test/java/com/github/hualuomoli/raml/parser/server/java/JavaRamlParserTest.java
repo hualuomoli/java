@@ -14,6 +14,10 @@ public class JavaRamlParserTest {
 			public String getAuthor() {
 				return "system";
 			};
+
+			protected String getCopyTemplateFolder() {
+				return "F:/github/hualuomoli/java/web-all";
+			};
 		}.parse("raml/api.raml", "F:/output");
 	}
 
