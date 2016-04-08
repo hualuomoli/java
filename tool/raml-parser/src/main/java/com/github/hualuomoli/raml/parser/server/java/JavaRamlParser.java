@@ -1,14 +1,11 @@
 package com.github.hualuomoli.raml.parser.server.java;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.ActionType;
@@ -20,15 +17,10 @@ import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.RamlParserAbs;
+import com.github.hualuomoli.raml.parser.server.RamlParserServer;
 import com.google.common.collect.Lists;
 
-public class JavaRamlParser extends RamlParserAbs {
-
-	public static final String MIME_TYPE_JSON = "application/json";
-	public static final String MIME_TYPE_XML = "application/xml";
-	public static final String MIME_TYPE_URLENCODED = "application/x-www-form-urlencoded";
-	public static final String MIME_TYPE_MULTIPART = "multipart/form-data";
+public class JavaRamlParser extends RamlParserServer {
 
 	// package
 	public String getPkg() {
@@ -40,13 +32,13 @@ public class JavaRamlParser extends RamlParserAbs {
 		return "hualuomoli";
 	}
 
-	@Override
-	protected String getCopyTemplateFolder() {
-		return getResourceFilePath("tpl/java");
-	}
-
 	public String getProjectName() {
 		return "api-web";
+	}
+
+	@Override
+	public String getCopyTemplateFolder() {
+		return this.getResourceFilePath("tpl/java");
 	}
 
 	@Override
@@ -97,26 +89,8 @@ public class JavaRamlParser extends RamlParserAbs {
 
 	}
 
-	// replace content
-	public void replaceContent(String outputPath, String filename, List<String> regexes, List<String> replaces) {
-		if (regexes == null || replaces == null || regexes.size() != replaces.size()) {
-			return;
-		}
-		try {
-			File file = new File(outputPath, filename);
-			String content = FileUtils.readFileToString(file, "UTF-8");
-			for (int i = 0; i < regexes.size(); i++) {
-				content = content.replaceAll(regexes.get(i), replaces.get(i));
-			}
-			FileUtils.writeStringToFile(file, content, "UTF-8");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	@Override
-	public void parse(Raml raml, Resource resource, String outputPath) throws Exception {
+	public Object getHeader(Raml raml, Resource resource) {
 		StringBuilder buffer = new StringBuilder();
 		String packageName = getPkg() + ".api." + this.getApiPackageName(resource.getRelativeUri());
 		String className = this.getApiClassName(resource.getRelativeUri()) + "Controller";
@@ -142,8 +116,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("/**");
 
 		buffer.append("\n").append(" * ").append(resource.getDisplayName());
-		buffer.append("\n").append(" * ").append("@Description ")
-				.append(this.trimDescription(resource.getDescription()));
+		buffer.append("\n").append(" * ").append("@Description ").append(resource.getDescription());
 		buffer.append("\n").append(" * ").append("@Author ").append(this.getAuthor());
 		buffer.append("\n").append(" * ").append("@Date ")
 				.append(new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
@@ -172,54 +145,28 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("  ");
 		buffer.append("private static final Logger logger = LoggerFactory.getLogger(" + className + ".class);");
 
-		// add services
-		buffer.append("\n");
-		buffer.append(this.getServices(resource, outputPath, false));
-		// add footer
+		return buffer;
+	}
+
+	@Override
+	public Object getFooter() {
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("\n");
 		buffer.append("\n");
 		buffer.append("}");
 
-		String filename = "src/main/java/" + packageName.replaceAll("[.]", "/") + "/" + className + ".java";
-		File output = new File(outputPath, filename);
-
-		FileUtils.writeStringToFile(output, buffer.toString());
-
-	}
-
-	// get services
-	private StringBuilder getServices(Resource resource, String outputPath, boolean addParentRelativeUri) {
-		StringBuilder buffer = new StringBuilder();
-
-		// remove parent relative uri
-		// common uri in controller annotation
-		if (!addParentRelativeUri) {
-			resource.setRelativeUri("");
-		}
-
-		// add child resource
-		Map<String, Resource> resources = resource.getResources();
-		for (Resource childResource : resources.values()) {
-			// uri
-			childResource.setRelativeUri(resource.getRelativeUri() + childResource.getRelativeUri());
-			// uri parameter
-			Map<String, UriParameter> uriParameters = childResource.getUriParameters();
-			uriParameters.putAll(resource.getUriParameters());
-			childResource.setUriParameters(uriParameters);
-			buffer.append(this.getServices(childResource, outputPath, true));
-		}
-
-		// add action
-		Map<ActionType, Action> actions = resource.getActions();
-		for (Action action : actions.values()) {
-			buffer.append(this.getActionService(action, resource, outputPath));
-		}
-
 		return buffer;
 	}
 
+	@Override
+	public String getRelativeFilepath(Resource resource) {
+		String packageName = getPkg() + ".api." + this.getApiPackageName(resource.getRelativeUri());
+		String className = this.getApiClassName(resource.getRelativeUri()) + "Controller";
+		return "src/main/java/" + packageName.replaceAll("[.]", "/") + "/" + className + ".java";
+	}
+
 	// get action service
-	private StringBuilder getActionService(Action action, Resource resource, String outputPath) {
+	public StringBuilder getService(Action action, Resource resource, String outputPath) {
 		StringBuilder buffer = new StringBuilder();
 		Map<String, UriParameter> uriParameters = resource.getUriParameters();
 
@@ -229,7 +176,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("  /**");
 		// description
 		if (StringUtils.isNotBlank(action.getDescription())) {
-			String[] descriptions = this.trimDescription(action.getDescription()).split("\\n");
+			String[] descriptions = this.trimQuotes(action.getDescription()).split("\\n");
 			for (String description : descriptions) {
 				buffer.append("\n");
 				buffer.append("   * ");
@@ -242,7 +189,7 @@ public class JavaRamlParser extends RamlParserAbs {
 			buffer.append("   * @param ");
 			buffer.append(uriParameter.getDisplayName());
 			buffer.append(" ");
-			buffer.append(this.trimDescription(uriParameter.getDescription()));
+			buffer.append(this.trimQuotes(uriParameter.getDescription()));
 		}
 		buffer.append("\n");
 		buffer.append("   */");
@@ -294,7 +241,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		for (UriParameter uriParameter : uriParameters.values()) {
 			buffer.append("\n");
 			buffer.append("    ").append("logger.debug(\"");
-			buffer.append(this.trimDescription(uriParameter.getDescription()));
+			buffer.append(this.trimQuotes(uriParameter.getDescription()));
 			buffer.append("[");
 			buffer.append(uriParameter.getDisplayName());
 			buffer.append("]");
@@ -309,7 +256,7 @@ public class JavaRamlParser extends RamlParserAbs {
 		for (QueryParameter queryParameter : queryParameters.values()) {
 			buffer.append("\n");
 			buffer.append("    ").append("logger.debug(\"");
-			buffer.append(this.trimDescription(queryParameter.getDescription()));
+			buffer.append(this.trimQuotes(queryParameter.getDescription()));
 			buffer.append("[");
 			buffer.append(queryParameter.getDisplayName());
 			buffer.append("]");
@@ -333,7 +280,7 @@ public class JavaRamlParser extends RamlParserAbs {
 						for (FormParameter formParameter : formParameterList) {
 							buffer.append("\n");
 							buffer.append("    ").append("logger.debug(\"");
-							buffer.append(this.trimDescription(formParameter.getDescription()));
+							buffer.append(this.trimQuotes(formParameter.getDescription()));
 							buffer.append("[");
 							buffer.append(formParameter.getDisplayName());
 							buffer.append("]");
@@ -400,7 +347,7 @@ public class JavaRamlParser extends RamlParserAbs {
 						for (String content : contents) {
 							buffer.append("\n");
 							buffer.append("    ").append("buffer.append(\"");
-							buffer.append(content.replaceAll("\"", "\\\\\""));
+							buffer.append(this.trimQuotes(content));
 							buffer.append("\\n\");");
 
 							// System.out.println(content);
@@ -419,13 +366,6 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("  ").append("}");
 
 		return buffer;
-	}
-
-	// get api package name
-	private String getApiPackageName(String uri) {
-		// remove /api
-		// remove /{....}
-		return uri.substring(this.getApiStart().length()).replaceAll("/\\{.*\\}", "").substring(1).replaceAll("/", ".");
 	}
 
 	// get api class name
@@ -467,14 +407,6 @@ public class JavaRamlParser extends RamlParserAbs {
 			buffer.append(list.get(i).substring(0, 1).toUpperCase()).append(list.get(i).substring(1));
 		}
 		return buffer.toString();
-	}
-
-	// trime description
-	private String trimDescription(String description) {
-		if (StringUtils.isBlank(description)) {
-			return StringUtils.EMPTY;
-		}
-		return description.replaceAll("\\*", "").replaceAll("\"", "\\\\\"");
 	}
 
 }

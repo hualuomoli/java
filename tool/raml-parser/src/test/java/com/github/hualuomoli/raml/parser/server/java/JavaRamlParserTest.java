@@ -15,14 +15,14 @@ public class JavaRamlParserTest {
 				return "system";
 			};
 
-			protected String getCopyTemplateFolder() {
+			public String getCopyTemplateFolder() {
 				return "F:/github/hualuomoli/java/web-all";
 			};
 
 			public String getProjectName() {
 				return "web-raml";
 			};
-		}.parse("raml/api.raml", "F:/output");
+		}.parse("raml/api.raml", "F:/output/java");
 	}
 
 }
