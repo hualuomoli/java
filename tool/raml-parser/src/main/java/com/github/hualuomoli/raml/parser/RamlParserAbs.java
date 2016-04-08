@@ -15,6 +15,8 @@ public abstract class RamlParserAbs implements RamlParser {
 	}
 
 	public void parse(Raml raml, String outputPath) throws Exception {
+		// set version
+		raml.setVersion(raml.getVersion().replaceAll("[Vv]", ""));
 		// delete output
 		FileUtils.deleteDirectory(new File(outputPath));
 		// copy template

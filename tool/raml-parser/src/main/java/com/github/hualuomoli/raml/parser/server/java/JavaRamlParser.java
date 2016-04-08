@@ -124,8 +124,11 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("import javax.servlet.http.HttpServletRequest;\n");
 		buffer.append("import javax.servlet.http.HttpServletResponse;\n");
 		buffer.append("\n");
+		buffer.append("import org.slf4j.Logger;\n");
+		buffer.append("import org.slf4j.LoggerFactory;\n");
 		buffer.append("import org.springframework.stereotype.Controller;\n");
 		buffer.append("import org.springframework.ui.Model;\n");
+		buffer.append("import org.springframework.web.bind.annotation.PathVariable;\n");
 		buffer.append("import org.springframework.web.bind.annotation.RequestMapping;\n");
 		buffer.append("import org.springframework.web.bind.annotation.RequestMethod;\n");
 		buffer.append("import org.springframework.web.bind.annotation.ResponseBody;\n");
@@ -159,6 +162,10 @@ public class JavaRamlParser extends RamlParserAbs {
 		buffer.append("public class ");
 		buffer.append(className);
 		buffer.append(" { ");
+
+		buffer.append("\n");
+		buffer.append("  ");
+		buffer.append("private static final Logger logger = LoggerFactory.getLogger(FarmerController.class);");
 
 		// add services
 		buffer.append("\n");
