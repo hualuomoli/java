@@ -21,5 +21,7 @@ call mvn versions:set -DnewVersion=%version%
 cd %batPath%\web
 call mvn versions:set -DnewVersion=%version%
 
+cd %batPath%\tool\raml-parser
+call mvn versions:set -DnewVersion=%version%
 
 pause

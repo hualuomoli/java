@@ -15,5 +15,7 @@ call mvn clean install -Dmaven.test.skip=true
 cd %batPath%\base
 call mvn clean install -Dmaven.test.skip=true
 
+cd %batPath%\tool\raml-parser
+call mvn clean install -Dmaven.test.skip=true
 
 pause

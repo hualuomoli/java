@@ -5,7 +5,7 @@
 
 	<groupId>com.github.hualuomoli</groupId>
 	<artifactId>plugins</artifactId>
-	<version>1.4.2</version>
+	<version>1.5.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -101,7 +101,36 @@
 					</compilerArguments>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>local</id>
+			<name>localhost release repository</name>
+			<url>http://localhost:8081/nexus/content/repositories/localhost</url>
+		</repository>
+		<snapshotRepository>
+			<id>local-snapshot</id>
+			<name>localhost snapshot repository</name>
+			<url>http://localhost:8081/nexus/content/repositories/localhost-snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
