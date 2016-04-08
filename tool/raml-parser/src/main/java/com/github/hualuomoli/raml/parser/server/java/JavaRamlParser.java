@@ -65,6 +65,9 @@ public class JavaRamlParser extends RamlParserAbs {
 		replaces.add("<artifactId>" + this.getProjectName() + "</artifactId>");
 		regexes.add("<version>1.4.0</version>");
 		replaces.add("<version>" + raml.getVersion() + "</version>");
+		// <warName>web-all</warName>
+		regexes.add("<warName>web-all</warName>");
+		replaces.add("<warName>" + this.getProjectName() + "</warName>");
 		this.replaceContent(outputPath, filename, regexes, replaces);
 
 		// src/main/resources/mvc/spring-mvc-core.xml
@@ -119,8 +122,9 @@ public class JavaRamlParser extends RamlParserAbs {
 		String className = this.getApiClassName(resource.getRelativeUri()) + "Controller";
 		// add header
 		buffer.append("package ").append(packageName).append(";");
-		buffer.append("\n");
 		// add import
+		buffer.append("\n");
+		buffer.append("\n");
 		buffer.append("import javax.servlet.http.HttpServletRequest;\n");
 		buffer.append("import javax.servlet.http.HttpServletResponse;\n");
 		buffer.append("\n");
@@ -251,6 +255,10 @@ public class JavaRamlParser extends RamlParserAbs {
 		// method
 		buffer.append(", method= RequestMethod.").append(action.getType());
 		buffer.append(")");
+
+		// @ResponseBody
+		buffer.append("\n");
+		buffer.append("@ResponseBody");
 
 		// public String doLogin(@PathVariable(value = "userId") String userId,
 		// HttpServletRequest request, HttpServletResponse response,

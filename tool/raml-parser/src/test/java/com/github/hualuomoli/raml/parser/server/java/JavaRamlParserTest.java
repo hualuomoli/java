@@ -8,7 +8,7 @@ public class JavaRamlParserTest {
 	public void testParseResourceStringString() throws Exception {
 		new JavaRamlParser() {
 			public String getPkg() {
-				return "com.github.hualuomoli.raml";
+				return "org.raml.hualuomoli.parser";
 			};
 
 			public String getAuthor() {
