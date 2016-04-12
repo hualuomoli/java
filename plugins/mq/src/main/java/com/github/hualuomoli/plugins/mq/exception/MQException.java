@@ -1,6 +1,11 @@
-package com.github.hualuomoli.plugins.mq;
+package com.github.hualuomoli.plugins.mq.exception;
 
-public class MQException extends RuntimeException {
+/**
+ * MQ exception
+ * @author hualuomoli
+ *
+ */
+public class MQException extends Exception {
 
 	private static final long serialVersionUID = -5233130376744856436L;
 

@@ -20,40 +20,32 @@
 		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
 	default-lazy-init="true">
 
-	<description>Spring ActiveMQ Configuration</description>
+	<description>Topic Message Listener use default username password and url</description>
 
-	<!-- properties -->
-	<context:property-placeholder ignore-unresolvable="true" location="classpath:prop/activemq.properties" />
-
-	<!-- 连接池 -->
-	<bean id="producerPooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
-		destroy-method="stop">
+	<!-- order message listener -->
+	<bean class="com.github.hualuomoli.plugins.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
-			<bean id="producerConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-				<property name="brokerURL" value="${mq.producer.url}" />
-				<property name="userName" value="${mq.producer.username}" />
-				<property name="password" value="${mq.producer.password}" />
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="clientID" value="user1" />
 			</bean>
 		</property>
-		<property name="maxConnections" value="${mq.producer.max}"></property>
+		<property name="pubSubDomain" value="true" />
+		<property name="listener">
+			<bean class="com.github.hualuomoli.plugins.mq.activemq.listener.topic.UserMessageListener1" />
+		</property>
 	</bean>
-	<bean id="consumerPooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
-		destroy-method="stop">
+
+	<!-- other order message listener -->
+	<bean class="com.github.hualuomoli.plugins.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
-			<bean id="consumerConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-				<property name="brokerURL" value="${mq.consumer.url}" />
-				<property name="userName" value="${mq.consumer.username}" />
-				<property name="password" value="${mq.consumer.password}" />
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="clientID" value="user2" />
 			</bean>
 		</property>
-		<property name="maxConnections" value="${mq.consumer.max}"></property>
+		<property name="pubSubDomain" value="true" />
+		<property name="listener">
+			<bean class="com.github.hualuomoli.plugins.mq.activemq.listener.topic.UserMessageListener2" />
+		</property>
 	</bean>
-
-	<!-- JMS -->
-	<bean id="jmsQueueMessageService" class="com.github.hualuomoli.plugins.mq.jms.JmsQueueMessageService">
-		<property name="connectionFactory" ref="producerPooledConnectionFactory" />
-	</bean>
-
-
 
 </beans>

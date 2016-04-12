@@ -12,19 +12,19 @@ import org.slf4j.LoggerFactory;
  * serialize
  *
  */
-public class SerializeUtil {
+public class SerializeUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(SerializeUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(SerializeUtils.class);
 
-	private SerializeUtil() {
+	private SerializeUtils() {
 	}
 
-	// 
+	//
 	public static byte[] serialize(Object object) {
 		ObjectOutputStream oos = null;
 		ByteArrayOutputStream baos = null;
 		try {
-			// 序列化  
+			// 序列化
 			baos = new ByteArrayOutputStream();
 			oos = new ObjectOutputStream(baos);
 			oos.writeObject(object);
@@ -42,7 +42,7 @@ public class SerializeUtil {
 			return null;
 		ByteArrayInputStream bais = null;
 		try {
-			// 反序列化  
+			// 反序列化
 			bais = new ByteArrayInputStream(bytes);
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			return (T) ois.readObject();
