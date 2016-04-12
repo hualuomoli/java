@@ -26,12 +26,23 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>plugins</artifactId>
+			<artifactId>base</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- plugins -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>cache</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>base</artifactId>
+			<artifactId>mq</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>jpush</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- 2、Spring Web -->
@@ -118,10 +129,6 @@
 					<target>${jdk.version}</target>
 					<encoding>utf8</encoding>
 					<showWarnings>true</showWarnings>
-					<compilerArguments>
-						<verbose />
-						<bootclasspath>${JAVA_HOME}\jre\lib\rt.jar;${JAVA_HOME}\jre\lib\jce.jar</bootclasspath>
-					</compilerArguments>
 				</configuration>
 			</plugin>
 

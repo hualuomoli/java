@@ -155,10 +155,6 @@
 					<target>${jdk.version}</target>
 					<encoding>utf8</encoding>
 					<showWarnings>true</showWarnings>
-					<compilerArguments>
-						<verbose />
-						<bootclasspath>${JAVA_HOME}\jre\lib\rt.jar;${JAVA_HOME}\jre\lib\jce.jar</bootclasspath>
-					</compilerArguments>
 				</configuration>
 			</plugin>
 
