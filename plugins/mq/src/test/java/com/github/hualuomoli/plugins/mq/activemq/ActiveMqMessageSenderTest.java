@@ -148,7 +148,7 @@ public class ActiveMqMessageSenderTest {
 		pool.setMaxConnections(20);
 
 		// send queue message
-		for (int i = 1; i < 1000; i++) {
+		for (int i = 1; i < 100; i++) {
 			ActiveMqMessageSender sender = new ActiveMqMessageSender();
 			sender.setDestinationName("orderPool"); // 用户
 			sender.setConnectionFactory(pool);
