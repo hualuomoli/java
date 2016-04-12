@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.plugins.mq.activemq.entity.Order;
-import com.github.hualuomoli.plugins.mq.activemq.entity.User;
 import com.github.hualuomoli.plugins.mq.listener.MessageListener;
 
 public class OrderMessageListener1 implements MessageListener {
