@@ -12,7 +12,11 @@ echo.
 cd %batPath%\commons
 call mvn versions:set -DnewVersion=%version%
 
-cd %batPath%\plugins
+cd %batPath%\plugins\mq
+call mvn versions:set -DnewVersion=%version%
+cd %batPath%\plugins\cache
+call mvn versions:set -DnewVersion=%version%
+cd %batPath%\plugins\jpush
 call mvn versions:set -DnewVersion=%version%
 
 cd %batPath%\base
