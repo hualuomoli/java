@@ -2,8 +2,6 @@ package com.github.hualuomoli.plugins.mq.listener;
 
 import java.io.Serializable;
 
-import com.github.hualuomoli.plugins.mq.activemq.entity.Order;
-
 /**
  * 消息监听器
  * @author hualuomoli

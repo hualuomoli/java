@@ -9,7 +9,11 @@ set batPath=%cd%
 cd %batPath%\commons
 call mvn clean deploy -Dmaven.test.skip=true
 
-cd %batPath%\plugins
+cd %batPath%\plugins\mq
+call mvn clean deploy -Dmaven.test.skip=true
+cd %batPath%\plugins\cache
+call mvn clean deploy -Dmaven.test.skip=true
+cd %batPath%\plugins\jpush
 call mvn clean deploy -Dmaven.test.skip=true
 
 cd %batPath%\base

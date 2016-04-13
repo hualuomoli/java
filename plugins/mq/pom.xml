@@ -96,14 +96,14 @@
 
 	<distributionManagement>
 		<repository>
-			<id>local</id>
+			<id>local-repo</id>
 			<name>localhost release repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/localhost</url>
+			<url>http://localhost:8081/nexus/content/repositories/local-repo</url>
 		</repository>
 		<snapshotRepository>
-			<id>local-snapshot</id>
+			<id>local-repo-s</id>
 			<name>localhost snapshot repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/localhost-snapshot</url>
+			<url>http://localhost:8081/nexus/content/repositories/local-repo-s</url>
 		</snapshotRepository>
 	</distributionManagement>
 
