@@ -41,10 +41,12 @@ public class LogFilter extends FilterBean {
 			logger.debug("\turl {}", req.getRequestURL());
 			logger.debug("\turi {}", req.getRequestURI());
 			logger.debug("\tmethod {}", req.getMethod());
-			logger.debug("\tcookies");
 			Cookie[] cookies = req.getCookies();
-			for (Cookie cookie : cookies) {
-				logger.debug("\t\t{} = {}", cookie.getName(), cookie.getValue());
+			if (cookies != null) {
+				logger.debug("\tcookies");
+				for (Cookie cookie : cookies) {
+					logger.debug("\t\t{} = {}", cookie.getName(), cookie.getValue());
+				}
 			}
 			logger.debug("\theaders");
 			Enumeration<String> headerNames = req.getHeaderNames();
