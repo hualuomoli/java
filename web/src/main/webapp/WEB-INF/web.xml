@@ -42,6 +42,38 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<!-- cross domain -->
+	<filter>
+		<filter-name>corsFilter</filter-name>
+		<filter-class>com.github.hualuomoli.filter.cors.CorsFilter</filter-class>
+		<init-param>
+			<param-name>allowCross</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- <init-param> <param-name>proxyDomains</param-name> <param-value>file://,http://localhost:3000,http://127.0.0.1:3000,http://192.168.1.136:3000</param-value> 
+			</init-param> -->
+		<!-- <init-param> <param-name>allowUris</param-name> <param-value>/api,/a,/login,/logout</param-value> </init-param> -->
+	</filter>
+	<filter-mapping>
+		<filter-name>corsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- log -->
+	<filter>
+		<filter-name>logFilter</filter-name>
+		<filter-class>com.github.hualuomoli.filter.log.LogFilter</filter-class>
+		<init-param>
+			<param-name>allowLog</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- <init-param> <param-name>allowUris</param-name> <param-value>/api,/a,/login,/logout</param-value> </init-param> -->
+	</filter>
+	<filter-mapping>
+		<filter-name>logFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- shiro -->
 	<filter>
 		<filter-name>shiroFilter</filter-name>
