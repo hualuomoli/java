@@ -1,14 +1,19 @@
 package com.github.hualuomoli.filter;
 
 import java.awt.List;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +46,19 @@ public abstract class FilterBean implements Filter {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		boolean continueChain = true;
+		if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+			continueChain = this.doFilter((HttpServletRequest) request, (HttpServletResponse) response);
+		}
+		if (continueChain) {
+			chain.doFilter(request, response);
+		}
+	}
+
+	public abstract boolean doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 
 	// is uri valid
 	protected boolean validate(HttpServletRequest request) {
@@ -107,6 +125,10 @@ public abstract class FilterBean implements Filter {
 			cls = cls.getSuperclass();
 		}
 		return fields;
+	}
+
+	@Override
+	public void destroy() {
 	}
 
 }

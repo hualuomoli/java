@@ -3,17 +3,13 @@ package com.github.hualuomoli.filter.cors;
 import java.io.IOException;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.hualuomoli.filter.FilterBean;
 
-public class CorsFilter extends FilterBean implements Filter {
+public class CorsFilter extends FilterBean {
 
 	// allow cross
 	private boolean allowCross = false;
@@ -64,9 +60,9 @@ public class CorsFilter extends FilterBean implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		this.configAllowCross((HttpServletRequest) request, (HttpServletResponse) response);
-		chain.doFilter(request, response);
+	public boolean doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		this.configAllowCross(request, response);
+		return true;
 	}
 
 	private void configAllowCross(HttpServletRequest req, HttpServletResponse res) {
@@ -103,10 +99,6 @@ public class CorsFilter extends FilterBean implements Filter {
 			return true;
 		}
 		return proxyDomains.contains(origin);
-	}
-
-	@Override
-	public void destroy() {
 	}
 
 }

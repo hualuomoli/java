@@ -24,7 +24,7 @@
 
 	<!-- 初始化数据表结构 -->
 	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
-		<jdbc:script location="classpath:database/init/init.sql" />
+		<jdbc:script location="classpath*:database/init/init.sql" />
 	</jdbc:initialize-database>
 
 </beans>

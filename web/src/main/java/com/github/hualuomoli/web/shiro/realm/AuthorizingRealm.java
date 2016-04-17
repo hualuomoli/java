@@ -1,4 +1,4 @@
-package com.github.hualuomoli.web.shiro;
+package com.github.hualuomoli.web.shiro.realm;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -8,6 +8,8 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
+
+import com.github.hualuomoli.web.shiro.UserPermission;
 
 public class AuthorizingRealm extends org.apache.shiro.realm.AuthorizingRealm {
 

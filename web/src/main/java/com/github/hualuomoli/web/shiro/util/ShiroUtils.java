@@ -1,4 +1,4 @@
-package com.github.hualuomoli.web.shiro;
+package com.github.hualuomoli.web.shiro.util;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,11 +20,15 @@ public class ShiroUtils {
 	private ShiroUtils() {
 	}
 
-	public static void login(String userName, String password) {
+	public static void login(String username, String password) {
 		Subject subject = getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken();
-		token.setUsername(userName);
+		token.setUsername(username);
 		subject.login(token);
+	}
+
+	public static void logout() {
+		getSubject().logout();
 	}
 
 	public static Subject getSubject() {
@@ -32,13 +36,11 @@ public class ShiroUtils {
 	}
 
 	public static Object getPrincipal() {
-		Subject subject = getSubject();
-		return subject.getPrincipal();
+		return getSubject().getPrincipal();
 	}
 
 	public static Session getSession() {
-		Subject subject = getSubject();
-		return subject.getSession();
+		return getSubject().getSession();
 	}
 
 	public static void put(Object key, Object value) {
@@ -50,8 +52,7 @@ public class ShiroUtils {
 	}
 
 	public static Object get(Object key) {
-		Session session = getSession();
-		return session.getAttribute(key);
+		return getSession().getAttribute(key);
 	}
 
 }

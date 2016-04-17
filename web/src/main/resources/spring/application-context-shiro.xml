@@ -15,7 +15,7 @@
 		<property name="realm" ref="authorizingRealm" />
 	</bean>
 
-	<bean id="authorizingRealm" class="com.github.hualuomoli.web.shiro.AuthorizingRealm">
+	<bean id="authorizingRealm" class="com.github.hualuomoli.web.shiro.realm.AuthorizingRealm">
 		<property name="userPermission" ref="userPermission" />
 	</bean>
 
@@ -25,8 +25,8 @@
 		<property name="loginUrl" value="${shiro.loginUrl}" />
 		<property name="filterChainDefinitions">
 			<value>
-				/static/**=anon
-				${shiro.authcPath}/**=authc
+				/static/** = anon
+				${shiro.authcPath}/** = authc
 			</value>
 		</property>
 	</bean>
