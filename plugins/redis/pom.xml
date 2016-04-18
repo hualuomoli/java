@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.hualuomoli</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.6.0</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>redis</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+
+		<!-- CACHE -->
+		<spring-data-redis.version>1.0.2.RELEASE</spring-data-redis.version>
+		<jedis.version>2.1.0</jedis.version>
+
+	</properties>
+
+	<dependencies>
+		<!-- commons -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>commons</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>api</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>${spring-data-redis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

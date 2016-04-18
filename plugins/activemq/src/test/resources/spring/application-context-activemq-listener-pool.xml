@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee 
+		http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Pool Message Listener</description>
+
+	<!-- pool message listener -->
+	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+		<property name="connectionFactory">
+			<!-- use poool -->
+			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
+				<!-- set connection factory -->
+				<property name="connectionFactory">
+					<bean class="org.apache.activemq.ActiveMQConnectionFactory" />
+				</property>
+				<!-- set max connections -->
+				<property name="maxConnections" value="10" />
+			</bean>
+		</property>
+		<property name="listener">
+			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener1" />
+		</property>
+	</bean>
+
+	<!-- other pool message listener -->
+	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+		<property name="connectionFactory">
+			<!-- use poool -->
+			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
+				<!-- set connection factory -->
+				<property name="connectionFactory">
+					<bean class="org.apache.activemq.ActiveMQConnectionFactory" />
+				</property>
+				<!-- set max connections -->
+				<property name="maxConnections" value="10" />
+			</bean>
+		</property>
+		<property name="listener">
+			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener2" />
+		</property>
+	</bean>
+
+	<!-- third pool message listener -->
+	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+		<property name="connectionFactory">
+			<!-- use poool -->
+			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
+				<!-- set connection factory -->
+				<property name="connectionFactory">
+					<bean class="org.apache.activemq.ActiveMQConnectionFactory" />
+				</property>
+				<!-- set max connections -->
+				<property name="maxConnections" value="10" />
+			</bean>
+		</property>
+		<property name="listener">
+			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener3" />
+		</property>
+	</bean>
+
+</beans>
