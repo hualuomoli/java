@@ -105,6 +105,7 @@ public class SecurityFilter extends FilterBean {
 				// login success
 				this.setSuccess(res);
 				res.addHeader(User.TOKEN, token);
+				res.getWriter().write(token);
 			} else {
 				// login fail
 				this.setError(res, Result.USER_INVALID);

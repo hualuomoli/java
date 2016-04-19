@@ -34,6 +34,7 @@ describe('test java security', function () {
       .expect(function (res) {
         token = res.headers.token;
         console.log(token);
+        console.log(res.text);
       })
       .end(done);
 
