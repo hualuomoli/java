@@ -1,7 +1,6 @@
 package com.github.hualuomoli.filter.cors;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Set;
 
 import javax.servlet.FilterChain;
@@ -11,8 +10,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.hualuomoli.filter.FilterBean;
-import com.github.hualuomoli.ret.none.NoDataMessageReturn;
 
 /**
  * 跨域拦截器
@@ -21,8 +21,6 @@ import com.github.hualuomoli.ret.none.NoDataMessageReturn;
  */
 public class CorsFilter extends FilterBean {
 
-	// allow cross
-	private boolean allowCross;
 	// proxy server domain(http://127.0.0.1:3000)
 	// null is all proxy domain
 	private Set<String> proxyDomains;
@@ -33,53 +31,61 @@ public class CorsFilter extends FilterBean {
 	private String allowMethods = "PUT,POST,GET,DELETE,OPTIONS"; // Access-Control-Allow-Methods
 	private String allowHeaders = "x-requested-with,Content-Type,*"; // Access-Control-Allow-Headers
 
-	public void setAllowCross(boolean allowCross) {
-		this.allowCross = allowCross;
-	}
-
 	public void setProxyDomains(Set<String> proxyDomains) {
 		this.proxyDomains = proxyDomains;
 	}
 
-	public void setMaxAge(String maxAge) {
-		this.maxAge = maxAge;
-	}
-
-	public void setAllowCredentials(String allowCredentials) {
-		this.allowCredentials = allowCredentials;
-	}
-
-	public void setAllowMethods(String allowMethods) {
-		this.allowMethods = allowMethods;
-	}
-
-	public void setAllowHeaders(String allowHeaders) {
-		this.allowHeaders = allowHeaders;
-	}
-
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-
-		String origin = req.getHeader("origin");
-		if (this.allowCross && this.isValidPorxyDomain(origin)) {
-			this.setCross(res, origin);
-			chain.doFilter(request, response);
-		} else {
-			res.setStatus(CAN_NOT_CROSS);
-			PrintWriter writer = res.getWriter();
-			writer.write(new NoDataMessageReturn(String.valueOf(CAN_NOT_CROSS), "can not cross domain " + origin).toJson());
-			writer.flush();
+		// add cross header
+		if (!this.addCrossHeader((HttpServletRequest) request, (HttpServletResponse) response)) {
+			return;
 		}
+		// chain
+		chain.doFilter(request, response);
 	}
 
-	// set cross
-	private void setCross(HttpServletResponse res, String origin) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("allow cross domain origin {}", origin);
+	// add cross header
+	private boolean addCrossHeader(HttpServletRequest req, HttpServletResponse res) {
+
+		String origin = req.getHeader("origin");
+
+		// call this server by browser, postman, mocha,
+		// origin is null, not use cross domain
+		if (StringUtils.isEmpty(origin)) {
+			return true;
 		}
 
+		// show log
+		if (logger.isDebugEnabled()) {
+			logger.debug("origin {}", origin);
+		}
+
+		// check proxy server
+		boolean validation = this.valid(origin);
+		if (validation) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("allow cross domain origin {}", origin);
+			}
+			this.addHeader(res, origin);
+		} else {
+			// not cross domain
+			// TODO
+		}
+
+		return validation;
+	}
+
+	// is origin valid
+	private boolean valid(String origin) {
+		if (proxyDomains == null || proxyDomains.size() == 0) {
+			return true;
+		}
+		return proxyDomains.contains(origin);
+	}
+
+	// set header
+	private void addHeader(HttpServletResponse res, String origin) {
 		// 授权的源控制
 		res.setHeader("Access-Control-Allow-Origin", origin);
 		// 授权的时间
@@ -90,15 +96,6 @@ public class CorsFilter extends FilterBean {
 		res.setHeader("Access-Control-Allow-Methods", allowMethods);
 		// 控制哪些header能发送真正的请求
 		res.setHeader("Access-Control-Allow-Headers", allowHeaders);
-
-	}
-
-	// is origin valid
-	private boolean isValidPorxyDomain(String origin) {
-		if (proxyDomains == null || proxyDomains.size() == 0) {
-			return true;
-		}
-		return proxyDomains.contains(origin);
 	}
 
 }

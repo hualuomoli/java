@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.github.hualuomoli.filter.FilterBean;
 
@@ -15,7 +16,15 @@ public class LogFilter extends FilterBean {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
+		// log request
+		this.log((HttpServletRequest) request);
+		// chain
+		chain.doFilter(request, response);
+		// log response
+		this.log((HttpServletResponse) response);
+	}
+
+	private void log(HttpServletRequest req) {
 		// show request
 		logger.debug("request message");
 		logger.debug("\tcharacterEncoding {}", req.getCharacterEncoding());
@@ -37,8 +46,10 @@ public class LogFilter extends FilterBean {
 			String name = parameterNames.nextElement();
 			logger.debug("\t\t{} = {}", name, req.getParameter(name));
 		}
-		// chain
-		chain.doFilter(request, response);
+	}
+
+	private void log(HttpServletResponse res) {
+
 	}
 
 }
