@@ -5,8 +5,22 @@
 
 	<groupId>com.github.hualuomoli</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.6.0</version>
+	<version>1.7.0</version>
 	<packaging>pom</packaging>
+
+	<modules>
+		<module>../commons</module>
+		<module>../base</module>
+		<module>../api</module>
+		<module>../plugins/activemq</module>
+		<module>../plugins/redis</module>
+		<module>../plugins/jpush</module>
+		<module>../plugins/demosecurity</module>
+		<module>../mvc</module>
+
+		<module>../tool/raml-parser</module>
+
+	</modules>
 
 	<properties>
 

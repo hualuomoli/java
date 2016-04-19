@@ -6,8 +6,8 @@
 	<parent>
 		<groupId>com.github.hualuomoli</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.6.0</version>
-		<relativePath>../parent/pom.xml</relativePath>
+		<version>1.7.0</version>
+		<relativePath>../../parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>redis</artifactId>

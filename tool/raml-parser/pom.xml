@@ -3,9 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.hualuomoli.tool</groupId>
+	<parent>
+		<groupId>com.github.hualuomoli</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.7.0</version>
+		<relativePath>../../parent/pom.xml</relativePath>
+	</parent>
+
 	<artifactId>raml-parser</artifactId>
-	<version>1.6.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -16,7 +21,7 @@
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>
-			<version>${project.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.raml</groupId>
@@ -24,51 +29,5 @@
 			<version>${raml.parser.version}</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-					<encoding>utf8</encoding>
-					<showWarnings>true</showWarnings>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
-	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>local-repo</id>
-			<name>localhost release repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/local-repo</url>
-		</repository>
-		<snapshotRepository>
-			<id>local-repo-s</id>
-			<name>localhost snapshot repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/local-repo-s</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>

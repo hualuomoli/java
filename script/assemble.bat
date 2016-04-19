@@ -9,7 +9,7 @@ SET CLASSPATH=%CLASSPATH%;%batPath%\script\assemble.jar
 
 set destPath=%batPath%\web-all
 set tempPomFileName=%batPath%\script\pom.txt
-set modules=%batPath%\commons,%batPath%\plugins\mq,%batPath%\plugins\cache,%batPath%\plugins\jpush,%batPath%\base,%batPath%\web
+set modules=%batPath%\commons,%batPath%\base,%batPath%\api,%batPath%\plugins\activemq,%batPath%\plugins\redis,%batPath%\plugins\jpush,%batPath%\plugins\demosecurity,%batPath%\mvc,%batPath%\web
 set groupId=com.github.hualuomoli
 
 
