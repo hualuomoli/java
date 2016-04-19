@@ -14,7 +14,6 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<spring.version>4.0.8.RELEASE</spring.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<cglib.version>3.1</cglib.version>
 		<!-- ORM -->
@@ -32,7 +31,7 @@
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>
-			<version>${project.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<!-- 2、Spring -->
 		<dependency>
@@ -152,13 +151,7 @@
 			<version>${h2.driver.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- 6、Spring Test -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
+
 	</dependencies>
 
 </project>

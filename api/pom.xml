@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>
-			<version>${project.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 
