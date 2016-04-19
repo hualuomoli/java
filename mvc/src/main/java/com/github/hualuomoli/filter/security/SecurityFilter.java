@@ -30,7 +30,7 @@ public class SecurityFilter extends FilterBean {
 
 	private String loginUri = "/login"; // login
 	private String logoutUri = "/logout"; // logout
-	private Set<String> checkUris;
+	private Set<String> authUris;
 
 	public void setSecurityClassName(String securityClassName) {
 		this.securityClassName = securityClassName;
@@ -44,8 +44,8 @@ public class SecurityFilter extends FilterBean {
 		this.logoutUri = logoutUri;
 	}
 
-	public void setCheckUris(Set<String> checkUris) {
-		this.checkUris = checkUris;
+	public void setAuthUris(Set<String> authUris) {
+		this.authUris = authUris;
 	}
 
 	public Security getSecurity() {
@@ -108,7 +108,7 @@ public class SecurityFilter extends FilterBean {
 				res.getWriter().write(token);
 			} else {
 				// login fail
-				this.setError(res, Result.USER_INVALID);
+				this.setNoAuthor(res, Result.USER_INVALID);
 			}
 		}
 
@@ -157,11 +157,11 @@ public class SecurityFilter extends FilterBean {
 
 	// check user or not
 	private boolean isCheckPath(String servletPath) {
-		if (checkUris == null && checkUris.isEmpty()) {
+		if (authUris == null && authUris.isEmpty()) {
 			return true;
 		}
-		for (String checkUri : checkUris) {
-			if (StringUtils.startsWith(servletPath, checkUri)) {
+		for (String authUri : authUris) {
+			if (StringUtils.startsWith(servletPath, authUri)) {
 				// check login
 				return true;
 			}

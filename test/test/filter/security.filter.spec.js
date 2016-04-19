@@ -14,7 +14,7 @@ describe('test java security', function () {
       .post('/login')
       .send('username=admin')
       .send('password=admin123')
-      .expect(500)
+      .expect(401)
       .expect(function (res) {
         assert.equal(res.headers.code, '1');
         assert.equal(res.headers.msg, 'user invalid');
@@ -33,8 +33,6 @@ describe('test java security', function () {
       .expect(200)
       .expect(function (res) {
         token = res.headers.token;
-        console.log(token);
-        console.log(res.text);
       })
       .end(done);
 
@@ -42,35 +40,28 @@ describe('test java security', function () {
 
   it('should get user message by no token', function (done) {
     request
-      .get('/a/user/admin')
+      .get('/auth/user/admin')
       .expect(401)
       .expect(function (res) {
         assert.equal(res.headers.code, '2');
         assert.equal(res.headers.msg, 'user no login');
-        console.log(res.body);
       })
       .end(done);
   });
 
   it('should get user message by invalid token', function (done) {
     request
-      .get('/a/user/admin')
+      .get('/auth/user/admin')
       .set('token', 'abcd')
       .expect(401)
-      .expect(function (res) {
-        console.log(res.body);
-      })
       .end(done);
   });
 
-  it('should get user message by invalid token', function (done) {
+  it('should get user message by valid token', function (done) {
     request
-      .get('/a/user/admin')
+      .get('/auth/user/admin')
       .set('token', token)
       .expect(200)
-      .expect(function (res) {
-        console.log(res.text);
-      })
       .end(done);
   });
 
@@ -79,18 +70,14 @@ describe('test java security', function () {
       .get('/logout')
       .set('token', 'abcd')
       .expect(200)
-      .expect(function (res) {})
       .end(done);
   });
 
   it('should get user message by no logout', function (done) {
     request
-      .get('/a/user/admin')
+      .get('/auth/user/admin')
       .set('token', token)
       .expect(200)
-      .expect(function (res) {
-        console.log(res.text);
-      })
       .end(done);
   });
 
@@ -99,18 +86,14 @@ describe('test java security', function () {
       .get('/logout')
       .set('token', token)
       .expect(200)
-      .expect(function (res) {})
       .end(done);
   });
 
   it('should get user message by logout', function (done) {
     request
-      .get('/a/user/admin')
+      .get('/auth/user/admin')
       .set('token', token)
       .expect(401)
-      .expect(function (res) {
-        console.log(res.body);
-      })
       .end(done);
   });
 

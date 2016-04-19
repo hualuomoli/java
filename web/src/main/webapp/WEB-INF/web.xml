@@ -74,8 +74,8 @@
 			<param-value>com.github.hualuomoli.demosecurity.DemoSecurity</param-value>
 		</init-param>
 		<init-param>
-			<param-name>checkUris</param-name>
-			<param-value>/a</param-value>
+			<param-name>authUris</param-name>
+			<param-value>/auth</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

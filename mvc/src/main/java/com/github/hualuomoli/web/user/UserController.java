@@ -11,22 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.hualuomoli.commons.json.JsonMapper;
-
 @Controller
-@RequestMapping(value = "/a/user")
+@RequestMapping(value = "${mvc.security.auth}/user")
 public class UserController {
 
 	@RequestMapping(value = "/{id}", method = { RequestMethod.GET })
 	@ResponseBody
-	public String message(@PathVariable(value = "id") String id, HttpServletRequest request, HttpServletResponse response) {
+	public User message(@PathVariable(value = "id") String id, HttpServletRequest request, HttpServletResponse response) {
 
 		// sleep 2 seconds
 		// Run.sleep(2);
 
 		User user = new User(id, "hualuomoli", "花落莫离");
 
-		return JsonMapper.toJsonString(user);
+		return user;
 	}
 
 	class User implements Serializable {
