@@ -36,31 +36,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>api</artifactId>
-			<version>${global.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>redis</artifactId>
-			<version>${global.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>activemq</artifactId>
-			<version>${global.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>jpush</artifactId>
-			<version>${global.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>demosecurity</artifactId>
-			<version>${global.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>mvc</artifactId>
 			<version>${global.version}</version>
 		</dependency>

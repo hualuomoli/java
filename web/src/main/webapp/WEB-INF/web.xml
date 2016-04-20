@@ -41,20 +41,10 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<!-- log -->
-	<filter>
-		<filter-name>logFilter</filter-name>
-		<filter-class>com.github.hualuomoli.filter.log.LogFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>logFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
 	<!-- cross domain -->
 	<filter>
 		<filter-name>corsFilter</filter-name>
-		<filter-class>com.github.hualuomoli.filter.cors.CorsFilter</filter-class>
+		<filter-class>com.github.hualuomoli.mvc.filter.cors.CorsFilter</filter-class>
 		<init-param>
 			<param-name>proxyDomains</param-name>
 			<param-value>file://,http://localhost:3000,http://127.0.0.1:3000,http://192.168.1.136:3000</param-value>
@@ -62,24 +52,6 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>corsFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<!-- security -->
-	<filter>
-		<filter-name>securityFilter</filter-name>
-		<filter-class>com.github.hualuomoli.filter.security.SecurityFilter</filter-class>
-		<init-param>
-			<param-name>securityClassName</param-name>
-			<param-value>com.github.hualuomoli.demosecurity.DemoSecurity</param-value>
-		</init-param>
-		<init-param>
-			<param-name>authUris</param-name>
-			<param-value>/auth</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>securityFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
@@ -91,6 +63,8 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
 				classpath*:/mvc/spring-mvc-core.xml
+				classpath*:/mvc/spring-mvc-interceptor.xml
+				classpath*:/mvc/spring-mvc-driven.xml
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>

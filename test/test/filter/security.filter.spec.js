@@ -16,8 +16,8 @@ describe('test java security', function () {
       .send('password=admin123')
       .expect(401)
       .expect(function (res) {
-        assert.equal(res.headers.code, '1');
-        assert.equal(res.headers.msg, 'user invalid');
+        assert.equal(res.headers.errorcode, '40101');
+        assert.equal(decodeURIComponent(res.headers.errormsg), '用户名或密码错误');
       })
       .end(done);
 
@@ -30,6 +30,7 @@ describe('test java security', function () {
       .post('/login')
       .send('username=admin')
       .send('password=admin')
+      .set('accept', 'application/json')
       .expect(200)
       .expect(function (res) {
         token = res.headers.token;
@@ -43,8 +44,8 @@ describe('test java security', function () {
       .get('/auth/user/admin')
       .expect(401)
       .expect(function (res) {
-        assert.equal(res.headers.code, '2');
-        assert.equal(res.headers.msg, 'user no login');
+        assert.equal(res.headers.errorcode, '40102');
+        assert.equal(decodeURIComponent(res.headers.errormsg), '未登录,请先登录');
       })
       .end(done);
   });
@@ -54,6 +55,10 @@ describe('test java security', function () {
       .get('/auth/user/admin')
       .set('token', 'abcd')
       .expect(401)
+      .expect(function (res) {
+        assert.equal(res.headers.errorcode, '40103');
+        assert.equal(decodeURIComponent(res.headers.errormsg), '登录超时,请重新登录');
+      })
       .end(done);
   });
 
@@ -62,6 +67,9 @@ describe('test java security', function () {
       .get('/auth/user/admin')
       .set('token', token)
       .expect(200)
+      .expect(function (res) {
+        assert.equal(res.body.id, 'admin')
+      })
       .end(done);
   });
 
@@ -78,6 +86,9 @@ describe('test java security', function () {
       .get('/auth/user/admin')
       .set('token', token)
       .expect(200)
+      .expect(function (res) {
+        assert.equal(res.body.id, 'admin')
+      })
       .end(done);
   });
 

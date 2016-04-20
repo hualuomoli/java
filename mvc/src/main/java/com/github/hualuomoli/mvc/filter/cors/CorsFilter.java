@@ -1,4 +1,4 @@
-package com.github.hualuomoli.filter.cors;
+package com.github.hualuomoli.mvc.filter.cors;
 
 import java.io.IOException;
 import java.util.Set;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.hualuomoli.filter.FilterBean;
+import com.github.hualuomoli.mvc.filter.FilterBean;
 
 /**
  * 跨域拦截器

@@ -1,7 +1,5 @@
-package com.github.hualuomoli.filter;
+package com.github.hualuomoli.mvc.filter;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,30 +8,17 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.hualuomoli.error.Result;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public abstract class FilterBean implements Filter {
 
-	public static final int STATUS_SUCCESS = 200;
-	public static final int STATUS_ERROR = 500;
-	public static final int STATUS_NO_AUTHOR = 401;
-	public static final int STATUS_FORBIDDEN = 403;
-
-	public static final String CODE = "code";
-	public static final String MSG = "msg";
-
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-
-	// cross domain
-	public static final int CAN_NOT_CROSS = 50010;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -96,65 +81,6 @@ public abstract class FilterBean implements Filter {
 
 	@Override
 	public void destroy() {
-	}
-
-	// set success
-	protected void setSuccess(HttpServletResponse res) {
-		res.setStatus(STATUS_SUCCESS);
-	}
-
-	/** 错误 */
-	protected void setError(HttpServletResponse res, Result result) {
-		res.setStatus(STATUS_ERROR);
-		this.addMessage(res, result);
-	}
-
-	/** 没有权限 401 */
-	protected void setNoAuthor(HttpServletResponse res, Result result) {
-		res.setStatus(STATUS_NO_AUTHOR);
-		this.addMessage(res, result);
-	}
-
-	/** 禁止403 */
-	protected void setForbidden(HttpServletResponse res, Result result) {
-		res.setStatus(STATUS_FORBIDDEN);
-		this.addMessage(res, result);
-	}
-
-	// 增加header
-	private void addMessage(HttpServletResponse res, Result result) {
-		// set content-type
-		res.setContentType("application/json");
-		// add to header
-		res.addHeader(CODE, String.valueOf(result.getCode()));
-		res.addHeader(MSG, result.getMessage());
-		// add to return
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("{");
-
-		// code
-		buffer.append("\"").append(CODE).append("\"");
-		buffer.append(":");
-		buffer.append("\"").append(result.getCode()).append("\"");
-
-		// ,
-		buffer.append(",");
-
-		// message
-		buffer.append("\"").append(MSG).append("\"");
-		buffer.append(":");
-		buffer.append("\"").append(result.getMessage()).append("\"");
-
-		buffer.append("}");
-
-		try {
-			PrintWriter writer = res.getWriter();
-			writer.write(buffer.toString());
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 }
