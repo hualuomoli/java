@@ -1,4 +1,5 @@
 var assert = require('assert');
+var should = require('should');
 var fs = require('fs');
 var path = require('path');
 
@@ -17,7 +18,7 @@ describe('test java security', function () {
       .set('content-type', 'application/json;charset=utf-8')
       .expect(200)
       .expect(function (res) {
-        console.log(res.headers);
+        res.headers.should.have.property('token');
       })
       .end(done);
 

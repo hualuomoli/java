@@ -1,6 +1,5 @@
 package com.github.hualuomoli.mvc.interceptor;
 
-import java.util.Collection;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		this.showResponseInformation(response, handler);
 	}
 
 	/** 输出请求信息 */
@@ -54,22 +52,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 			String name = parameterNames.nextElement();
 			logger.debug("\t\t{} = {}", name, req.getParameter(name));
 		}
-	}
-
-	/** 响应信息 
-	 * @param handler */
-	private void showResponseInformation(HttpServletResponse res, Object handler) {
-		logger.debug("response message");
-		logger.debug("\tstatus {}", res.getStatus());
-		logger.debug("\tcharacterEncoding {}", res.getCharacterEncoding());
-		logger.debug("\tcontentType {}", res.getContentType());
-
-		logger.debug("\theaders");
-		Collection<String> headerNames = res.getHeaderNames();
-		for (String headerName : headerNames) {
-			logger.debug("\t\t{} = {}", headerName, res.getHeader(headerName));
-		}
-
 	}
 
 }

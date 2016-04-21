@@ -3,15 +3,24 @@ package com.github.hualuomoli.base.demo.service;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.hualuomoli.base.demo.entity.Demo;
 import com.github.hualuomoli.base.entity.Pagination;
-import com.github.hualuomoli.base.junit.SpringJunitTest;
 
-public class DemoServiceTest extends SpringJunitTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { //
+		"classpath:spring/application-context-jdbc.xml", //
+		"classpath:spring/application-context-jdbc-init.xml", //
+		"classpath:spring/application-context-core.xml", //
+		"classpath:spring/application-context-orm.xml" //
+})
+public class DemoServiceTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(DemoService.class);
 

@@ -12,7 +12,6 @@
 			classpath*:/spring/application-context-core.xml,
 			classpath*:/spring/application-context-orm.xml,
 			classpath*:/spring/application-context-jdbc.xml
-			classpath*:/spring/application-context-jdbc-init.xml
 		</param-value>
 	</context-param>
 	<listener>
@@ -62,8 +61,8 @@
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
-				classpath*:/mvc/spring-mvc-core.xml
-				classpath*:/mvc/spring-mvc-interceptor.xml
+				classpath*:/mvc/spring-mvc-core.xml,
+				classpath*:/mvc/spring-mvc-interceptor.xml,
 				classpath*:/mvc/spring-mvc-driven.xml
 			</param-value>
 		</init-param>
