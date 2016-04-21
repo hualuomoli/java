@@ -1,4 +1,4 @@
-package com.github.hualuomoli.jpush;
+package com.github.hualuomoli.plugin.app.jpush;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,11 +7,11 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.hualuomoli.app.exception.AppException;
-import com.github.hualuomoli.app.push.SenderAbstract;
-import com.github.hualuomoli.app.push.entity.Message;
-import com.github.hualuomoli.app.push.entity.Notification;
-import com.github.hualuomoli.app.push.entity.RichTxt;
+import com.github.hualuomoli.plugin.app.exception.AppException;
+import com.github.hualuomoli.plugin.app.push.SenderAbstract;
+import com.github.hualuomoli.plugin.app.push.entity.Message;
+import com.github.hualuomoli.plugin.app.push.entity.Notification;
+import com.github.hualuomoli.plugin.app.push.entity.RichTxt;
 
 import cn.jpush.api.JPushClient;
 import cn.jpush.api.push.model.PushPayload;

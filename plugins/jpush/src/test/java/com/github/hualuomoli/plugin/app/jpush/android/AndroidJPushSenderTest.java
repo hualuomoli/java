@@ -1,4 +1,4 @@
-package com.github.hualuomoli.jpush.android;
+package com.github.hualuomoli.plugin.app.jpush.android;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +8,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.hualuomoli.app.exception.AppException;
-import com.github.hualuomoli.app.push.entity.Notification;
-import com.github.hualuomoli.jpush.JPushSender;
+import com.github.hualuomoli.plugin.app.exception.AppException;
+import com.github.hualuomoli.plugin.app.jpush.JPushSender;
+import com.github.hualuomoli.plugin.app.push.entity.Notification;
 import com.google.common.collect.Sets;
 
 public class AndroidJPushSenderTest {
