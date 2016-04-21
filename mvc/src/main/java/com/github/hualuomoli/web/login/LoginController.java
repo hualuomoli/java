@@ -1,4 +1,4 @@
-package com.github.hualuomoli.web.user;
+package com.github.hualuomoli.web.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,20 +6,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.hualuomoli.mvc.interceptor.AuthInterceptor;
+import com.github.hualuomoli.commons.servlet.TokenUtils;
 import com.github.hualuomoli.mvc.security.Auth;
-import com.github.hualuomoli.mvc.security.entity.User;
-import com.github.hualuomoli.mvc.security.exception.AuthException;
+import com.github.hualuomoli.mvc.security.exception.MvcException;
 
 /**
  * 登录,登出
  * @author hualuomoli
  *
  */
-@Controller(value = "com.github.hualuomoli.web.user.LoginController")
+@Controller(value = "com.github.hualuomoli.web.login.LoginController")
 @RequestMapping(value = "")
 public class LoginController {
 
@@ -28,27 +28,20 @@ public class LoginController {
 
 	@RequestMapping(value = "login")
 	@ResponseBody
-	public User login(Entity entity, HttpServletRequest request, HttpServletResponse response) {
+	public void login(@RequestBody Entity entity, HttpServletRequest request, HttpServletResponse response) {
 		// TODO
 		if (!StringUtils.equals(entity.getUsername(), "admin") || !StringUtils.equals(entity.getPassword(), "admin")) {
-			throw new AuthException(Auth.ERROR_CODE_INVALID, "用户名或密码错误");
+			throw new MvcException(MvcException.ERROR_USER_INVALID, "用户名或密码错误");
 		}
 		// login to auth
-		User user = AuthInterceptor.getUser(request);
-		user.setUsername(entity.getUsername());
-		user = auth.login(user);
-		// add token to header
-		AuthInterceptor.setToken(response, user.getToken());
-
-		return user;
+		String token = auth.login(entity.getUsername());
+		TokenUtils.setToken(response, token);
 	}
 
 	@RequestMapping(value = "logout")
 	@ResponseBody
-	public void logout(Entity entity, HttpServletRequest request, HttpServletResponse response) {
-		User user = AuthInterceptor.getUser(request);
-		user.setUsername(entity.getUsername());
-		auth.logout(user);
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		auth.logout(TokenUtils.getToken(request));
 	}
 
 	// user

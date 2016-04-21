@@ -1,6 +1,6 @@
 package com.github.hualuomoli.mvc.exception;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,51 +9,68 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.github.hualuomoli.commons.constant.Charset;
-import com.github.hualuomoli.mvc.annotation.ContentType;
+import com.github.hualuomoli.commons.util.CharsetUtils;
 import com.github.hualuomoli.mvc.exception.entity.ErrorData;
+import com.github.hualuomoli.mvc.security.exception.AuthException;
 import com.github.hualuomoli.mvc.security.exception.MvcException;
 
 @Service(value = "com.github.hualuomoli.mvc.exception.HandlerException")
 public class HandlerException implements HandlerExceptionResolver {
 
+	public static final String JSON = "application/json;charset=utf-8";
+
+	public static final int STATUS_SUCCESS = 200; // 成功
+	public static final int STATUS_NO_AUTH = 401; // 没有权限
+	public static final int STSTUS_INVLID_PARAMETER = 400; // 参数不合法
+	public static final int STATUS_MVC_CUSTOM = 200; // 用户自定义异常
+	public static final int STATUS_ERROR = 500; // 错误
+
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
-		if (ex instanceof MvcException) {
+		// 设置编码集
+		response.setCharacterEncoding(CharsetUtils.UTF8.name());
+		// 设置返回数据类型
+		response.setContentType(JSON);
 
-			MvcException e = (MvcException) ex;
+		ErrorData errorData;
 
-			// set status
-			response.setStatus(e.getStatus());
-			// set content-type
-			response.setContentType(ContentType.JSON);
-			// set encoding
-			response.setCharacterEncoding(Charset.UTF8.getEncoding());
-			// set header
-			response.setHeader(ErrorData.CODE, e.getErrorCode());
-			response.setHeader(ErrorData.MSG, e.getErrorMsg());
+		// 权限异常
+		if (ex instanceof AuthException) {
+			AuthException authException = (AuthException) ex;
+			errorData = authException.getErrorData();
+			// 权限异常 status = 401
+			response.setStatus(STATUS_NO_AUTH);
+		} else if (ex instanceof MvcException) {
+			// MVC自定义异常
+			MvcException mvcException = (MvcException) ex;
+			errorData = mvcException.getErrorData();
+			// 自定义异常 status = 200
+			response.setStatus(STATUS_MVC_CUSTOM);
+		} else if (ex instanceof IllegalArgumentException) {
+			// MVC自定义异常
+			IllegalArgumentException illegalArgumentException = (IllegalArgumentException) ex;
+			errorData = new ErrorData();
+			errorData.setCode(String.valueOf(STSTUS_INVLID_PARAMETER));
+			errorData.setMsg(illegalArgumentException.getMessage());
+			// 参数不合法异常 status = 400
+			response.setStatus(STSTUS_INVLID_PARAMETER);
+		} else {
+			ex.printStackTrace();
+			errorData = new ErrorData();
+			errorData.setCode(String.valueOf(STATUS_ERROR));
+			// errorData.setMsg(ex.getMessage());
+			// 其他异常 status = 500
+			response.setStatus(STATUS_ERROR);
+		}
 
-			// flush data
-			this.flushData(response, e);
-
+		try {
+			response.getWriter().write(errorData.toJson());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return new ModelAndView();
-	}
-
-	// flush
-	void flushData(HttpServletResponse response, MvcException e) {
-		try {
-			ErrorData data = new ErrorData();
-			data.setErrorCode(e.getErrorCode());
-			data.setErrorMsg(e.getMessage());
-
-			PrintWriter writer = response.getWriter();
-			writer.write(data.toJson());
-			writer.flush();
-		} catch (Exception e1) {
-		}
 	}
 
 }

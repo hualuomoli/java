@@ -1,5 +1,7 @@
 package com.github.hualuomoli.mvc.security.exception;
 
+import com.github.hualuomoli.mvc.exception.entity.ErrorData;
+
 /**
  * 权限异常
  * @author hualuomoli
@@ -9,21 +11,20 @@ public class AuthException extends MvcException {
 
 	private static final long serialVersionUID = 879054420696384909L;
 
-	@Override
-	public int getStatus() {
-		return 401;
+	public AuthException(String code, String msg) {
+		super(code, msg);
 	}
 
-	public AuthException(String message) {
-		super(message);
+	public AuthException(ErrorData errorData) {
+		super(errorData);
 	}
 
-	public AuthException(String errorCode, String message) {
-		super(errorCode, message);
+	public AuthException(String code, String msg, Throwable cause) {
+		super(code, msg, cause);
 	}
 
-	public AuthException(String errorCode, String message, Throwable cause) {
-		super(errorCode, message, cause);
+	public AuthException(ErrorData errorData, Throwable cause) {
+		super(errorData, cause);
 	}
 
 }

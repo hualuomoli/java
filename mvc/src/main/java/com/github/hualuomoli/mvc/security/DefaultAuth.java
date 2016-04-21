@@ -1,12 +1,11 @@
 package com.github.hualuomoli.mvc.security;
 
-import java.util.Map;
-import java.util.UUID;
+import java.io.Serializable;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
-import com.github.hualuomoli.mvc.security.entity.User;
-import com.github.hualuomoli.mvc.security.exception.AuthException;
+import com.github.hualuomoli.plugin.cache.Cache;
 import com.google.common.collect.Maps;
 
 /**
@@ -15,43 +14,76 @@ import com.google.common.collect.Maps;
  *
  */
 @Service(value = "com.github.hualuomoli.mvc.security.DefaultAuth")
-public class DefaultAuth implements Auth {
+public class DefaultAuth extends AuthAbstract {
 
-	private static final Map<String, User> userMap = Maps.newHashMap();
+	@Override
+	public Cache getCache() {
+		if (super.getCache() == null) {
+			super.setCache(new Cache() {
 
-	private String getToken() {
-		return UUID.randomUUID().toString().replaceAll("[-]", "");
+				private final HashMap<String, Serializable> maps = Maps.newHashMap();
+
+				@Override
+				public boolean set(String key, Serializable serializable, int expire) {
+					maps.put(key, serializable);
+					return true;
+				}
+
+				@Override
+				public boolean set(String key, Serializable serializable) {
+					maps.put(key, serializable);
+					return true;
+				}
+
+				@Override
+				public boolean remove(String key) {
+					maps.remove(key);
+					return true;
+				}
+
+				@Override
+				public long plus(String key, long number) {
+					long data = 0;
+					if (this.exists(key)) {
+						data = Long.parseLong(String.valueOf(maps.get(key)));
+					}
+					maps.put(key, ++data);
+					return data;
+				}
+
+				@Override
+				public boolean isInstance() {
+					return true;
+				}
+
+				@SuppressWarnings("unchecked")
+				@Override
+				public <T> T get(String key) {
+					return (T) maps.get(key);
+				}
+
+				@Override
+				public boolean exists(String key) {
+					return maps.containsKey(key);
+				}
+
+				@Override
+				public void empty() {
+					maps.clear();
+				}
+			});
+		}
+		return super.getCache();
 	}
 
 	@Override
-	public User login(User user) throws AuthException {
-
-		user.setToken(this.getToken());
-
-		// set to cache
-		userMap.put(user.getToken(), user);
-
-		return user;
+	public String[] getRoles(String username) {
+		return new String[] {};
 	}
 
 	@Override
-	public void logout(User user) throws AuthException {
-		userMap.remove(user.getToken());
-	}
-
-	@Override
-	public boolean isLogin(User user) throws AuthException {
-		return userMap.containsKey(user.getToken());
-	}
-
-	@Override
-	public boolean hasRole(User user, String role) throws AuthException {
-		return true;
-	}
-
-	@Override
-	public boolean hasPermission(User user, String permission) throws AuthException {
-		return true;
+	public String[] getPermissions(String uesrname) {
+		return new String[] {};
 	}
 
 }

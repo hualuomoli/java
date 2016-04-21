@@ -1,32 +1,68 @@
 package com.github.hualuomoli.mvc.security;
 
-import com.github.hualuomoli.mvc.security.entity.User;
-import com.github.hualuomoli.mvc.security.exception.AuthException;
-
 /**
- * 验证权限,只验证权限,对用户的密码不校验
+ * 权限
  * @author hualuomoli
  *
  */
 public interface Auth {
 
-	public static final String ERROR_CODE_INVALID = "40101"; // 用户名或密码错误(登录)
-	public static final String ERROR_CODE_NO_LOGIN = "40102"; // 未登录
-	public static final String ERROR_CODE_OVERTIME = "40103"; // 登录超时
+	public static final int DEFAULT_EXPIRE = 30 * 60; // 30 分钟
 
-	// 登陆
-	User login(User user) throws AuthException;
+	/**
+	 * 获取数据有效期,单位为秒
+	 * @return 数据保存有效期
+	 */
+	int getDataExpire();
 
-	// 登出
-	void logout(User user) throws AuthException;
+	/**
+	 * 登录
+	 * @param username 用户名
+	 * @return token
+	 */
+	String login(String username);
 
-	// 是否已经登陆
-	boolean isLogin(User user) throws AuthException;
+	/**
+	 * 登录
+	 * @param username 用户名
+	 * @param token token(需要保证唯一)
+	 */
+	void login(String username, String token);
 
-	// 是否有角色
-	boolean hasRole(User user, String role) throws AuthException;
+	/**
+	 * 登出
+	 * @param token 用户token
+	 */
+	void logout(String token);
 
-	// 是否有权限
-	boolean hasPermission(User user, String permission) throws AuthException;
+	/**
+	 * 用户是否登录
+	 * @param token 用户token
+	 * @return 如果用户已经登录,返回true
+	 */
+	boolean isLogin(String token);
+
+	/**
+	 * 已经登录的用户(如允许多终端登录)
+	 * @param username 用户名
+	 * @return 已经登录的用户token
+	 */
+	String[] logged(String username);
+
+	/**
+	 * 用户是否具有该角色
+	 * @param username 用户名
+	 * @param role 角色名称
+	 * @return 如果用户具有角色,返回true
+	 */
+	boolean hasRole(String username, String role);
+
+	/**
+	 * 用户是否具有该权限
+	 * @param username 用户名
+	 * @param permission 权限名称
+	 * @return 如果用户具有权限,返回true
+	 */
+	boolean hasPermission(String username, String permission);
 
 }

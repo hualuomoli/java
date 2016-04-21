@@ -13,34 +13,34 @@ public class ErrorData implements Serializable {
 
 	private static final long serialVersionUID = 7853106897448509957L;
 
-	public static final String CODE = "errorcode";
-	public static final String MSG = "errormsg";
+	public static final String CODE = "code";
+	public static final String MSG = "msg";
 
-	private String errorCode;
-	private String errorMsg;
+	private String code;
+	private String msg;
 
 	public ErrorData() {
 	}
 
-	public ErrorData(String errorCode, String errorMsg) {
-		this.errorCode = errorCode;
-		this.errorMsg = errorMsg;
+	public ErrorData(String code, String msg) {
+		this.code = code;
+		this.msg = msg;
 	}
 
-	public String getErrorCode() {
-		return errorCode;
+	public String getCode() {
+		return code;
 	}
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getErrorMsg() {
-		return errorMsg;
+	public String getMsg() {
+		return msg;
 	}
 
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	public String toJson() {

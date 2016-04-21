@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.hualuomoli.mvc.annotation.ContentType;
-
 @Controller
 @RequestMapping(value = "${mvc.security.auth}/user")
 public class UserController {
 
 	@RequestMapping(value = "/{id}", method = { RequestMethod.GET })
 	@ResponseBody
-	@ContentType
 	public User message(@PathVariable(value = "id") String id, HttpServletRequest request, HttpServletResponse response) {
 
 		// sleep 2 seconds

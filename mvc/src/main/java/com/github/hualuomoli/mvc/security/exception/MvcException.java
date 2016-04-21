@@ -1,59 +1,45 @@
 package com.github.hualuomoli.mvc.security.exception;
 
-import java.net.URLEncoder;
-
-import com.github.hualuomoli.commons.constant.Charset;
+import com.github.hualuomoli.mvc.exception.entity.ErrorData;
 
 /**
- * 权限异常
+ * MVC异常
  * @author hualuomoli
  *
  */
-public abstract class MvcException extends RuntimeException {
+public class MvcException extends RuntimeException {
 
 	private static final long serialVersionUID = -6936931609600847923L;
 
-	public abstract int getStatus();
+	public static final String ERROR_AUTH_NO_LOGIN = "9999"; // 未登录
+	public static final String ERROR_AUTH_OVERTIME = "9998"; // 登录超时
+	public static final String ERROR_USER_INVALID = "9989"; // 用户名或密码错误
 
-	private String errorCode;
-	private String errorMsg;
+	private ErrorData errorData;
 
-	public MvcException(String message) {
-		super(message);
-		this.setErrorCode(String.valueOf(this.getStatus()));
-		this.setErrorMsg();
+	public MvcException(String code, String msg) {
+		this(new ErrorData(code, msg));
 	}
 
-	public MvcException(String errorCode, String message) {
-		super(message);
-		this.errorCode = errorCode;
-		this.setErrorMsg();
+	public MvcException(ErrorData errorData) {
+		this.errorData = errorData;
 	}
 
-	public MvcException(String errorCode, String message, Throwable cause) {
-		super(message, cause);
-		this.errorCode = errorCode;
-		this.setErrorMsg();
+	public MvcException(String code, String msg, Throwable cause) {
+		this(new ErrorData(code, msg), cause);
 	}
 
-	public String getErrorCode() {
-		return errorCode;
+	public MvcException(ErrorData errorData, Throwable cause) {
+		super(errorData.getMsg(), cause);
+		this.errorData = errorData;
 	}
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+	public ErrorData getErrorData() {
+		return errorData;
 	}
 
-	public String getErrorMsg() {
-		return errorMsg;
-	}
-
-	private void setErrorMsg() {
-		try {
-			errorMsg = URLEncoder.encode(this.getMessage(), Charset.UTF8.getEncoding());
-		} catch (Exception e) {
-		}
-
+	public void setErrorData(ErrorData errorData) {
+		this.errorData = errorData;
 	}
 
 }
