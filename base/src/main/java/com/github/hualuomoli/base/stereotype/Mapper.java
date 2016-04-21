@@ -1,4 +1,4 @@
-package com.github.hualuomoli.stereotype;
+package com.github.hualuomoli.base.stereotype;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

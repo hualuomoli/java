@@ -29,6 +29,11 @@
 			<artifactId>base</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>plugin</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<!-- Spring Web -->
 		<dependency>

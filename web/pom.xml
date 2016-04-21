@@ -40,7 +40,6 @@
 			<version>${global.version}</version>
 		</dependency>
 
-
 		<!-- junit test -->
 		<dependency>
 			<groupId>junit</groupId>

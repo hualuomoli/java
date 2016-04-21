@@ -20,7 +20,8 @@
 		<!-- header -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*" />
-			<bean class="com.github.hualuomoli.mvc.interceptor.HeaderInterceptor">
+			<bean class="com.github.hualuomoli.mvc.interceptor.JsonHandlerInterceptor">
+				<property name="entityPackage" value="com.github.hualuomoli" />
 			</bean>
 		</mvc:interceptor>
 		<!-- auth -->
@@ -32,6 +33,5 @@
 			</bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
-
 
 </beans>
