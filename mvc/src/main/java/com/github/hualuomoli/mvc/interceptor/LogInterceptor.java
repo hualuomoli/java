@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -70,12 +69,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 		for (String headerName : headerNames) {
 			logger.debug("\t\t{} = {}", headerName, res.getHeader(headerName));
 		}
-
-		// content
-		if (handler instanceof HandlerMethod) {
-			((HandlerMethod) handler).getMethodParameters();
-		}
-		// logger.debug("handler {}", handler);
 
 	}
 

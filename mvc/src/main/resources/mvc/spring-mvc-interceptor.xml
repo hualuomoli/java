@@ -17,13 +17,6 @@
 			<mvc:mapping path="/**/*" />
 			<bean class="com.github.hualuomoli.mvc.interceptor.LogInterceptor" />
 		</mvc:interceptor>
-		<!-- header -->
-		<mvc:interceptor>
-			<mvc:mapping path="/**/*" />
-			<bean class="com.github.hualuomoli.mvc.interceptor.JsonHandlerInterceptor">
-				<property name="entityPackage" value="com.github.hualuomoli" />
-			</bean>
-		</mvc:interceptor>
 		<!-- auth -->
 		<mvc:interceptor>
 			<mvc:mapping path="/auth/**" />
