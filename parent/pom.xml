@@ -11,12 +11,13 @@
 	<modules>
 		<module>../commons</module>
 		<module>../base</module>
-		<module>../api</module>
+		<module>../plugin</module>
+		<module>../mvc</module>
+		
+		<!-- plugins -->
 		<module>../plugins/activemq</module>
 		<module>../plugins/redis</module>
 		<module>../plugins/jpush</module>
-		<module>../plugins/demosecurity</module>
-		<module>../mvc</module>
 
 		<module>../tool/raml-parser</module>
 
