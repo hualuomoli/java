@@ -23,7 +23,7 @@
 	<description>Colony Message Listener</description>
 
 	<!-- pool message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<!-- use poool -->
 			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
@@ -38,7 +38,7 @@
 			</bean>
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.colony.OrderMessageListener" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.colony.OrderMessageListener" />
 		</property>
 	</bean>
 

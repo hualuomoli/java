@@ -29,7 +29,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>api</artifactId>
+			<artifactId>plugin</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<!-- activeMQ -->

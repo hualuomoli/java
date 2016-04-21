@@ -23,12 +23,12 @@
 	<description>Queue Message Listener use default username password and url</description>
 
 	<!-- third order message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<bean class="org.apache.activemq.ActiveMQConnectionFactory" />
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.queue.OrderMessageListener3" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.queue.OrderMessageListener3" />
 		</property>
 	</bean>
 

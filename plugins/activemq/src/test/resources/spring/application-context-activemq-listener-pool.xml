@@ -23,7 +23,7 @@
 	<description>Pool Message Listener</description>
 
 	<!-- pool message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<!-- use poool -->
 			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
@@ -36,12 +36,12 @@
 			</bean>
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener1" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.pool.OrderMessageListener1" />
 		</property>
 	</bean>
 
 	<!-- other pool message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<!-- use poool -->
 			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
@@ -54,12 +54,12 @@
 			</bean>
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener2" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.pool.OrderMessageListener2" />
 		</property>
 	</bean>
 
 	<!-- third pool message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<!-- use poool -->
 			<bean class="org.apache.activemq.pool.PooledConnectionFactory">
@@ -72,7 +72,7 @@
 			</bean>
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.pool.OrderMessageListener3" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.pool.OrderMessageListener3" />
 		</property>
 	</bean>
 

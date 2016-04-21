@@ -23,7 +23,7 @@
 	<description>Security Message Listener</description>
 
 	<!-- order message listener -->
-	<bean class="com.github.hualuomoli.activemq.ActiveMqMessageListener">
+	<bean class="com.github.hualuomoli.plugin.mq.activemq.ActiveMqMessageListener">
 		<property name="connectionFactory">
 			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
 				<property name="userName" value="admin" />
@@ -32,7 +32,7 @@
 			</bean>
 		</property>
 		<property name="listener">
-			<bean class="com.github.hualuomoli.activemq.listener.security.OrderMessageListener" />
+			<bean class="com.github.hualuomoli.plugin.mq.activemq.listener.security.OrderMessageListener" />
 		</property>
 	</bean>
 
