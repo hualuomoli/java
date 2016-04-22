@@ -27,7 +27,20 @@ public class UserController {
 		return user;
 	}
 
-	class User implements Serializable {
+	@RequestMapping(value = "/{id}", method = { RequestMethod.POST })
+	@ResponseBody
+	public User doMessage(User user, HttpServletRequest request, HttpServletResponse response) {
+
+		System.out.println(user.getId());
+		// sleep 2 seconds
+		// Run.sleep(2);
+
+		user = new User(user.getId(), "hualuomoli", "花落莫离");
+
+		return user;
+	}
+
+	public static class User implements Serializable {
 
 		private static final long serialVersionUID = -6169103355412739991L;
 

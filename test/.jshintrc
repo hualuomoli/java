@@ -4,7 +4,8 @@
     "console",
     "require",
     "describe",
-    "it"
+    "it",
+    "before"
   ],
   "strict": false,
   "undef": true,
