@@ -65,6 +65,7 @@ public class LoginController {
 	@ResponseBody
 	public void logout(HttpServletRequest request, HttpServletResponse response) {
 		auth.logout(TokenUtils.getToken(request));
+		TokenUtils.removeToken(response);
 	}
 
 	// user

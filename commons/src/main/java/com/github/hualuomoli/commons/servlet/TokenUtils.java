@@ -3,6 +3,8 @@ package com.github.hualuomoli.commons.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Token 工具
  * @author hualuomoli
@@ -34,6 +36,10 @@ public class TokenUtils {
 	public static void setToken(HttpServletResponse response, String token) {
 		ServletUtils.setCookie(response, TOKEN, token);
 		ServletUtils.setHeader(response, TOKEN, token);
+	}
+
+	public static void removeToken(HttpServletResponse response) {
+		setToken(response, StringUtils.EMPTY);
 	}
 
 	// 刷新token
