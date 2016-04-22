@@ -126,7 +126,7 @@ describe('test java security', function () {
   it('should logout by invalid token', function (done) {
     request
       .get('/logout')
-      .set('Cookie', 'token=abcd')
+      .set('Cookie', 'token=fffffffffff')
       .expect(200)
       .end(done);
   });

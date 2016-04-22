@@ -64,8 +64,11 @@ public class LoginController {
 	@RequestMapping(value = "logout")
 	@ResponseBody
 	public void logout(HttpServletRequest request, HttpServletResponse response) {
-		auth.logout(TokenUtils.getToken(request));
-		TokenUtils.removeToken(response);
+		String token = TokenUtils.getToken(request);
+		if (auth.isLogin(token)) { // 如果登录，登出
+			auth.logout(TokenUtils.getToken(request));
+			TokenUtils.removeToken(response);
+		}
 	}
 
 	// user
