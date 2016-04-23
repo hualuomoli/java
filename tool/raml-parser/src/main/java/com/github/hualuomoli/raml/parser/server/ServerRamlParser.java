@@ -1,12 +1,12 @@
 package com.github.hualuomoli.raml.parser.server;
 
-import com.github.hualuomoli.raml.parser.RamlParserAbstract;
+import com.github.hualuomoli.raml.parser.JoinRamlParser;
 
 /**
  * 服务端
  * @author hualuomoli
  *
  */
-public abstract class ServerRamlParser extends RamlParserAbstract {
+public abstract class ServerRamlParser extends JoinRamlParser {
 
 }

@@ -5,7 +5,7 @@ import org.raml.model.Raml;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 
 /**
- * raml parser
+ * RAML 转换器
  * 
  * @author hualuomoli
  *

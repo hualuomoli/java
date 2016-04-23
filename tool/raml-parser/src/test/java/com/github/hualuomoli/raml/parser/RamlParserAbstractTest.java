@@ -1,6 +1,5 @@
 package com.github.hualuomoli.raml.parser;
 
-import java.util.List;
 import java.util.Map;
 
 import org.junit.BeforeClass;
@@ -21,28 +20,22 @@ public class RamlParserAbstractTest {
 		ramlParser = new RamlParserAbstract() {
 
 			@Override
-			public String getUriPrefix() {
-				return "/raml/api";
-			}
-
-			@Override
 			public String getOutputFilepath() {
 				return "E:/output/raml";
 			}
 
 			@Override
-			public void config(Map<ActionType, Action> actions, Map<String, Resource> noChildResources, String parentRelativeUri,
-					Map<String, UriParameter> parentUriParameters, Resource resource) throws ParseException {
+			public void createFile(Map<ActionType, Action> actions, Map<String, Resource> noChildResources, String parentFullUri,
+					Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
+				// TODO Auto-generated method stub
+
 			}
 
 			@Override
-			public void createFile(List<String> actionDatas, Resource resource) {
-			}
+			public void configFile(Map<ActionType, Action> actions, Map<String, Resource> noChildResources, String parentFullUri,
+					Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
+				// TODO Auto-generated method stub
 
-			@Override
-			public String getData(Action action, String relativeUri, Map<String, UriParameter> uriParameters, Resource resource) {
-				logger.debug("\t{}", relativeUri);
-				return null;
 			}
 
 		};
