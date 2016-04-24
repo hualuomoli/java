@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ public class UserController {
 
 	@RequestMapping(value = "/{id}", method = { RequestMethod.POST })
 	@ResponseBody
-	public User doMessage(User user, HttpServletRequest request, HttpServletResponse response) {
+	public User doMessage(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		System.out.println(user.getId());
 		// sleep 2 seconds

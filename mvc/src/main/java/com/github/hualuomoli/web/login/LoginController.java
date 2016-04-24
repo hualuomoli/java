@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.hualuomoli.commons.servlet.TokenUtils;
@@ -31,9 +33,15 @@ public class LoginController {
 	@Autowired
 	private Auth auth;
 
-	@RequestMapping(value = "login", consumes = { "application/x-www-form-urlencoded", "application/*" })
+	/**
+	 * 
+	 * @param entity
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "login", method = { RequestMethod.POST }, consumes = { "application/x-www-form-urlencoded", "application/*" })
 	@ResponseBody
-	public void login(Entity entity, HttpServletRequest request, HttpServletResponse response) {
+	public void login(Entity entity, HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.debug("login by urlencoded.");
 		if (!this.login(entity)) {
 			throw new MvcException(MvcException.ERROR_USER_INVALID, "用户名或密码错误");
