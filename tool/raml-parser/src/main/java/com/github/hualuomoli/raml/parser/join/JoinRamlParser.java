@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser;
+package com.github.hualuomoli.raml.parser.join;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +16,13 @@ import org.raml.model.Resource;
 import org.raml.model.Response;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.join.Join;
+import com.github.hualuomoli.raml.parser.RamlParserAbstract;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.java.transfer.get.GetJsonTransfer;
-import com.github.hualuomoli.raml.parser.java.transfer.json.JsonJsonTransfer;
-import com.github.hualuomoli.raml.parser.java.transfer.multipart.MultipartJsonTransfer;
-import com.github.hualuomoli.raml.parser.java.transfer.raml.RamlJsonTransfer;
-import com.github.hualuomoli.raml.parser.java.transfer.urlencoded.UrlEncodedJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.get.GetTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.multipart.MultipartJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.raml.RamlJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedJsonTransfer;
 import com.github.hualuomoli.raml.parser.transfer.Transfer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -34,15 +34,11 @@ import com.google.common.collect.Sets;
  */
 public abstract class JoinRamlParser extends RamlParserAbstract implements Join {
 
-	private String encoding = "UTF-8"; // 输出文件编码
-	private List<Transfer> transferList; // 转换器
+	protected String encoding = "UTF-8"; // 输出文件编码
+	protected List<Transfer> transferList; // 转换器
 
 	public JoinRamlParser() {
 		this.setDefaultTransfer();
-	}
-
-	public JoinRamlParser(List<Transfer> transferList) {
-		this.transferList = transferList;
 	}
 
 	@Override
@@ -145,7 +141,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		// 文件名
 		String filename = this.getFilename(parentFullUri, resource);
 		// 生成路径
-		File dir = new File(this.getOutputFilepath(), filepath);
+		File dir = new File(outputFilepath, filepath);
 		if (!dir.exists()) {
 			if (!dir.mkdirs()) {
 				throw new ParseException("can not create folder " + dir.getAbsolutePath());
@@ -155,7 +151,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		File file = new File(dir.getAbsolutePath(), filename);
 		// 写数据
 		try {
-			FileUtils.write(file, data, Charset.forName(this.getEncoding()));
+			FileUtils.write(file, data, Charset.forName(encoding));
 		} catch (IOException e) {
 			throw new ParseException(e);
 		}
@@ -229,6 +225,9 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 			for (int i = 0; i < transferList.size(); i++) {
 				Transfer transfer = transferList.get(i);
 				if (transfer.support(action, null, null, null)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("transfer {}", transfer);
+					}
 					String data = transfer.getData(null, null, null, action, relativeUri, parentFullUriParameters, resource);
 					datas.add(data);
 					ok = true;
@@ -247,6 +246,9 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 				for (int i = 0; i < transferList.size(); i++) {
 					Transfer transfer = transferList.get(i);
 					if (transfer.support(action, queryMimeType, null, null)) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("transfer {}", transfer);
+						}
 						String data = transfer.getData(queryMimeType, null, null, action, relativeUri, parentFullUriParameters, resource);
 						datas.add(data);
 						ok = true;
@@ -265,6 +267,9 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 				for (int i = 0; i < transferList.size(); i++) {
 					Transfer transfer = transferList.get(i);
 					if (transfer.support(action, null, r.status, r.mimeType)) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("transfer {}", transfer);
+						}
 						String data = transfer.getData(null, r.status, r.mimeType, action, relativeUri, parentFullUriParameters, resource);
 						datas.add(data);
 						ok = true;
@@ -285,6 +290,9 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 					for (int i = 0; i < transferList.size(); i++) {
 						Transfer transfer = transferList.get(i);
 						if (transfer.support(action, queryMimeType, r.status, r.mimeType)) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("transfer {}", transfer);
+							}
 							String data = transfer.getData(queryMimeType, r.status, r.mimeType, action, relativeUri, parentFullUriParameters, resource);
 							datas.add(data);
 							ok = true;
@@ -319,7 +327,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 	private void setDefaultTransfer() {
 		transferList = Lists.newArrayList();
 
-		transferList.add(new GetJsonTransfer()); // get
+		transferList.add(new GetTransfer()); // get
 		transferList.add(new RamlJsonTransfer()); // RAML
 		transferList.add(new UrlEncodedJsonTransfer()); // URLEncoded
 		transferList.add(new JsonJsonTransfer()); // JSON
@@ -327,16 +335,8 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 
 	}
 
-	public String getEncoding() {
-		return encoding;
-	}
-
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
-	}
-
-	public List<Transfer> getTransferList() {
-		return transferList;
 	}
 
 	public void setTransferList(List<Transfer> transferList) {

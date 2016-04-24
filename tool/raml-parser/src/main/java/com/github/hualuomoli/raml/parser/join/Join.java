@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.join;
+package com.github.hualuomoli.raml.parser.join;
 
 /**
  * 字符串连接借口,不做什么,只是提供常量

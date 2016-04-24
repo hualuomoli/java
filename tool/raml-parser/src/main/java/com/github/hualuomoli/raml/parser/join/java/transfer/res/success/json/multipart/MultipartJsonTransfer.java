@@ -1,6 +1,5 @@
-package com.github.hualuomoli.raml.parser.java.transfer.multipart;
+package com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.multipart;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,9 +9,7 @@ import org.raml.model.MimeType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.java.transfer.JavaJoinTransfer;
-import com.github.hualuomoli.raml.parser.transfer.Transfer;
-import com.google.common.collect.Lists;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.ResponseSuccessJsonTransfer;
 
 /**
  * multipart/form-data -> JSON
@@ -21,7 +18,7 @@ import com.google.common.collect.Lists;
  * @author hualuomoli
  *
  */
-public class MultipartJsonTransfer extends JavaJoinTransfer implements Transfer {
+public class MultipartJsonTransfer extends ResponseSuccessJsonTransfer {
 
 	@Override
 	public String getData(MimeType queryMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
@@ -31,31 +28,15 @@ public class MultipartJsonTransfer extends JavaJoinTransfer implements Transfer 
 	}
 
 	@Override
-	public boolean support(Action action, MimeType queryMimeType, String status, MimeType responseMimeType) {
+	public boolean support(Action action, MimeType queryMimeType) {
 		if (action.getType() == null || action.getType() != ActionType.POST) {
 			return false;
 		}
 		if (queryMimeType == null || !StringUtils.equals(queryMimeType.getType(), MIME_TYPE_MULTIPART)) {
 			return false;
 		}
-		if (!StringUtils.equalsIgnoreCase(status, STATUS_SUCCESS)) {
-			return false;
-		}
-		if (responseMimeType == null || !StringUtils.equalsIgnoreCase(responseMimeType.getType(), MIME_TYPE_JSON)) {
-			return false;
-		}
 
 		return true;
-	}
-
-	@Override
-	protected List<String> getSupportQueryMimeType() {
-		return Lists.newArrayList(MIME_TYPE_MULTIPART);
-	}
-
-	@Override
-	protected String getEntityRequestBodyPrefix() {
-		return "multipart";
 	}
 
 }

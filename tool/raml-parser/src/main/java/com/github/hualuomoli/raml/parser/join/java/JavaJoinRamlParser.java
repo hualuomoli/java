@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.java;
+package com.github.hualuomoli.raml.parser.join.java;
 
 import java.util.List;
 import java.util.Map;
@@ -9,20 +9,20 @@ import org.raml.model.ActionType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.JoinRamlParser;
-import com.github.hualuomoli.raml.parser.RamlParserAbstract;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
+import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
+import com.github.hualuomoli.raml.parser.util.RamlUtils;
 
 /**
  * java解析
  * @author hualuomoli
  *
  */
-public class JavaRamlParser extends JoinRamlParser {
+public class JavaJoinRamlParser extends JoinRamlParser {
 
-	private String packageName = "com.github.hualuomoli"; // 包名
-	private String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
-	private String author = "hualuomoli"; // 作者,用于注释
+	protected String packageName = "com.github.hualuomoli"; // 包名
+	protected String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
+	protected String author = "hualuomoli"; // 作者,用于注释
 
 	@Override
 	public String getFileHeader(List<String> actionDatas, String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource)
@@ -59,7 +59,7 @@ public class JavaRamlParser extends JoinRamlParser {
 		buffer.append(LINE);
 		buffer.append(LINE).append("/**");
 		buffer.append(LINE).append(" * ").append("@Description ");
-		List<String> lines = RamlParserAbstract.splitByLine(resource.getDescription());
+		List<String> lines = RamlUtils.splitByLine(resource.getDescription());
 		if (lines.size() == 1) {
 			buffer.append(lines.get(0));
 		} else {
@@ -67,9 +67,9 @@ public class JavaRamlParser extends JoinRamlParser {
 				buffer.append(LINE).append(" * ").append("             ").append(line);
 			}
 		}
-		buffer.append(LINE).append(" * ").append("@Author ").append(this.getAuthor());
-		buffer.append(LINE).append(" * ").append("@Date ").append(this.getCurrentTime());
-		buffer.append(LINE).append(" * ").append("@Version ").append(this.getVersion());
+		buffer.append(LINE).append(" * ").append("@Author ").append(author);
+		buffer.append(LINE).append(" * ").append("@Date ").append(RamlUtils.getCurrentTime());
+		buffer.append(LINE).append(" * ").append("@Version ").append(version);
 		buffer.append(LINE).append(" */");
 
 		// @Controller(value = "com.github.hualuomoli.web.login.LoginController")
@@ -80,7 +80,7 @@ public class JavaRamlParser extends JoinRamlParser {
 		buffer.append(this.getFullPackage(parentFullUri));
 		// name
 		buffer.append(".");
-		buffer.append(this.getUriLastName(parentFullUri));
+		buffer.append(RamlUtils.getUriLastName(parentFullUri));
 		buffer.append("Controller");
 
 		buffer.append(QUOTES);
@@ -98,7 +98,7 @@ public class JavaRamlParser extends JoinRamlParser {
 		// public class LoginController {
 		// class
 		buffer.append(LINE).append("public class ");
-		buffer.append(this.getUriLastName(parentFullUri));
+		buffer.append(RamlUtils.getUriLastName(parentFullUri));
 		buffer.append("Controller {");
 		return buffer.toString();
 	}
@@ -121,7 +121,7 @@ public class JavaRamlParser extends JoinRamlParser {
 		buffer.append(this.getFullPackage(parentFullUri));
 		// name
 		buffer.append(".");
-		buffer.append(this.getUriLastName(parentFullUri));
+		buffer.append(RamlUtils.getUriLastName(parentFullUri));
 		buffer.append("Controller");
 		return buffer.toString().replaceAll("[.]", "/") + ".java";
 	}
@@ -141,16 +141,16 @@ public class JavaRamlParser extends JoinRamlParser {
 	protected String getFullPackage(String parentFullUri) {
 		StringBuilder buffer = new StringBuilder();
 		// package
-		buffer.append(this.getPackageName());
+		buffer.append(packageName);
 
 		// uri path
-		String uriPath = this.trimUriParam(parentFullUri);
-		if (StringUtils.isEmpty(this.getUriPrefix())) {
+		String uriPath = RamlUtils.trimUriParam(parentFullUri);
+		if (StringUtils.isEmpty(uriPrefix)) {
 			// uri prefix is null
 			buffer.append(uriPath);
-		} else if (uriPath.startsWith(this.getUriPrefix())) {
+		} else if (uriPath.startsWith(uriPrefix)) {
 			// start with uri prefix
-			buffer.append(uriPath.substring(this.getUriPrefix().length()));
+			buffer.append(uriPath.substring(uriPrefix.length()));
 		} else {
 			// not start with uri prefix
 			buffer.append(uriPath);
@@ -162,51 +162,12 @@ public class JavaRamlParser extends JoinRamlParser {
 		return buffer.toString().replaceAll("/", ".");
 	}
 
-	/**
-	 * 获取URI最后一个名称 /user/order/product --> product
-	 * @param parentFullUri
-	 * @return 最后一个URI名称
-	 */
-	private String getUriLastName(String parentFullUri) {
-		String uriPath = this.trimUriParam(parentFullUri);
-		if (StringUtils.isEmpty(uriPath)) {
-			return StringUtils.EMPTY;
-		}
-		String[] array = uriPath.split("/");
-		String name = array[array.length - 1];
-		return name;
-	}
-
-	/**
-	 * 去掉URI中参数部分 /user/{username}/{addressid} --> /user
-	 * @param uri URI
-	 * @return 去掉URI中参数部分
-	 */
-	private String trimUriParam(String uri) {
-		if (StringUtils.isEmpty(uri)) {
-			return StringUtils.EMPTY;
-		}
-		return uri.replaceAll("/\\{.*}", "");
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
 
-	public String getUriPrefix() {
-		return uriPrefix;
-	}
-
 	public void setUriPrefix(String uriPrefix) {
 		this.uriPrefix = uriPrefix;
-	}
-
-	public String getAuthor() {
-		return author;
 	}
 
 	public void setAuthor(String author) {

@@ -7,6 +7,8 @@ import org.raml.model.MimeType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
+import com.github.hualuomoli.raml.parser.exception.ParseException;
+
 /**
  * 转换器
  * @author hualuomoli
@@ -15,6 +17,8 @@ import org.raml.model.parameter.UriParameter;
 public interface Transfer {
 
 	public static final String STATUS_SUCCESS = "200"; // 成功响应编码
+
+	public static final String DEFAULT_ENTITY_NAME = "entity"; // 默认的实体类名称
 
 	public static final String MIME_TYPE_URLENCODED = "application/x-www-form-urlencoded";
 	public static final String MIME_TYPE_MULTIPART = "multipart/form-data";
@@ -27,25 +31,25 @@ public interface Transfer {
 	/**
 	 * 是否支持
 	 * @param action 事件类型
-	 * @param queryMimeType 请求MimeType
+	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
 	 * @param responseMimeType 响应MimeType
 	 * @return 是否支持
 	 */
-	boolean support(Action action, MimeType queryMimeType, String status, MimeType responseMimeType);
+	boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType);
 
 	/**
 	 * 获取数据
-	 * @param queryMimeType 请求MimeType
-	 * @param responseMimeType 响应MimeType
+	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
 	 * @param action 事件
 	 * @param relativeUri 相对URI
 	 * @param parentFullUriParameters 父URI参数
 	 * @param resource 本资源
 	 * @return 事件数据
 	 */
-	String getData(MimeType queryMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			Map<String, UriParameter> parentFullUriParameters, Resource resource);
+	String getData(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException;
 
 }

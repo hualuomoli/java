@@ -2,11 +2,7 @@ package com.github.hualuomoli.raml.parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -31,11 +26,10 @@ import com.google.common.collect.Maps;
 public abstract class RamlParserAbstract implements RamlParser {
 
 	public static final Logger logger = LoggerFactory.getLogger(RamlParser.class);
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
-	private boolean clearBeforeFlush = false; // 强制清除输出目录
-	private String outputFilepath; // 输出目录
-	private String version = "1.0"; // 版本号
+	private boolean clearBeforeFlush; // 强制清除输出目录
+	protected String outputFilepath; // 输出目录
+	protected String version = "1.0"; // 版本号
 
 	@Override
 	public void parse(String ramlResourceLocation) throws ParseException {
@@ -183,10 +177,10 @@ public abstract class RamlParserAbstract implements RamlParser {
 	 * 清除输出目录
 	 */
 	private void clear() throws ParseException {
-		if (!this.isClearBeforeFlush()) {
+		if (!clearBeforeFlush) {
 			return;
 		}
-		File dir = new File(this.getOutputFilepath());
+		File dir = new File(outputFilepath);
 		if (dir.exists()) {
 			try {
 				FileUtils.forceDelete(dir);
@@ -196,59 +190,12 @@ public abstract class RamlParserAbstract implements RamlParser {
 		}
 	}
 
-	/**
-	 * 按照换行分割
-	 * @param data 数据
-	 * @return 数据集合
-	 */
-	public static List<String> splitByLine(String data) {
-		List<String> lines = Lists.newArrayList();
-
-		if (StringUtils.isEmpty(data)) {
-			return lines;
-		}
-		String[] array = data.split("\n");
-		for (String line : array) {
-			lines.add(line);
-		}
-		return lines;
-	}
-
-	/**
-	 * 替换双引号 "data" --> \"data\"
-	 * @param data 数据
-	 * @return 替换后的数据
-	 */
-	public static String replaceQuotes(String data) {
-		if (StringUtils.isEmpty(data)) {
-			return StringUtils.EMPTY;
-		}
-		return data.replaceAll("\"", "\\\\\"");
-	}
-
-	public String getCurrentTime() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-		return sdf.format(new Date());
-	}
-
-	public boolean isClearBeforeFlush() {
-		return clearBeforeFlush;
-	}
-
 	public void setClearBeforeFlush(boolean clearBeforeFlush) {
 		this.clearBeforeFlush = clearBeforeFlush;
 	}
 
-	public String getOutputFilepath() {
-		return outputFilepath;
-	}
-
 	public void setOutputFilepath(String outputFilepath) {
 		this.outputFilepath = outputFilepath;
-	}
-
-	public String getVersion() {
-		return version;
 	}
 
 	public void setVersion(String version) {
