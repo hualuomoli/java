@@ -56,9 +56,29 @@ public class JsonTransfer extends ResponseSuccessJsonTransfer {
 	}
 
 	@Override
-	public boolean addEntityAnnonation(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	public String getMethodOtherParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		return true;
+
+		// User user
+		StringBuilder buffer = new StringBuilder();
+
+		String entityName = this.getEntityName(action, relativeUri);
+		if (StringUtils.isEmpty(entityName)) {
+			return buffer.toString();
+		}
+
+		String entityUpperName = entityName.substring(0, 1).toUpperCase() + entityName.substring(1);
+		String entityLowerName = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
+
+		buffer.append(entityUpperName).append("@ResponseBody ").append(entityLowerName).append(", ");
+
+		return buffer.toString();
+
+	}
+
+	@Override
+	public String getEntityName(Action action, String relativeUri) {
+		return "json" + super.getEntityName(action, relativeUri);
 	}
 
 }

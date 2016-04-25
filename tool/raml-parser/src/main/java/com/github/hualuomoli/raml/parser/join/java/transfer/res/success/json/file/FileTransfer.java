@@ -73,11 +73,68 @@ public class FileTransfer extends ResponseSuccessJsonTransfer {
 		return true;
 	}
 
+	// 其他参数
 	@Override
-	public String getData(MimeType queryMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	public void addMethodOtherParameterNote(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action,
+			String relativeUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+
+		// add super
+		super.addMethodOtherParameterNote(buffer, requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+
+		// @param photo 头像
+		if (requestMimeType == null || requestMimeType.getFormParameters() == null || requestMimeType.getFormParameters().size() == 0) {
+			return;
+		}
+		Map<String, List<FormParameter>> formParameters = requestMimeType.getFormParameters();
+
+		for (String displayName : formParameters.keySet()) {
+			List<FormParameter> values = formParameters.get(displayName);
+			for (FormParameter formParameter : values) {
+				if (formParameter.getType() == ParamType.FILE) {
+					buffer.append(LINE).append(TAB).append(" * ").append("@param ");
+					buffer.append(formParameter.getDisplayName()).append(" ").append(formParameter.getDescription());
+					buffer.append(", ");
+				}
+			}
+		}
+	}
+
+	@Override
+	public String getMethodOtherParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// TODO
-		return "// 文件上传";
+		StringBuilder buffer = new StringBuilder();
+
+		// add super
+		buffer.append(super.getMethodOtherParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
+
+		// @RequestParam(value = "photo") File photo
+		if (requestMimeType == null || requestMimeType.getFormParameters() == null || requestMimeType.getFormParameters().size() == 0) {
+			return buffer.toString();
+		}
+		Map<String, List<FormParameter>> formParameters = requestMimeType.getFormParameters();
+
+		for (String displayName : formParameters.keySet()) {
+			List<FormParameter> values = formParameters.get(displayName);
+			for (FormParameter formParameter : values) {
+				if (formParameter.getType() == ParamType.FILE) {
+					buffer.append("@RequestParam");
+					buffer.append("(");
+					buffer.append("value = ").append(QUOTES).append(displayName).append(QUOTES);
+					buffer.append(")");
+
+					buffer.append(" File ").append(displayName);
+
+					buffer.append(", ");
+				}
+			}
+		}
+
+		return buffer.toString();
+	}
+
+	@Override
+	public String getEntityName(Action action, String relativeUri) {
+		return "file" + super.getEntityName(action, relativeUri);
 	}
 
 }

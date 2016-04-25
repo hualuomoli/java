@@ -81,6 +81,7 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestBody;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMapping;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMethod;");
+		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestParam;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.ResponseBody;");
 
 		// description

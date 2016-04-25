@@ -92,9 +92,9 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append(LINE).append(TAB).append(" * ").append(StringUtils.isEmpty(action.getDescription()) ? "" : action.getDescription());
 
 		// URI参数
-		this.addMethodUriParameterNote(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		this.addMethodUriParameterNote(buffer, requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
 		// 其他参数
-		this.addMethodOtherParameterNote(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		this.addMethodOtherParameterNote(buffer, requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
 
 		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("request ").append("HTPP请求");
 		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("response ").append("HTTP响应");
@@ -106,6 +106,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 
 	/**
 	 * 设置方法的URI参数注释
+	 * @param buffer buffer
 	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
 	 * @param responseMimeType 响应MimeType
@@ -114,13 +115,23 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param parentFullUriParameters 父URI参数
 	 * @param resource 本资源
 	 */
-	public void addMethodUriParameterNote(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// TODO
+	public void addMethodUriParameterNote(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action,
+			String relativeUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// @param username 用户名
+		if (parentFullUriParameters == null || parentFullUriParameters.size() == 0) {
+			return;
+		}
+
+		for (UriParameter uriParameter : parentFullUriParameters.values()) {
+			buffer.append(LINE).append(TAB).append(" * ").append("@param ");
+			buffer.append(uriParameter.getDisplayName()).append(" ").append(uriParameter.getDescription());
+		}
+
 	}
 
 	/**
-	 * 获取方法的其他参数注释
+	 * 设置方法的其他参数注释
+	 * @param buffer buffer
 	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
 	 * @param responseMimeType 响应MimeType
@@ -130,9 +141,8 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param resource 本资源
 	 * @return 方法的其他参数
 	 */
-	public void addMethodOtherParameterNote(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// TODO
+	public void addMethodOtherParameterNote(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action,
+			String relativeUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
 	}
 
 	/**
@@ -190,9 +200,9 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append("(");
 
 		// URI参数
-		this.addMethodUriParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		buffer.append(this.getMethodUriParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
 		// 其他参数
-		this.addMethodOtherParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		buffer.append(this.getMethodOtherParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
 
 		buffer.append("HttpServletRequest request, HttpServletResponse response, Model model");
 		buffer.append(") {");
@@ -201,7 +211,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 	}
 
 	/**
-	 * 添加方法的URI参数声明
+	 * 获取方法的URI参数声明
 	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
 	 * @param responseMimeType 响应MimeType
@@ -209,10 +219,33 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param relativeUri 相对URI
 	 * @param parentFullUriParameters 父URI参数
 	 * @param resource 本资源
+	 * @return 方法的URI参数声明
 	 */
-	public void addMethodUriParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	public String getMethodUriParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// TODO
+		// @RequestParam(value = "username") String username
+		StringBuilder buffer = new StringBuilder();
+
+		if (parentFullUriParameters == null || parentFullUriParameters.size() == 0) {
+			return buffer.toString();
+		}
+
+		for (UriParameter uriParameter : parentFullUriParameters.values()) {
+			buffer.append("@RequestParam");
+
+			buffer.append("(");
+			buffer.append("value = ").append(QUOTES).append(uriParameter.getDisplayName()).append(QUOTES);
+			buffer.append(")");
+
+			buffer.append(" ");
+			buffer.append(this.getParameterType(uriParameter));
+			buffer.append(" ");
+			buffer.append(uriParameter.getDisplayName());
+
+			buffer.append(", ");
+		}
+
+		return buffer.toString();
 	}
 
 	/**
@@ -224,10 +257,24 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param relativeUri 相对URI
 	 * @param parentFullUriParameters 父URI参数
 	 * @param resource 本资源
+	 * @param 方法的其他参数声明
 	 */
-	public void addMethodOtherParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	public String getMethodOtherParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// TODO
+		// User user
+		StringBuilder buffer = new StringBuilder();
+
+		String entityName = this.getEntityName(action, relativeUri);
+		if (StringUtils.isEmpty(entityName)) {
+			return buffer.toString();
+		}
+
+		String entityUpperName = entityName.substring(0, 1).toUpperCase() + entityName.substring(1);
+		String entityLowerName = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
+
+		buffer.append(entityUpperName).append(" ").append(entityLowerName).append(", ");
+
+		return buffer.toString();
 	}
 
 	/**
@@ -527,22 +574,6 @@ public abstract class JavaTransfer implements Join, Transfer {
 		}
 
 		return buffer.toString();
-	}
-
-	/**
-	 * 是否增加 @RequestBody注解
-	 * @param requestMimeType 请求MimeType
-	 * @param status 响应编码
-	 * @param responseMimeType 响应MimeType
-	 * @param action 事件
-	 * @param relativeUri 相对URI
-	 * @param parentFullUriParameters 父URI参数
-	 * @param resource 本资源
-	 * @return 是否增加 @RequestBody注解
-	 */
-	public boolean addEntityAnnonation(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		return false;
 	}
 
 	/**
