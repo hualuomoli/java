@@ -12,6 +12,8 @@ import org.raml.model.parameter.AbstractParam;
 import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.Join;
@@ -20,11 +22,13 @@ import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 
 /**
- * JAVA字符串连接转换器
+ * JAVA字符串连接转换器,默认转换URLEncoded参数请求
  * @author hualuomoli
  *
  */
 public abstract class JavaTransfer implements Join, Transfer {
+
+	public static final Logger logger = LoggerFactory.getLogger(JavaTransfer.class);
 
 	/**
 	* 获取事件数据
@@ -42,6 +46,10 @@ public abstract class JavaTransfer implements Join, Transfer {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(LINE);
+
+		// method notes
+		buffer.append(this.getMethodNote(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
+
 		// method header
 		buffer.append(this.getMethodHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
 
@@ -58,6 +66,76 @@ public abstract class JavaTransfer implements Join, Transfer {
 	}
 
 	/**
+	 * 获取方法的注释
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 * @return 方法注释
+	 */
+	public String getMethodNote(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
+		StringBuilder buffer = new StringBuilder();
+
+		/**
+		 * 
+		 * @param entity
+		 * @param request
+		 * @param response
+		 * @param model
+		 */
+		buffer.append(LINE).append(TAB).append("/**");
+		buffer.append(LINE).append(TAB).append(" * ").append(this.getClass().getSimpleName());
+		buffer.append(LINE).append(TAB).append(" * ").append(StringUtils.isEmpty(action.getDescription()) ? "" : action.getDescription());
+
+		// URI参数
+		this.addMethodUriParameterNote(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		// 其他参数
+		this.addMethodOtherParameterNote(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+
+		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("request ").append("HTPP请求");
+		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("response ").append("HTTP响应");
+		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("model ").append("Spring的Model");
+		buffer.append(LINE).append(TAB).append(" */");
+
+		return buffer.toString();
+	}
+
+	/**
+	 * 设置方法的URI参数注释
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 */
+	public void addMethodUriParameterNote(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// TODO
+	}
+
+	/**
+	 * 获取方法的其他参数注释
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 * @return 方法的其他参数
+	 */
+	public void addMethodOtherParameterNote(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// TODO
+	}
+
+	/**
 	 * 获取方法的头部
 	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
@@ -71,34 +149,6 @@ public abstract class JavaTransfer implements Join, Transfer {
 	public String getMethodHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		StringBuilder buffer = new StringBuilder();
-
-		// 实体类
-		String entityName = this.getEntityName(action, relativeUri);
-		String entityUpperName = "";
-		String entityLowerName = "";
-		if (StringUtils.isNotEmpty(entityName)) {
-			entityUpperName = entityName.substring(0, 1).toUpperCase() + entityName.substring(1);
-			entityLowerName = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
-		}
-
-		/**
-		 * 
-		 * @param entity
-		 * @param request
-		 * @param response
-		 * @param model
-		 */
-		buffer.append(LINE).append(TAB).append("/**");
-		buffer.append(LINE).append(TAB).append(" * ").append(this.getClass().getSimpleName());
-		buffer.append(LINE).append(TAB).append(" * ").append(StringUtils.isEmpty(action.getDescription()) ? "" : action.getDescription());
-		// entity
-		if (StringUtils.isNotEmpty(entityName)) {
-			buffer.append(LINE).append(TAB).append(" * ").append("@param ").append(entityLowerName).append(" 实体类");
-		}
-		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("request ").append("HTPP请求");
-		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("response ").append("HTTP响应");
-		buffer.append(LINE).append(TAB).append(" * ").append("@param ").append("model ").append("Spring的Model");
-		buffer.append(LINE).append(TAB).append(" */");
 
 		// @RequestMapping(
 		// value = "login",
@@ -139,20 +189,45 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append(this.getMethodName(action, relativeUri));
 		buffer.append("(");
 
-		// entity
-		if (StringUtils.isNotEmpty(entityName)) {
-			if (this.addEntityAnnonation(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource)) {
-				buffer.append("@RequestBody ");
-			}
-			buffer.append(entityUpperName);
-			buffer.append(" ");
-			buffer.append(entityLowerName);
-			buffer.append(", ");
-		}
+		// URI参数
+		this.addMethodUriParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+		// 其他参数
+		this.addMethodOtherParameterHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource);
+
 		buffer.append("HttpServletRequest request, HttpServletResponse response, Model model");
 		buffer.append(") {");
 
 		return buffer.toString();
+	}
+
+	/**
+	 * 添加方法的URI参数声明
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 */
+	public void addMethodUriParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// TODO
+	}
+
+	/**
+	 * 获取方法的其他参数声明
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 */
+	public void addMethodOtherParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// TODO
 	}
 
 	/**
@@ -207,7 +282,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 	}
 
 	/**
-	 * 获取参数的类
+	 * 获取参数的类定义
 	 * @param requestMimeType 请求MimeType
 	 * @param status 响应编码
 	 * @param responseMimeType 响应MimeType
@@ -296,7 +371,11 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("/** ").append(abstractParam.getDescription()).append("*/");
 		buffer.append(LINE).append(TAB).append(TAB);
-		buffer.append("private String ").append(abstractParam.getDisplayName()).append(";");
+		buffer.append("private ");
+		buffer.append(this.getParameterType(abstractParam));
+		buffer.append(" ");
+		buffer.append(abstractParam.getDisplayName());
+		buffer.append(";");
 	}
 
 	/**
@@ -310,7 +389,10 @@ public abstract class JavaTransfer implements Join, Transfer {
 		// getter
 		buffer.append(LINE);
 		buffer.append(LINE).append(TAB).append(TAB);
-		buffer.append("public String get").append(displayName.substring(0, 1) + displayName.substring(1)).append("() {");
+		buffer.append("public ");
+		buffer.append(this.getParameterType(abstractParam));
+		buffer.append(" get");
+		buffer.append(displayName.substring(0, 1) + displayName.substring(1)).append("() {");
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append(TAB).append("return ").append(displayName).append(";");
 		buffer.append(LINE).append(TAB).append(TAB);
@@ -319,12 +401,41 @@ public abstract class JavaTransfer implements Join, Transfer {
 		// getter
 		buffer.append(LINE);
 		buffer.append(LINE).append(TAB).append(TAB);
-		buffer.append("public void set").append(displayName.substring(0, 1) + displayName.substring(1)).append("(String ").append(displayName).append(") {");
+		buffer.append("public void set").append(displayName.substring(0, 1) + displayName.substring(1));
+		buffer.append("(");
+		buffer.append(this.getParameterType(abstractParam));
+		buffer.append(" ").append(displayName).append(") {");
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append(TAB).append("this.").append(displayName).append(" = ").append(displayName).append(";");
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("}");
 
+	}
+
+	/**
+	 * 获取参数类型
+	 * @param abstractParam 参数
+	 * @return 参数类型
+	 */
+	public String getParameterType(AbstractParam abstractParam) {
+		switch (abstractParam.getType()) {
+		case STRING:
+			return "String";
+		case INTEGER:
+			return "Integer";
+		case DATE:
+			return "Date";
+		case BOOLEAN:
+			return "Boolean";
+		case NUMBER:
+			return "Double";
+		case FILE:
+			return "File";
+		default:
+			break;
+		}
+		logger.warn("can not find param type" + abstractParam.getType());
+		return "String";
 	}
 
 	/**
@@ -394,7 +505,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 	}
 
 	/**
-	 * 获取实体类名
+	 * 获取实体类名,默认为URLEncoded方式
 	 * @param action 事件
 	 * @param relativeUri URI
 	 * @return 实体类名

@@ -14,6 +14,8 @@ public class JavaRamlParserTest {
 	public static void beforeClass() {
 		ramlParser = new JavaJoinRamlParser() {
 		};
+
+//		ramlParser.setClearBeforeFlush(true);
 		ramlParser.setOutputFilepath("E:/output");
 
 	}

@@ -1,21 +1,24 @@
 package com.github.hualuomoli.raml.parser.join.java;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.ActionType;
+import org.raml.model.Raml;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.file.FileTransfer;
 import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.get.GetTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.multipart.MultipartJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.raml.RamlJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.restful.RestfulTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedTransfer;
 import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
@@ -34,11 +37,16 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 	public JavaJoinRamlParser() {
 		super();
 		List<Transfer> transferList = Lists.newArrayList();
+		// restfule
+		transferList.add(new RestfulTransfer());
+		// get
 		transferList.add(new GetTransfer());
-		transferList.add(new RamlJsonTransfer());
-		transferList.add(new UrlEncodedJsonTransfer());
-		transferList.add(new JsonJsonTransfer());
-		transferList.add(new MultipartJsonTransfer());
+		// UrlEncoded
+		transferList.add(new UrlEncodedTransfer());
+		// JSON
+		transferList.add(new JsonTransfer());
+		// file
+		transferList.add(new FileTransfer());
 		this.setTransferList(transferList);
 	}
 
@@ -57,7 +65,9 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 		// add serializable
 		buffer.append(LINE);
+		buffer.append(LINE).append("import java.io.File;");
 		buffer.append(LINE).append("import java.io.Serializable;");
+		buffer.append(LINE).append("import java.util.Date;");
 
 		// servlet
 		buffer.append(LINE);
@@ -153,6 +163,35 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected void configProejct(Raml raml) {
+		try {
+			// use web project
+			String path = JavaJoinRamlParser.class.getClassLoader().getResource("log4j.properties").getPath();
+			// root project path
+			String rootProjectFilepath = path.substring(0, path.indexOf("/tool/raml-parser/target"));
+			// web project path
+			String webProjectFilepath = new File(rootProjectFilepath, "web").getAbsolutePath();
+
+			// filename folder
+			String folder;
+			String filename;
+
+			// pom.xml
+			filename = "pom.xml";
+			FileUtils.copyFile(new File(webProjectFilepath, filename), new File(outputFilepath, filename));
+			// .gitignore
+			filename = ".gitignore";
+			FileUtils.copyFile(new File(webProjectFilepath, filename), new File(outputFilepath, filename));
+
+			// src
+			folder = "src";
+			FileUtils.copyDirectory(new File(webProjectFilepath, folder), new File(outputFilepath, folder));
+
+		} catch (Exception e) {
+		}
 	}
 
 	/**

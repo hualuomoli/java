@@ -12,20 +12,43 @@ import org.raml.model.parameter.UriParameter;
 import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.ResponseSuccessJsonTransfer;
 
 /**
- * JSON(POST) -> JSON
  * 请求参数为JSON
- * 响应类型为JSON
  * @author hualuomoli
  *
  */
-public class JsonJsonTransfer extends ResponseSuccessJsonTransfer {
+public class JsonTransfer extends ResponseSuccessJsonTransfer {
 
+	/**
+	 * 请求方式: POST
+	 * 请求协议: application/json
+	 * 请求参数: query查询参数0个,form表单参于0个
+	 * 请求例子: 不为空
+	 */
 	@Override
 	public boolean support(Action action, MimeType queryMimeType) {
+
+		// 请求方式: POST
 		if (action.getType() != ActionType.POST) {
 			return false;
 		}
-		if (queryMimeType != null && !StringUtils.equalsIgnoreCase(queryMimeType.getType(), MIME_TYPE_JSON)) {
+
+		// 请求协议: application/json
+		if (queryMimeType == null || !StringUtils.equalsIgnoreCase(queryMimeType.getType(), MIME_TYPE_JSON)) {
+			return false;
+		}
+
+		// 请求参数: query查询参数0个,form表单参于0个
+		// query
+		if (action.getQueryParameters() != null && action.getQueryParameters().size() > 0) {
+			return false;
+		}
+		// form
+		if (queryMimeType != null && queryMimeType.getFormParameters() != null && queryMimeType.getFormParameters().size() > 0) {
+			return false;
+		}
+
+		// 请求例子: 不为空
+		if (queryMimeType == null || StringUtils.isEmpty(queryMimeType.getExample())) {
 			return false;
 		}
 

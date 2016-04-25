@@ -61,6 +61,16 @@ public abstract class RamlParserAbstract implements RamlParser {
 			this.create(resource, resource.getRelativeUri(), resource.getUriParameters());
 		}
 
+		// config project
+		this.configProejct(raml);
+
+	}
+
+	/**
+	 * 配置项目
+	 * @param raml RAML
+	 */
+	protected void configProejct(Raml raml) {
 	}
 
 	/**
