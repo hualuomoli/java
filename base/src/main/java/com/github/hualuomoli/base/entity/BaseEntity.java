@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Paginator;
-import com.github.hualuomoli.base.constant.Status;
+import com.github.hualuomoli.commons.constant.Status;
 
 public abstract class BaseEntity extends CommonField implements Paginator {
 
@@ -33,7 +33,7 @@ public abstract class BaseEntity extends CommonField implements Paginator {
 		setCreateDate(currentDate);
 		setUpdateBy(currentUser);
 		setUpdateDate(currentDate);
-		setStatus(getStatus() == null ? Status.NORMAL : getStatus());
+		setStatus(getStatus() == null ? Status.NOMAL.getValue() : getStatus());
 		setVersion(1);
 		setId(StringUtils.isEmpty(getId()) ? UUID.randomUUID().toString().replaceAll("-", "") : getId());
 	}

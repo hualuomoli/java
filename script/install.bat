@@ -6,20 +6,7 @@ cd ..
 set batPath=%cd%
 
 
-cd %batPath%\commons
-call mvn clean install -Dmaven.test.skip=true
-
-cd %batPath%\plugins\mq
-call mvn clean install -Dmaven.test.skip=true
-cd %batPath%\plugins\cache
-call mvn clean install -Dmaven.test.skip=true
-cd %batPath%\plugins\jpush
-call mvn clean install -Dmaven.test.skip=true
-
-cd %batPath%\base
-call mvn clean install -Dmaven.test.skip=true
-
-cd %batPath%\tool\raml-parser
+cd %batPath%
 call mvn clean install -Dmaven.test.skip=true
 
 pause

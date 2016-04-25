@@ -2,8 +2,10 @@ package com.github.hualuomoli.raml.parser;
 
 import org.raml.model.Raml;
 
+import com.github.hualuomoli.raml.parser.exception.ParseException;
+
 /**
- * raml parser
+ * RAML 转换器
  * 
  * @author hualuomoli
  *
@@ -11,8 +13,8 @@ import org.raml.model.Raml;
 public interface RamlParser {
 
 	// parse
-	void parse(String ramlResourceLocation, String outputPath) throws Exception;
+	void parse(String ramlResourceLocation) throws ParseException;
 
 	// parse
-	void parse(Raml raml, String outputPath) throws Exception;
+	void parse(Raml raml) throws ParseException;
 }

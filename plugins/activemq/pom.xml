@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.hualuomoli</groupId>
+		<artifactId>plugins</artifactId>
+		<version>1.8.3</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>activemq</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+
+		<!-- ActiveMQ -->
+		<activemq.version>5.11.0</activemq.version>
+
+	</properties>
+
+	<dependencies>
+
+		<!-- ActiveMQ -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+			<version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>

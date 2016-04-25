@@ -9,23 +9,7 @@ set /p version=please input new version£º
 echo.
 
 
-cd %batPath%\commons
-call mvn versions:set -DnewVersion=%version%
-
-cd %batPath%\plugins\mq
-call mvn versions:set -DnewVersion=%version%
-cd %batPath%\plugins\cache
-call mvn versions:set -DnewVersion=%version%
-cd %batPath%\plugins\jpush
-call mvn versions:set -DnewVersion=%version%
-
-cd %batPath%\base
-call mvn versions:set -DnewVersion=%version%
-
-cd %batPath%\web
-call mvn versions:set -DnewVersion=%version%
-
-cd %batPath%\tool\raml-parser
+cd %batPath%
 call mvn versions:set -DnewVersion=%version%
 
 pause

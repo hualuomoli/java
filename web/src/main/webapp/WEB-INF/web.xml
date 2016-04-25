@@ -11,9 +11,7 @@
 		<param-value>
 			classpath*:/spring/application-context-core.xml,
 			classpath*:/spring/application-context-orm.xml,
-			classpath*:/spring/application-context-jdbc.xml,
-			classpath:/spring/application-context-shiro.xml,
-			classpath:/spring/application-context-web.xml
+			classpath*:/spring/application-context-jdbc.xml
 		</param-value>
 	</context-param>
 	<listener>
@@ -45,47 +43,14 @@
 	<!-- cross domain -->
 	<filter>
 		<filter-name>corsFilter</filter-name>
-		<filter-class>com.github.hualuomoli.filter.cors.CorsFilter</filter-class>
+		<filter-class>com.github.hualuomoli.mvc.filter.cors.CorsFilter</filter-class>
 		<init-param>
-			<param-name>allowCross</param-name>
-			<param-value>true</param-value>
+			<param-name>proxyDomains</param-name>
+			<param-value>file://,http://localhost:3000,http://127.0.0.1:3000,http://192.168.1.136:3000</param-value>
 		</init-param>
-		<!-- <init-param> <param-name>proxyDomains</param-name> <param-value>file://,http://localhost:3000,http://127.0.0.1:3000,http://192.168.1.136:3000</param-value> 
-			</init-param> -->
-		<!-- <init-param> <param-name>allowUris</param-name> <param-value>/api,/a,/login,/logout</param-value> </init-param> -->
 	</filter>
 	<filter-mapping>
 		<filter-name>corsFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<!-- log -->
-	<filter>
-		<filter-name>logFilter</filter-name>
-		<filter-class>com.github.hualuomoli.filter.log.LogFilter</filter-class>
-		<init-param>
-			<param-name>allowLog</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<!-- <init-param> <param-name>allowUris</param-name> <param-value>/api,/a,/login,/logout</param-value> </init-param> -->
-	</filter>
-	<filter-mapping>
-		<filter-name>logFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<!-- shiro -->
-	<filter>
-		<filter-name>shiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>shiroFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
@@ -96,7 +61,9 @@
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
-				classpath*:/mvc/spring-mvc-core.xml
+				classpath*:/mvc/spring-mvc-core.xml,
+				classpath*:/mvc/spring-mvc-interceptor.xml,
+				classpath*:/mvc/spring-mvc-driven.xml
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>

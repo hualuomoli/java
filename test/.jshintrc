@@ -1,0 +1,14 @@
+{
+  "predef": [
+    "__dirname",
+    "console",
+    "require",
+    "describe",
+    "it",
+    "before"
+  ],
+  "strict": false,
+  "undef": true,
+  "unused": false,
+  "asi": true
+}
