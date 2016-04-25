@@ -5,26 +5,25 @@
 
 	<parent>
 		<groupId>com.github.hualuomoli</groupId>
-		<artifactId>plugins</artifactId>
+		<artifactId>parent</artifactId>
 		<version>1.8.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>jpush</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>tool</artifactId>
+	<packaging>pom</packaging>
 
-	<properties>
-		<jpush.version>3.1.3</jpush.version>
-	</properties>
+	<modules>
+		<module>./raml-parser</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.jpush.api</groupId>
-			<artifactId>jpush-client</artifactId>
-			<version>${jpush.version}</version>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>commons</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 	</dependencies>
-
 
 </project>
