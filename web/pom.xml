@@ -45,6 +45,15 @@
 
 	<build>
 		<plugins>
+			<!-- 不安装 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<!-- 不发布 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -63,7 +72,6 @@
 					<warName>web</warName>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
