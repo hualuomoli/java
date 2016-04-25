@@ -14,12 +14,15 @@
 	<packaging>pom</packaging>
 
 	<modules>
+
 		<module>./activemq</module>
 		<module>./redis</module>
 		<module>./jpush</module>
+
 	</modules>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>

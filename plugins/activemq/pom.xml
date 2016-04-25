@@ -15,13 +15,14 @@
 
 	<properties>
 
-		<!-- MQ -->
+		<!-- ActiveMQ -->
 		<activemq.version>5.11.0</activemq.version>
 
 	</properties>
 
 	<dependencies>
-		<!-- activeMQ -->
+
+		<!-- ActiveMQ -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-all</artifactId>

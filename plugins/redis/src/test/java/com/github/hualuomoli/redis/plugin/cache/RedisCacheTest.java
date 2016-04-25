@@ -43,23 +43,23 @@ public class RedisCacheTest {
 		success = cache.set(key, value);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 		// use this key set type to int
 		success = cache.set(key, 1);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 		// use this key set type to double
 		success = cache.set(key, 1D);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 
 		// use this key set type to long
 		success = cache.set(key, 1L);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 
 		// use this key set type to map
 		HashMap<String, String> map = Maps.newHashMap();
@@ -68,7 +68,7 @@ public class RedisCacheTest {
 		success = cache.set(key, map);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 
 		// use this key set type to list
 		ArrayList<String> list = Lists.newArrayList();
@@ -79,14 +79,14 @@ public class RedisCacheTest {
 		success = cache.set(key, list);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 
 		// use this key set type to object
 		User user = new User("hualuomoli", "花落莫离", "山东省青岛市");
 		success = cache.set(key, user);
 		logger.debug("set {} '{}'", key, success);
 		v = cache.get(key);
-		logger.debug("{} = {} {}", key, v, v.getClass().getName());
+		logger.debug(key + " = {} {}", v, v.getClass().getName());
 
 	}
 
@@ -96,7 +96,7 @@ public class RedisCacheTest {
 		int seconds = 1;
 		Object v;
 		success = cache.set(key, value, seconds);
-		logger.debug("set {} use {} seconds '{}'", key, seconds, success);
+		logger.debug("set  use {} seconds '{}'", seconds, success);
 		v = cache.get(key);
 		logger.debug("{} in expire {}", key, v);
 		Thread.sleep((seconds + 1) * 1000);

@@ -15,14 +15,15 @@
 
 	<properties>
 
-		<!-- CACHE -->
+		<!-- Redis -->
 		<spring-data-redis.version>1.0.2.RELEASE</spring-data-redis.version>
 		<jedis.version>2.1.0</jedis.version>
 
 	</properties>
 
 	<dependencies>
-		<!-- redis -->
+
+		<!-- Redis -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>

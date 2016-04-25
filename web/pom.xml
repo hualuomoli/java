@@ -18,6 +18,8 @@
 	</properties>
 
 	<dependencies>
+
+		<!-- local -->
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>
@@ -38,6 +40,7 @@
 			<artifactId>mvc</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

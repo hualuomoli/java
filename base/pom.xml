@@ -14,6 +14,8 @@
 	<packaging>jar</packaging>
 
 	<properties>
+
+		<!-- aspect -->
 		<aspectj.version>1.7.4</aspectj.version>
 		<cglib.version>3.1</cglib.version>
 		<!-- ORM -->
@@ -27,6 +29,7 @@
 	</properties>
 
 	<dependencies>
+
 		<!-- 1、commons -->
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>

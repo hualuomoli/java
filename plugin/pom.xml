@@ -13,15 +13,19 @@
 	<artifactId>plugin</artifactId>
 	<packaging>jar</packaging>
 
-	<properties></properties>
+	<properties>
+
+	</properties>
 
 	<dependencies>
+
 		<!-- commons -->
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+
 	</dependencies>
 
 </project>

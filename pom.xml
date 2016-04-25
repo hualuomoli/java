@@ -9,6 +9,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+
 		<module>./commons</module>
 		<module>./base</module>
 		<module>./plugin</module>
@@ -23,6 +24,7 @@
 
 	<properties>
 
+		<!-- Spring -->
 		<spring.version>4.0.8.RELEASE</spring.version>
 
 		<!-- junit test -->
@@ -79,8 +81,6 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
-
-
 
 	</dependencies>
 

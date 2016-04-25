@@ -14,10 +14,14 @@
 	<packaging>pom</packaging>
 
 	<modules>
+
 		<module>./raml-parser</module>
+
 	</modules>
 
 	<dependencies>
+
+		<!-- local -->
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>commons</artifactId>

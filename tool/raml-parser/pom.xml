@@ -14,15 +14,21 @@
 	<packaging>jar</packaging>
 
 	<properties>
+
+		<!-- Raml -->
 		<raml.parser.version>0.8.12</raml.parser.version>
+
 	</properties>
 
 	<dependencies>
+
+		<!-- Raml -->
 		<dependency>
 			<groupId>org.raml</groupId>
 			<artifactId>raml-parser</artifactId>
 			<version>${raml.parser.version}</version>
 		</dependency>
+
 	</dependencies>
 
 </project>
