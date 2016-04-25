@@ -6,7 +6,7 @@ cd ..
 set batPath=%cd%
 
 
-cd %batPath%\parent
+cd %batPath%
 call mvn clean install -Dmaven.test.skip=true
 
 pause

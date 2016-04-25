@@ -9,7 +9,7 @@ set /p version=please input new version£º
 echo.
 
 
-cd %batPath%\parent
+cd %batPath%
 call mvn versions:set -DnewVersion=%version%
 
 pause
