@@ -18,12 +18,7 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.RamlParserAbstract;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.get.GetTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.multipart.MultipartJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.raml.RamlJsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedJsonTransfer;
-import com.github.hualuomoli.raml.parser.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -38,7 +33,10 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 	protected List<Transfer> transferList; // 转换器
 
 	public JoinRamlParser() {
-		this.setDefaultTransfer();
+	}
+
+	public JoinRamlParser(List<Transfer> transferList) {
+		this.transferList = transferList;
 	}
 
 	@Override
@@ -319,20 +317,6 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 	class R {
 		public String status;
 		public MimeType mimeType;
-	}
-
-	/**
-	 * 设置默认转换器
-	 */
-	private void setDefaultTransfer() {
-		transferList = Lists.newArrayList();
-
-		transferList.add(new GetTransfer()); // get
-		transferList.add(new RamlJsonTransfer()); // RAML
-		transferList.add(new UrlEncodedJsonTransfer()); // URLEncoded
-		transferList.add(new JsonJsonTransfer()); // JSON
-		transferList.add(new MultipartJsonTransfer()); // multipart
-
 	}
 
 	public void setEncoding(String encoding) {

@@ -4,14 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.raml.model.MimeType;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.join.java.transfer.JavaJoinTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.JavaTransfer;
 
 /**
  * 响应转换器
  * @author hualuomoli
  *
  */
-public abstract class ResponseTransfer extends JavaJoinTransfer {
+public abstract class ResponseTransfer extends JavaTransfer {
 
 	public static final String RESPONSE_TYPE_VOID = "void";
 	public static final String RESPONSE_TYPE_STRING = "String";

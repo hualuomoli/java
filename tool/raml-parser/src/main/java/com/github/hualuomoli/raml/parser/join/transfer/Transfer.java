@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.transfer;
+package com.github.hualuomoli.raml.parser.join.transfer;
 
 import java.util.Map;
 

@@ -11,7 +11,14 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.get.GetTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.multipart.MultipartJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.raml.RamlJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedJsonTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
+import com.google.common.collect.Lists;
 
 /**
  * java解析
@@ -23,6 +30,21 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 	protected String packageName = "com.github.hualuomoli"; // 包名
 	protected String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
 	protected String author = "hualuomoli"; // 作者,用于注释
+
+	public JavaJoinRamlParser() {
+		super();
+		List<Transfer> transferList = Lists.newArrayList();
+		transferList.add(new GetTransfer());
+		transferList.add(new RamlJsonTransfer());
+		transferList.add(new UrlEncodedJsonTransfer());
+		transferList.add(new JsonJsonTransfer());
+		transferList.add(new MultipartJsonTransfer());
+		this.setTransferList(transferList);
+	}
+
+	public JavaJoinRamlParser(List<Transfer> transferList) {
+		super(transferList);
+	}
 
 	@Override
 	public String getFileHeader(List<String> actionDatas, String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource)

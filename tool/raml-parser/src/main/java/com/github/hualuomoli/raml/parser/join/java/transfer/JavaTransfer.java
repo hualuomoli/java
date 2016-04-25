@@ -15,7 +15,7 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.Join;
-import com.github.hualuomoli.raml.parser.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 
@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
  * @author hualuomoli
  *
  */
-public abstract class JavaJoinTransfer implements Join, Transfer {
+public abstract class JavaTransfer implements Join, Transfer {
 
 	/**
 	* 获取事件数据
