@@ -13,9 +13,11 @@
 		<module>./base</module>
 		<module>./plugin</module>
 		<module>./mvc</module>
-		
 		<module>./plugins</module>
+
 		<module>./tool</module>
+
+		<module>./web</module>
 
 	</modules>
 
