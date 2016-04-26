@@ -391,6 +391,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 				buffer.append("str += ");
 				buffer.append(QUOTES);
 				buffer.append(RamlUtils.replaceQuotes(example));
+				buffer.append("\\n");
 				buffer.append(QUOTES);
 				buffer.append(";");
 			}
@@ -696,13 +697,17 @@ public abstract class JavaTransfer implements Join, Transfer {
 		// @Pattern(regexp = "", message = "")
 		public static void addPattern(StringBuilder buffer, AbstractParam abstractParam) {
 			String pattern = abstractParam.getPattern();
-			String regexp = pattern.replaceAll("\\", "\\\\");
+			String regexp = StringUtils.replace(pattern, "\\", "\\\\");
 
 			// replace
 			buffer.append(LINE).append(TAB).append(TAB);
 			buffer.append("@Pattern");
 			buffer.append("(");
-			buffer.append("regexp = ").append(regexp).append(", ");
+			buffer.append("regexp = ");
+			buffer.append(QUOTES);
+			buffer.append(regexp);
+			buffer.append(QUOTES);
+			buffer.append(", ");
 			buffer.append("message = ");
 			buffer.append(QUOTES);
 			buffer.append("请设置合法的").append(abstractParam.getDescription());
