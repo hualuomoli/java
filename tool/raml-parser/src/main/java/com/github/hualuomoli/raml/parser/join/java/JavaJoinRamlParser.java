@@ -82,6 +82,7 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestBody;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMapping;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMethod;");
+		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestParam;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.ResponseBody;");
 
 		// description
@@ -182,7 +183,14 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 			// pom.xml
 			filename = "pom.xml";
-			FileUtils.copyFile(new File(webProjectFilepath, filename), new File(outputFilepath, filename));
+			String pomData = FileUtils.readFileToString(new File(webProjectFilepath, filename), "UTF-8");
+			// update <artifactId>web</artifactId>
+			pomData = StringUtils.replace(pomData, "<artifactId>web</artifactId>", "<artifactId>web-demo</artifactId>");
+			// update <warName>web</warName>
+			pomData = StringUtils.replace(pomData, "<warName>web</warName>", "<warName>web-demo</warName>");
+			// flush
+			FileUtils.write(new File(outputFilepath, filename), pomData, "UTF-8");
+
 			// .gitignore
 			filename = ".gitignore";
 			FileUtils.copyFile(new File(webProjectFilepath, filename), new File(outputFilepath, filename));
