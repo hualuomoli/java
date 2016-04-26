@@ -1,4 +1,4 @@
-package com.github.hualuomoli.web.user;
+package com.github.hualuomoli.demo.web.user;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
+@Controller(value = "com.github.hualuomoli.demo.web.user.UserController")
 @RequestMapping(value = "${mvc.security.auth}/user")
 public class UserController {
 

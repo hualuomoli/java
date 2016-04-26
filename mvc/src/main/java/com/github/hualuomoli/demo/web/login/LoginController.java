@@ -1,10 +1,13 @@
-package com.github.hualuomoli.web.login;
+package com.github.hualuomoli.demo.web.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.hualuomoli.commons.servlet.TokenUtils;
 import com.github.hualuomoli.mvc.security.Auth;
 import com.github.hualuomoli.mvc.security.exception.MvcException;
+import com.github.hualuomoli.mvc.valid.EntityValidator;
 
 /**
  * 登录,登出
  * @author hualuomoli
  *
  */
-@Controller(value = "com.github.hualuomoli.web.login.LoginController")
+@Controller(value = "com.github.hualuomoli.demo.web.login.LoginController")
 @RequestMapping(value = "")
 public class LoginController {
 
@@ -80,13 +84,16 @@ public class LoginController {
 	}
 
 	// user
-	public static class Entity {
+	public static class Entity implements EntityValidator {
+
 		private String username;
 		private String password;
 
 		public Entity() {
 		}
 
+		@NotEmpty(message = "必填选项")
+		@Length(min = 1, max = 5, message = "用户名长度在1-5之间")
 		public String getUsername() {
 			return username;
 		}
@@ -95,6 +102,9 @@ public class LoginController {
 			this.username = username;
 		}
 
+		@NotNull(message = "必填选项")
+		@NotEmpty(message = "必填选项")
+		@Length(min = 1, max = 5, message = "密码长度在1-5之间")
 		public String getPassword() {
 			return password;
 		}

@@ -74,6 +74,16 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(LINE).append("import javax.servlet.http.HttpServletRequest;");
 		buffer.append(LINE).append("import javax.servlet.http.HttpServletResponse;");
 
+		// valid
+		buffer.append(LINE).append("import javax.validation.constraints.Max;");
+		buffer.append(LINE).append("import javax.validation.constraints.Min;");
+		buffer.append(LINE).append("import javax.validation.constraints.NotNull;");
+		buffer.append(LINE).append("import javax.validation.constraints.Pattern;");
+
+		// hibernate valid
+		buffer.append(LINE).append("import org.hibernate.validator.constraints.Length;");
+		buffer.append(LINE).append("import org.hibernate.validator.constraints.NotEmpty;");
+
 		// springframework
 		buffer.append(LINE);
 		buffer.append(LINE).append("import org.springframework.stereotype.Controller;");
@@ -84,6 +94,10 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMethod;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestParam;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.ResponseBody;");
+
+		// my
+		buffer.append(LINE);
+		buffer.append(LINE).append("import com.github.hualuomoli.mvc.valid.EntityValidator;");
 
 		// description
 		/**

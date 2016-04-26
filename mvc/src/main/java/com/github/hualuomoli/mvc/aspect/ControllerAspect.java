@@ -1,4 +1,4 @@
-package com.github.hualuomoli.aspect.controller;
+package com.github.hualuomoli.mvc.aspect;
 
 import java.util.List;
 
@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import com.github.hualuomoli.mvc.util.EntityValidatorUtils;
+import com.github.hualuomoli.mvc.valid.EntityValidator;
 import com.google.common.collect.Lists;
 
 /**
@@ -24,7 +26,7 @@ import com.google.common.collect.Lists;
  *
  */
 @Aspect
-@Component(value = "com.github.hualuomoli.aspect.controller.ControllerAspect")
+@Component(value = "com.github.hualuomoli.mvc.aspect.ControllerAspect")
 public class ControllerAspect {
 
 	// 本地异常日志记录对象
@@ -38,12 +40,6 @@ public class ControllerAspect {
 	// show parameter
 	@Before("pointcut()")
 	public void doBefore(JoinPoint joinPoint) {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append(joinPoint.getSignature().getDeclaringTypeName());
-		buffer.append(".");
-		buffer.append(joinPoint.getSignature().getName());
-
-		logger.debug("call {}", buffer.toString());
 		logger.debug("{}", joinPoint);
 
 		List<Object> parameters = this.getValidParameter(joinPoint);
@@ -51,6 +47,17 @@ public class ControllerAspect {
 			logger.debug("parameter {}", parameter);
 		}
 
+		// valid
+		this.valid(parameters);
+
+	}
+
+	public void valid(List<Object> parameters) {
+		for (Object parameter : parameters) {
+			if (parameter instanceof EntityValidator) {
+				EntityValidatorUtils.valid((EntityValidator) parameter);
+			}
+		}
 	}
 
 	/**
@@ -116,12 +123,12 @@ public class ControllerAspect {
 	// 处理并返回
 	@AfterReturning(pointcut = "pointcut()", returning = "ret")
 	public void doAfterReturning(JoinPoint joinPoint, Object ret) {
-		logger.debug("return {}", ret);
+		logger.debug("{} return {}", joinPoint, ret);
 	}
 
 	@AfterThrowing(pointcut = "pointcut()", throwing = "e")
 	public void doAfterThrowing(JoinPoint joinPoint, Throwable e) throws Throwable {
-		logger.debug("exception {}", e);
+		logger.debug("{} exception {}", joinPoint, e.getMessage());
 		throw e;
 	}
 

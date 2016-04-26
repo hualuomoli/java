@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
+import org.raml.model.ParamType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.AbstractParam;
 import org.raml.model.parameter.FormParameter;
@@ -160,30 +161,17 @@ public abstract class JavaTransfer implements Join, Transfer {
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		StringBuilder buffer = new StringBuilder();
 
-		// @RequestMapping(
-		// value = "login",
-		// method = { RequestMethod.POST },
-		// consumes = { "application/x-www-form-urlencoded", "application/*" }
-		// )
 		buffer.append(LINE).append(TAB).append("@RequestMapping");
 		buffer.append("(");
 
+		// value
 		buffer.append("value = ").append(QUOTES).append(relativeUri).append(QUOTES);
-
-		buffer.append(", method = { ");
-		buffer.append(this.getMethodTypeName(action, relativeUri));
-		buffer.append(" }");
-
-		// 有请求类型,设置类型
-		if (requestMimeType != null) {
-			buffer.append(", consumes = { ");
-
-			buffer.append(QUOTES);
-			buffer.append(requestMimeType.getType());
-			buffer.append(QUOTES);
-
-			buffer.append(" }");
-		}
+		// method
+		buffer.append(this.getMethodTypeHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
+		// consumes
+		buffer.append(this.getMethodConsumesHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
+		// produces
+		buffer.append(this.getMethodProducesHeader(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUriParameters, resource));
 
 		buffer.append(")");
 
@@ -206,6 +194,92 @@ public abstract class JavaTransfer implements Join, Transfer {
 
 		buffer.append("HttpServletRequest request, HttpServletResponse response, Model model");
 		buffer.append(") {");
+
+		return buffer.toString();
+	}
+
+	/**
+	 * 获取Spring MVC 的method
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 * @return Spring MVC 的method
+	 */
+	public String getMethodTypeHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// method = { RequestMethod.POST }
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append(", method = { ");
+		buffer.append(this.getMethodTypeName(action, relativeUri));
+		buffer.append(" }");
+
+		return buffer.toString();
+	}
+
+	/**
+	 * 获取Spring MVC 的consumes
+	 * @param requestMimeType 请求MimeType
+	 * @param status 响应编码
+	 * @param responseMimeType 响应MimeType
+	 * @param action 事件
+	 * @param relativeUri 相对URI
+	 * @param parentFullUriParameters 父URI参数
+	 * @param resource 本资源
+	 * @return Spring MVC 的produces
+	 */
+	public String getMethodConsumesHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// consumes = { "application/x-www-form-urlencoded" }
+		StringBuilder buffer = new StringBuilder();
+
+		if (requestMimeType == null) {
+			return buffer.toString();
+		}
+
+		buffer.append(", consumes = { ");
+
+		buffer.append(QUOTES);
+		buffer.append(requestMimeType.getType());
+		buffer.append(QUOTES);
+
+		buffer.append(" }");
+
+		return buffer.toString();
+	}
+
+	/**
+	* 获取Spring MVC 的produces
+	* @param requestMimeType 请求MimeType
+	* @param status 响应编码
+	* @param responseMimeType 响应MimeType
+	* @param action 事件
+	* @param relativeUri 相对URI
+	* @param parentFullUriParameters 父URI参数
+	* @param resource 本资源
+	* @return Spring MVC 的produces
+	*/
+	public String getMethodProducesHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+		// produces = { "application/json" }
+
+		StringBuilder buffer = new StringBuilder();
+
+		if (responseMimeType == null) {
+			return buffer.toString();
+		}
+
+		buffer.append(", produces = { ");
+
+		buffer.append(QUOTES);
+		buffer.append(responseMimeType.getType());
+		buffer.append(QUOTES);
+
+		buffer.append(" }");
 
 		return buffer.toString();
 	}
@@ -353,7 +427,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append(LINE).append(LINE).append(TAB);
 		buffer.append("public static class ");
 		buffer.append(entityUpperName);
-		buffer.append(" implements Serializable {");
+		buffer.append(" implements EntityValidator, Serializable {");
 
 		// serial
 		// private static final long serialVersionUID = 4649474858114976268L;
@@ -433,12 +507,20 @@ public abstract class JavaTransfer implements Join, Transfer {
 	private void addMethodClassGetterAndSetter(StringBuilder buffer, AbstractParam abstractParam) {
 		String displayName = abstractParam.getDisplayName();
 
-		// getter
+		// validator
 		buffer.append(LINE);
+		this.addMethodClassGetterValidator(buffer, abstractParam);
+
+		// getter
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("public ");
 		buffer.append(this.getParameterType(abstractParam));
-		buffer.append(" get");
+		buffer.append(" ");
+		if (abstractParam.getType() == ParamType.BOOLEAN) {
+			buffer.append("is");
+		} else {
+			buffer.append("get");
+		}
 		buffer.append(displayName.substring(0, 1) + displayName.substring(1)).append("() {");
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append(TAB).append("return ").append(displayName).append(";");
@@ -457,6 +539,176 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("}");
 
+	}
+
+	/**
+	* 设置getter方法类的校验
+	* @param buffer buffer
+	* @param abstractParam 参数
+	*/
+	private void addMethodClassGetterValidator(StringBuilder buffer, AbstractParam abstractParam) {
+
+		// @NotNull(message = "")
+		if (abstractParam.isRequired()) {
+			ValidHeader.addNotNull(buffer, abstractParam);
+		}
+		// @NotEmpty(message = "")
+		if (abstractParam.isRequired()) {
+			ValidHeader.addNotEmpty(buffer, abstractParam);
+		}
+		// @Pattern(regexp = "", message = "")
+		if (StringUtils.isNotEmpty(abstractParam.getPattern())) {
+			ValidHeader.addPattern(buffer, abstractParam);
+		}
+
+		// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+		// @Min(value = 1, message = "")
+		// @Max(value = 10, message = "")
+
+		switch (abstractParam.getType()) {
+		case STRING:
+			if (abstractParam.getMinLength() != null || abstractParam.getMaxLength() != null) {
+				ValidHeader.addLength(buffer, abstractParam);
+			}
+			break;
+		case BOOLEAN:
+			break;
+		case DATE:
+			break;
+		case INTEGER:
+			if (abstractParam.getMinimum() != null) {
+				ValidHeader.addMin(buffer, abstractParam);
+			}
+			if (abstractParam.getMaximum() != null) {
+				ValidHeader.addMax(buffer, abstractParam);
+			}
+			break;
+		case FILE:
+			break;
+		case NUMBER:
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	// 有效性header
+	static class ValidHeader {
+
+		// 必填选项
+		// @NotNull(message = "")
+		public static void addNotNull(StringBuilder buffer, AbstractParam abstractParam) {
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@NotNull");
+			buffer.append("(");
+			buffer.append("message = ");
+			buffer.append(QUOTES);
+			buffer.append(abstractParam.getDescription()).append("不能为空");
+			buffer.append(QUOTES);
+			buffer.append(")");
+		}
+
+		// 必填选项(字符串,集合,Map,数组)
+		// @NotEmpty(message = "必填选项")
+		public static void addNotEmpty(StringBuilder buffer, AbstractParam abstractParam) {
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@NotEmpty");
+			buffer.append("(");
+			buffer.append("message = ");
+			buffer.append(QUOTES);
+			buffer.append(abstractParam.getDescription()).append("不能为空");
+			buffer.append(QUOTES);
+			buffer.append(")");
+		}
+
+		// 长度限制
+		// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+		public static void addLength(StringBuilder buffer, AbstractParam abstractParam) {
+			buffer.append(LINE).append(TAB).append(TAB);
+			if (abstractParam.getMaxLength() == null) {
+				// 只设置了最小长度
+				// @Length(min = 1, message = "数据长度不能小于1")
+				buffer.append("@Length");
+				buffer.append("(");
+				// 最小值
+				buffer.append("min = ").append(abstractParam.getMinLength()).append(", ");
+				buffer.append("message = ");
+				buffer.append(QUOTES);
+				buffer.append("数据长度不能小于").append(abstractParam.getMinLength());
+				buffer.append(QUOTES);
+				buffer.append(")");
+			} else if (abstractParam.getMinLength() == null) {
+				// 只设置了最大长度
+				// @Length(max = 5, message = "数据长度不能大于5")
+				buffer.append("@Length");
+				buffer.append("(");
+				buffer.append("max = ").append(abstractParam.getMaxLength()).append(", ");
+				buffer.append("message = ");
+				buffer.append(QUOTES);
+				buffer.append("数据长度不能大于").append(abstractParam.getMaxLength());
+				buffer.append(QUOTES);
+				buffer.append(")");
+			} else {
+				// 设置了最小长度和最大长度
+				// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+				buffer.append("@Length");
+				buffer.append("(");
+				buffer.append("min = ").append(abstractParam.getMinLength()).append(", ");
+				buffer.append("max = ").append(abstractParam.getMaxLength()).append(", ");
+				buffer.append("message = ");
+				buffer.append(QUOTES);
+				buffer.append("数据长度在").append(abstractParam.getMinLength()).append("-").append(abstractParam.getMaxLength()).append("之间");
+				buffer.append(QUOTES);
+				buffer.append(")");
+			}
+		}
+
+		// 设置了最小值
+		// @Min(value = 1, message = "")
+		public static void addMin(StringBuilder buffer, AbstractParam abstractParam) {
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@Min");
+			buffer.append("(");
+			buffer.append("value = ").append(abstractParam.getMinimum().intValue()).append(", ");
+			buffer.append("message = ");
+			buffer.append(QUOTES);
+			buffer.append("数据长度不能大于").append(abstractParam.getMinimum().intValue());
+			buffer.append(QUOTES);
+			buffer.append(")");
+		}
+
+		// 设置了最大值
+		// @Max(value = 10, message = "")
+		public static void addMax(StringBuilder buffer, AbstractParam abstractParam) {
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@Max");
+			buffer.append("(");
+			buffer.append("value = ").append(abstractParam.getMaximum().intValue()).append(", ");
+			buffer.append("message = ");
+			buffer.append(QUOTES);
+			buffer.append("数据长度不能大于").append(abstractParam.getMaximum().intValue());
+			buffer.append(QUOTES);
+			buffer.append(")");
+		}
+
+		// 正则表达式
+		// @Pattern(regexp = "", message = "")
+		public static void addPattern(StringBuilder buffer, AbstractParam abstractParam) {
+			String pattern = abstractParam.getPattern();
+			String regexp = pattern.replaceAll("\\", "\\\\");
+
+			// replace
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@Pattern");
+			buffer.append("(");
+			buffer.append("regexp = ").append(regexp).append(", ");
+			buffer.append("message = ");
+			buffer.append(QUOTES);
+			buffer.append("请设置合法的").append(abstractParam.getDescription());
+			buffer.append(QUOTES);
+			buffer.append(")");
+		}
 	}
 
 	/**

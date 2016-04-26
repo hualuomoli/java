@@ -15,6 +15,8 @@ public class MvcException extends RuntimeException {
 	public static final String ERROR_AUTH_OVERTIME = "9998"; // 登录超时
 	public static final String ERROR_USER_INVALID = "9989"; // 用户名或密码错误
 
+	public static final String ERROR_PARAMETER_INVALID = "9979"; // 参数不合法
+
 	private ErrorData errorData;
 
 	public MvcException(String code, String msg) {
@@ -22,7 +24,9 @@ public class MvcException extends RuntimeException {
 	}
 
 	public MvcException(ErrorData errorData) {
+		super(errorData.getMsg());
 		this.errorData = errorData;
+
 	}
 
 	public MvcException(String code, String msg, Throwable cause) {

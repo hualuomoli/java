@@ -5,7 +5,7 @@ var path = require('path');
 
 var request = require('supertest').agent('http://localhost:80/web');
 
-describe('test path parameter', function () {
+describe('test mvc uri path parameter', function () {
 
   before(function (done) {
     request

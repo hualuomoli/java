@@ -9,6 +9,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,47 +22,45 @@ import org.springframework.stereotype.Component;
 @Component(value = "com.github.hualuomoli.demo.aspect.DemoAspect")
 public class DemoAspect {
 
-	// 切点到class
-	@Pointcut("execution(* com.github.hualuomoli.web.login.LoginController.*(..))")
-	public void someClass() {
+	private static final Logger logger = LoggerFactory.getLogger(DemoAspect.class);
+
+	@Before("execution(* com.github.hualuomoli.demo.web.login.LoginController.login(..))")
+	public void doMethod(JoinPoint joinPoint) {
+		logger.debug("调用了特定类的特定方法");
 	}
 
-	// 切点到package
-	@Pointcut("execution(* com.github.hualuomoli.web.login.*.*(..))")
-	public void somePackage() {
+	@Before("execution(* com.github.hualuomoli.demo.web.login.LoginController.*(..))")
+	public void doClass(JoinPoint joinPoint) {
+		logger.debug("调用了特定类");
 	}
 
-	// 切点到package和子包
-	@Pointcut("execution(* com.github.hualuomoli.web..*.*(..))")
-	public void someSubPackage() {
+	@Before("execution(* com.github.hualuomoli.demo.web.login.*.*(..))")
+	public void doPackage(JoinPoint joinPoint) {
+		logger.debug("调用了特定包");
 	}
 
-	@Before("someClass()")
-	public void doBeforeOnSomeClass(JoinPoint joinPoint) {
-		System.out.println("before someClass");
+	@Before("execution(* com.github.hualuomoli.demo.web..*.*(..))")
+	public void doPackageAndSub(JoinPoint joinPoint) {
+		logger.debug("调用了特定包与子包");
 	}
 
-	@Before("somePackage()")
-	public void doBeforeOnSomePackage(JoinPoint joinPoint) {
-		System.out.println("before somePackage");
-	}
-
-	@Before("someSubPackage()")
-	public void doBeforeOnSomeSubPackage(JoinPoint joinPoint) {
-		System.out.println("before someSubPackage");
+	@Before("execution(* com.github.hualuomoli..*Controller.*(..))")
+	public void doController(JoinPoint joinPoint) {
+		logger.debug("调用了Controller结尾");
 	}
 
 	///////////////////////////////
 	// 切点到class
-	@Pointcut("execution(* com.github.hualuomoli.web.user.UserController.*(..))")
+	@Pointcut("execution(* com.github.hualuomoli.demo.web.user.UserController.*(..))")
 	public void pointcut() {
+		logger.debug("定义统一切点");
 	}
 
 	// 请求开始
 	@Before(value = "pointcut()")
 	public void doBefore(JoinPoint joinPoint) {
 
-		System.out.println("before.........");
+		logger.debug("before.........");
 
 		// show parameter
 		Object[] args = joinPoint.getArgs();
@@ -68,22 +68,22 @@ public class DemoAspect {
 			return;
 		}
 		for (int i = 0; i < args.length; i++) {
-			System.out.println(ToStringBuilder.reflectionToString(args[i]));
+			logger.debug("param {}", args[i]);
 		}
 	}
 
 	// 处理并返回
 	@AfterReturning(pointcut = "pointcut()", returning = "ret")
 	public void doAfterReturning(JoinPoint joinPoint, Object ret) {
-		System.out.println("afterReturning.........");
-		System.out.println(ret);
+		logger.debug("afterReturning.........");
+		logger.debug("return value {}", ret);
 	}
 
 	// 有异常抛出
-	@AfterThrowing(pointcut = "someClass()", throwing = "e")
+	@AfterThrowing(pointcut = "execution(* com.github.hualuomoli.demo.web.login.LoginController.login(..))", throwing = "e")
 	public void doAfterThrowing(JoinPoint joinPoint, Throwable e) throws Throwable {
-		System.out.println("afterThrowing.........");
-		System.out.println(e);
+		logger.debug("afterThrowing.........");
+		logger.debug("exception {}", e.getMessage());
 		throw e;
 	}
 
@@ -92,17 +92,17 @@ public class DemoAspect {
 	// 返回 Object
 	@Around("pointcut()")
 	public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-		System.out.println("around.............");
+		logger.debug("around.............");
 
 		Object[] args = joinPoint.getArgs();
 		for (int i = 0; i < args.length; i++) {
-			System.out.println(ToStringBuilder.reflectionToString(args[i]));
+			logger.debug(ToStringBuilder.reflectionToString(args[i]));
 		}
 
 		Object ret = joinPoint.proceed(args);
-		System.out.println(ret);
+		logger.debug("return value {}", ret);
 
-		System.out.println("arounded...");
+		logger.debug("arounded...");
 
 		return ret;
 	}

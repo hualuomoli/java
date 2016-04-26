@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.hualuomoli.commons.util.CharsetUtils;
 import com.github.hualuomoli.mvc.exception.entity.ErrorData;
 import com.github.hualuomoli.mvc.security.exception.AuthException;
+import com.github.hualuomoli.mvc.security.exception.InvalidParameterException;
 import com.github.hualuomoli.mvc.security.exception.MvcException;
 
 @Service(value = "com.github.hualuomoli.mvc.exception.HandlerException")
@@ -33,29 +34,28 @@ public class HandlerException implements HandlerExceptionResolver {
 		// 设置返回数据类型
 		response.setContentType(JSON);
 
+		// 设置错误信息
 		ErrorData errorData;
 
-		// 权限异常
-		if (ex instanceof AuthException) {
-			AuthException authException = (AuthException) ex;
-			errorData = authException.getErrorData();
-			// 权限异常 status = 401
-			response.setStatus(STATUS_NO_AUTH);
-		} else if (ex instanceof MvcException) {
+		// MVC 异常,设置异常信息
+		if (ex instanceof MvcException) {
 			// MVC自定义异常
 			MvcException mvcException = (MvcException) ex;
 			errorData = mvcException.getErrorData();
-			// 自定义异常 status = 200
-			response.setStatus(STATUS_MVC_CUSTOM);
-		} else if (ex instanceof IllegalArgumentException) {
-			// MVC自定义异常
-			IllegalArgumentException illegalArgumentException = (IllegalArgumentException) ex;
-			errorData = new ErrorData();
-			errorData.setCode(String.valueOf(STSTUS_INVLID_PARAMETER));
-			errorData.setMsg(illegalArgumentException.getMessage());
-			// 参数不合法异常 status = 400
-			response.setStatus(STSTUS_INVLID_PARAMETER);
+
+			// 设置status
+			if (ex instanceof AuthException) {
+				// 权限异常 status = 401
+				response.setStatus(STATUS_NO_AUTH);
+			} else if (ex instanceof InvalidParameterException) {
+				// 参数不合法 = 400
+				response.setStatus(STSTUS_INVLID_PARAMETER);
+			} else {
+				// 自定义异常 status = 200
+				response.setStatus(STATUS_MVC_CUSTOM);
+			}
 		} else {
+			// 其他未知异常
 			ex.printStackTrace();
 			errorData = new ErrorData();
 			errorData.setCode(String.valueOf(STATUS_ERROR));
