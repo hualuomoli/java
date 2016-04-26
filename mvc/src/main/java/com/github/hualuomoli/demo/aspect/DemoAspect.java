@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.mvc.aspect;
+package com.github.hualuomoli.demo.aspect;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.aspectj.lang.JoinPoint;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Aspect
-@Component
+@Component(value = "com.github.hualuomoli.demo.aspect.DemoAspect")
 public class DemoAspect {
 
 	// 切点到class
