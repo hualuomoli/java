@@ -231,7 +231,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 		}
 
 		for (UriParameter uriParameter : parentFullUriParameters.values()) {
-			buffer.append("@RequestParam");
+			buffer.append("@PathVariable");
 
 			buffer.append("(");
 			buffer.append("value = ").append(QUOTES).append(uriParameter.getDisplayName()).append(QUOTES);

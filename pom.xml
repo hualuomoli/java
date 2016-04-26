@@ -86,7 +86,7 @@
 
 	<build>
 		<plugins>
-
+			<!-- 编译 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -98,7 +98,7 @@
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
-
+			<!-- 源码 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -113,7 +113,18 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<!-- 忽略目录 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<!-- 忽略demo目录 -->
+						<exclude>com/github/hualuomoli/demo/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
