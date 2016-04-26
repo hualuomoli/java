@@ -1,11 +1,10 @@
-package com.github.hualuomoli.mvc.aspect;
+package com.github.hualuomoli.aspect.controller;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -25,7 +24,7 @@ import com.google.common.collect.Lists;
  *
  */
 @Aspect
-@Component(value = "com.github.hualuomoli.mvc.aspect.ControllerAspect")
+@Component(value = "com.github.hualuomoli.aspect.controller.ControllerAspect")
 public class ControllerAspect {
 
 	// 本地异常日志记录对象
@@ -49,7 +48,7 @@ public class ControllerAspect {
 
 		List<Object> parameters = this.getValidParameter(joinPoint);
 		for (Object parameter : parameters) {
-			logger.debug("parameter {}", ToStringBuilder.reflectionToString(parameter));
+			logger.debug("parameter {}", parameter);
 		}
 
 	}
