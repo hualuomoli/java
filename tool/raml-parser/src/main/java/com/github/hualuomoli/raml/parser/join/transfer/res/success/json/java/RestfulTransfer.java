@@ -1,17 +1,15 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.restful;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java;
 
 import org.raml.model.Action;
 import org.raml.model.ActionType;
 import org.raml.model.MimeType;
-
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.ResponseSuccessJsonTransfer;
 
 /**
  * 请求参数为Restful
  * @author hualuomoli
  *
  */
-public class RestfulTransfer extends ResponseSuccessJsonTransfer {
+public class RestfulTransfer extends JavaTransfer {
 
 	/**
 	 * 请求方式: GET/DELETE

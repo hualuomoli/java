@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.Join;
 import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.ResponseSuccessJsonTransfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 
@@ -27,9 +28,12 @@ import com.google.common.collect.Lists;
  * @author hualuomoli
  *
  */
-public abstract class JavaTransfer implements Join, Transfer {
+public abstract class JavaTransfer extends ResponseSuccessJsonTransfer implements Join, Transfer {
 
 	public static final Logger logger = LoggerFactory.getLogger(JavaTransfer.class);
+
+	public static final String RESPONSE_TYPE_VOID = "void";
+	public static final String RESPONSE_TYPE_STRING = "String";
 
 	/**
 	* 获取事件数据
@@ -924,6 +928,14 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param responseMimeType 响应MimeType
 	 * @return 响应类型
 	 */
-	public abstract String getResponseTypeName(MimeType responseMimeType) throws ParseException;
+	public String getResponseTypeName(MimeType responseMimeType) throws ParseException {
+		if (responseMimeType == null) {
+			return RESPONSE_TYPE_VOID;
+		}
+		if (StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON)) {
+			return RESPONSE_TYPE_STRING;
+		}
+		throw new ParseException("can not support response MimeType " + responseMimeType.getType());
+	}
 
 }

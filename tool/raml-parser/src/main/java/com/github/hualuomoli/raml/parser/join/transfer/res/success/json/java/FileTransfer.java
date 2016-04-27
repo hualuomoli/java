@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.file;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java;
 
 import java.util.List;
 import java.util.Map;
@@ -12,14 +12,12 @@ import org.raml.model.Resource;
 import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.ResponseSuccessJsonTransfer;
-
 /**
  * 请求参数为multipart/form-data
  * @author hualuomoli
  *
  */
-public class FileTransfer extends ResponseSuccessJsonTransfer {
+public class FileTransfer extends JavaTransfer {
 
 	/**
 	 * 请求方式: POST

@@ -14,12 +14,12 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.file.FileTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.get.GetTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json.JsonTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.restful.RestfulTransfer;
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.urlencoded.UrlEncodedTransfer;
 import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.FileTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.GetTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.JsonTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.RestfulTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.UrlEncodedTransfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 

@@ -1,17 +1,17 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer.res.success;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success;
 
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
 
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.ResponseTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.ResponseTransfer;
 
 /**
  * 响应成功的转换器
  * @author hualuomoli
  *
  */
-public abstract class ResponseSuccessTransfer extends ResponseTransfer {
+public abstract class ResponseSuccessTransfer implements ResponseTransfer {
 
 	@Override
 	public boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType) {

@@ -1,10 +1,10 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success.json;
 
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
 
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.ResponseSuccessTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.res.success.ResponseSuccessTransfer;
 
 /**
  * 响应成功JSON的转换器

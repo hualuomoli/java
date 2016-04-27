@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.json;
+package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java;
 
 import java.util.Map;
 
@@ -9,14 +9,12 @@ import org.raml.model.MimeType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
-import com.github.hualuomoli.raml.parser.join.java.transfer.res.success.json.ResponseSuccessJsonTransfer;
-
 /**
  * 请求参数为JSON
  * @author hualuomoli
  *
  */
-public class JsonTransfer extends ResponseSuccessJsonTransfer {
+public class JsonTransfer extends JavaTransfer {
 
 	/**
 	 * 请求方式: POST
