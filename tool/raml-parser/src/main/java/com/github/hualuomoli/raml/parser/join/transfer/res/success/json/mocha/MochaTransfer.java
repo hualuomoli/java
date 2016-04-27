@@ -73,7 +73,7 @@ public abstract class MochaTransfer extends ResponseSuccessJsonTransfer implemen
 		buffer.append(LINE).append(TAB);
 		buffer.append("it");
 		buffer.append("('");
-		buffer.append(action.getDescription().replaceAll("\\n", "    "));
+		buffer.append(action.getDescription() == null ? "" : action.getDescription().replaceAll("\\n", "    "));
 		buffer.append("', function (done) {");
 
 	}
