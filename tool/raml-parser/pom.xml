@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.hualuomoli</groupId>
 		<artifactId>tool</artifactId>
-		<version>1.8.5</version>
+		<version>1.8.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
