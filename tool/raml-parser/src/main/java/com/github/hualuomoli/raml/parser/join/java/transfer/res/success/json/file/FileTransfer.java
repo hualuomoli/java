@@ -120,9 +120,10 @@ public class FileTransfer extends ResponseSuccessJsonTransfer {
 					buffer.append("@RequestParam");
 					buffer.append("(");
 					buffer.append("value = ").append(QUOTES).append(displayName).append(QUOTES);
+					buffer.append(", required = ").append(formParameter.isRequired() ? "true" : "false");
 					buffer.append(")");
 
-					buffer.append(" File ").append(displayName);
+					buffer.append(" MultipartFile ").append(displayName);
 
 					buffer.append(", ");
 				}

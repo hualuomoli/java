@@ -29,6 +29,8 @@ public class HandlerException implements HandlerExceptionResolver {
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
+		ex.printStackTrace();
+		
 		// 设置编码集
 		response.setCharacterEncoding(CharsetUtils.UTF8.name());
 		// 设置返回数据类型
@@ -36,8 +38,6 @@ public class HandlerException implements HandlerExceptionResolver {
 
 		// 设置错误信息
 		ErrorData errorData;
-		
-		ex.printStackTrace();
 
 		// MVC 异常,设置异常信息
 		if (ex instanceof MvcException) {

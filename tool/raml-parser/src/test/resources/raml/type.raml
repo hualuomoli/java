@@ -1,0 +1,144 @@
+#%RAML 0.8
+title: 易邦生物
+baseUri: http://localhost:80/web
+version: v0.1
+mediaType: application/json
+
+traits:
+  # 响应成功
+  - resSuccess:
+      responses:
+        200:
+          description: 成功
+          body:
+            application/json:
+              example: |
+                {
+                  "code" : "0",
+                  "msg" : "成功"
+                }
+              
+  
+              
+#####################################################################
+######################### parameter type ############################
+#####################################################################
+
+/api/type:
+  displayName: type
+  description: 参数类型
+  
+  /typeString:
+    displayName: string
+    description: 参数为字符串
+    
+    post:
+      description: 请求参数为字符串
+      is:
+        - resSuccess:
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            username:
+              displayName: username
+              description: 用户名
+              type: string
+              required: true
+              minLength: 3
+              maxLength: 20
+              example: hualuomoli
+            time:
+              displayName: time
+              description: 时间
+              type: string
+              required: true
+              pattern: "\\d{2}:\\d{2}:\\d{2}"
+              example: 10:26:43
+
+  
+  
+  
+  /typeInteger:
+    displayName: int
+    description: 参数为int
+    
+    post:
+      description: 参数为int
+      is:
+        - resSuccess:
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            age:
+              displayName: age
+              description: 年龄
+              type: integer
+              required: true
+              minimum: 16
+              maximum: 80
+              example: 20
+              
+              
+  /typeDate:
+    displayName: date
+    description: 参数为日期
+    
+    post:
+      description: 参数为日期
+      is:
+        - resSuccess:
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            date:
+              displayName: date
+              description: 日期
+              required: true
+              type: date
+              example: 2015-08-26 05:16:34
+    
+  /typeBoolean:
+    displayName: boolean
+    description: 参数为布尔类型
+    
+    post:
+      description: 参数为布尔类型
+      is:
+        - resSuccess:
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            manager:
+              displayName: manager
+              description: 管理员
+              required: true
+              type: boolean
+              example: false
+  /typeFile:
+    displayName: file
+    description: 参数为文件
+    
+    post:
+      description: 参数为文件
+      is:
+        - resSuccess:
+      body:
+        multipart/form-data:
+          formParameters:
+            photo:
+              displayName: photo
+              description: 头像
+              type: file
+              required: true
+            username:
+              displayName: username
+              description: 用户名
+              type: string
+              required: true
+              example: hualuomoli
+            pic:
+              displayName: pic
+              description: 照片
+              type: file
+              required: false
+              

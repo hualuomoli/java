@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -40,19 +41,50 @@ public class ControllerAspect {
 	// show parameter
 	@Before("pointcut()")
 	public void doBefore(JoinPoint joinPoint) {
-		logger.debug("{}", joinPoint);
-
-		List<Object> parameters = this.getValidParameter(joinPoint);
-		for (Object parameter : parameters) {
-			logger.debug("parameter {}", parameter);
+		if (!logger.isDebugEnabled()) {
+			return;
 		}
-
-		// valid
-		this.valid(parameters);
-
+		List<Object> parameters = this.getValidParameter(joinPoint);
+		if (parameters == null || parameters.size() == 0) {
+			return;
+		}
+		// 显示参数
+		this.showParameter(parameters);
+		// 校验参数
+		this.validParameter(parameters);
 	}
 
-	public void valid(List<Object> parameters) {
+	// 处理并返回
+	@AfterReturning(pointcut = "pointcut()", returning = "ret")
+	public void doAfterReturning(JoinPoint joinPoint, Object ret) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("{} return {}", joinPoint, ret);
+		}
+	}
+
+	@AfterThrowing(pointcut = "pointcut()", throwing = "e")
+	public void doAfterThrowing(JoinPoint joinPoint, Throwable e) throws Throwable {
+		if (logger.isDebugEnabled()) {
+			logger.debug("{} exception {}", joinPoint, e.getMessage());
+		}
+		throw e;
+	}
+
+	/**
+	 * 显示请求参数
+	 * @param parameters 参数
+	 */
+	private void showParameter(List<Object> parameters) {
+		for (Object parameter : parameters) {
+			logger.debug("parameter {}", ToStringBuilder.reflectionToString(parameter));
+		}
+	}
+
+	/**
+	 * 校验参数有效性
+	 * @param parameters 参数
+	 */
+	private void validParameter(List<Object> parameters) {
 		for (Object parameter : parameters) {
 			if (parameter instanceof EntityValidator) {
 				EntityValidatorUtils.valid((EntityValidator) parameter);
@@ -61,10 +93,10 @@ public class ControllerAspect {
 	}
 
 	/**
-	 * 获取有效的参数
-	 * @param joinPoint JoinPoint
-	 * @return 有效参数集合
-	 */
+	* 获取有效的参数
+	* @param joinPoint JoinPoint
+	* @return 有效参数集合
+	*/
 	private List<Object> getValidParameter(JoinPoint joinPoint) {
 		return this.getValidParameter(joinPoint, new Validator() {
 
@@ -118,18 +150,6 @@ public class ControllerAspect {
 
 		boolean valid(Object parameter);
 
-	}
-
-	// 处理并返回
-	@AfterReturning(pointcut = "pointcut()", returning = "ret")
-	public void doAfterReturning(JoinPoint joinPoint, Object ret) {
-		logger.debug("{} return {}", joinPoint, ret);
-	}
-
-	@AfterThrowing(pointcut = "pointcut()", throwing = "e")
-	public void doAfterThrowing(JoinPoint joinPoint, Throwable e) throws Throwable {
-		logger.debug("{} exception {}", joinPoint, e.getMessage());
-		throw e;
 	}
 
 }

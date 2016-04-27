@@ -22,7 +22,8 @@ public class JavaRamlParserTest {
 
 	@Test
 	public void test() throws ParseException {
-		ramlParser.parse("raml/api.raml");
+		ramlParser.parse("raml/uri.raml");
+		ramlParser.parse("raml/type.raml");
 	}
 
 }

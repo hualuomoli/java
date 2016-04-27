@@ -297,7 +297,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 */
 	public String getMethodUriParameterHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		// @RequestParam(value = "username") String username
+		// @PathVariable(value = "username") String username
 		StringBuilder buffer = new StringBuilder();
 
 		if (parentFullUriParameters == null || parentFullUriParameters.size() == 0) {
@@ -436,6 +436,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 		buffer.append("private static final long serialVersionUID = ");
 		buffer.append(System.currentTimeMillis()).append("L;");
 
+		//
 		buffer.append(LINE);
 
 		// 参数
@@ -490,8 +491,15 @@ public abstract class JavaTransfer implements Join, Transfer {
 	 * @param abstractParam 参数
 	 */
 	private void addMethodClassAttribute(StringBuilder buffer, AbstractParam abstractParam) {
+
+		// 注释
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("/** ").append(abstractParam.getDescription()).append("*/");
+
+		// validator
+		this.addMethodClassGetterValidator(buffer, abstractParam);
+
+		// 属性
 		buffer.append(LINE).append(TAB).append(TAB);
 		buffer.append("private ");
 		buffer.append(this.getParameterType(abstractParam));
@@ -508,9 +516,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 	private void addMethodClassGetterAndSetter(StringBuilder buffer, AbstractParam abstractParam) {
 		String displayName = abstractParam.getDisplayName();
 
-		// validator
 		buffer.append(LINE);
-		this.addMethodClassGetterValidator(buffer, abstractParam);
 
 		// getter
 		buffer.append(LINE).append(TAB).append(TAB);
@@ -553,30 +559,33 @@ public abstract class JavaTransfer implements Join, Transfer {
 		if (abstractParam.isRequired()) {
 			ValidHeader.addNotNull(buffer, abstractParam);
 		}
-		// @NotEmpty(message = "")
-		if (abstractParam.isRequired()) {
-			ValidHeader.addNotEmpty(buffer, abstractParam);
-		}
-		// @Pattern(regexp = "", message = "")
-		if (StringUtils.isNotEmpty(abstractParam.getPattern())) {
-			ValidHeader.addPattern(buffer, abstractParam);
-		}
-
-		// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
-		// @Min(value = 1, message = "")
-		// @Max(value = 10, message = "")
 
 		switch (abstractParam.getType()) {
 		case STRING:
+			// @NotEmpty(message = "")
+			if (abstractParam.isRequired()) {
+				ValidHeader.addNotEmpty(buffer, abstractParam);
+			}
+			// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
 			if (abstractParam.getMinLength() != null || abstractParam.getMaxLength() != null) {
 				ValidHeader.addLength(buffer, abstractParam);
+			}
+			// @Pattern(regexp = "", message = "")
+			if (StringUtils.isNotEmpty(abstractParam.getPattern())) {
+				ValidHeader.addPattern(buffer, abstractParam);
 			}
 			break;
 		case BOOLEAN:
 			break;
 		case DATE:
+			// @Pattern(regexp = "", message = "")
+			if (StringUtils.isNotEmpty(abstractParam.getExample())) {
+				ValidHeader.addDateTimeFormat(buffer, abstractParam);
+			}
 			break;
 		case INTEGER:
+			// @Min(value = 1, message = "")
+			// @Max(value = 10, message = "")
 			if (abstractParam.getMinimum() != null) {
 				ValidHeader.addMin(buffer, abstractParam);
 			}
@@ -636,7 +645,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 				buffer.append("min = ").append(abstractParam.getMinLength()).append(", ");
 				buffer.append("message = ");
 				buffer.append(QUOTES);
-				buffer.append("数据长度不能小于").append(abstractParam.getMinLength());
+				buffer.append(abstractParam.getDescription()).append("长度不能小于").append(abstractParam.getMinLength());
 				buffer.append(QUOTES);
 				buffer.append(")");
 			} else if (abstractParam.getMinLength() == null) {
@@ -647,7 +656,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 				buffer.append("max = ").append(abstractParam.getMaxLength()).append(", ");
 				buffer.append("message = ");
 				buffer.append(QUOTES);
-				buffer.append("数据长度不能大于").append(abstractParam.getMaxLength());
+				buffer.append(abstractParam.getDescription()).append("长度不能大于").append(abstractParam.getMaxLength());
 				buffer.append(QUOTES);
 				buffer.append(")");
 			} else {
@@ -659,7 +668,8 @@ public abstract class JavaTransfer implements Join, Transfer {
 				buffer.append("max = ").append(abstractParam.getMaxLength()).append(", ");
 				buffer.append("message = ");
 				buffer.append(QUOTES);
-				buffer.append("数据长度在").append(abstractParam.getMinLength()).append("-").append(abstractParam.getMaxLength()).append("之间");
+				buffer.append(abstractParam.getDescription());
+				buffer.append("长度在").append(abstractParam.getMinLength()).append("-").append(abstractParam.getMaxLength()).append("之间");
 				buffer.append(QUOTES);
 				buffer.append(")");
 			}
@@ -674,7 +684,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 			buffer.append("value = ").append(abstractParam.getMinimum().intValue()).append(", ");
 			buffer.append("message = ");
 			buffer.append(QUOTES);
-			buffer.append("数据长度不能大于").append(abstractParam.getMinimum().intValue());
+			buffer.append(abstractParam.getDescription()).append("长度不能小于").append(abstractParam.getMinimum().intValue());
 			buffer.append(QUOTES);
 			buffer.append(")");
 		}
@@ -688,7 +698,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 			buffer.append("value = ").append(abstractParam.getMaximum().intValue()).append(", ");
 			buffer.append("message = ");
 			buffer.append(QUOTES);
-			buffer.append("数据长度不能大于").append(abstractParam.getMaximum().intValue());
+			buffer.append(abstractParam.getDescription()).append("长度不能大于").append(abstractParam.getMaximum().intValue());
 			buffer.append(QUOTES);
 			buffer.append(")");
 		}
@@ -714,6 +724,82 @@ public abstract class JavaTransfer implements Join, Transfer {
 			buffer.append(QUOTES);
 			buffer.append(")");
 		}
+
+		/**
+		 * 日期注解
+		 * @param buffer
+		 * @param abstractParam
+		 */
+		public static void addDateTimeFormat(StringBuilder buffer, AbstractParam abstractParam) {
+			String example = abstractParam.getExample();
+
+			String pattern = DateFormat.getPattern(example);
+
+			// replace
+			buffer.append(LINE).append(TAB).append(TAB);
+			buffer.append("@DateTimeFormat");
+			buffer.append("(");
+			buffer.append("pattern = ");
+			buffer.append(QUOTES);
+			buffer.append(pattern);
+			buffer.append(QUOTES);
+			// buffer.append(", ");
+			// buffer.append("message = ");
+			// buffer.append(QUOTES);
+			// buffer.append("请设置合法的").append(abstractParam.getDescription());
+			// buffer.append(QUOTES);
+			buffer.append(")");
+		}
+	}
+
+	// 日期转换
+	static class DateFormat {
+
+		private static List<Validator> validatorList = Lists.newArrayList();
+
+		static {
+			validatorList.add(new LineValidator());
+		}
+
+		public static String getPattern(String date) {
+			for (int i = 0; i < validatorList.size(); i++) {
+				Validator validator = validatorList.get(i);
+				if (validator.valid(date)) {
+					return validator.transfer(date);
+				}
+			}
+			return null;
+		}
+
+		// 有效性
+		interface Validator {
+
+			boolean valid(String date);
+
+			String transfer(String date);
+		}
+
+		static class LineValidator implements Validator {
+
+			String regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
+			String regex2 = "^\\d{4}-\\d{2}-\\d{2}$";
+
+			@Override
+			public boolean valid(String date) {
+				return StringUtils.isNotEmpty(date) && (date.matches(regex) || date.matches(regex2));
+			}
+
+			@Override
+			public String transfer(String date) {
+				String temp = date.substring(8);
+				if (StringUtils.isEmpty(temp)) {
+					return "yyyy-MM-dd";
+				}
+				return "yyyy-MM-dd kk:mm:ss";
+			}
+
+		}
+
 	}
 
 	/**
@@ -734,7 +820,7 @@ public abstract class JavaTransfer implements Join, Transfer {
 		case NUMBER:
 			return "Double";
 		case FILE:
-			return "File";
+			return "MultipartFile";
 		default:
 			break;
 		}

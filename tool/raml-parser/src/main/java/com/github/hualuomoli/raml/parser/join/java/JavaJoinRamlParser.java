@@ -65,7 +65,7 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 		// add serializable
 		buffer.append(LINE);
-		buffer.append(LINE).append("import java.io.File;");
+		// buffer.append(LINE).append("import java.io.File;");
 		buffer.append(LINE).append("import java.io.Serializable;");
 		buffer.append(LINE).append("import java.util.Date;");
 
@@ -83,9 +83,9 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		// hibernate valid
 		buffer.append(LINE).append("import org.hibernate.validator.constraints.Length;");
 		buffer.append(LINE).append("import org.hibernate.validator.constraints.NotEmpty;");
+		buffer.append(LINE).append("import org.springframework.format.annotation.DateTimeFormat;");
 
 		// springframework
-		buffer.append(LINE);
 		buffer.append(LINE).append("import org.springframework.stereotype.Controller;");
 		buffer.append(LINE).append("import org.springframework.ui.Model;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.PathVariable;");
@@ -94,6 +94,7 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestMethod;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.RequestParam;");
 		buffer.append(LINE).append("import org.springframework.web.bind.annotation.ResponseBody;");
+		buffer.append(LINE).append("import org.springframework.web.multipart.MultipartFile;");
 
 		// my
 		buffer.append(LINE);
