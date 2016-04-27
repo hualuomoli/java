@@ -3,3 +3,5 @@
 /.project
 /.classpath
 /target
+/src/test/resources/raml
+
