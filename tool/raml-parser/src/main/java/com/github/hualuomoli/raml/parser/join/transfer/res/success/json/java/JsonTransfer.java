@@ -4,10 +4,11 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
-import org.raml.model.ActionType;
 import org.raml.model.MimeType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
+
+import com.github.hualuomoli.raml.parser.join.transfer.util.TransferUtils;
 
 /**
  * 请求参数为JSON
@@ -16,41 +17,9 @@ import org.raml.model.parameter.UriParameter;
  */
 public class JsonTransfer extends JavaTransfer {
 
-	/**
-	 * 请求方式: POST
-	 * 请求协议: application/json
-	 * 请求参数: query查询参数0个,form表单参于0个
-	 * 请求例子: 不为空
-	 */
 	@Override
-	public boolean support(Action action, MimeType queryMimeType) {
-
-		// 请求方式: POST
-		if (action.getType() != ActionType.POST) {
-			return false;
-		}
-
-		// 请求协议: application/json
-		if (queryMimeType == null || !StringUtils.equalsIgnoreCase(queryMimeType.getType(), MIME_TYPE_JSON)) {
-			return false;
-		}
-
-		// 请求参数: query查询参数0个,form表单参于0个
-		// query
-		if (action.getQueryParameters() != null && action.getQueryParameters().size() > 0) {
-			return false;
-		}
-		// form
-		if (queryMimeType != null && queryMimeType.getFormParameters() != null && queryMimeType.getFormParameters().size() > 0) {
-			return false;
-		}
-
-		// 请求例子: 不为空
-		if (queryMimeType == null || StringUtils.isEmpty(queryMimeType.getExample())) {
-			return false;
-		}
-
-		return true;
+	public boolean support(Action action, MimeType requestMimeType) {
+		return TransferUtils.isJSON(action, requestMimeType);
 	}
 
 	@Override

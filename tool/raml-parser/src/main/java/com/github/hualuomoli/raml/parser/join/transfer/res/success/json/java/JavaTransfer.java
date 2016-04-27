@@ -42,11 +42,12 @@ public abstract class JavaTransfer extends ResponseSuccessJsonTransfer implement
 	* @param responseMimeType 响应MimeType
 	* @param action 事件
 	* @param relativeUri 相对URI
+	* @param parentFullUri 父URI
 	* @param parentFullUriParameters 父URI参数
 	* @param resource 本资源
 	* @return 事件数据
 	*/
-	public String getData(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	public String getData(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri, String parentFullUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		StringBuilder buffer = new StringBuilder();
 

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
 
+import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.transfer.res.ResponseTransfer;
 
 /**
@@ -14,7 +15,7 @@ import com.github.hualuomoli.raml.parser.join.transfer.res.ResponseTransfer;
 public abstract class ResponseSuccessTransfer implements ResponseTransfer {
 
 	@Override
-	public boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType) {
+	public boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType) throws ParseException {
 		if (StringUtils.isNotEmpty(status) && !StringUtils.equals(status, STATUS_SUCCESS)) {
 			return false;
 		}
@@ -28,6 +29,6 @@ public abstract class ResponseSuccessTransfer implements ResponseTransfer {
 	 * @param responseMimeType 响应MimeType
 	 * @return 是否支持
 	 */
-	public abstract boolean support(Action action, MimeType requestMimeType, MimeType responseMimeType);
+	public abstract boolean support(Action action, MimeType requestMimeType, MimeType responseMimeType) throws ParseException;
 
 }

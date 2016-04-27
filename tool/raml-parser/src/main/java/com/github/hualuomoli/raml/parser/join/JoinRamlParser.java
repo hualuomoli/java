@@ -30,6 +30,8 @@ import com.google.common.collect.Sets;
 public abstract class JoinRamlParser extends RamlParserAbstract implements Join {
 
 	protected String encoding = "UTF-8"; // 输出文件编码
+	protected String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
+	protected String author = "hualuomoli"; // 作者,用于注释
 	protected List<Transfer> transferList; // 转换器
 
 	public JoinRamlParser() {
@@ -226,7 +228,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 					if (logger.isDebugEnabled()) {
 						logger.debug("transfer {}", transfer);
 					}
-					String data = transfer.getData(null, null, null, action, relativeUri, parentFullUriParameters, resource);
+					String data = transfer.getData(null, null, null, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 					datas.add(data);
 					ok = true;
 					break;
@@ -247,7 +249,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 						if (logger.isDebugEnabled()) {
 							logger.debug("transfer {}", transfer);
 						}
-						String data = transfer.getData(queryMimeType, null, null, action, relativeUri, parentFullUriParameters, resource);
+						String data = transfer.getData(queryMimeType, null, null, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 						datas.add(data);
 						ok = true;
 						break;
@@ -268,7 +270,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 						if (logger.isDebugEnabled()) {
 							logger.debug("transfer {}", transfer);
 						}
-						String data = transfer.getData(null, r.status, r.mimeType, action, relativeUri, parentFullUriParameters, resource);
+						String data = transfer.getData(null, r.status, r.mimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 						datas.add(data);
 						ok = true;
 						break;
@@ -291,7 +293,8 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 							if (logger.isDebugEnabled()) {
 								logger.debug("transfer {}", transfer);
 							}
-							String data = transfer.getData(queryMimeType, r.status, r.mimeType, action, relativeUri, parentFullUriParameters, resource);
+							String data = transfer.getData(queryMimeType, r.status, r.mimeType, action, relativeUri, parentFullUri, parentFullUriParameters,
+									resource);
 							datas.add(data);
 							ok = true;
 							break;
@@ -321,6 +324,14 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
+	}
+
+	public void setUriPrefix(String uriPrefix) {
+		this.uriPrefix = uriPrefix;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public void setTransferList(List<Transfer> transferList) {

@@ -36,7 +36,7 @@ public interface Transfer {
 	 * @param responseMimeType 响应MimeType
 	 * @return 是否支持
 	 */
-	boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType);
+	boolean support(Action action, MimeType requestMimeType, String status, MimeType responseMimeType) throws ParseException;
 
 	/**
 	 * 获取数据
@@ -45,11 +45,12 @@ public interface Transfer {
 	 * @param responseMimeType 响应MimeType
 	 * @param action 事件
 	 * @param relativeUri 相对URI
+	 * @param parentFullUri 父URI
 	 * @param parentFullUriParameters 父URI参数
 	 * @param resource 本资源
 	 * @return 事件数据
 	 */
-	String getData(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+	String getData(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri, String parentFullUri,
 			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException;
 
 }

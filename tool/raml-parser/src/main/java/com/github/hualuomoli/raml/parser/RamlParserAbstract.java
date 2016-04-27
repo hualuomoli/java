@@ -27,9 +27,14 @@ public abstract class RamlParserAbstract implements RamlParser {
 
 	public static final Logger logger = LoggerFactory.getLogger(RamlParser.class);
 
-	private boolean clearBeforeFlush; // 强制清除输出目录
 	protected String outputFilepath; // 输出目录
 	protected String version = "1.0"; // 版本号
+
+	@Override
+	public void init(boolean delete) throws ParseException {
+		// 清除输出目录
+		this.clear(delete);
+	}
 
 	@Override
 	public void parse(String ramlResourceLocation) throws ParseException {
@@ -43,8 +48,6 @@ public abstract class RamlParserAbstract implements RamlParser {
 
 	@Override
 	public void parse(Raml raml) throws ParseException {
-		// 清除输出目录
-		this.clear();
 		// this.createOutputFilepath();
 		// 第一级设置相对目录,如 /raml/api/user 相对目录为user,/raml/api/order/product 相对目录为order/product
 		Map<String, Resource> resources = raml.getResources();
@@ -185,9 +188,10 @@ public abstract class RamlParserAbstract implements RamlParser {
 
 	/**
 	 * 清除输出目录
+	 * @param delete 
 	 */
-	private void clear() throws ParseException {
-		if (!clearBeforeFlush) {
+	private void clear(boolean delete) throws ParseException {
+		if (!delete) {
 			return;
 		}
 		File dir = new File(outputFilepath);
@@ -198,10 +202,6 @@ public abstract class RamlParserAbstract implements RamlParser {
 				throw new ParseException(e);
 			}
 		}
-	}
-
-	public void setClearBeforeFlush(boolean clearBeforeFlush) {
-		this.clearBeforeFlush = clearBeforeFlush;
 	}
 
 	public void setOutputFilepath(String outputFilepath) {

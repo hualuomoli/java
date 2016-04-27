@@ -31,8 +31,6 @@ import com.google.common.collect.Lists;
 public class JavaJoinRamlParser extends JoinRamlParser {
 
 	protected String packageName = "com.github.hualuomoli"; // 包名
-	protected String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
-	protected String author = "hualuomoli"; // 作者,用于注释
 
 	public JavaJoinRamlParser() {
 		super();
@@ -229,17 +227,8 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 		buffer.append(packageName);
 
 		// uri path
-		String uriPath = RamlUtils.trimUriParam(parentFullUri);
-		if (StringUtils.isEmpty(uriPrefix)) {
-			// uri prefix is null
-			buffer.append(uriPath);
-		} else if (uriPath.startsWith(uriPrefix)) {
-			// start with uri prefix
-			buffer.append(uriPath.substring(uriPrefix.length()));
-		} else {
-			// not start with uri prefix
-			buffer.append(uriPath);
-		}
+		String uriPath = RamlUtils.trimPrefix(RamlUtils.trimUriParam(parentFullUri), uriPrefix);
+		buffer.append(uriPath);
 
 		// add to web folder
 		buffer.append(".web");
@@ -249,14 +238,6 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
-	}
-
-	public void setUriPrefix(String uriPrefix) {
-		this.uriPrefix = uriPrefix;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 
 }

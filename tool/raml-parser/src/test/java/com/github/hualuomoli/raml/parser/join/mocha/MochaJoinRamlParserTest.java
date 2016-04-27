@@ -1,21 +1,20 @@
-package com.github.hualuomoli.raml.parser.join.java;
+package com.github.hualuomoli.raml.parser.join.mocha;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.join.java.JavaJoinRamlParser;
 
-public class JavaRamlParserTest {
+public class MochaJoinRamlParserTest {
 
-	private static JavaJoinRamlParser ramlParser;
+	private static MochaJoinRamlParser ramlParser;
 
 	@BeforeClass
 	public static void beforeClass() {
-		ramlParser = new JavaJoinRamlParser() {
+		ramlParser = new MochaJoinRamlParser() {
 		};
 
-		ramlParser.setOutputFilepath("E:/output/web");
+		ramlParser.setOutputFilepath("E:/output/mocha");
 
 	}
 
@@ -25,5 +24,4 @@ public class JavaRamlParserTest {
 		ramlParser.parse("raml/uri.raml");
 		ramlParser.parse("raml/type.raml");
 	}
-
 }

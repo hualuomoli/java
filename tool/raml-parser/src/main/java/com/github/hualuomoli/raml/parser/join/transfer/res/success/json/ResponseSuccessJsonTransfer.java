@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
 
+import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.transfer.res.success.ResponseSuccessTransfer;
 
 /**
@@ -14,7 +15,7 @@ import com.github.hualuomoli.raml.parser.join.transfer.res.success.ResponseSucce
 public abstract class ResponseSuccessJsonTransfer extends ResponseSuccessTransfer {
 
 	@Override
-	public boolean support(Action action, MimeType requestMimeType, MimeType responseMimeType) {
+	public boolean support(Action action, MimeType requestMimeType, MimeType responseMimeType) throws ParseException {
 		if (responseMimeType != null && !StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON)) {
 			return false;
 		}
@@ -28,6 +29,6 @@ public abstract class ResponseSuccessJsonTransfer extends ResponseSuccessTransfe
 	 * @param responseMimeType 响应MimeType
 	 * @return 是否支持
 	 */
-	public abstract boolean support(Action action, MimeType requestMimeType);
+	public abstract boolean support(Action action, MimeType requestMimeType) throws ParseException;
 
 }

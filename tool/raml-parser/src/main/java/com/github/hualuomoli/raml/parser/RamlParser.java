@@ -12,6 +12,9 @@ import com.github.hualuomoli.raml.parser.exception.ParseException;
  */
 public interface RamlParser {
 
+	// 初始化
+	void init(boolean delete) throws ParseException;
+
 	// parse
 	void parse(String ramlResourceLocation) throws ParseException;
 

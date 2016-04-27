@@ -70,6 +70,30 @@ public class RamlUtils {
 	}
 
 	/**
+	 * 去掉前缀
+	 * @param data 数据
+	 * @param prefix 前缀
+	 * @return 去掉后的数据
+	 */
+	public static String trimPrefix(String data, String prefix) {
+
+		if (StringUtils.isEmpty(data) || StringUtils.isEmpty(prefix)) {
+			return data;
+		}
+
+		if (data.length() <= prefix.length()) {
+			return data;
+		}
+
+		if (data.startsWith(prefix)) {
+			return data.substring(prefix.length());
+		}
+
+		return data;
+
+	}
+
+	/**
 	 * 获取URI最后一个名称 /user/order/product --> product
 	 * @param parentFullUri
 	 * @return 最后一个URI名称
