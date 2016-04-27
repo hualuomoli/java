@@ -36,6 +36,8 @@ public class HandlerException implements HandlerExceptionResolver {
 
 		// 设置错误信息
 		ErrorData errorData;
+		
+		ex.printStackTrace();
 
 		// MVC 异常,设置异常信息
 		if (ex instanceof MvcException) {
