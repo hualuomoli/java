@@ -1,8 +1,8 @@
-package com.github.hualuomoli.ret.list;
+package com.github.hualuomoli.mvc.ramlapi.result;
 
 import java.util.List;
 
-import com.github.hualuomoli.ret.none.NoDataMessageReturn;
+import com.github.hualuomoli.mvc.ramlapi.ResultAbstract;
 
 /**
  * return list data
@@ -23,13 +23,11 @@ import com.github.hualuomoli.ret.none.NoDataMessageReturn;
  * @author hualuomoli
  *
  */
-public class ListDataMessageReturn<T> extends NoDataMessageReturn {
-
-	private static final long serialVersionUID = -361084718831818979L;
+public class ListData<T> extends ResultAbstract {
 
 	private List<T> data;
 
-	public ListDataMessageReturn() {
+	public ListData() {
 	}
 
 	public List<T> getData() {

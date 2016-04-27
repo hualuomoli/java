@@ -1,15 +1,15 @@
-package com.github.hualuomoli.ret.page.entity;
+package com.github.hualuomoli.mvc.ramlapi.result.entity;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * page message
+ * result page entity
  * @author hualuomoli
  *
  * @param <T>
  */
-public class Page<T> implements Serializable {
+public class ResultPage<T> implements Serializable {
 
 	private static final long serialVersionUID = -4195627771767010262L;
 
@@ -19,7 +19,7 @@ public class Page<T> implements Serializable {
 
 	private List<T> list;
 
-	public Page() {
+	public ResultPage() {
 	}
 
 	public int getTotal() {

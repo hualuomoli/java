@@ -1,9 +1,9 @@
-package com.github.hualuomoli.ret.object;
+package com.github.hualuomoli.mvc.ramlapi.result;
 
-import com.github.hualuomoli.ret.none.NoDataMessageReturn;
+import com.github.hualuomoli.mvc.ramlapi.ResultAbstract;
 
 /**
- * return object data
+ * return map data
  * @description
  * {
  * 	"code" : "0",
@@ -16,13 +16,11 @@ import com.github.hualuomoli.ret.none.NoDataMessageReturn;
  *
  * @param <T> data type
  */
-public class ObjectDataMessageReturn<T> extends NoDataMessageReturn {
-
-	private static final long serialVersionUID = -3895536923345693226L;
+public class MapData<T> extends ResultAbstract {
 
 	private T data;
 
-	public ObjectDataMessageReturn() {
+	public MapData() {
 	}
 
 	public T getData() {
