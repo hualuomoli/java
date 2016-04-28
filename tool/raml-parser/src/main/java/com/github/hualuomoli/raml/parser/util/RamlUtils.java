@@ -58,15 +58,39 @@ public class RamlUtils {
 	}
 
 	/**
+	 * 处理example 去掉换行,双引号转意
+	 * @param example 例子
+	 * @return 处理后的例子
+	 */
+	public static String dealExample(String example) {
+		if (StringUtils.isEmpty(example)) {
+			return StringUtils.EMPTY;
+		}
+		return example.replaceAll("\"", "\\\\\"").replaceAll("\n", "");
+	}
+
+	/**
+	* 处理description 去掉换行,双引号转意
+	* @param description 描述
+	* @return 处理后description
+	*/
+	public static String dealDescription(String description) {
+		if (StringUtils.isEmpty(description)) {
+			return StringUtils.EMPTY;
+		}
+		return description.replaceAll("\n", "");
+	}
+
+	/**
 	 * 去掉URI中参数部分 /user/{username}/{addressid} --> /user
 	 * @param parentFullUri URI
 	 * @return 去掉URI中参数部分
 	 */
-	public static String trimUriParam(String parentFullUri) {
-		if (StringUtils.isEmpty(parentFullUri)) {
+	public static String trimUriParam(String uri) {
+		if (StringUtils.isEmpty(uri)) {
 			return StringUtils.EMPTY;
 		}
-		return parentFullUri.replaceAll("/\\{.*}", "");
+		return uri.replaceAll("/\\{.*}", "");
 	}
 
 	/**

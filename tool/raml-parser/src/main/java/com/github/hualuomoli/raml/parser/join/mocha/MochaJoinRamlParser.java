@@ -15,11 +15,11 @@ import org.raml.model.parameter.UriParameter;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
 import com.github.hualuomoli.raml.parser.join.java.JavaJoinRamlParser;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha.FileTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha.GetTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha.JsonTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha.RestfulTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha.UrlEncodedTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj.MochaFileMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj.MochaGetMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj.MochaJsonMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj.MochaRestfulMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj.MochaUrlEncodedMethodTransfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 
@@ -33,11 +33,11 @@ public class MochaJoinRamlParser extends JoinRamlParser {
 	public MochaJoinRamlParser() {
 		super();
 		transferList = Lists.newArrayList();
-		transferList.add(new RestfulTransfer());
-		transferList.add(new GetTransfer());
-		transferList.add(new UrlEncodedTransfer());
-		transferList.add(new JsonTransfer());
-		transferList.add(new FileTransfer());
+		transferList.add(new MochaRestfulMethodTransfer());
+		transferList.add(new MochaGetMethodTransfer());
+		transferList.add(new MochaUrlEncodedMethodTransfer());
+		transferList.add(new MochaJsonMethodTransfer());
+		transferList.add(new MochaFileMethodTransfer());
 	}
 
 	@Override

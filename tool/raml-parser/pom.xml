@@ -17,6 +17,7 @@
 
 		<!-- Raml -->
 		<raml.parser.version>0.8.12</raml.parser.version>
+		<json.version>20160212</json.version>
 
 	</properties>
 
@@ -27,6 +28,12 @@
 			<groupId>org.raml</groupId>
 			<artifactId>raml-parser</artifactId>
 			<version>${raml.parser.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

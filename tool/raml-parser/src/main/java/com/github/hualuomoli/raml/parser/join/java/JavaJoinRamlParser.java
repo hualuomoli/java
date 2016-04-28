@@ -14,12 +14,12 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.JoinRamlParser;
-import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.FileTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.GetTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.JsonTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.RestfulTransfer;
-import com.github.hualuomoli.raml.parser.join.transfer.res.success.json.java.UrlEncodedTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.MethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.java.rsj.JavaFileMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.java.rsj.JavaGetMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.java.rsj.JavaJsonMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.java.rsj.JavaRestfulMethodTransfer;
+import com.github.hualuomoli.raml.parser.join.transfer.java.rsj.JavaUrlEncodedMethodTransfer;
 import com.github.hualuomoli.raml.parser.util.RamlUtils;
 import com.google.common.collect.Lists;
 
@@ -34,21 +34,21 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 	public JavaJoinRamlParser() {
 		super();
-		List<Transfer> transferList = Lists.newArrayList();
+		List<MethodTransfer> transferList = Lists.newArrayList();
 		// restfule
-		transferList.add(new RestfulTransfer());
+		transferList.add(new JavaRestfulMethodTransfer());
 		// get
-		transferList.add(new GetTransfer());
+		transferList.add(new JavaGetMethodTransfer());
 		// UrlEncoded
-		transferList.add(new UrlEncodedTransfer());
+		transferList.add(new JavaUrlEncodedMethodTransfer());
 		// JSON
-		transferList.add(new JsonTransfer());
+		transferList.add(new JavaJsonMethodTransfer());
 		// file
-		transferList.add(new FileTransfer());
+		transferList.add(new JavaFileMethodTransfer());
 		this.setTransferList(transferList);
 	}
 
-	public JavaJoinRamlParser(List<Transfer> transferList) {
+	public JavaJoinRamlParser(List<MethodTransfer> transferList) {
 		super(transferList);
 	}
 
@@ -96,6 +96,7 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 		// my
 		buffer.append(LINE);
+		buffer.append(LINE).append("import com.github.hualuomoli.commons.json.JsonMapper;");
 		buffer.append(LINE).append("import com.github.hualuomoli.mvc.valid.EntityValidator;");
 
 		// description

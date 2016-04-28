@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha;
+package com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ import com.github.hualuomoli.raml.parser.join.transfer.util.TransferUtils;
  * @author hualuomoli
  *
  */
-public class FileTransfer extends MochaTransfer {
+public class MochaFileMethodTransfer extends RSJMochaMethodTransfer {
 
 	@Override
 	public boolean support(Action action, MimeType requestMimeType) throws ParseException {

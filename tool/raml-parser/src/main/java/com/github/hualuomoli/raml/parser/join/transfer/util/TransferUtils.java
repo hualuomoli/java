@@ -11,7 +11,7 @@ import org.raml.model.ParamType;
 import org.raml.model.parameter.FormParameter;
 
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.MethodTransfer;
 
 /**
  * 转换器工具
@@ -67,7 +67,7 @@ public class TransferUtils {
 		}
 
 		// 请求协议: application/x-www-form-urlencoded
-		if (requestMimeType == null || !StringUtils.equalsIgnoreCase(requestMimeType.getType(), Transfer.MIME_TYPE_URLENCODED)) {
+		if (requestMimeType == null || !StringUtils.equalsIgnoreCase(requestMimeType.getType(), MethodTransfer.MIME_TYPE_URLENCODED)) {
 			return false;
 		}
 
@@ -93,7 +93,7 @@ public class TransferUtils {
 		}
 
 		// 请求协议: application/json
-		if (requestMimeType == null || !StringUtils.equalsIgnoreCase(requestMimeType.getType(), Transfer.MIME_TYPE_JSON)) {
+		if (requestMimeType == null || !StringUtils.equalsIgnoreCase(requestMimeType.getType(), MethodTransfer.MIME_TYPE_JSON)) {
 			return false;
 		}
 
@@ -123,7 +123,7 @@ public class TransferUtils {
 		}
 
 		// 请求协议: multipart/form-data
-		if (requestMimeType == null || !StringUtils.equals(requestMimeType.getType(), Transfer.MIME_TYPE_MULTIPART)) {
+		if (requestMimeType == null || !StringUtils.equals(requestMimeType.getType(), MethodTransfer.MIME_TYPE_MULTIPART)) {
 			return false;
 		}
 

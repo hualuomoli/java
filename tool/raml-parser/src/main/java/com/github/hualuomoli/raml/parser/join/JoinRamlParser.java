@@ -18,7 +18,7 @@ import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.parser.RamlParserAbstract;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
-import com.github.hualuomoli.raml.parser.join.transfer.Transfer;
+import com.github.hualuomoli.raml.parser.join.transfer.MethodTransfer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -32,12 +32,12 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 	protected String encoding = "UTF-8"; // 输出文件编码
 	protected String uriPrefix; // URI的前缀,如 /api/user 希望目录不包含api
 	protected String author = "hualuomoli"; // 作者,用于注释
-	protected List<Transfer> transferList; // 转换器
+	protected List<MethodTransfer> transferList; // 转换器
 
 	public JoinRamlParser() {
 	}
 
-	public JoinRamlParser(List<Transfer> transferList) {
+	public JoinRamlParser(List<MethodTransfer> transferList) {
 		this.transferList = transferList;
 	}
 
@@ -223,7 +223,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		ok = false;
 		if (queryMimeTypes.size() == 0 && rs.size() == 0) {
 			for (int i = 0; i < transferList.size(); i++) {
-				Transfer transfer = transferList.get(i);
+				MethodTransfer transfer = transferList.get(i);
 				if (transfer.support(action, null, null, null)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("transfer {}", transfer);
@@ -244,7 +244,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		if (queryMimeTypes.size() > 0 && rs.size() == 0) {
 			for (MimeType queryMimeType : queryMimeTypes) {
 				for (int i = 0; i < transferList.size(); i++) {
-					Transfer transfer = transferList.get(i);
+					MethodTransfer transfer = transferList.get(i);
 					if (transfer.support(action, queryMimeType, null, null)) {
 						if (logger.isDebugEnabled()) {
 							logger.debug("transfer {}", transfer);
@@ -265,7 +265,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		if (queryMimeTypes.size() == 0 && rs.size() > 0) {
 			for (R r : rs) {
 				for (int i = 0; i < transferList.size(); i++) {
-					Transfer transfer = transferList.get(i);
+					MethodTransfer transfer = transferList.get(i);
 					if (transfer.support(action, null, r.status, r.mimeType)) {
 						if (logger.isDebugEnabled()) {
 							logger.debug("transfer {}", transfer);
@@ -288,7 +288,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 			for (MimeType queryMimeType : queryMimeTypes) {
 				for (R r : rs) {
 					for (int i = 0; i < transferList.size(); i++) {
-						Transfer transfer = transferList.get(i);
+						MethodTransfer transfer = transferList.get(i);
 						if (transfer.support(action, queryMimeType, r.status, r.mimeType)) {
 							if (logger.isDebugEnabled()) {
 								logger.debug("transfer {}", transfer);
@@ -334,7 +334,7 @@ public abstract class JoinRamlParser extends RamlParserAbstract implements Join 
 		this.author = author;
 	}
 
-	public void setTransferList(List<Transfer> transferList) {
+	public void setTransferList(List<MethodTransfer> transferList) {
 		this.transferList = transferList;
 	}
 

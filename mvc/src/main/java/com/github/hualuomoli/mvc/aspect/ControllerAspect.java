@@ -76,7 +76,11 @@ public class ControllerAspect {
 	 */
 	private void showParameter(List<Object> parameters) {
 		for (Object parameter : parameters) {
-			logger.debug("parameter {}", ToStringBuilder.reflectionToString(parameter));
+			if (parameter.getClass().getName().startsWith("com.github.hualuomoli")) {
+				logger.debug("parameter {}", ToStringBuilder.reflectionToString(parameter));
+			} else {
+				logger.debug("parameter {}", parameter);
+			}
 		}
 	}
 

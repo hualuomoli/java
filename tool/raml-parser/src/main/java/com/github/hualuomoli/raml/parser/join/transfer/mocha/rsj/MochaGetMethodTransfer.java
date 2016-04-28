@@ -1,4 +1,4 @@
-package com.github.hualuomoli.raml.parser.join.transfer.res.success.json.mocha;
+package com.github.hualuomoli.raml.parser.join.transfer.mocha.rsj;
 
 import java.util.Map;
 
@@ -11,11 +11,11 @@ import org.raml.model.parameter.UriParameter;
 import com.github.hualuomoli.raml.parser.join.transfer.util.TransferUtils;
 
 /**
- * mocha转换器
+ * GET转换器
  * @author hualuomoli
  *
  */
-public class GetTransfer extends MochaTransfer {
+public class MochaGetMethodTransfer extends RSJMochaMethodTransfer {
 
 	@Override
 	public boolean support(Action action, MimeType requestMimeType) {

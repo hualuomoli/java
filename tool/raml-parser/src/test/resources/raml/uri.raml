@@ -12,9 +12,29 @@ traits:
           description: 成功
           body:
             application/json:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "id": "http://jsonschema.net",
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "id": "http://jsonschema.net/code",
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "id": "http://jsonschema.net/msg",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg"
+                  ]
+                }
               example: |
                 {
-                  "code" : "0",
+                  "code" : 0,
                   "msg" : "成功"
                 }
   # 响应成功2
@@ -24,6 +44,26 @@ traits:
           description: 成功
           body:
             application/json:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "id": "http://jsonschema.net",
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "id": "http://jsonschema.net/code",
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "id": "http://jsonschema.net/msg",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg"
+                  ]
+                }
               example: |
                 {
                   "code" : "9",

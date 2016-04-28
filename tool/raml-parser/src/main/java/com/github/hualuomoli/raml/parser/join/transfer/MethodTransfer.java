@@ -10,11 +10,11 @@ import org.raml.model.parameter.UriParameter;
 import com.github.hualuomoli.raml.parser.exception.ParseException;
 
 /**
- * 转换器
+ * 方法转换器
  * @author hualuomoli
  *
  */
-public interface Transfer {
+public interface MethodTransfer {
 
 	public static final String STATUS_SUCCESS = "200"; // 成功响应编码
 
