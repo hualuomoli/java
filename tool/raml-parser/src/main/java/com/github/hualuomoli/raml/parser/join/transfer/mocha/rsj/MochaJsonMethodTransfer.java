@@ -23,9 +23,19 @@ public class MochaJsonMethodTransfer extends RSJMochaMethodTransfer {
 	}
 
 	@Override
+	protected void addRequestOthers(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+
+		// .set('Content-Type', 'application/json')
+		buffer.append(LINE).append(TAB).append(TAB).append(TAB);
+		buffer.append(".set('Content-Type', 'application/json')");
+
+	}
+
+	@Override
 	public void addRequestParameter(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
 			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
-		if (requestMimeType == null || StringUtils.isNotEmpty(requestMimeType.getExample())) {
+		if (requestMimeType == null || StringUtils.isEmpty(requestMimeType.getExample())) {
 			return;
 		}
 		buffer.append(LINE).append(TAB).append(TAB).append(TAB);

@@ -24,5 +24,6 @@ public class MochaJoinRamlParserTest {
 		ramlParser.parse("raml/uri.raml");
 		ramlParser.parse("raml/type.raml");
 		ramlParser.parse("raml/response.raml");
+		ramlParser.parse("raml/json.raml");
 	}
 }

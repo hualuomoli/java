@@ -220,7 +220,7 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		StringBuilder buffer = new StringBuilder();
 
-		if (responseMimeType == null || !StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON) || StringUtils.isEmpty(responseMimeType.getExample())) {
+		if (responseMimeType == null || !StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON) || StringUtils.isEmpty(responseMimeType.getSchema())) {
 			return buffer.toString();
 		}
 
@@ -232,21 +232,17 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 
 		// schema
 		String schema = responseMimeType.getSchema();
-		if (StringUtils.isEmpty(schema)) {
-			throw new ParseException("please set json's schema.");
-		}
-
 		String upperResultEntityName = resultEntityName.substring(0, 1).toUpperCase() + resultEntityName.substring(1);
 
 		// buffer.append(LINE);
 
-		buffer.append(this.getResultClass(1, upperResultEntityName, JavaRamlUtils.parseSchema(schema)));
+		buffer.append(this.getJSONClass(1, upperResultEntityName, JavaRamlUtils.parseSchema(schema)));
 
 		return buffer.toString();
 	}
 
 	// 获取返回类的定义
-	private String getResultClass(int level, String classNmae, List<JSON> jsons) {
+	protected String getJSONClass(int level, String classNmae, List<JSON> jsons) {
 		StringBuilder buffer = new StringBuilder();
 		String tab = "";
 		for (int i = 0; i < level; i++) {
@@ -276,7 +272,7 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 
 		// method
 		for (JSON json : jsons) {
-			String upperName = json.name.substring(0, 1).toUpperCase() + json.name;
+			String upperName = json.name.substring(0, 1).toUpperCase() + json.name.substring(1);
 			String array = json.jsonType == JSON.JSON_TYPE_LIST ? "[]" : "";
 
 			// getter
@@ -307,7 +303,7 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 		// add inner class
 		for (JSON json : jsons) {
 			if (json.jsonType == JSON.JSON_TYPE_LIST || json.jsonType == JSON.JSON_TYPE_MAP) {
-				buffer.append(this.getResultClass(level + 1, json.type, json.children));
+				buffer.append(this.getJSONClass(level + 1, json.type, json.children));
 			}
 		}
 

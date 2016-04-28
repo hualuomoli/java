@@ -37,6 +37,9 @@ public abstract class MochaMethodTransfer extends MethodTransferAbstract {
 		buffer.append(LINE);
 
 		buffer.append(LINE).append(TAB);
+		buffer.append("// ").append(this.getClass().getSimpleName());
+
+		buffer.append(LINE).append(TAB);
 		buffer.append("it");
 		buffer.append("('");
 		buffer.append(RamlUtils.dealDescription(action.getDescription()));
@@ -68,6 +71,8 @@ public abstract class MochaMethodTransfer extends MethodTransferAbstract {
 
 		buffer.append(LINE).append(TAB).append(TAB).append(TAB);
 		buffer.append(".").append(action.getType().toString().toLowerCase()).append("('").append(realUri).append("')");
+		// 增加其他信息
+		this.addRequestOthers(buffer, requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 		// 增加参数
 		this.addRequestParameter(buffer, requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 		// status code
@@ -94,6 +99,10 @@ public abstract class MochaMethodTransfer extends MethodTransferAbstract {
 		buffer.append(LINE);
 
 		return buffer.toString();
+	}
+
+	protected void addRequestOthers(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
 	}
 
 	public abstract void addRequestParameter(StringBuilder buffer, MimeType requestMimeType, String status, MimeType responseMimeType, Action action,
