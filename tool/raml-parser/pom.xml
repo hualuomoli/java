@@ -33,7 +33,6 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>${json.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
