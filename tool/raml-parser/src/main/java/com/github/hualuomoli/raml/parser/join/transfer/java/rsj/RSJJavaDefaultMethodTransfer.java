@@ -19,7 +19,7 @@ public abstract class RSJJavaDefaultMethodTransfer extends JavaDefaultMethodTran
 		if (StringUtils.isNotEmpty(status) && !StringUtils.equals(status, STATUS_SUCCESS)) {
 			return false;
 		}
-		if (responseMimeType != null && !StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON)) {
+		if (responseMimeType == null || !StringUtils.equals(responseMimeType.getType(), MIME_TYPE_JSON)) {
 			return false;
 		}
 		return this.support(action, requestMimeType);

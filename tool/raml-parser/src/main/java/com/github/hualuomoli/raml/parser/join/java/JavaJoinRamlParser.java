@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 public class JavaJoinRamlParser extends JoinRamlParser {
 
 	protected String packageName = "com.github.hualuomoli"; // 包名
+	protected String projectName = "web-raml"; // 项目名
 
 	public JavaJoinRamlParser() {
 		super();
@@ -199,9 +200,9 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 			filename = "pom.xml";
 			String pomData = FileUtils.readFileToString(new File(webProjectFilepath, filename), "UTF-8");
 			// update <artifactId>web</artifactId>
-			pomData = StringUtils.replace(pomData, "<artifactId>web</artifactId>", "<artifactId>web-demo</artifactId>");
+			pomData = StringUtils.replace(pomData, "<artifactId>web</artifactId>", "<artifactId>" + projectName + "</artifactId>");
 			// update <warName>web</warName>
-			pomData = StringUtils.replace(pomData, "<warName>web</warName>", "<warName>web-demo</warName>");
+			pomData = StringUtils.replace(pomData, "<warName>web</warName>", "<warName>" + projectName + "</warName>");
 			// flush
 			FileUtils.write(new File(outputFilepath, filename), pomData, "UTF-8");
 
@@ -239,6 +240,10 @@ public class JavaJoinRamlParser extends JoinRamlParser {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 }

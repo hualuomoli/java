@@ -29,7 +29,7 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 	// 查询实体类
 	@Override
 	public Set<Note> getOtherNotes(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri, String parentFullUri,
-			Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 
 		Set<Note> notes = Sets.newHashSet();
 
@@ -60,7 +60,7 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 
 	@Override
 	public Set<MethodParam> getOtherParams(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 
 		Set<MethodParam> params = Sets.newHashSet();
 
@@ -315,13 +315,14 @@ public abstract class JavaDefaultMethodTransfer extends JavaMethodTransfer {
 
 	// 获取查询实体类名称
 	protected String getQueryEntityName(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		return this.getEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 	}
 
 	// 获取返回实体类名称
 	protected String getResultEntityName(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
+
 		String entityName = this.getQueryEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters,
 				resource);
 		if (StringUtils.isEmpty(entityName)) {

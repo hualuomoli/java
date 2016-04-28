@@ -61,7 +61,7 @@ public abstract class JavaMethodTransfer extends MethodTransferAbstract {
 
 	// 其他参数
 	public abstract Set<Note> getOtherNotes(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource);
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException;
 
 	@Override
 	public String getHeader(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri, String parentFullUri,
@@ -164,7 +164,7 @@ public abstract class JavaMethodTransfer extends MethodTransferAbstract {
 
 	// 其他参数
 	public abstract Set<MethodParam> getOtherParams(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource);
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException;
 
 	@Override
 	public String getFooter(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri, String parentFullUri,

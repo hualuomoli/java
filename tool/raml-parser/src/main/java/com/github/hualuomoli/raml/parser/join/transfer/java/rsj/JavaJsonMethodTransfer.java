@@ -29,14 +29,14 @@ public class JavaJsonMethodTransfer extends RSJJavaDefaultMethodTransfer {
 
 	@Override
 	protected String getQueryEntityName(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		return "json"
 				+ super.getQueryEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 	}
 
 	@Override
 	public Set<MethodParam> getOtherParams(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		Set<MethodParam> params = Sets.newHashSet();
 
 		String queryEntityName = this.getQueryEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters,

@@ -14,9 +14,8 @@ public class JavaRamlParserTest {
 	public static void beforeClass() {
 		ramlParser = new JavaJoinRamlParser() {
 		};
-
 		ramlParser.setOutputFilepath("E:/output/web");
-
+		ramlParser.setProjectName("demo");
 	}
 
 	@Test

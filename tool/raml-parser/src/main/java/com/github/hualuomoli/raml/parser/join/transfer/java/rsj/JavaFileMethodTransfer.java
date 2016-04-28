@@ -24,7 +24,7 @@ public class JavaFileMethodTransfer extends RSJJavaDefaultMethodTransfer {
 
 	@Override
 	protected String getQueryEntityName(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		return "file"
 				+ super.getQueryEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 	}

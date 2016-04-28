@@ -7,6 +7,7 @@ import org.raml.model.MimeType;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
+import com.github.hualuomoli.raml.parser.exception.ParseException;
 import com.github.hualuomoli.raml.parser.join.transfer.util.TransferUtils;
 
 /**
@@ -23,7 +24,7 @@ public class JavaUrlEncodedMethodTransfer extends RSJJavaDefaultMethodTransfer {
 
 	@Override
 	protected String getQueryEntityName(MimeType requestMimeType, String status, MimeType responseMimeType, Action action, String relativeUri,
-			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) {
+			String parentFullUri, Map<String, UriParameter> parentFullUriParameters, Resource resource) throws ParseException {
 		return "encoded"
 				+ super.getQueryEntityName(requestMimeType, status, responseMimeType, action, relativeUri, parentFullUri, parentFullUriParameters, resource);
 	}
