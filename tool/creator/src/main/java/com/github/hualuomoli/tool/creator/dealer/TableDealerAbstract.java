@@ -174,10 +174,10 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 		// get columns
 		List<Column> columnList = this.getColumns(entityCls, sets, projectPackageName);
 		// add id
-		columnList.add(0, this.getColumn(String.class, new MyDBColumn(this.getIdLength()), "id", "主键", true, ""));
+		columnList.add(0, this.getColumn(String.class, new MyDBColumn(this.getIdLength()), unCamel("id"), "主键", true, ""));
 		// add version
 		if (!ignores.contains("version")) {
-			columnList.add(1, this.getColumn(Integer.class, new MyDBColumn(11), "version", "数据版本", true, "1"));
+			columnList.add(1, this.getColumn(Integer.class, new MyDBColumn(11), unCamel("version"), "数据版本", true, "1"));
 		}
 		// add version,createBy,createDate,updateBy,updateDate,status,remark
 		columnList.addAll(this.getCommonColumns(ignores));
@@ -194,27 +194,27 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 
 		// createBy
 		if (!ignores.contains("createBy")) {
-			columns.add(this.getColumn(String.class, new MyDBColumn(this.getUserLength()), "createBy", "创建人", true, ""));
+			columns.add(this.getColumn(String.class, new MyDBColumn(this.getUserLength()), unCamel("createBy"), "创建人", true, ""));
 		}
 		// createDate
 		if (!ignores.contains("createDate")) {
-			columns.add(this.getColumn(Date.class, new MyDBColumn(), "createDate", "创建时间", true, ""));
+			columns.add(this.getColumn(Date.class, new MyDBColumn(), unCamel("create_date"), "创建时间", true, ""));
 		}
 		// updateBy
 		if (!ignores.contains("updateBy")) {
-			columns.add(this.getColumn(String.class, new MyDBColumn(this.getUserLength()), "updateBy", "修改人", true, ""));
+			columns.add(this.getColumn(String.class, new MyDBColumn(this.getUserLength()), unCamel("updateBy"), "修改人", true, ""));
 		}
 		// updateDate
 		if (!ignores.contains("updateDate")) {
-			columns.add(this.getColumn(Date.class, new MyDBColumn(), "updateDate", "修改时间", true, ""));
+			columns.add(this.getColumn(Date.class, new MyDBColumn(), unCamel("updateDate"), "修改时间", true, ""));
 		}
 		// status
 		if (!ignores.contains("status")) {
-			columns.add(this.getColumn(Integer.class, new MyDBColumn(1), "status", "数据状态 0无效,1有效,2删除", true, "1"));
+			columns.add(this.getColumn(Integer.class, new MyDBColumn(1), unCamel("status"), "数据状态 0无效,1有效,2删除", true, "1"));
 		}
 		// remark
 		if (!ignores.contains("remark")) {
-			columns.add(this.getColumn(String.class, new MyDBColumn(2000), "remark", "备注", false, ""));
+			columns.add(this.getColumn(String.class, new MyDBColumn(2000), unCamel("remark"), "备注", false, ""));
 		}
 		return columns;
 	}

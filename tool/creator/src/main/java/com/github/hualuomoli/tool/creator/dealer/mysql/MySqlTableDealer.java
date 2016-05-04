@@ -1,8 +1,10 @@
-package com.github.hualuomoli.tool.creator.dealer;
+package com.github.hualuomoli.tool.creator.dealer.mysql;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.annotation.DBColumn;
+import com.github.hualuomoli.tool.creator.dealer.TableDealer;
+import com.github.hualuomoli.tool.creator.dealer.TableDealerAbstract;
 
 /**
  * Mysql数据库列的工具
@@ -22,7 +24,7 @@ public class MySqlTableDealer extends TableDealerAbstract implements TableDealer
 
 		// string
 		case "java.lang.String":
-			return "varchar2";
+			return "varchar";
 
 		// int
 		case "java.lang.Integer":
@@ -39,10 +41,7 @@ public class MySqlTableDealer extends TableDealerAbstract implements TableDealer
 		case "double":
 			return "double";
 
-		case "java.lang.Boolean":
-		case "boolean":
-			return "char";
-
+		// Date
 		case "java.util.Date":
 			return "datetime";
 
@@ -76,10 +75,7 @@ public class MySqlTableDealer extends TableDealerAbstract implements TableDealer
 		case "double":
 			return "11,3";
 
-		case "java.lang.Boolean":
-		case "boolean":
-			return "1";
-
+		// Date
 		case "java.util.Date":
 			return "";
 

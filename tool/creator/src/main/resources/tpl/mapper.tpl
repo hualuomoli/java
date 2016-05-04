@@ -5,13 +5,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.github.hualuomoli.base.stereotype.Mapper;
+import com.github.hualuomoli.base.orm.stereotype.Mapper;
 import ${entity.fullName};
 
 // ${r"#"}${entity.simpleName}
 @Mapper(value = "${fullName}")
 public interface ${name} {
 
+	${entity.simpleName} get(${entity.simpleName} ${entity.simpleName?uncap_first});
+	
 	${entity.simpleName} get(String id);
 
 	int insert(${entity.simpleName} ${entity.simpleName?uncap_first});
@@ -20,6 +22,8 @@ public interface ${name} {
 
 	int update(${entity.simpleName} ${entity.simpleName?uncap_first});
 
+	int delete(${entity.simpleName} ${entity.simpleName?uncap_first});
+	
 	int delete(String id);
 	
 	int deleteByIds(@Param(value = "ids") String[] ids);

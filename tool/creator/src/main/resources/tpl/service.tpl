@@ -9,6 +9,8 @@ import ${entity.fullName};
 // ${r"#"}${entity.simpleName}
 public interface ${name} {
 
+	${entity.simpleName} get(${entity.simpleName} ${entity.simpleName?uncap_first});
+	
 	${entity.simpleName} get(String id);
 
 	void insert(${entity.simpleName} ${entity.simpleName?uncap_first});
@@ -17,6 +19,8 @@ public interface ${name} {
 
 	void update(${entity.simpleName} ${entity.simpleName?uncap_first});
 
+	void delete(${entity.simpleName} ${entity.simpleName?uncap_first});
+	
 	void delete(String id);
 	
 	void deleteByIds(String[] ids);

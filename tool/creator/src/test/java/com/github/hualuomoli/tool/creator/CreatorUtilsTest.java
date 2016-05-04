@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.template.TemplateUtils;
 import com.github.hualuomoli.demo.base.entity.Demo;
-import com.github.hualuomoli.tool.creator.dealer.MySqlTableDealer;
 import com.github.hualuomoli.tool.creator.dealer.TableDealer;
+import com.github.hualuomoli.tool.creator.dealer.mysql.MySqlTableDealer;
 import com.github.hualuomoli.tool.creator.entity.Mapper;
 import com.github.hualuomoli.tool.creator.entity.Service;
 import com.github.hualuomoli.tool.creator.entity.Table;
@@ -25,9 +25,9 @@ public class CreatorUtilsTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(CreatorUtilsTest.class);
 
-	private static final String outputpath = "E:/github/hualuomoli/java/tool/creator";
+	private static final String outputpath = "E:/github/hualuomoli/java/base";
 	// private static final String outputpath = "E:/output/creator";
-	private static final Set<String> ignores = Sets.newHashSet("version", "pagination");
+	private static final Set<String> ignores = Sets.newHashSet(/*"version",*/ "pagination");
 	private static final String projectPackageName = "com.github.hualuomoli";
 
 	String filepath;
@@ -58,7 +58,7 @@ public class CreatorUtilsTest {
 		TemplateUtils.processByResource("tpl", "service.tpl", service, output);
 
 		// service impl
-		output = new File(filepath, service.getName() + "Impl.java");
+		output = new File(filepath + "/orm", service.getName() + "Impl.java");
 		TemplateUtils.processByResource("tpl", "serviceImpl.tpl", service, output);
 
 		// database
@@ -71,8 +71,10 @@ public class CreatorUtilsTest {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("tableList", tableList);
 
-		output = new File(outputpath, table.getName() + ".sql");
-		TemplateUtils.processByResource("tpl", "mysql.tpl", map, output);
+		filepath = new File(outputpath, "/src/test/resources/orm/database").getAbsolutePath();
+		logger.debug("database filepath {}", filepath);
+		output = new File(filepath, "init.sql");
+		TemplateUtils.processByResource("tpl/databases", "mysql.tpl", map, output);
 
 	}
 

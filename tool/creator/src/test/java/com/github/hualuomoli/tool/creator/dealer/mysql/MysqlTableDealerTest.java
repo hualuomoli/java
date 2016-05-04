@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.creator.dealer;
+package com.github.hualuomoli.tool.creator.dealer.mysql;
 
 import java.io.File;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.template.TemplateUtils;
 import com.github.hualuomoli.demo.base.entity.Demo;
+import com.github.hualuomoli.tool.creator.dealer.TableDealer;
 import com.github.hualuomoli.tool.creator.entity.Table;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,8 +42,10 @@ public class MysqlTableDealerTest {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("tableList", tableList);
 
-		output = new File(outputpath, table.getName() + ".sql");
-		TemplateUtils.processByResource("tpl", "mysql.tpl", map, output);
+		filepath = new File(outputpath, "/src/test/resources/orm/database").getAbsolutePath();
+		logger.debug("database filepath {}", filepath);
+		output = new File(filepath, "init.sql");
+		TemplateUtils.processByResource("tpl/databases", "mysql.tpl", map, output);
 
 	}
 

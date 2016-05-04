@@ -37,7 +37,7 @@ public class ServiceUtilsTest {
 		TemplateUtils.processByResource("tpl", "service.tpl", service, output);
 
 		// service impl
-		output = new File(filepath, service.getName() + "Impl.java");
+		output = new File(filepath + "/orm", service.getName() + "Impl.java");
 		TemplateUtils.processByResource("tpl", "serviceImpl.tpl", service, output);
 
 	}

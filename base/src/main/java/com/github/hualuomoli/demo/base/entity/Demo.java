@@ -26,7 +26,7 @@ public class Demo extends BaseEntity {
 
 	@Comment("性别")
 	@DBColumn(value = true, defaultValue = "1")
-	private Boolean sex;
+	private String sex;
 
 	@Comment("生日")
 	private Date birthDay;
@@ -66,11 +66,11 @@ public class Demo extends BaseEntity {
 		this.salary = salary;
 	}
 
-	public Boolean getSex() {
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(Boolean sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 

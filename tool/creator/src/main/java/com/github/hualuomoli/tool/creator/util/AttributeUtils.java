@@ -3,6 +3,8 @@ package com.github.hualuomoli.tool.creator.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +31,28 @@ public class AttributeUtils extends CreatorUtils {
 	public static List<Attribute> getAttributes(Class<?> entityCls, Set<String> ignores, String projectPackageName) {
 		List<Attribute> attributes = loadAttributes(entityCls, ignores, projectPackageName);
 		configAttributes(attributes);
+
+		// sort
+		Collections.sort(attributes, new Comparator<Attribute>() {
+
+			@Override
+			public int compare(Attribute o1, Attribute o2) {
+				// 如果比较者是id,改变位置
+				if (StringUtils.equals(o1.getName(), "id")) {
+					return -1;
+				}
+				// 如果被比较者是id,不改变位置
+				if (StringUtils.equals(o2.getName(), "id")) {
+					return 1;
+				}
+				// 如果比较者是version,改变位置
+				if (StringUtils.equals(o1.getName(), "version")) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+
 		return attributes;
 	}
 
@@ -122,7 +146,7 @@ public class AttributeUtils extends CreatorUtils {
 				attribute.setDbNameLength(attribute.getDbName().length());
 
 				// 其他,是否是字符串
-				attribute.setString(field.getType() == String.class);
+				attribute.setString(field.getType() == String.class || field.getType() == char.class);
 			}
 
 			attributes.add(attribute);
@@ -164,17 +188,7 @@ public class AttributeUtils extends CreatorUtils {
 				return false;
 			}
 
-			Method getMethod = null;
-			// 如果是boolean,判断是否是is方法
-			if (StringUtils.equalsIgnoreCase(type.getSimpleName(), "boolean")) {
-				try {
-					getMethod = cls.getMethod("is" + upperName);
-				} catch (Exception e) {
-				}
-			}
-			if (getMethod == null) {
-				getMethod = cls.getMethod("get" + upperName);
-			}
+			Method getMethod = cls.getMethod("get" + upperName);
 
 			if (getMethod == null || getMethod.getModifiers() != Modifier.PUBLIC || !StringUtils.equals(getMethod.getReturnType().getName(), type.getName())) {
 				return false;

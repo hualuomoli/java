@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.hualuomoli.base.entity.BaseEntity;
 import com.github.hualuomoli.commons.constant.Status;
 
@@ -45,9 +47,10 @@ public class BaseUtils {
 			e.setCreateDate(currentDate);
 			e.setUpdateBy(currentUser);
 			e.setUpdateDate(currentDate);
-			e.setStatus(Status.NOMAL.getValue());
+			e.setStatus(e.getStatus() == null ? Status.NOMAL.getValue() : e.getStatus());
 			e.setVersion(1);
-			e.setId(BaseUtils.getRandomId());
+			e.setId(StringUtils.isEmpty(e.getId()) ? BaseUtils.getRandomId() : e.getId());
+
 		}
 	}
 
