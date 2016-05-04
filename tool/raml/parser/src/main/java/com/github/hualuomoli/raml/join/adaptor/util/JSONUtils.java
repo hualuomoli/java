@@ -23,6 +23,39 @@ import com.google.common.collect.Sets;
 public class JSONUtils {
 
 	/**
+	 * example是否是list数据
+	 * @param example example
+	 * @return example是否是list数据
+	 */
+	public static boolean isListExample(String example) {
+		// example
+		/**
+		 * [{
+		 * 	"name" : "Ipad 64G",
+		 * 	"price" : 3200.15,
+		 * 	"amount": 10,
+		 * 	"def" : false,
+		 * 	"time" : "2015-01-02 15:23:48"
+		 * },{
+		 * 	"name" : "Ipad 64G",
+		 * 	"price" : 3200.15,
+		 * 	"amount": 10,
+		 * 	"def" : false,
+		 * 	"time" : "2015-01-02 15:23:48"
+		 * }] 
+		 */
+		if (!(example.trim().startsWith("[") && example.trim().endsWith("]"))) {
+			return false;
+		}
+		try {
+			new JSONArray(example);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 解析Example
 	 * @param example Example
 	 * @return JSON集合
@@ -43,8 +76,8 @@ public class JSONUtils {
 		* }
 		*/
 		JSONObject jsonObject = new JSONObject(example);
-		JSONObject properties = getJSONObject(jsonObject, Schema.PROPERTIES);
-		return parseExample(properties);
+		// JSONObject properties = getJSONObject(jsonObject, Schema.PROPERTIES);
+		return parseExample(jsonObject);
 	}
 
 	/**
@@ -91,6 +124,37 @@ public class JSONUtils {
 		}
 
 		return paramDatas;
+	}
+
+	/**
+	 * Schema是否是list数据
+	 * @param schema Schema
+	 * @return Schema是否是list数据
+	 */
+	public static boolean isListSchema(String schema) {
+		/** 
+		 * {
+		 *   "$schema": "http://json-schema.org/draft-04/schema#",
+		 *   "type": "array",
+		 *   "items": {
+		 *     "type": "object",
+		 *     "properties": {
+		 *       "name": {
+		 *         "type": "string"
+		 *       },
+		 *       "age": {
+		 *         "type": "integer"
+		 *       }
+		 *     },
+		 *     "required": [
+		 *       "name",
+		 *       "age"
+		 *     ]
+		 *   }
+		 * }
+		 */
+		JSONObject jsonObject = new JSONObject(schema);
+		return jsonObject.has(Schema.ITEMS);
 	}
 
 	/**
@@ -151,7 +215,14 @@ public class JSONUtils {
 		* }
 		*/
 		JSONObject jsonObject = new JSONObject(schema);
-		JSONObject properties = getJSONObject(jsonObject, Schema.PROPERTIES);
+
+		JSONObject properties;
+		if (jsonObject.has(Schema.ITEMS)) {
+			JSONObject items = getJSONObject(jsonObject, Schema.ITEMS);
+			properties = getJSONObject(items, Schema.PROPERTIES);
+		} else {
+			properties = getJSONObject(jsonObject, Schema.PROPERTIES);
+		}
 		Set<String> required = getRequired(jsonObject);
 
 		return parseSchema(properties, required);
@@ -228,7 +299,6 @@ public class JSONUtils {
 	 * @return 参数类型
 	 */
 	private static ParamType getParamType(String type) {
-		// TODO
 		// add other schema type transfer
 		switch (type) {
 		case "string":

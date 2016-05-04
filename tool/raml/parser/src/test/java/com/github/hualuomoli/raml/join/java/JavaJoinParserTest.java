@@ -12,16 +12,16 @@ import org.raml.model.Raml;
 
 import com.github.hualuomoli.raml.join.Adaptor;
 import com.github.hualuomoli.raml.join.JoinParser;
-import com.github.hualuomoli.raml.join.JoinParser.JavaConfig;
 import com.github.hualuomoli.raml.join.adaptor.FileAdaptor;
 import com.github.hualuomoli.raml.join.adaptor.GetAdaptor;
 import com.github.hualuomoli.raml.join.adaptor.JSONAdaptor;
 import com.github.hualuomoli.raml.join.adaptor.RestfulAdaptor;
 import com.github.hualuomoli.raml.join.adaptor.UriEncodedAdaptor;
 import com.github.hualuomoli.raml.join.adaptor.util.JavaAdaptorUtils;
+import com.github.hualuomoli.raml.join.java.JavaJoinParser.JavaConfig;
 import com.google.common.collect.Lists;
 
-public class JoinParserTest {
+public class JavaJoinParserTest {
 
 	private JoinParser parser;
 

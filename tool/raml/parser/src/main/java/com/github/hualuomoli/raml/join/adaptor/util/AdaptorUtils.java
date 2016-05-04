@@ -27,6 +27,38 @@ public class AdaptorUtils extends ParserUtils {
 	public static final String LINE = JoinParser.LINE;
 
 	/**
+	 * 是否是List数据
+	 * @param responseSM 响应
+	 * @return 是否是List数据
+	 */
+	public static boolean isList(ResponseSM responseSM) {
+		if (!hasResult(responseSM)) {
+			return false;
+		}
+		String schema = responseSM.responseMimeType.getSchema();
+		String example = responseSM.responseMimeType.getExample();
+		if (StringUtils.isBlank(schema) && StringUtils.isBlank(example)) {
+			return false;
+		}
+		if (StringUtils.isNotBlank(schema) && JSONUtils.isListSchema(schema)) {
+			return true;
+		}
+		if (StringUtils.isNotBlank(example) && JSONUtils.isListExample(example)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 是否有返回结果
+	 * @param responseSM 响应
+	 * @return 是否有返回结果
+	 */
+	public static boolean hasResult(ResponseSM responseSM) {
+		return responseSM != null && responseSM.responseMimeType != null;
+	}
+
+	/**
 	 * 获取方法名
 	 * @param actionType
 	 * @param methodUri

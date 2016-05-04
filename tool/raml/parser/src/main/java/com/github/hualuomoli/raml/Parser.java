@@ -31,6 +31,7 @@ public interface Parser {
 		private String outputFilepath; // 输出目录
 		private boolean clear; // 清除输出目录
 		private Charset encoding; // 文件编码
+		private String ignoreUriPrefix; // 忽略的uri前缀,如 /api
 
 		public String getOutputFilepath() {
 			return outputFilepath;
@@ -54,6 +55,14 @@ public interface Parser {
 
 		public void setEncoding(Charset encoding) {
 			this.encoding = encoding;
+		}
+
+		public String getIgnoreUriPrefix() {
+			return ignoreUriPrefix;
+		}
+
+		public void setIgnoreUriPrefix(String ignoreUriPrefix) {
+			this.ignoreUriPrefix = ignoreUriPrefix;
 		}
 
 	}

@@ -2,28 +2,34 @@ package com.github.hualuomoli.raml.join.java;
 
 import java.util.Set;
 
-import org.raml.model.Raml;
 import org.raml.model.parameter.UriParameter;
 
 import com.github.hualuomoli.raml.join.JoinParser;
 import com.github.hualuomoli.raml.join.adaptor.util.JavaAdaptorUtils;
 import com.github.hualuomoli.raml.util.RamlUtils;
 
+/**
+ * JAVA拼接字符串解析器
+ * @author hualuomoli
+ *
+ */
 public class JavaJoinParser extends JoinParser {
 
+	protected JavaConfig javaConfig;
+
 	@Override
-	protected void configure(Raml[] ramls) {
-		String path = JoinParser.class.getClassLoader().getResource(".").getPath();
-		String rootProjectPath = path.substring(0, path.indexOf("/tool/raml/parser/target"));
+	protected void setConfig(Config config) {
+		super.setConfig(config);
+		this.javaConfig = (JavaConfig) config;
 	}
 
 	@Override
-	public String getFileHeader(String fileUri, Set<UriParameter> fileUriParameters) {
+	public String getFileHeader(String fileUri, Set<UriParameter> fileUriParameters, String fileDescription) {
 
 		StringBuilder buffer = new StringBuilder();
 
 		// 包名
-		String uri = RamlUtils.trimUriParam(fileUri);
+		String uri = RamlUtils.trimPrefix(RamlUtils.trimUriParam(fileUri), javaConfig.getIgnoreUriPrefix());
 		String packageName = javaConfig.getRootPackageName() + uri.replaceAll("/", ".");
 
 		String name = JavaAdaptorUtils.cap(RamlUtils.getUriLastName(fileUri));
@@ -112,13 +118,58 @@ public class JavaJoinParser extends JoinParser {
 
 	@Override
 	public String getFilePath(String fileUri) {
-		String uri = RamlUtils.trimUriParam(fileUri);
+		String uri = RamlUtils.trimPrefix(RamlUtils.trimUriParam(fileUri), javaConfig.getIgnoreUriPrefix());
 		return "src/main/java/" + javaConfig.getRootPackageName().replaceAll("[.]", "/") + uri;
 	}
 
 	@Override
 	public String getFileName(String fileUri) {
 		return JavaAdaptorUtils.cap(RamlUtils.getUriLastName(fileUri)) + "Controller.java";
+	}
+
+	// java 配置
+	public static class JavaConfig extends Config {
+
+		private String author; // 作者
+		private double version; // 版本
+		private String projectName; // 项目名称
+		private String rootPackageName; // 根包名
+
+		public JavaConfig() {
+		}
+
+		public String getAuthor() {
+			return author;
+		}
+
+		public void setAuthor(String author) {
+			this.author = author;
+		}
+
+		public double getVersion() {
+			return version;
+		}
+
+		public void setVersion(double version) {
+			this.version = version;
+		}
+
+		public String getProjectName() {
+			return projectName;
+		}
+
+		public void setProjectName(String projectName) {
+			this.projectName = projectName;
+		}
+
+		public String getRootPackageName() {
+			return rootPackageName;
+		}
+
+		public void setRootPackageName(String rootPackageName) {
+			this.rootPackageName = rootPackageName;
+		}
+
 	}
 
 }

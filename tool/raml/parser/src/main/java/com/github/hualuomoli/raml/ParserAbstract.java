@@ -152,7 +152,7 @@ public abstract class ParserAbstract implements Parser {
 		if (ParserUtils.isLeaf(rootResource)) {
 			return;
 		}
-		this.execute(rootResource, ParserUtils.getRelativeUri(rootResource), ParserUtils.getUriParameters(rootResource));
+		this.execute(rootResource, ParserUtils.getRelativeUri(rootResource), ParserUtils.getUriParameters(rootResource), rootResource.getDisplayName());
 	}
 
 	/**
@@ -160,8 +160,9 @@ public abstract class ParserAbstract implements Parser {
 	 * @param notLeafResource 非叶子节点的资源
 	 * @param parentFullRelativeUri 父资源的全路径 
 	 * @param parentFullUriParameters 父资源的全路径参数
+	 * @param parentFullDescripiton 父资源的描述(级别之间使用 - 分割)
 	 */
-	private void execute(Resource notLeafResource, String parentFullRelativeUri, Set<UriParameter> parentFullUriParameters) {
+	private void execute(Resource notLeafResource, String parentFullRelativeUri, Set<UriParameter> parentFullUriParameters, String parentFullDescripiton) {
 
 		Set<Action> actions = ParserUtils.getActions(notLeafResource);
 		// 叶子资源
@@ -170,20 +171,21 @@ public abstract class ParserAbstract implements Parser {
 		Set<Resource> notLeafResources = ParserUtils.getNotLeafResources(notLeafResource);
 
 		//
-		String rootRelativeUri = notLeafResource.getRelativeUri();
-		Set<UriParameter> rootUriParameters = ParserUtils.getUriParameters(notLeafResource);
+		// String fullRelativeUri = this.getNewFullRelativeUri(parentFullRelativeUri, notLeafResource);
+		// Set<UriParameter> fullUriParameters = this.getNewFullUriParameters(parentFullUriParameters, notLeafResource);
 
 		// 处理没有子资源的resource
 		if (leafResources.size() > 0 || (actions != null && actions.size() > 0)) {
 			// 创建server或者client
-			this.create(actions, leafResources, rootRelativeUri, rootUriParameters);
+			this.create(actions, leafResources, parentFullRelativeUri, parentFullUriParameters, parentFullDescripiton);
 		}
 
 		// create
 		for (Resource r : notLeafResources) {
 			String newFullRelativeUri = this.getNewFullRelativeUri(parentFullRelativeUri, r);
 			Set<UriParameter> newFullUriParameters = this.getNewFullUriParameters(parentFullUriParameters, r);
-			this.execute(r, newFullRelativeUri, newFullUriParameters);
+			String newParentFullDescripiton = parentFullDescripiton + "" + r.getDisplayName();
+			this.execute(r, newFullRelativeUri, newFullUriParameters, newParentFullDescripiton);
 		}
 
 	}
@@ -217,8 +219,10 @@ public abstract class ParserAbstract implements Parser {
 	 * @param leafResources 叶子节点资源
 	 * @param fileUri 文件的URI
 	 * @param fileUriParameters 文件的URI参数
+	 * @param fileDescription 文件的描述
 	 */
-	protected abstract void create(Set<Action> actions, Set<Resource> leafResources, String fileUri, Set<UriParameter> fileUriParameters);
+	protected abstract void create(Set<Action> actions, Set<Resource> leafResources, String fileUri, Set<UriParameter> fileUriParameters,
+			String fileDescription);
 
 	/**
 	 * 生成文件

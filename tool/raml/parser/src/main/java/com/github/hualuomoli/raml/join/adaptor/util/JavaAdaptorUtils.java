@@ -50,15 +50,6 @@ public class JavaAdaptorUtils extends AdaptorUtils implements MethodAdaptor {
 	}
 
 	/**
-	 * 是否有返回结果
-	 * @param responseSM 响应
-	 * @return 是否有返回结果
-	 */
-	public static boolean hasResult(ResponseSM responseSM) {
-		return responseSM != null && responseSM.responseMimeType != null;
-	}
-
-	/**
 	 * 获取方法的数据
 	 * @param translate 转换实体类
 	 * @return 方法的数据
@@ -182,7 +173,11 @@ public class JavaAdaptorUtils extends AdaptorUtils implements MethodAdaptor {
 
 			buffer.append("public");
 			buffer.append(" ");
-			buffer.append(resultEntityName);
+			if (isList(translate.responseSM)) {
+				buffer.append("java.util.List<").append(resultEntityName).append(">");
+			} else {
+				buffer.append(resultEntityName);
+			}
 			buffer.append(" ");
 			buffer.append(methodName);
 			buffer.append("(");
@@ -268,7 +263,11 @@ public class JavaAdaptorUtils extends AdaptorUtils implements MethodAdaptor {
 
 			// 返回数据
 			String resultEntityName = getResultEntityName(translate.actionType, translate.methodUri, translate.responseSM);
-			datas.add("return JsonMapper.fromJsonString(datas, " + resultEntityName + ".class);");
+			if (isList(translate.responseSM)) {
+				datas.add("return JsonMapper.fromJsonString(datas, JsonMapper.getJavaType(java.util.List.class," + resultEntityName + ".class));");
+			} else {
+				datas.add("return JsonMapper.fromJsonString(datas, " + resultEntityName + ".class);");
+			}
 
 			return datas;
 		}
@@ -769,6 +768,8 @@ public class JavaAdaptorUtils extends AdaptorUtils implements MethodAdaptor {
 				// array
 				if (displayName.endsWith("s")) {
 					javaType = displayName.substring(0, displayName.length() - 1);
+				} else if (StringUtils.equalsIgnoreCase(displayName, "list")) {
+					javaType = "list";
 				} else if (displayName.endsWith("List") || displayName.endsWith("list")) {
 					javaType = displayName.substring(0, displayName.length() - 4);
 				} else {

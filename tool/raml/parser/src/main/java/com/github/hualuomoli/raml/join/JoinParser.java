@@ -27,21 +27,14 @@ public abstract class JoinParser extends ParserAbstract {
 
 	public static final String LINE = "\n";
 
-	protected JavaConfig javaConfig;
 	private List<Adaptor> adaptors;
-
-	@Override
-	protected void setConfig(Config config) {
-		super.setConfig(config);
-		this.javaConfig = (JavaConfig) config;
-	}
 
 	public void setAdaptors(List<Adaptor> adaptors) {
 		this.adaptors = adaptors;
 	}
 
 	@Override
-	protected void create(Set<Action> actions, Set<Resource> leafResources, String fileUri, Set<UriParameter> fileUriParameters) {
+	protected void create(Set<Action> actions, Set<Resource> leafResources, String fileUri, Set<UriParameter> fileUriParameters, String fileDescription) {
 
 		if (logger.isInfoEnabled()) {
 			logger.info("create file, uri is {}", fileUri);
@@ -64,7 +57,7 @@ public abstract class JoinParser extends ParserAbstract {
 		}
 
 		// 组装数据
-		String fileData = this.assable(actionDatas, fileUri, fileUriParameters);
+		String fileData = this.assable(actionDatas, fileUri, fileUriParameters, fileDescription);
 		// 写文件
 		this.createFile(fileData, fileUri);
 		// 配置文件
@@ -75,9 +68,10 @@ public abstract class JoinParser extends ParserAbstract {
 	 * 获取文件头
 	 * @param fileUri 文件URI
 	 * @param fileUriParameters 文件URI参数
+	 * @param fileDescription 文件的功能描述
 	 * @return 文件头
 	 */
-	public abstract String getFileHeader(String fileUri, Set<UriParameter> fileUriParameters);
+	public abstract String getFileHeader(String fileUri, Set<UriParameter> fileUriParameters, String fileDescription);
 
 	/**
 	 * 获取文件尾
@@ -91,10 +85,10 @@ public abstract class JoinParser extends ParserAbstract {
 	 * @param fileUri 文件URI
 	 * @param fileUriParameters 文件URI参数
 	 */
-	private String assable(List<String> actionDatas, String fileUri, Set<UriParameter> fileUriParameters) {
+	private String assable(List<String> actionDatas, String fileUri, Set<UriParameter> fileUriParameters, String fileDescription) {
 
 		// 获取头部尾部
-		String header = this.getFileHeader(fileUri, fileUriParameters);
+		String header = this.getFileHeader(fileUri, fileUriParameters, fileDescription);
 		String footer = this.getFileFooter();
 
 		// 组装
@@ -229,51 +223,6 @@ public abstract class JoinParser extends ParserAbstract {
 			}
 		}
 		return null;
-	}
-
-	// java 配置
-	public static class JavaConfig extends Config {
-
-		private String author; // 作者
-		private double version; // 版本
-		private String projectName; // 项目名称
-		private String rootPackageName; // 根包名
-
-		public JavaConfig() {
-		}
-
-		public String getAuthor() {
-			return author;
-		}
-
-		public void setAuthor(String author) {
-			this.author = author;
-		}
-
-		public double getVersion() {
-			return version;
-		}
-
-		public void setVersion(double version) {
-			this.version = version;
-		}
-
-		public String getProjectName() {
-			return projectName;
-		}
-
-		public void setProjectName(String projectName) {
-			this.projectName = projectName;
-		}
-
-		public String getRootPackageName() {
-			return rootPackageName;
-		}
-
-		public void setRootPackageName(String rootPackageName) {
-			this.rootPackageName = rootPackageName;
-		}
-
 	}
 
 }
