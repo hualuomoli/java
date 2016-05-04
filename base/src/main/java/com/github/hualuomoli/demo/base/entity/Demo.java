@@ -1,13 +1,35 @@
 package com.github.hualuomoli.demo.base.entity;
 
+import java.util.Date;
+
+import com.github.hualuomoli.base.annotation.Comment;
+import com.github.hualuomoli.base.annotation.DBColumn;
 import com.github.hualuomoli.base.entity.BaseEntity;
 
+@Comment("例子")
 public class Demo extends BaseEntity {
 
+	@Comment("名称")
+	@DBColumn(true)
 	private String name;
-	private String sex;
+
+	@Comment("年龄")
+	@DBColumn(precision = 3)
 	private Integer age;
-	private String address;
+
+	@Comment("测试字段")
+	private Long seconds;
+
+	@Comment("工资")
+	@DBColumn(precision = 7, scale = 3)
+	private Double salary;
+
+	@Comment("性别")
+	@DBColumn(value = true, defaultValue = "1")
+	private Boolean sex;
+
+	@Comment("生日")
+	private Date birthDay;
 
 	public Demo() {
 	}
@@ -20,14 +42,6 @@ public class Demo extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
 	public Integer getAge() {
 		return age;
 	}
@@ -36,12 +50,36 @@ public class Demo extends BaseEntity {
 		this.age = age;
 	}
 
-	public String getAddress() {
-		return address;
+	public Long getSeconds() {
+		return seconds;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setSeconds(Long seconds) {
+		this.seconds = seconds;
+	}
+
+	public Double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Double salary) {
+		this.salary = salary;
+	}
+
+	public Boolean getSex() {
+		return sex;
+	}
+
+	public void setSex(Boolean sex) {
+		this.sex = sex;
+	}
+
+	public Date getBirthDay() {
+		return birthDay;
+	}
+
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
 	}
 
 }

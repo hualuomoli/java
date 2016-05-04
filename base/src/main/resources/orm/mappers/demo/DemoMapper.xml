@@ -4,16 +4,18 @@
 
 	<sql id="columns">
 		id				as "id",
+		name			as "name",
+		age				as "age",
+		seconds			as "seconds",
+		salary			as "salary",
+		sex				as "sex",
+		birth_day		as "birthDay",
 		create_by		as "createBy",
 		create_date		as "createDate",
 		update_by		as "updateBy",
 		update_date		as "updateDate",
 		status			as "status",
-		remark			as "remark",
-		name			as "name",
-		sex				as "sex",
-		age				as "age",
-		address			as "address"
+		remark			as "remark"
 	</sql>
 	
 	<select id="get" resultType="com.github.hualuomoli.demo.base.entity.Demo">

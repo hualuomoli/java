@@ -1,9 +1,11 @@
 package com.github.hualuomoli.demo.base.service.orm;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.hualuomoli.base.entity.Pagination;
 import com.github.hualuomoli.demo.base.entity.Demo;
@@ -11,44 +13,62 @@ import com.github.hualuomoli.demo.base.mapper.DemoMapper;
 import com.github.hualuomoli.demo.base.service.DemoService;
 
 @Service(value = "com.github.hualuomoli.demo.base.service.orm.OrmDemoService")
+@Transactional(readOnly = true)
 public class OrmDemoService implements DemoService {
 
 	@Autowired
 	private DemoMapper demoMapper;
 
 	@Override
+	public Demo get(Demo demo) {
+		return demoMapper.get(demo);
+	}
+
+	@Override
 	public Demo get(String id) {
-		Demo demo = demoMapper.get(id);
-		if (demo == null) {
-			throw new RuntimeException("there is no data which id is " + id);
-		}
-		return demo;
+		return demoMapper.get(id);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void insert(Demo demo) {
-		demo.preInsert();
-		int result = demoMapper.insert(demo);
-		if (result != 1) {
-			throw new RuntimeException("there may return one.but find " + result);
-		}
+		demoMapper.insert(demo);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
+	public void batchInsert(List<Demo> list) {
+		demoMapper.batchInsert(list);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
 	public void update(Demo demo) {
-		demo.preUpdate();
-		int result = demoMapper.update(demo);
-		if (result != 1) {
-			throw new RuntimeException("there may return one.but find " + result);
-		}
+		demoMapper.update(demo);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
+	public void delete(Demo demo) {
+		demoMapper.delete(demo);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
 	public void delete(String id) {
-		int result = demoMapper.delete(id);
-		if (result != 1) {
-			throw new RuntimeException("there may return one.but find " + result);
-		}
+		demoMapper.delete(id);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void deleteByIds(String[] ids) {
+		demoMapper.deleteByIds(ids);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void deleteByIds(Collection<String> ids) {
+		demoMapper.deleteByIds(ids);
 	}
 
 	@Override
@@ -59,7 +79,8 @@ public class OrmDemoService implements DemoService {
 	@Override
 	public Pagination findPage(Demo demo, Pagination pagination) {
 		demo.setPagination(pagination);
-		pagination.setDataList(demoMapper.findList(demo));
+		List<Demo> dataList = demoMapper.findList(demo);
+		pagination.setDataList(dataList);
 		return pagination;
 	}
 
