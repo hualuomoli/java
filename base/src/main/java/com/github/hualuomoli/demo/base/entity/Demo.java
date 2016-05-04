@@ -25,7 +25,7 @@ public class Demo extends BaseEntity {
 	private Double salary;
 
 	@Comment("性别")
-	@DBColumn(value = true, defaultValue = "1")
+	@DBColumn(value = true, defaultValue = "'1'")
 	private String sex;
 
 	@Comment("生日")

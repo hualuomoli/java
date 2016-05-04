@@ -13,19 +13,19 @@ public interface ${name} {
 	
 	${entity.simpleName} get(String id);
 
-	void insert(${entity.simpleName} ${entity.simpleName?uncap_first});
+	int insert(${entity.simpleName} ${entity.simpleName?uncap_first});
 	
-	void batchInsert(List<${entity.simpleName}> list);
+	int batchInsert(List<${entity.simpleName}> list);
 
-	void update(${entity.simpleName} ${entity.simpleName?uncap_first});
+	int update(${entity.simpleName} ${entity.simpleName?uncap_first});
 
-	void delete(${entity.simpleName} ${entity.simpleName?uncap_first});
+	int delete(${entity.simpleName} ${entity.simpleName?uncap_first});
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<${entity.simpleName}> findList(${entity.simpleName} ${entity.simpleName?uncap_first});
 

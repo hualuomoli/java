@@ -35,16 +35,16 @@ public class DemoServiceImpl implements DemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(Demo demo) {
+	public int insert(Demo demo) {
 		demo.preInsert();
-		demoMapper.insert(demo);
+		return demoMapper.insert(demo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(List<Demo> list) {
+	public int batchInsert(List<Demo> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}
 		
 		BaseUtils.preBatchInsert(list);
@@ -57,37 +57,38 @@ public class DemoServiceImpl implements DemoService {
 			}
 			demoMapper.batchInsert(newList);
 		}
+		return list.size();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(Demo demo) {
+	public int update(Demo demo) {
 		demo.preUpdate();
-		demoMapper.update(demo);
+		return demoMapper.update(demo);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(Demo demo) {
-		demoMapper.delete(demo);
+	public int delete(Demo demo) {
+		return demoMapper.delete(demo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		demoMapper.delete(id);
+	public int delete(String id) {
+		return demoMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
-		demoMapper.deleteByIds(ids);
+	public int deleteByIds(String[] ids) {
+		return demoMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
-		demoMapper.deleteByIds(ids);
+	public int deleteByIds(Collection<String> ids) {
+		return demoMapper.deleteByIds(ids);
 	}
 
 	@Override

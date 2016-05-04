@@ -13,19 +13,19 @@ public interface DemoService {
 	
 	Demo get(String id);
 
-	void insert(Demo demo);
+	int insert(Demo demo);
 	
-	void batchInsert(List<Demo> list);
+	int batchInsert(List<Demo> list);
 
-	void update(Demo demo);
+	int update(Demo demo);
 
-	void delete(Demo demo);
+	int delete(Demo demo);
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<Demo> findList(Demo demo);
 

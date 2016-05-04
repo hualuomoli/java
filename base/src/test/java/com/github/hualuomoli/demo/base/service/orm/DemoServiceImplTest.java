@@ -1,5 +1,6 @@
 package com.github.hualuomoli.demo.base.service.orm;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -41,7 +42,12 @@ public class DemoServiceImplTest {
 		demo.setId(id);
 		demo.setName("testme");
 		demo.setSex("M");
-		ormDemoService.insert(demo);
+		demo.setBirthDay(new Date());
+		demo.setRemark("备注");
+		demo.setSalary(1234.56);
+		demo.setSeconds(System.currentTimeMillis());
+		int update = ormDemoService.insert(demo);
+		Assert.assertEquals(1, update);
 	}
 
 	@Test
@@ -67,16 +73,17 @@ public class DemoServiceImplTest {
 
 		// update
 		demo.setRemark("添加注释");
-		ormDemoService.update(demo);
+		int update = ormDemoService.update(demo);
+		Assert.assertEquals(1, update);
 
 		// get
 		demo = ormDemoService.get(demo);
 		Assert.assertNotNull(demo);
-		Assert.assertEquals(demo.getId(), id);
-		Assert.assertEquals(demo.getName(), "testme");
-		Assert.assertEquals(demo.getSex(), "M");
+		Assert.assertEquals(id, demo.getId());
+		Assert.assertEquals("testme", demo.getName());
+		Assert.assertEquals("M", demo.getSex());
 		Assert.assertNull(demo.getAge());
-		Assert.assertEquals(demo.getRemark(), "添加注释");
+		Assert.assertEquals("添加注释", demo.getRemark());
 	}
 
 	@Test
@@ -87,17 +94,18 @@ public class DemoServiceImplTest {
 
 		// update
 		demo.setSalary(1234.56);
-		ormDemoService.update(demo);
+		int update = ormDemoService.update(demo);
+		Assert.assertEquals(1, update);
 
 		// get
 		demo = ormDemoService.get(demo);
 		Assert.assertNotNull(demo);
-		Assert.assertEquals(demo.getId(), id);
-		Assert.assertEquals(demo.getName(), "testme");
-		Assert.assertEquals(demo.getSex(), "M");
+		Assert.assertEquals(id, demo.getId());
+		Assert.assertEquals("testme", demo.getName());
+		Assert.assertEquals("M", demo.getSex());
 		Assert.assertNull(demo.getAge());
-		Assert.assertEquals(demo.getRemark(), "添加注释");
-		Assert.assertEquals(demo.getSalary(), Double.valueOf(1234.56));
+		Assert.assertEquals("添加注释", demo.getRemark());
+		Assert.assertEquals(Double.valueOf(1234.56), demo.getSalary());
 	}
 
 	@Test
@@ -105,7 +113,9 @@ public class DemoServiceImplTest {
 		Demo demo = new Demo();
 		demo.setId(id);
 		// delte
-		ormDemoService.delete(demo);
+		int update = ormDemoService.delete(demo);
+		Assert.assertEquals(1, update);
+
 		// get
 		demo = ormDemoService.get(id);
 		Assert.assertNull(demo);
@@ -117,13 +127,17 @@ public class DemoServiceImplTest {
 		demo.setId(id);
 		demo.setName("testme");
 		demo.setSex("F");
-		ormDemoService.insert(demo);
+		int update = ormDemoService.insert(demo);
+		Assert.assertEquals(1, update);
+
 	}
 
 	@Test
 	public void test07DeleteString() {
 		// delte
-		ormDemoService.delete(id);
+		int update = ormDemoService.delete(id);
+		Assert.assertEquals(1, update);
+
 		// get
 		Demo demo = ormDemoService.get(id);
 		Assert.assertNull(demo);
@@ -140,18 +154,23 @@ public class DemoServiceImplTest {
 			demo.setName("testme");
 			demo.setAge(i);
 			demo.setSex(sex);
+
 			sex = StringUtils.equals(sex, "F") ? "M" : "F";
 
 			list.add(demo);
 
 		}
-		ormDemoService.batchInsert(list);
+		int update = ormDemoService.batchInsert(list);
+		Assert.assertEquals(list.size(), update);
+
 	}
 
 	@Test
 	public void test09DeleteByIdsStringArray() {
 		String[] ids = new String[] { "1", "3", "5" };
-		ormDemoService.deleteByIds(ids);
+		int update = ormDemoService.deleteByIds(ids);
+		Assert.assertEquals(ids.length, update);
+
 		Demo demo = ormDemoService.get("3");
 		Assert.assertNull(demo);
 	}
@@ -159,7 +178,9 @@ public class DemoServiceImplTest {
 	@Test
 	public void test10DeleteByIdsCollectionOfString() {
 		List<String> ids = Lists.newArrayList(new String[] { "2", "4", "6" });
-		ormDemoService.deleteByIds(ids);
+		int update = ormDemoService.deleteByIds(ids);
+		Assert.assertEquals(ids.size(), update);
+
 		Demo demo = ormDemoService.get("6");
 		Assert.assertNull(demo);
 	}
@@ -169,7 +190,7 @@ public class DemoServiceImplTest {
 		Demo demo = new Demo();
 		demo.setSex("F");
 		List<Demo> list = ormDemoService.findList(demo);
-		Assert.assertEquals(list.size(), 47);
+		Assert.assertEquals(47, list.size());
 	}
 
 	@Test
@@ -181,7 +202,7 @@ public class DemoServiceImplTest {
 
 		pagination = ormDemoService.findPage(demo, pagination);
 		Assert.assertNotNull(pagination.getDataList());
-		Assert.assertTrue(pagination.getDataList().size() == 7);
+		Assert.assertEquals(7, pagination.getDataList().size());
 	}
 
 	@Test
@@ -191,10 +212,12 @@ public class DemoServiceImplTest {
 		for (int i = 0; i < list.size(); i++) {
 			ids[i] = list.get(i).getId();
 		}
-		ormDemoService.deleteByIds(ids);
+		int update = ormDemoService.deleteByIds(ids);
+		Assert.assertEquals(94, update);
 
 		list = ormDemoService.findList(new Demo());
-		Assert.assertTrue(list.size() == 0);
+		Assert.assertNotNull(list);
+		Assert.assertEquals(0, list.size());
 	}
 
 }

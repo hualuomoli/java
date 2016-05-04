@@ -35,16 +35,16 @@ public class ${name}Impl implements ${name} {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(${entity.simpleName} ${entity.simpleName?uncap_first}) {
+	public int insert(${entity.simpleName} ${entity.simpleName?uncap_first}) {
 		${entity.simpleName?uncap_first}.preInsert();
-		${mapper.name?uncap_first}.insert(${entity.simpleName?uncap_first});
+		return ${mapper.name?uncap_first}.insert(${entity.simpleName?uncap_first});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(List<${entity.simpleName}> list) {
+	public int batchInsert(List<${entity.simpleName}> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}
 		
 		BaseUtils.preBatchInsert(list);
@@ -57,37 +57,38 @@ public class ${name}Impl implements ${name} {
 			}
 			${mapper.name?uncap_first}.batchInsert(newList);
 		}
+		return list.size();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(${entity.simpleName} ${entity.simpleName?uncap_first}) {
+	public int update(${entity.simpleName} ${entity.simpleName?uncap_first}) {
 		${entity.simpleName?uncap_first}.preUpdate();
-		${mapper.name?uncap_first}.update(${entity.simpleName?uncap_first});
+		return ${mapper.name?uncap_first}.update(${entity.simpleName?uncap_first});
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(${entity.simpleName} ${entity.simpleName?uncap_first}) {
-		${mapper.name?uncap_first}.delete(${entity.simpleName?uncap_first});
+	public int delete(${entity.simpleName} ${entity.simpleName?uncap_first}) {
+		return ${mapper.name?uncap_first}.delete(${entity.simpleName?uncap_first});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		${mapper.name?uncap_first}.delete(id);
+	public int delete(String id) {
+		return ${mapper.name?uncap_first}.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
-		${mapper.name?uncap_first}.deleteByIds(ids);
+	public int deleteByIds(String[] ids) {
+		return ${mapper.name?uncap_first}.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
-		${mapper.name?uncap_first}.deleteByIds(ids);
+	public int deleteByIds(Collection<String> ids) {
+		return ${mapper.name?uncap_first}.deleteByIds(ids);
 	}
 
 	@Override
