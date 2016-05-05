@@ -9,6 +9,11 @@ import com.github.hualuomoli.raml.join.JoinFileDealer;
 import com.github.hualuomoli.raml.util.RamlUtils;
 import com.google.common.collect.Lists;
 
+/**
+ * Java - Join文件处理者
+ * @author hualuomoli
+ *
+ */
 public class JavaJoinFileDealer implements JoinFileDealer {
 
 	private JavaConfig javaConfig;
