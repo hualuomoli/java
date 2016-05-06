@@ -32,7 +32,9 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 	@Override
 	public void configure(Raml[] ramls) {
 		try {
-			String webProjectFilepath = javaConfig.getWebProjectPath();
+
+			String path = this.getClass().getClassLoader().getResource(".").getPath();
+			String webProjectFilepath = path.substring(0, path.indexOf("/target")) + "/src/test/resources/demo/web";
 
 			// filename folder
 			String folder;
@@ -57,6 +59,7 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 			FileUtils.copyDirectory(new File(webProjectFilepath, folder), new File(javaConfig.getOutputFilepath(), folder));
 
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -104,6 +107,7 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 		datas.add("import javax.validation.constraints.Pattern;");
 		// hibernate
 		datas.add("import org.hibernate.validator.constraints.Length;");
+		datas.add("import org.hibernate.validator.constraints.NotBlank;");
 		datas.add("import org.hibernate.validator.constraints.NotEmpty;");
 		datas.add("import org.springframework.format.annotation.DateTimeFormat;");
 
@@ -168,7 +172,6 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 		private double version; // 版本
 		private String projectName; // 项目名称
 		private String rootPackageName; // 根包名
-		private String webProjectPath; // web项目的绝对位置
 
 		public JavaConfig() {
 		}
@@ -203,14 +206,6 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 
 		public void setRootPackageName(String rootPackageName) {
 			this.rootPackageName = rootPackageName;
-		}
-
-		public String getWebProjectPath() {
-			return webProjectPath;
-		}
-
-		public void setWebProjectPath(String webProjectPath) {
-			this.webProjectPath = webProjectPath;
 		}
 
 	}

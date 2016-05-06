@@ -99,24 +99,6 @@ traits:
               example: 20
               
               
-  /typeDate:
-    displayName: date
-    description: 参数为日期
-    
-    post:
-      description: 参数为日期
-      is:
-        - resSuccess:
-      body:
-        application/x-www-form-urlencoded:
-          formParameters:
-            date:
-              displayName: date
-              description: 日期
-              required: true
-              type: date
-              example: 2015-08-26 05:16:34
-    
   /typeBoolean:
     displayName: boolean
     description: 参数为布尔类型

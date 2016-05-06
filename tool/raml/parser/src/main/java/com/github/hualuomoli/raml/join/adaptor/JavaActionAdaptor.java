@@ -61,7 +61,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法注释
 	 */
-	public List<String> getNote(Adapter adapter) {
+	protected List<String> getNote(Adapter adapter) {
 		List<String> datas = Lists.newArrayList();
 
 		// 实体类的名称
@@ -72,12 +72,6 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 
 		// 实体类定义
 		datas.add(" * @param " + RamlUtils.unCap(entityName) + " " + RamlUtils.dealDescription(adapter.action.getDescription()));
-
-		// files
-		Set<FormParameter> fileParams = Tool.getFileParameters(adapter.formMimeType);
-		for (AbstractParam fileParam : fileParams) {
-			datas.add(" * @param " + fileParam.getDisplayName() + " " + RamlUtils.dealDescription(fileParam.getDescription()));
-		}
 
 		// springmvc
 		datas.add(" * @param request HttpServletRequest");
@@ -95,14 +89,18 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法注解
 	 */
-	public List<String> getAnnotation(Adapter adapter) {
+	protected List<String> getAnnotation(Adapter adapter) {
 		List<String> datas = Lists.newArrayList();
 
 		// 请求注解
+		String relativeUri = "";
+		if (adapter.child) {
+			relativeUri = adapter.action.getResource().getRelativeUri();
+		}
 		String requestAnnonation = "";
 		requestAnnonation += "@RequestMapping(" //
 				// value
-				+ "value = \"" + adapter.action.getResource().getRelativeUri() + "\""
+				+ "value = \"" + relativeUri + "\""
 				// split
 				+ ", "
 				// method
@@ -140,7 +138,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法头部
 	 */
-	public List<String> getHeader(Adapter adapter) {
+	protected List<String> getHeader(Adapter adapter) {
 		List<String> datas = Lists.newArrayList();
 
 		String entityName = Tool.getEntityName(adapter);
@@ -157,18 +155,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 
 		// 实体类
 		buffer.append(entityName).append(" ").append(RamlUtils.unCap(entityName));
-		// files
-		Set<FormParameter> fileParams = Tool.getFileParameters(adapter.formMimeType);
-		for (AbstractParam fileParam : fileParams) {
-			buffer.append(", ");
-			// @RequestParam(value = "", required = false)
-			buffer.append("@RequestParam(value = \"").append(fileParam.getDisplayName()).append("\"");
-			buffer.append(", required = ").append(fileParam.isRequired() ? "true" : "false");
-			buffer.append(") ");
 
-			// MultipartFile file
-			buffer.append("MultipartFile").append(fileParam.isRepeat() ? "[]" : "").append(" ").append(fileParam.getDisplayName());
-		}
 		// springmvv
 		buffer.append(", ");
 		buffer.append("HttpServletRequest request");
@@ -190,7 +177,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法内容
 	 */
-	public List<String> getContent(Adapter adapter) {
+	protected List<String> getContent(Adapter adapter) {
 
 		List<String> datas = Lists.newArrayList();
 
@@ -240,7 +227,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法尾部
 	 */
-	public List<String> getFooter(Adapter adapter) {
+	protected List<String> getFooter(Adapter adapter) {
 		List<String> datas = Lists.newArrayList();
 
 		datas.add("}");
@@ -253,67 +240,14 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法实体类定义
 	 */
-	public List<String> getEntityDefinition(Adapter adapter) {
-
-		// 参数
-		List<JsonParam> jsonParams = Lists.newArrayList();
-
-		if (adapter.formMimeType != null && StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_JSON)) {
-			// json
-			String schema = adapter.formMimeType.getSchema();
-			String example = adapter.formMimeType.getExample();
-
-			if (StringUtils.isNotBlank(schema)) {
-				jsonParams = JSONUtils.parseSchema(schema);
-			} else {
-				jsonParams = JSONUtils.parseExample(example);
-			}
-		} else {
-			Map<String, UriParameter> uriParameters = RamlUtils.getFullUriParameter(adapter.action);
-			if (uriParameters != null && uriParameters.size() > 0) {
-				for (AbstractParam param : uriParameters.values()) {
-					JsonParam jsonParam = new JsonParam();
-					jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
-					jsonParam.setParam(param);
-					jsonParams.add(jsonParam);
-				}
-			}
-			Map<String, QueryParameter> queryParameters = adapter.action.getQueryParameters();
-			if (queryParameters != null && queryParameters.size() > 0) {
-				for (AbstractParam param : queryParameters.values()) {
-					JsonParam jsonParam = new JsonParam();
-					jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
-					jsonParam.setParam(param);
-					jsonParams.add(jsonParam);
-				}
-			}
-			if (adapter.formMimeType != null) {
-				Map<String, List<FormParameter>> formParameters = adapter.formMimeType.getFormParameters();
-				for (String displayName : formParameters.keySet()) {
-					List<FormParameter> list = formParameters.get(displayName);
-					if (list != null && list.size() > 0) {
-						AbstractParam param = list.get(0);
-						JsonParam jsonParam = new JsonParam();
-						jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
-						jsonParam.setParam(param);
-						jsonParams.add(jsonParam);
-					}
-				}
-			}
-			// end
-		}
-
-		// parse
-		return Tool.getClassDefinition(jsonParams, Tool.getEntityName(adapter), 0, true);
-
-	}
+	protected abstract List<String> getEntityDefinition(Adapter adapter);
 
 	/**
 	 * 获取方法返回实体类定义
 	 * @param adapter 适配者
 	 * @return 方法返回实体类定义
 	 */
-	public List<String> getResultEntityDefinition(Adapter adapter) {
+	protected List<String> getResultEntityDefinition(Adapter adapter) {
 
 		// 没有返回值
 		if (!Tool.hasResult(adapter)) {
@@ -343,14 +277,14 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 	}
 
 	// 工具
-	static class Tool {
+	protected static class Tool {
 
 		/**
 		 * 是否有返回值
 		 * @param adapter 适配者
 		 * @return 是否有返回值
 		 */
-		private static boolean hasResult(Adapter adapter) {
+		public static boolean hasResult(Adapter adapter) {
 			return adapter.responseMimeType != null;
 		}
 
@@ -416,6 +350,86 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			String type = adapter.action.getType().toString().toLowerCase();
 			String methodUri = RamlUtils.getLastUri(adapter.action.getResource().getRelativeUri());
 			return RamlUtils.cap(type) + RamlUtils.cap(methodUri) + "ResultEntity";
+		}
+
+		/**
+		 * 获取URI的参数
+		 * @param adapter 适配者
+		 * @return URI的参数
+		 */
+		public static List<JsonParam> getUriParams(Adapter adapter) {
+			List<JsonParam> jsonParams = Lists.newArrayList();
+			// URI
+			Map<String, UriParameter> uriParameters = RamlUtils.getFullUriParameter(adapter.action);
+
+			if (uriParameters == null || uriParameters.size() == 0) {
+				return jsonParams;
+			}
+
+			for (AbstractParam param : uriParameters.values()) {
+				JsonParam jsonParam = new JsonParam();
+				jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
+				jsonParam.setParam(param);
+				jsonParams.add(jsonParam);
+			}
+			return jsonParams;
+		}
+
+		/**
+		 * 获取Query的参数
+		 * @param adapter 适配者
+		 * @return Query的参数
+		 */
+		public static List<JsonParam> getQueryParams(Adapter adapter) {
+			List<JsonParam> jsonParams = Lists.newArrayList();
+
+			Map<String, QueryParameter> queryParameters = adapter.action.getQueryParameters();
+
+			if (queryParameters == null || queryParameters.size() == 0) {
+				return jsonParams;
+			}
+
+			for (AbstractParam param : queryParameters.values()) {
+				JsonParam jsonParam = new JsonParam();
+				jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
+				jsonParam.setParam(param);
+				jsonParams.add(jsonParam);
+			}
+			return jsonParams;
+		}
+
+		/**
+		 * 获取Form的参数
+		 * @param adapter 适配者
+		 * @param formMimeType 请求的协议类型
+		 * @return Form的参数
+		 */
+		public static List<JsonParam> getFormParams(Adapter adapter, String formMimeType) {
+			List<JsonParam> jsonParams = Lists.newArrayList();
+
+			Map<String, MimeType> body = adapter.action.getBody();
+			if (body == null) {
+				return jsonParams;
+			}
+			MimeType mimeType = body.get(formMimeType);
+			if (mimeType == null) {
+				return jsonParams;
+			}
+
+			Map<String, List<FormParameter>> formParameters = mimeType.getFormParameters();
+			for (String displayName : formParameters.keySet()) {
+				List<FormParameter> list = formParameters.get(displayName);
+				if (list == null || list.size() == 0) {
+					continue;
+				}
+				FormParameter formParameter = list.get(0);
+				JsonParam jsonParam = new JsonParam();
+				jsonParam.setDataType(JsonParam.DATA_TYPE_SIMPLE);
+				jsonParam.setParam(formParameter);
+				jsonParams.add(jsonParam);
+			}
+
+			return jsonParams;
 		}
 
 		/**
@@ -575,14 +589,18 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			List<String> valids = Lists.newArrayList();
 
 			String notNull = Valid.getNotNull(jsonParam);
+			String notBlank = Valid.getNotBlank(jsonParam);
 			String notEmpty = Valid.getNotEmpty(jsonParam);
 			String length = Valid.getLength(jsonParam);
-			String min = Valid.getLength(jsonParam);
+			String min = Valid.getMin(jsonParam);
 			String max = Valid.getMax(jsonParam);
 			String pattern = Valid.getPattern(jsonParam);
 
 			if (notNull != null) {
 				valids.add(notNull);
+			}
+			if (notBlank != null) {
+				valids.add(notBlank);
 			}
 			if (notEmpty != null) {
 				valids.add(notEmpty);
@@ -615,14 +633,20 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 				return jsonParam.getParam().isRequired();
 			}
 
-			// 不能为空(字符串)
+			// 不能为空
 			// @NotNull(message = "")
 			public static String getNotNull(JsonParam jsonParam) {
 				if (!isRequired(jsonParam)) {
 					return null;
 				}
+				return "@NotNull(message = \"" + jsonParam.getParam().getDescription() + "不能为空\")";
+			}
+
+			// 不能为空(字符串)
+			// @NotBlank(message = "")
+			public static String getNotBlank(JsonParam jsonParam) {
 				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
-					return "@NotNull(message = \"" + jsonParam.getParam().getDescription() + "不能为空\")";
+					return "@NotBlank(message = \"" + jsonParam.getParam().getDescription() + "不能为空\")";
 				}
 				return null;
 			}
@@ -630,10 +654,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			// 必填选项(集合,Map)
 			// @NotEmpty(message = "必填选项")
 			public static String getNotEmpty(JsonParam jsonParam) {
-				if (!isRequired(jsonParam)) {
-					return null;
-				}
-				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY || jsonParam.getDataType() == JsonParam.DATA_TYPE_OBJECT) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY) {
 					return "@NotEmpty(message = \"" + jsonParam.getParam().getDescription() + "必填选项\")";
 				}
 				return null;
@@ -732,8 +753,8 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 					if (StringUtils.isBlank(pattern)) {
 						return null;
 					}
-					String regexp = pattern.replaceAll("\\", "\\\\");
-					return "@Pattern(regexp = \"" + regexp + "\", message = \"数据不合法[" + jsonParam.getParam().getDescription() + "]\")";
+					String regexp = pattern.replaceAll("\\\\", "\\\\\\\\");
+					return "@Pattern(regexp = \"" + regexp + "\", message = \"" + jsonParam.getParam().getDescription() + "数据不合法\")";
 				}
 				return null;
 			}

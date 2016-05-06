@@ -2,6 +2,7 @@ package com.github.hualuomoli.raml.join.adaptor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.raml.model.ParamType;
@@ -14,6 +15,7 @@ import com.github.hualuomoli.raml.join.JoinParser.Adapter;
 import com.github.hualuomoli.raml.util.RamlUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * Mocha适配器
@@ -62,8 +64,12 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 		List<String> datas = Lists.newArrayList();
 
 		datas.add("");
+		String descripton = adapter.action.getDescription();
+		if (StringUtils.isBlank(descripton)) {
+			descripton = adapter.action.getResource().getDescription();
+		}
 		// it('没有参数', function (done) {
-		datas.add("it('" + adapter.action.getResource().getDescription() + "', function (done) {");
+		datas.add("it('" + descripton + "', function (done) {");
 
 		return datas;
 	}
@@ -73,82 +79,7 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 	 * @param adapter 适配者
 	 * @return 方法内容
 	 */
-	public List<String> getContent(Adapter adapter) {
-
-		List<String> datas = Lists.newArrayList();
-
-		// request
-		// .post('/api/uri')
-		// .set('content-type', 'application/json')
-		// .send({
-		// })
-		// .expect(200)
-		// .expect(function (res) {
-		// res.body.code.should.equal('0');
-		// })
-		// .end(done);
-
-		datas.add("");
-		datas.add("request");
-		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + "." + adapter.action.getType().toString().toLowerCase() + "('" + Tool.getRequestUri(adapter) + "')");
-		// param
-		Map<String, String> queryParams;
-		Map<String, String> formParams;
-
-		switch (adapter.action.getType()) {
-		case GET:
-			queryParams = Tool.getQueryParams(adapter);
-			for (String key : queryParams.keySet()) {
-				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + key + " = ' + encodeURIComponent('" + queryParams.get(key) + "'))");
-			}
-		case DELETE:
-			queryParams = Tool.getQueryParams(adapter);
-			formParams = Tool.getFormParams(adapter);
-
-			if (queryParams.size() > 0) {
-				for (String key : queryParams.keySet()) {
-					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + key + "=' + encodeURIComponent('" + queryParams.get(key) + "'))");
-				}
-			} else {
-				for (String key : formParams.keySet()) {
-					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send('" + key + "=" + formParams.get(key) + "')");
-				}
-			}
-			break;
-		case POST:
-		case PUT:
-			if (adapter.formMimeType == null) {
-				break;
-			}
-			if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_URLENCODED)) {
-				formParams = Tool.getFormParams(adapter);
-				for (String key : formParams.keySet()) {
-					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send('" + key + "=" + formParams.get(key) + "')");
-				}
-			} else if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_JSON)) {
-				String example = adapter.formMimeType.getExample();
-				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send(" + example + ")");
-			} else if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_MULTIPART)) {
-				formParams = Tool.getFormParams(adapter);
-				for (String key : formParams.keySet()) {
-					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".field('" + key + "', '" + formParams.get(key) + "')");
-				}
-				Map<String, String> fileParams = Tool.getFileParams(adapter);
-				for (String key : fileParams.keySet()) {
-					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".attach('" + key + "', path.join(__dirname, '" + formParams.get(key) + "'))");
-				}
-			}
-			break;
-		default:
-			break;
-		}
-
-		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".expect(200)");
-
-		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".end(done);");
-
-		return datas;
-	}
+	public abstract List<String> getContent(Adapter adapter);
 
 	/**
 	 * 获取方法尾部
@@ -164,7 +95,7 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 	}
 
 	// 工具
-	static class Tool {
+	protected static class Tool {
 
 		/**
 		 * 获取请求的URI
@@ -183,6 +114,7 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 				UriParameter uriParameter = uriParameters.get(displayName);
 				searchList[i] = "{" + displayName + "}";
 				replacementList[i] = uriParameter.getExample();
+				i++;
 			}
 
 			return StringUtils.replaceEach(uri, searchList, replacementList);
@@ -241,9 +173,9 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 		 * @param adapter 适配这
 		 * @return 请求参数
 		 */
-		public static Map<String, String> getFileParams(Adapter adapter) {
+		public static Set<String> getFileParams(Adapter adapter) {
 
-			Map<String, String> params = Maps.newHashMap();
+			Set<String> files = Sets.newHashSet();
 
 			// form
 			if (adapter.formMimeType != null) {
@@ -253,13 +185,13 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 					if (list != null && list.size() > 0) {
 						FormParameter param = list.get(0);
 						if (param.getType() == ParamType.FILE) {
-							params.put(param.getDisplayName(), "../request");
+							files.add(param.getDisplayName());
 						}
 					}
 				}
 			}
 
-			return params;
+			return files;
 
 		}
 

@@ -8,7 +8,11 @@ import org.junit.Test;
 
 import com.github.hualuomoli.raml.join.JoinFileDealer;
 import com.github.hualuomoli.raml.join.JoinParser;
-import com.github.hualuomoli.raml.join.JoinParser.Adapter;
+import com.github.hualuomoli.raml.join.adaptor.mocha.MochaDeleteActionAdaptor;
+import com.github.hualuomoli.raml.join.adaptor.mocha.MochaFileActionAdaptor;
+import com.github.hualuomoli.raml.join.adaptor.mocha.MochaGetActionAdaptor;
+import com.github.hualuomoli.raml.join.adaptor.mocha.MochaPostJsonActionAdaptor;
+import com.github.hualuomoli.raml.join.adaptor.mocha.MochaPostUrlEncodedActionAdaptor;
 import com.github.hualuomoli.raml.join.dealer.MochaJoinFileDealer;
 import com.github.hualuomoli.raml.join.dealer.MochaJoinFileDealer.MochaConfig;
 import com.google.common.collect.Lists;
@@ -16,24 +20,28 @@ import com.google.common.collect.Lists;
 public class MochaActionAdaptorTest {
 
 	private JoinParser parser;
-	private ActionAdaptor adaptor;
 	private JoinFileDealer dealer;
 
 	@Before
 	public void before() {
-		adaptor = new MochaActionAdaptor() {
-
-			@Override
-			public boolean support(Adapter adapter) {
-				return true;
-			}
-		};
+		MochaActionAdaptor mochaGetActionAdaptor = new MochaGetActionAdaptor();
+		MochaActionAdaptor mochaDeleteActionAdaptor = new MochaDeleteActionAdaptor();
+		MochaActionAdaptor mochaPostUrlEncodedActionAdaptor = new MochaPostUrlEncodedActionAdaptor();
+		MochaActionAdaptor mochaPostJsonActionAdaptor = new MochaPostJsonActionAdaptor();
+		MochaActionAdaptor mochaFileActionAdaptor = new MochaFileActionAdaptor();
 
 		dealer = new MochaJoinFileDealer();
 
 		parser = new JoinParser() {
 		};
-		List<ActionAdaptor> adaptors = Lists.newArrayList(new ActionAdaptor[] { adaptor });
+		List<ActionAdaptor> adaptors = Lists.newArrayList(new ActionAdaptor[] { //
+				//
+				mochaGetActionAdaptor, //
+				mochaDeleteActionAdaptor, //
+				mochaPostUrlEncodedActionAdaptor, //
+				mochaPostJsonActionAdaptor, //
+				mochaFileActionAdaptor, //
+		});
 		parser.setAdaptors(adaptors);
 		parser.setDealer(dealer);
 
@@ -44,9 +52,8 @@ public class MochaActionAdaptorTest {
 		MochaConfig config = new MochaConfig();
 		config.setEncoding(Charset.forName("utf-8"));
 		config.setOutputFilepath("E:/output/mocha");
-//		config.setClear(true);
+		// config.setClear(true);
 		//
-		config.setTestProjectPath("E:/github/hualuomoli/nodejs");
 
 		parser.init(config);
 		parser.execute(new String[] {

@@ -29,7 +29,9 @@ public class MochaJoinFileDealer implements JoinFileDealer {
 	@Override
 	public void configure(Raml[] ramls) {
 		try {
-			String testProjectFilepath = mochaConfig.getTestProjectPath();
+
+			String path = this.getClass().getClassLoader().getResource(".").getPath();
+			String testProjectFilepath = path.substring(0, path.indexOf("/target")) + "/src/test/resources/demo/mocha";
 
 			// filename folder
 			String filename;
@@ -60,6 +62,7 @@ public class MochaJoinFileDealer implements JoinFileDealer {
 			FileUtils.writeLines(new File(mochaConfig.getOutputFilepath(), "test/request.js"), mochaConfig.getEncoding().name(), datas);
 
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -110,16 +113,6 @@ public class MochaJoinFileDealer implements JoinFileDealer {
 
 	// config
 	public static class MochaConfig extends Config {
-
-		private String testProjectPath;
-
-		public String getTestProjectPath() {
-			return testProjectPath;
-		}
-
-		public void setTestProjectPath(String testProjectPath) {
-			this.testProjectPath = testProjectPath;
-		}
 
 	}
 

@@ -125,13 +125,19 @@ public abstract class JoinParser extends ParserAbstract {
 		// 本资源
 		Map<ActionType, Action> actions = resource.getActions();
 		for (Action action : actions.values()) {
-			content.addAll(this.getData(action));
+			content.addAll(this.getData(action, false));
 		}
 
 		// 本资源下的非叶子资源
 		Set<Resource> leafResources = Tool.getLeafResources(resource);
 		for (Resource leafResource : leafResources) {
-			content.addAll(this.getContent(leafResource));
+			// content.addAll(this.getContent(leafResource));
+			// child
+			actions = leafResource.getActions();
+			for (Action action : actions.values()) {
+				content.addAll(this.getData(action, true));
+			}
+			// end
 		}
 
 		return content;
@@ -141,9 +147,10 @@ public abstract class JoinParser extends ParserAbstract {
 	/**
 	 * 获取数据
 	 * @param action 功能
+	 * @param child 是否是子资源
 	 * @return 数据
 	 */
-	private List<String> getData(Action action) {
+	private List<String> getData(Action action, boolean child) {
 
 		List<String> actionDatas = Lists.newArrayList();
 
@@ -151,9 +158,10 @@ public abstract class JoinParser extends ParserAbstract {
 		for (Adapter adapter : adapters) {
 			ActionAdaptor adaptor = ActionTool.getAdapter(adaptors, adapter);
 			if (adaptor == null) {
-				logger.error("can not find support adaptor for {} {}", adapter, RamlUtils.getFullUri(action.getResource()));
+				logger.error("can not find support adaptor for  {}", RamlUtils.getFullUri(action.getResource()));
 				continue;
 			}
+			adapter.child = child;
 			List<String> datas = adaptor.getDatas(adapter);
 			actionDatas.addAll(datas);
 		}
@@ -247,6 +255,7 @@ public abstract class JoinParser extends ParserAbstract {
 	// 适配者
 	public static class Adapter {
 
+		public boolean child; // 是否是子资源
 		public Action action; // 功能
 		public MimeType formMimeType; // form的类型
 		public String responseCode; // 响应编码
