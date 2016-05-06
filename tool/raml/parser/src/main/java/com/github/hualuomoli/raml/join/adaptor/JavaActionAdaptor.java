@@ -181,6 +181,14 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 
 		List<String> datas = Lists.newArrayList();
 
+		// 增加logger
+		String lowerEntityName = RamlUtils.unCap(Tool.getEntityName(adapter));
+
+		datas.add("");
+		datas.add("if (logger.isDebugEnabled()) {");
+		datas.add(INDENT_CHAR + "logger.debug(\"" + lowerEntityName + " {}\", ToStringBuilder.reflectionToString(" + lowerEntityName + "));");
+		datas.add("}");
+
 		if (!Tool.hasResult(adapter)) {
 			return datas;
 		}
@@ -633,6 +641,34 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 				return jsonParam.getParam().isRequired();
 			}
 
+			/**
+			 * 是否必填
+			 * @param jsonParam
+			 * @return
+			 */
+			private static boolean isDate(JsonParam jsonParam) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING && StringUtils.isNotBlank(jsonParam.getParam().getPattern())) {
+					String description = jsonParam.getParam().getDescription();
+					if (StringUtils.contains(description, "时间") || StringUtils.contains(description, "日期")) {
+						String pattern = jsonParam.getParam().getPattern();
+
+						Set<String> dateFormats = Sets.newHashSet(new String[] { //
+								"yyyy-MM-dd", //
+								"yyyy-MM-dd hh:mm:ss", //
+								"yyyy/MM/dd", //
+								"yyyy/MM/dd hh:mm:ss", //
+								"yyyyMMdd", //
+								"yyyyMMddhhmmss", //
+						});
+						if (dateFormats.contains(pattern)) {
+							return true;
+						}
+					}
+
+				}
+				return false;
+			}
+
 			// 不能为空
 			// @NotNull(message = "")
 			public static String getNotNull(JsonParam jsonParam) {
@@ -645,6 +681,9 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			// 不能为空(字符串)
 			// @NotBlank(message = "")
 			public static String getNotBlank(JsonParam jsonParam) {
+				if (isDate(jsonParam)) { // 日期字符串不处理
+					return null;
+				}
 				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
 					return "@NotBlank(message = \"" + jsonParam.getParam().getDescription() + "不能为空\")";
 				}
@@ -663,8 +702,10 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			// 长度限制
 			// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
 			public static String getLength(JsonParam jsonParam) {
+				if (isDate(jsonParam)) {// 日期字符串不处理
+					return null;
+				}
 				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
-
 					AbstractParam param = jsonParam.getParam();
 					Integer minLength = param.getMinLength();
 					Integer maxLength = param.getMaxLength();
@@ -748,10 +789,15 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			// 正则表达式
 			// @Pattern(regexp = "", message = "")
 			public static String getPattern(JsonParam jsonParam) {
+
 				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
 					String pattern = jsonParam.getParam().getPattern();
 					if (StringUtils.isBlank(pattern)) {
 						return null;
+					}
+					if (isDate(jsonParam)) {
+						// @DateTimeFormat(pattern = "")
+						return "@DateTimeFormat(pattern = \"" + pattern + "\")";
 					}
 					String regexp = pattern.replaceAll("\\\\", "\\\\\\\\");
 					return "@Pattern(regexp = \"" + regexp + "\", message = \"" + jsonParam.getParam().getDescription() + "数据不合法\")";
