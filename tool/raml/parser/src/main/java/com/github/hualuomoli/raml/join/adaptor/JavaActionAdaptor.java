@@ -1,5 +1,6 @@
 package com.github.hualuomoli.raml.join.adaptor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.raml.model.parameter.AbstractParam;
 import org.raml.model.parameter.FormParameter;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.raml.join.JoinParser.Adapter;
 import com.github.hualuomoli.raml.util.JSONUtils;
@@ -42,13 +44,14 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		List<String> entityDefinition = this.getEntityDefinition(adapter);
 		List<String> resultEntityDefinition = this.getResultEntityDefinition(adapter);
 
-		datas.addAll(note);
-		datas.addAll(annotation);
-		datas.addAll(header);
-		datas.addAll(content);
-		datas.addAll(footer);
-		datas.addAll(entityDefinition);
-		datas.addAll(resultEntityDefinition);
+		datas.add(""); // 换行
+		datas.addAll(RamlUtils.getIndentDatas(note, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(annotation, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(header, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(content, INDENT_CHAR, 2));
+		datas.addAll(RamlUtils.getIndentDatas(footer, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(entityDefinition, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(resultEntityDefinition, INDENT_CHAR, 1));
 
 		return datas;
 	}
@@ -215,8 +218,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		// 转换成object
 		String resultEntityName = Tool.getResultEntityName(adapter);
 		if (JSONUtils.isListExample(example)) {
-			datas.add("java.util.List<" + resultEntityName + "> data = JsonMapper.fromJsonString(datas,  JsonMapper.getJavaType(java.util.List.class,"
-					+ resultEntityName + ".class));");
+			datas.add("java.util.List<" + resultEntityName + "> data = JsonMapper.fromJsonString(datas,  JsonMapper.getJavaType(java.util.List.class," + resultEntityName + ".class));");
 		} else {
 			datas.add(resultEntityName + " data = JsonMapper.fromJsonString(datas,  " + resultEntityName + ".class);");
 		}
@@ -302,7 +304,7 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		}
 
 		// parse
-		return Tool.getClassDefinition(jsonParams, Tool.getEntityName(adapter), 0);
+		return Tool.getClassDefinition(jsonParams, Tool.getEntityName(adapter), 0, true);
 
 	}
 
@@ -336,25 +338,12 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		}
 
 		// parse
-		return Tool.getClassDefinition(jsonParams, Tool.getResultEntityName(adapter), 0);
+		return Tool.getClassDefinition(jsonParams, Tool.getResultEntityName(adapter), 0, false);
 
 	}
 
 	// 工具
 	static class Tool {
-
-		/**
-		 * 获取缩进字符串
-		 * @param indentLevel 缩进级别
-		 * @return 缩进字符串
-		 */
-		private static String getIndentCharts(int indentLevel) {
-			String data = "";
-			for (int i = 0; i < indentLevel; i++) {
-				data += INDENT_CHAR;
-			}
-			return data;
-		}
 
 		/**
 		 * 是否有返回值
@@ -429,13 +418,21 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			return RamlUtils.cap(type) + RamlUtils.cap(methodUri) + "ResultEntity";
 		}
 
-		public static List<String> getClassDefinition(List<JsonParam> jsonParams, String className, int indentLevel) {
+		/**
+		 * 获取类的定义
+		 * @param jsonParams 例子参数
+		 * @param className 类名
+		 * @param indentLevel 缩进级别,默认为0
+		 * @param request 是否为请求
+		 * @return 类的定义
+		 */
+		public static List<String> getClassDefinition(List<JsonParam> jsonParams, String className, int indentLevel, boolean request) {
 
 			List<String> datas = Lists.newArrayList();
 
 			datas.add("");
 			// header
-			datas.add(getIndentCharts(indentLevel) + "public static class " + className + " {");
+			datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel) + "public static class " + className + (request ? " implements EntityValidator" : "") + " {");
 
 			// 解析
 			datas.add("");
@@ -443,12 +440,18 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 			// attribute
 			for (int i = 0; i < jsonParams.size(); i++) {
 				JsonParam jsonParam = jsonParams.get(i);
-				if (StringUtils.equals(jsonParam.getDataType(), JSONUtils.JsonParam.DATA_TYPE_SIMPLE)) {
+				if (jsonParam.getDataType() == JSONUtils.JsonParam.DATA_TYPE_SIMPLE) {
 
 				}
-				datas.add(getIndentCharts(indentLevel + 1) + "/** " + jsonParam.getParam().getDescription() + "*/");
-				datas.add(getIndentCharts(indentLevel + 1) + "private " + getJavaTypeName(jsonParam)
-						+ (StringUtils.equals(jsonParam.getDataType(), JsonParam.DATA_TYPE_ARRAY) ? "[]" : "") + " " + jsonParam.getParam().getDisplayName()
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "/** " + jsonParam.getParam().getDescription() + "*/");
+				// 注解
+				if (request) {
+					List<String> valids = Tool.getValid(jsonParam);
+					for (String valid : valids) {
+						datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + valid);
+					}
+				}
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "private " + getJavaTypeName(jsonParam) + (jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY ? "[]" : "") + " " + jsonParam.getParam().getDisplayName()
 						+ ";");
 			}
 
@@ -458,31 +461,28 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 
 				// getter
 				datas.add("");
-				datas.add(getIndentCharts(indentLevel + 1) + "public " + getJavaTypeName(jsonParam) + getArrayStr(jsonParam) + " get"
-						+ RamlUtils.cap(jsonParam.getParam().getDisplayName()) + "() {");
-				datas.add(getIndentCharts(indentLevel + 2) + "return " + jsonParam.getParam().getDisplayName() + ";");
-				datas.add(getIndentCharts(indentLevel + 1) + "}");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "public " + getJavaTypeName(jsonParam) + getArrayStr(jsonParam) + " get" + RamlUtils.cap(jsonParam.getParam().getDisplayName()) + "() {");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 2) + "return " + jsonParam.getParam().getDisplayName() + ";");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "}");
 
 				// setter
 				datas.add("");
-				datas.add(getIndentCharts(indentLevel + 1) + "public void set" + RamlUtils.cap(jsonParam.getParam().getDisplayName()) + "("
-						+ getJavaTypeName(jsonParam) + getArrayStr(jsonParam) + " " + jsonParam.getParam().getDisplayName() + ") {");
-				datas.add(getIndentCharts(indentLevel + 2) + "this." + jsonParam.getParam().getDisplayName() + " = " + jsonParam.getParam().getDisplayName()
-						+ ";");
-				datas.add(getIndentCharts(indentLevel + 1) + "}");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "public void set" + RamlUtils.cap(jsonParam.getParam().getDisplayName()) + "(" + getJavaTypeName(jsonParam) + getArrayStr(jsonParam) + " "
+						+ jsonParam.getParam().getDisplayName() + ") {");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 2) + "this." + jsonParam.getParam().getDisplayName() + " = " + jsonParam.getParam().getDisplayName() + ";");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel + 1) + "}");
 			}
 
 			// inner class
 			for (int i = 0; i < jsonParams.size(); i++) {
 				JsonParam jsonParam = jsonParams.get(i);
-				if (StringUtils.equals(jsonParam.getDataType(), JsonParam.DATA_TYPE_ARRAY)
-						|| StringUtils.equals(jsonParam.getDataType(), JsonParam.DATA_TYPE_OBJECT)) {
-					datas.addAll(getClassDefinition(jsonParam.getChildren(), getJavaTypeName(jsonParam), indentLevel + 1));
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY || jsonParam.getDataType() == JsonParam.DATA_TYPE_OBJECT) {
+					datas.addAll(getClassDefinition(jsonParam.getChildren(), getJavaTypeName(jsonParam), indentLevel + 1, request));
 				}
 			}
 
 			// footer
-			datas.add(getIndentCharts(indentLevel) + "}");
+			datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, indentLevel) + "}");
 
 			return datas;
 		}
@@ -516,28 +516,45 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 				break;
 			case JsonParam.DATA_TYPE_SIMPLE:
 				// simple
-				switch (jsonParam.getParam().getType()) {
-				case STRING: // string
-					javaType = String.class.getSimpleName();
-					break;
-				case INTEGER: // integer
-					javaType = Integer.class.getSimpleName();
-					break;
-				case NUMBER: // number
-					javaType = Double.class.getSimpleName();
-					break;
-				case DATE:
-					javaType = Date.class.getSimpleName();
-					break;
-				case BOOLEAN: // boolean
-					javaType = Boolean.class.getSimpleName();
-					break;
-				case FILE:
-					javaType = "MultipartFile";
-					break;
-				}
+				javaType = getSimpleJavaTypeName(jsonParam).getSimpleName();
+				break;
 			}
 			return javaType;
+		}
+
+		/**
+		 * 获取简单的java类型
+		 * @param schemaType Schema 中的类型
+		 * @return Java类型
+		 */
+
+		private static Class<?> getSimpleJavaTypeName(JsonParam jsonParam) {
+
+			if (jsonParam.getDataType() != JsonParam.DATA_TYPE_SIMPLE) {
+				return null;
+			}
+
+			// simple
+			switch (jsonParam.getParam().getType()) {
+			case STRING: // string
+				return String.class;
+			case INTEGER: // integer
+				// max
+				BigDecimal maxinum = jsonParam.getParam().getMaximum();
+				if (maxinum != null && maxinum.longValue() > Integer.MAX_VALUE) {
+					return Long.class;
+				}
+				return Integer.class;
+			case NUMBER: // number
+				return Double.class;
+			case DATE:
+				return Date.class;
+			case BOOLEAN: // boolean
+				return Boolean.class;
+			case FILE:
+				return MultipartFile.class;
+			}
+			return null;
 		}
 
 		/**
@@ -546,8 +563,184 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		 * @return 如果是array,返回[],否则返回空字符串
 		 */
 		private static String getArrayStr(JsonParam jsonParam) {
-			return StringUtils.equals(jsonParam.getDataType(), JsonParam.DATA_TYPE_ARRAY) ? "[]" : "";
+			return jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY ? "[]" : "";
 		}
+
+		/**
+		 * 获取校验规则
+		 * @param jsonParam 参数
+		 * @return 校验规则
+		 */
+		public static List<String> getValid(JsonParam jsonParam) {
+			List<String> valids = Lists.newArrayList();
+
+			String notNull = Valid.getNotNull(jsonParam);
+			String notEmpty = Valid.getNotEmpty(jsonParam);
+			String length = Valid.getLength(jsonParam);
+			String min = Valid.getLength(jsonParam);
+			String max = Valid.getMax(jsonParam);
+			String pattern = Valid.getPattern(jsonParam);
+
+			if (notNull != null) {
+				valids.add(notNull);
+			}
+			if (notEmpty != null) {
+				valids.add(notEmpty);
+			}
+			if (length != null) {
+				valids.add(length);
+			}
+			if (min != null) {
+				valids.add(min);
+			}
+			if (max != null) {
+				valids.add(max);
+			}
+			if (pattern != null) {
+				valids.add(pattern);
+			}
+
+			return valids;
+		}
+
+		// 有效性注解
+		static class Valid {
+
+			/**
+			 * 是否必填
+			 * @param jsonParam
+			 * @return
+			 */
+			private static boolean isRequired(JsonParam jsonParam) {
+				return jsonParam.getParam().isRequired();
+			}
+
+			// 不能为空(字符串)
+			// @NotNull(message = "")
+			public static String getNotNull(JsonParam jsonParam) {
+				if (!isRequired(jsonParam)) {
+					return null;
+				}
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
+					return "@NotNull(message = \"" + jsonParam.getParam().getDescription() + "不能为空\")";
+				}
+				return null;
+			}
+
+			// 必填选项(集合,Map)
+			// @NotEmpty(message = "必填选项")
+			public static String getNotEmpty(JsonParam jsonParam) {
+				if (!isRequired(jsonParam)) {
+					return null;
+				}
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_ARRAY || jsonParam.getDataType() == JsonParam.DATA_TYPE_OBJECT) {
+					return "@NotEmpty(message = \"" + jsonParam.getParam().getDescription() + "必填选项\")";
+				}
+				return null;
+			}
+
+			// 长度限制
+			// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+			public static String getLength(JsonParam jsonParam) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
+
+					AbstractParam param = jsonParam.getParam();
+					Integer minLength = param.getMinLength();
+					Integer maxLength = param.getMaxLength();
+
+					if (minLength == null && maxLength == null) {
+						return null;
+					}
+
+					int min = minLength == null ? 0 : minLength.intValue();
+					int max = maxLength == null ? 0 : maxLength.intValue();
+
+					if (min > 0 && max == 0) {
+						// 只设置了最小长度
+						// @Length(min = 1, message = "数据长度不能小于1")
+						return "@Length(min = " + min + ", message = \"数据长度不能小于" + min + "\")";
+					} else if (min == 0 && max > 0) {
+						// 只设置了最大长度
+						// @Length(max = 5, message = "数据长度不能大于5")
+						return "@Length(max = " + max + ", message = \"数据长度不能大于" + max + "\")";
+					} else if (min > 0 && max > 0) {
+						// 设置了最小长度和最大长度
+						// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+						return "@Length(min = " + min + ", max = " + max + ", message = \"用户名长度在" + min + "-" + max + "之间\")";
+					}
+				}
+				return null;
+			}
+
+			// 设置了最小值
+			// @Min(value = 1, message = "")
+			public static String getMin(JsonParam jsonParam) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && (jsonParam.getParam().getType() == ParamType.NUMBER || jsonParam.getParam().getType() == ParamType.INTEGER)) {
+					// @Min(value = 1, message = "")
+					BigDecimal minimum = jsonParam.getParam().getMinimum();
+					if (minimum == null) {
+						return null;
+					}
+					Class<?> cls = getSimpleJavaTypeName(jsonParam);
+					if (cls == Integer.class) {
+						int min = minimum.intValue();
+						return "@Min(value = " + min + ", message = \"最小值" + min + "\")";
+					} else if (cls == Long.class) {
+						long min = minimum.longValue();
+						return "@Min(value = " + min + ", message = \"最小值" + min + "\")";
+					} else if (cls == Double.class) {
+						double min = minimum.doubleValue();
+						return "@Min(value = " + min + ", message = \"最小值" + min + "\")";
+					}
+
+					return null;
+				}
+				return null;
+			}
+
+			// 设置了最大值
+			// @Max(value = 10, message = "")
+			public static String getMax(JsonParam jsonParam) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && (jsonParam.getParam().getType() == ParamType.NUMBER || jsonParam.getParam().getType() == ParamType.INTEGER)) {
+					// @Min(value = 1, message = "")
+					BigDecimal maxinum = jsonParam.getParam().getMaximum();
+					if (maxinum == null) {
+						return null;
+					}
+					Class<?> cls = getSimpleJavaTypeName(jsonParam);
+					if (cls == Integer.class) {
+						int max = maxinum.intValue();
+						return "@Max(value = " + max + ", message = \"最大值" + max + "\")";
+					} else if (cls == Long.class) {
+						long max = maxinum.longValue();
+						return "@Max(value = " + max + ", message = \"最大值" + max + "\")";
+					} else if (cls == Double.class) {
+						double max = maxinum.doubleValue();
+						return "@Max(value = " + max + ", message = \"最大值" + max + "\")";
+					}
+
+					return null;
+				}
+				return null;
+			}
+
+			// 正则表达式
+			// @Pattern(regexp = "", message = "")
+			public static String getPattern(JsonParam jsonParam) {
+				if (jsonParam.getDataType() == JsonParam.DATA_TYPE_SIMPLE && jsonParam.getParam().getType() == ParamType.STRING) {
+					String pattern = jsonParam.getParam().getPattern();
+					if (StringUtils.isBlank(pattern)) {
+						return null;
+					}
+					String regexp = pattern.replaceAll("\\", "\\\\");
+					return "@Pattern(regexp = \"" + regexp + "\", message = \"数据不合法[" + jsonParam.getParam().getDescription() + "]\")";
+				}
+				return null;
+			}
+
+		}
+
+		// end
 
 	}
 

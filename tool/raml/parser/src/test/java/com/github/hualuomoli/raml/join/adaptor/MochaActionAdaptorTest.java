@@ -44,8 +44,9 @@ public class MochaActionAdaptorTest {
 		MochaConfig config = new MochaConfig();
 		config.setEncoding(Charset.forName("utf-8"));
 		config.setOutputFilepath("E:/output/mocha");
-		config.setClear(true);
+//		config.setClear(true);
 		//
+		config.setTestProjectPath("E:/github/hualuomoli/nodejs");
 
 		parser.init(config);
 		parser.execute(new String[] {

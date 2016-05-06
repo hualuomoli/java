@@ -1,5 +1,6 @@
 package com.github.hualuomoli.raml;
 
+import org.raml.model.Raml;
 import org.raml.model.Resource;
 
 import com.github.hualuomoli.raml.Parser.Config;
@@ -16,6 +17,12 @@ public interface FileDealer {
 	 * @param config 配置信息
 	 */
 	void setConfig(Config config);
+
+	/**
+	 * 配置
+	 * @param ramls
+	 */
+	void configure(Raml[] ramls);
 
 	/**
 	 * 获取资源的相对文件路径

@@ -494,11 +494,11 @@ public class JSONUtils {
 	public static class JsonParam {
 
 		// 数据类型
-		public static final String DATA_TYPE_OBJECT = "object";// 对象
-		public static final String DATA_TYPE_ARRAY = "array";// 数组
-		public static final String DATA_TYPE_SIMPLE = "simple";// 简单类型
+		public static final int DATA_TYPE_OBJECT = 1;// 对象
+		public static final int DATA_TYPE_ARRAY = 2;// 数组
+		public static final int DATA_TYPE_SIMPLE = 3;// 简单类型
 
-		private String dataType; // 数据类型
+		private int dataType; // 数据类型
 		private List<JsonParam> children;// 子数据
 		// 当前数据属性
 		private AbstractParam param;
@@ -506,11 +506,11 @@ public class JSONUtils {
 		public JsonParam() {
 		}
 
-		public String getDataType() {
+		public int getDataType() {
 			return dataType;
 		}
 
-		public void setDataType(String dataType) {
+		public void setDataType(int dataType) {
 			this.dataType = dataType;
 		}
 

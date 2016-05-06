@@ -1,7 +1,11 @@
 package com.github.hualuomoli.raml.join.dealer;
 
+import java.io.File;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.raml.model.Raml;
 import org.raml.model.Resource;
 
 import com.github.hualuomoli.raml.Parser.Config;
@@ -16,11 +20,44 @@ import com.google.common.collect.Lists;
  */
 public class JavaJoinFileDealer implements JoinFileDealer {
 
+	public static final String INDENT_CHAR = "\t";
+
 	private JavaConfig javaConfig;
 
 	@Override
 	public void setConfig(Config config) {
 		javaConfig = (JavaConfig) config;
+	}
+
+	@Override
+	public void configure(Raml[] ramls) {
+		try {
+			String webProjectFilepath = javaConfig.getWebProjectPath();
+
+			// filename folder
+			String folder;
+			String filename;
+
+			// pom.xml
+			filename = "pom.xml";
+			String pomData = FileUtils.readFileToString(new File(webProjectFilepath, filename), "UTF-8");
+			// update <artifactId>web</artifactId>
+			pomData = StringUtils.replace(pomData, "<artifactId>web</artifactId>", "<artifactId>" + javaConfig.getProjectName() + "</artifactId>");
+			// update <warName>web</warName>
+			pomData = StringUtils.replace(pomData, "<warName>web</warName>", "<warName>" + javaConfig.getProjectName() + "</warName>");
+			// flush
+			FileUtils.write(new File(javaConfig.getOutputFilepath(), filename), pomData, "UTF-8");
+
+			// .gitignore
+			filename = ".gitignore";
+			FileUtils.copyFile(new File(webProjectFilepath, filename), new File(javaConfig.getOutputFilepath(), filename));
+
+			// src
+			folder = "src";
+			FileUtils.copyDirectory(new File(webProjectFilepath, folder), new File(javaConfig.getOutputFilepath(), folder));
+
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
@@ -112,8 +149,7 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 		datas.add("public class " + className + " {");
 
 		datas.add("");
-		datas.add("private static final Logger logger = LoggerFactory.getLogger(" + className + ".class);");
-		datas.add("");
+		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + "private static final Logger logger = LoggerFactory.getLogger(" + className + ".class);");
 
 		return datas;
 	}
@@ -132,6 +168,7 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 		private double version; // 版本
 		private String projectName; // 项目名称
 		private String rootPackageName; // 根包名
+		private String webProjectPath; // web项目的绝对位置
 
 		public JavaConfig() {
 		}
@@ -166,6 +203,14 @@ public class JavaJoinFileDealer implements JoinFileDealer {
 
 		public void setRootPackageName(String rootPackageName) {
 			this.rootPackageName = rootPackageName;
+		}
+
+		public String getWebProjectPath() {
+			return webProjectPath;
+		}
+
+		public void setWebProjectPath(String webProjectPath) {
+			this.webProjectPath = webProjectPath;
 		}
 
 	}

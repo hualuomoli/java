@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.raml.model.Action;
 import org.raml.model.ActionType;
 import org.raml.model.MimeType;
+import org.raml.model.Raml;
 import org.raml.model.Resource;
 import org.raml.model.Response;
 
@@ -35,6 +36,11 @@ public abstract class JoinParser extends ParserAbstract {
 
 	public void setAdaptors(List<ActionAdaptor> adaptors) {
 		this.adaptors = adaptors;
+	}
+
+	@Override
+	protected void configure(Raml[] ramls) {
+		dealer.configure(ramls);
 	}
 
 	@Override

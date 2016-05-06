@@ -12,7 +12,6 @@ import org.raml.parser.visitor.RamlDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.hualuomoli.raml.exception.ParserException;
 import com.google.common.collect.Sets;
 
 /**
@@ -63,7 +62,7 @@ public abstract class ParserAbstract implements Parser {
 		if (!dir.exists()) {
 			boolean success = dir.mkdirs();
 			if (!success) {
-				throw new ParserException("can not create folder " + dir.getAbsolutePath());
+				throw new RuntimeException("can not create folder " + dir.getAbsolutePath());
 			}
 		}
 	}
@@ -79,7 +78,7 @@ public abstract class ParserAbstract implements Parser {
 			try {
 				FileUtils.forceDelete(dir);
 			} catch (Exception e) {
-				throw new ParserException(e);
+				throw new RuntimeException(e);
 			}
 
 		}

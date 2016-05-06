@@ -24,6 +24,38 @@ public class RamlUtils {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
 	/**
+	 * 获取缩进字符串
+	 * @param indentChar 缩进字符串
+	 * @param indentLevel 缩进级别
+	 * @return 缩进字符串
+	 */
+	public static String getIndentCharts(String indentChar, int indentLevel) {
+		String data = "";
+		for (int i = 0; i < indentLevel; i++) {
+			data += indentChar;
+		}
+		return data;
+	}
+
+	/**
+	 * 缩进数据
+	 * @param datas 数据
+	 * @param indentChar 缩进字符串
+	 * @param indentLevel 缩进级别
+	 * @return 缩进后的数据
+	 */
+	public static List<String> getIndentDatas(List<String> datas, String indentChar, int indentLevel) {
+		if (indentLevel == 0 || datas == null || datas.size() == 0) {
+			return datas;
+		}
+		List<String> list = Lists.newArrayList();
+		for (String data : datas) {
+			list.add(RamlUtils.getIndentCharts(indentChar, indentLevel) + data);
+		}
+		return list;
+	}
+
+	/**
 	 * 获取当前时间
 	 * @return 当前时间
 	 */

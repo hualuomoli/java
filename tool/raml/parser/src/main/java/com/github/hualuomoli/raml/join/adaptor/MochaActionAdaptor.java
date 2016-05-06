@@ -90,7 +90,8 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 
 		datas.add("");
 		datas.add("request");
-		datas.add(Tool.getIndentCharts(1) + "." + adapter.action.getType().toString().toLowerCase() + "'" + Tool.getRequestUri(adapter) + "')");
+		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + "." + adapter.action.getType().toString().toLowerCase() + "('" + Tool.getRequestUri(adapter)
+				+ "')");
 		// param
 		Map<String, String> queryParams;
 		Map<String, String> formParams;
@@ -158,26 +159,13 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 	public List<String> getFooter(Adapter adapter) {
 		List<String> datas = Lists.newArrayList();
 
-		datas.add("}");
+		datas.add("});");
 
 		return datas;
 	}
 
 	// 工具
 	static class Tool {
-
-		/**
-		 * 获取缩进字符串
-		 * @param indentLevel 缩进级别
-		 * @return 缩进字符串
-		 */
-		public static String getIndentCharts(int indentLevel) {
-			String data = "";
-			for (int i = 0; i < indentLevel; i++) {
-				data += INDENT_CHAR;
-			}
-			return data;
-		}
 
 		/**
 		 * 获取请求的URI

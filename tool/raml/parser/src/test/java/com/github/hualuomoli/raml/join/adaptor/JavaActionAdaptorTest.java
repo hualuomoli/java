@@ -50,6 +50,7 @@ public class JavaActionAdaptorTest {
 		config.setVersion(1.0);
 		config.setProjectName("web-raml-demo");
 		config.setRootPackageName("com.github.hualuomoli");
+		config.setWebProjectPath("E:/github/hualuomoli/java/web");
 
 		parser.init(config);
 		parser.execute(new String[] {
