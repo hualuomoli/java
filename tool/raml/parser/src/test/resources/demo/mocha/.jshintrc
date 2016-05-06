@@ -1,0 +1,21 @@
+{
+  "predef": [
+    "require",
+    "angular",
+    "$",
+    "console",
+    "process",
+    "__dirname",
+    "module",
+    "describe",
+    "before",
+    "after",
+    "beforeEach",
+    "afterEach",
+    "it"
+  ],
+  "strict": false,
+  "undef": true,
+  "unused": false,
+  "asi": true
+}
