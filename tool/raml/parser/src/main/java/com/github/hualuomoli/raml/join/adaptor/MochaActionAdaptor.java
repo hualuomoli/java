@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
  */
 public abstract class MochaActionAdaptor implements ActionAdaptor {
 
-	public static final String INDENT_CHAR = " ";
+	public static final String INDENT_CHAR = "  ";
 
 	@Override
 	public List<String> getDatas(Adapter adapter) {
@@ -34,10 +34,10 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 		List<String> content = this.getContent(adapter);
 		List<String> footer = this.getFooter(adapter);
 
-		datas.addAll(note);
-		datas.addAll(header);
-		datas.addAll(content);
-		datas.addAll(footer);
+		datas.addAll(RamlUtils.getIndentDatas(note, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(header, INDENT_CHAR, 1));
+		datas.addAll(RamlUtils.getIndentDatas(content, INDENT_CHAR, 2));
+		datas.addAll(RamlUtils.getIndentDatas(footer, INDENT_CHAR, 1));
 
 		return datas;
 	}
@@ -90,8 +90,7 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 
 		datas.add("");
 		datas.add("request");
-		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + "." + adapter.action.getType().toString().toLowerCase() + "('" + Tool.getRequestUri(adapter)
-				+ "')");
+		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + "." + adapter.action.getType().toString().toLowerCase() + "('" + Tool.getRequestUri(adapter) + "')");
 		// param
 		Map<String, String> queryParams;
 		Map<String, String> formParams;
@@ -100,7 +99,7 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 		case GET:
 			queryParams = Tool.getQueryParams(adapter);
 			for (String key : queryParams.keySet()) {
-				datas.add(".query('" + key + " = ' +  encodeURIComponent('" + queryParams.get(key) + "'))");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + key + " = ' + encodeURIComponent('" + queryParams.get(key) + "'))");
 			}
 		case DELETE:
 			queryParams = Tool.getQueryParams(adapter);
@@ -108,11 +107,11 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 
 			if (queryParams.size() > 0) {
 				for (String key : queryParams.keySet()) {
-					datas.add(".query('" + key + "=' +  encodeURIComponent('" + queryParams.get(key) + "'))");
+					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + key + "=' + encodeURIComponent('" + queryParams.get(key) + "'))");
 				}
 			} else {
 				for (String key : formParams.keySet()) {
-					datas.add(".send('" + key + "=" + formParams.get(key) + "')");
+					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send('" + key + "=" + formParams.get(key) + "')");
 				}
 			}
 			break;
@@ -124,19 +123,19 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 			if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_URLENCODED)) {
 				formParams = Tool.getFormParams(adapter);
 				for (String key : formParams.keySet()) {
-					datas.add(".send('" + key + "=" + formParams.get(key) + "')");
+					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send('" + key + "=" + formParams.get(key) + "')");
 				}
 			} else if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_JSON)) {
 				String example = adapter.formMimeType.getExample();
-				datas.add(".send(" + example + ")");
+				datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".send(" + example + ")");
 			} else if (StringUtils.equals(adapter.formMimeType.getType(), MIME_TYPE_MULTIPART)) {
 				formParams = Tool.getFormParams(adapter);
 				for (String key : formParams.keySet()) {
-					datas.add(".field('" + key + "', '" + formParams.get(key) + "')");
+					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".field('" + key + "', '" + formParams.get(key) + "')");
 				}
 				Map<String, String> fileParams = Tool.getFileParams(adapter);
 				for (String key : fileParams.keySet()) {
-					datas.add(".attach('" + key + "', path.join(__dirname, '" + formParams.get(key) + "'))");
+					datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".attach('" + key + "', path.join(__dirname, '" + formParams.get(key) + "'))");
 				}
 			}
 			break;
@@ -144,9 +143,9 @@ public abstract class MochaActionAdaptor implements ActionAdaptor {
 			break;
 		}
 
-		datas.add(".expect(200)");
+		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".expect(200)");
 
-		datas.add(".end(done);");
+		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".end(done);");
 
 		return datas;
 	}

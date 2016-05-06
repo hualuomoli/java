@@ -38,9 +38,8 @@ public class MochaJoinFileDealer implements JoinFileDealer {
 			filename = ".gitignore";
 			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
 			// .jshintrc
-			// filename = ".jshintrc";
-			// FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(),
-			// filename));
+			filename = ".jshintrc";
+			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
 			// favicon.ico
 			filename = "favicon.ico";
 			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
@@ -94,7 +93,7 @@ public class MochaJoinFileDealer implements JoinFileDealer {
 
 		datas.add("");
 		// describe('参数类型', function () {
-		datas.add("describe('" + RamlUtils.dealDescription(resource.getDescription()) + "', function() {");
+		datas.add("describe('" + RamlUtils.dealDescription(resource.getDescription()) + "', function () {");
 
 		return datas;
 	}
