@@ -147,8 +147,12 @@ public class PaginationSQLHelper {
 			int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
 			int limit = pagination.getPageSize();
 			// add order by
-			if (StringUtils.isNotBlank(pagination.getOrderByStr())) {
-				sql = removeOrders(sql) + " order by " + pagination.getOrderByStr();
+			if (pagination.getOrderByStrArray() != null && pagination.getOrderByStrArray().size() > 0) {
+				sql = removeOrders(sql) + " order by ";
+				for (String orderByStr : pagination.getOrderByStrArray()) {
+					sql += orderByStr + ",";
+				}
+				sql = sql.substring(0, sql.length() - 1);
 			} else if (pagination.getOrders() != null && pagination.getOrders().size() > 0) {
 				sql = removeOrders(sql) + " order by ";
 				for (Order order : pagination.getOrders()) {

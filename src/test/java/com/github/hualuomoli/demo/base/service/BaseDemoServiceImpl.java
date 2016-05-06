@@ -12,6 +12,7 @@ import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
 import com.github.hualuomoli.demo.base.mapper.BaseDemoMapper;
+import com.github.hualuomoli.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 
@@ -94,6 +95,26 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 	@Override
 	public List<BaseDemo> findList(BaseDemo baseDemo) {
 		return baseDemoMapper.findList(baseDemo);
+	}
+
+	@Override
+	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize) {
+		return this.findPage(baseDemo, new Pagination(pageNo, pageSize));
+	}
+
+	@Override
+	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, String... orderByStrArray) {
+		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orderByStrArray));
+	}
+
+	@Override
+	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, Order... orders) {
+		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orders));
+	}
+
+	@Override
+	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, List<Order> orders) {
+		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orders));
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.plugin.mybatis.entity.Pagination;
 
 // #BaseDemo
@@ -29,6 +30,14 @@ public interface BaseDemoService {
 	int deleteByIds(Collection<String> ids);
 
 	List<BaseDemo> findList(BaseDemo baseDemo);
+
+	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize);
+
+	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, String... orderByStrArray);
+
+	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, Order... orders);
+
+	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, List<Order> orders);
 
 	Page findPage(BaseDemo baseDemo, Pagination pagination);
 

@@ -229,29 +229,51 @@ public class BaseDemoServiceTest extends AnnotationConfigTest {
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(2, page.getDataList().size());
 
-		// add order
-		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc,id asc"));
+		// order
+
+		// no order
+		page = demoService.findPage(baseDemo, 3, 5);
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
+		// order by str array
+		// 1
+		page = demoService.findPage(baseDemo, 3, 5, "name desc,id asc");
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+		// 2
+		page = demoService.findPage(baseDemo, 3, 5, "name desc", "id asc");
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+		// 3
 		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc"));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
-		// use orders
-		List<Order> orders1 = Lists.newArrayList();
-		orders1.add(new Order("salary", Direction.DESC));
-		orders1.add(new Order("sex"));
-		page = demoService.findPage(baseDemo, new Pagination(3, 5, orders1));
+		// order by Ojbect array
+		// 1
+		page = demoService.findPage(baseDemo, 3, 5, new Order("salary", Direction.DESC), new Order("sex"));
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+		// 2
+		page = demoService.findPage(baseDemo, new Pagination(3, 5, new Order("salary", Direction.DESC)));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
-		List<Order> orders2 = Lists.newArrayList();
-		orders2.add(new Order("salary", Direction.DESC));
-		page = demoService.findPage(baseDemo, new Pagination(3, 5, orders2));
+		// order by Ojbect list
+		// 1
+		List<Order> list1 = Lists.newArrayList();
+		list1.add(new Order("birth_day", Direction.DESC));
+		list1.add(new Order("age"));
+		page = demoService.findPage(baseDemo, 3, 5, list1);
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
-
+		// 2
+		List<Order> list2 = Lists.newArrayList();
+		list2.add(new Order("birth_day", Direction.DESC));
+		page = demoService.findPage(baseDemo, 3, 5, list2);
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
 	}
 
 	@Test
