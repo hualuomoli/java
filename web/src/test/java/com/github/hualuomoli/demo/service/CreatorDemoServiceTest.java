@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { //
 		"classpath:spring/application-context-jdbc.xml", //
+		"classpath:spring/application-context-jdbc-init.xml", //
 		"classpath:spring/application-context-core.xml", //
 		"classpath:spring/application-context-orm.xml" //
 })
