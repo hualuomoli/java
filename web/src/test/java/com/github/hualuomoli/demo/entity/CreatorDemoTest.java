@@ -33,19 +33,19 @@ public class CreatorDemoTest {
 		String templateResourcePath = "tpl";
 
 		// mapper
-		relativeDir = new File(outputpath, "src/main/java");
+		relativeDir = new File(outputpath, "src/test/java");
 		filepath = new File(relativeDir.getAbsolutePath(), mapper.getFilepath()).getAbsolutePath();
 		output = new File(filepath, mapper.getFilename());
 		TemplateUtils.processByResource(templateResourcePath, "mapper.tpl", mapper, output);
 
 		// config
-		relativeDir = new File(outputpath, "src/main/resources/mappers");
+		relativeDir = new File(outputpath, "src/test/resources/mappers");
 		filepath = new File(relativeDir.getAbsolutePath(), mapper.getConfigFilePath()).getAbsolutePath();
 		output = new File(filepath, mapper.getConfigFileName());
 		TemplateUtils.processByResource(templateResourcePath, "config.tpl", mapper, output);
 
 		// service
-		relativeDir = new File(outputpath, "src/main/java");
+		relativeDir = new File(outputpath, "src/test/java");
 		filepath = new File(relativeDir.getAbsolutePath(), service.getFilepath()).getAbsolutePath();
 		output = new File(filepath, service.getFilename());
 		TemplateUtils.processByResource("tpl", "service.tpl", service, output);
