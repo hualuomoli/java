@@ -1,11 +1,11 @@
 package com.github.hualuomoli.base.entity;
 
 import java.util.Date;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Paginator;
+import com.github.hualuomoli.base.util.BaseUtils;
 import com.github.hualuomoli.commons.constant.Status;
 
 public abstract class BaseEntity extends CommonField implements Paginator {
@@ -15,19 +15,9 @@ public abstract class BaseEntity extends CommonField implements Paginator {
 	public BaseEntity() {
 	}
 
-	public final String getCurrentUser() {
-		// TODO
-		return "system";
-	}
-
-	public final Date getCurrentDate() {
-		// TODO
-		return new Date();
-	}
-
 	public void preInsert() {
-		String currentUser = getCurrentUser();
-		Date currentDate = getCurrentDate();
+		String currentUser = BaseUtils.getCurrentUser();
+		Date currentDate = BaseUtils.getCurrentDate();
 
 		setCreateBy(currentUser);
 		setCreateDate(currentDate);
@@ -35,12 +25,12 @@ public abstract class BaseEntity extends CommonField implements Paginator {
 		setUpdateDate(currentDate);
 		setStatus(getStatus() == null ? Status.NOMAL.getValue() : getStatus());
 		setVersion(1);
-		setId(StringUtils.isEmpty(getId()) ? UUID.randomUUID().toString().replaceAll("-", "") : getId());
+		setId(StringUtils.isEmpty(getId()) ? BaseUtils.getRandomId() : getId());
 	}
 
 	public void preUpdate() {
-		setUpdateBy(getCurrentUser());
-		setUpdateDate(getCurrentDate());
+		setUpdateBy(BaseUtils.getCurrentUser());
+		setUpdateDate(BaseUtils.getCurrentDate());
 	}
 
 	public Pagination getPagination() {

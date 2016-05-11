@@ -24,9 +24,9 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.slf4j.Logger;
 
-import com.github.hualuomoli.commons.util.Reflections;
 import com.github.hualuomoli.base.entity.Pagination;
 import com.github.hualuomoli.base.mybatis.dialect.Dialect;
+import com.github.hualuomoli.commons.util.Reflections;
 
 /**
  * SQL工具类
@@ -145,7 +145,9 @@ public class PaginationSQLHelper {
 	 */
 	public static String generatePageSql(String sql, Pagination pagination, Dialect dialect) {
 		if (dialect.supportsLimit()) {
-			return dialect.getLimitString(sql, pagination.getFirstResult(), pagination.getMaxResults());
+			int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
+			int limit = pagination.getPageSize();
+			return dialect.getLimitString(sql, offset, limit);
 		} else {
 			return sql;
 		}

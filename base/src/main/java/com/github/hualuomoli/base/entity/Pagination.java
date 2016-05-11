@@ -66,28 +66,4 @@ public class Pagination {
 		this.orderBy = orderBy;
 	}
 
-	// other method
-	/**
-	 * 获取 Hibernate FirstResult
-	 */
-	public int getFirstResult() {
-		int firstResult = (getPageNo() - 1) * getPageSize();
-		// 不能大于最大数量
-		if (firstResult >= getCount()) {
-			firstResult = (getCount() - getPageSize() + 1);
-		}
-		// 不能小于零
-		if (firstResult < 0) {
-			firstResult = 0;
-		}
-		return firstResult;
-	}
-
-	/**
-	 * 获取 Hibernate MaxResults
-	 */
-	public int getMaxResults() {
-		return getPageSize();
-	}
-
 }

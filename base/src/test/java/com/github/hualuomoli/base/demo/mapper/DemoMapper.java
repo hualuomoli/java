@@ -5,7 +5,7 @@ import java.util.List;
 import com.github.hualuomoli.base.demo.entity.Demo;
 import com.github.hualuomoli.base.stereotype.Mapper;
 
-@Mapper
+@Mapper(value = "com.github.hualuomoli.base.demo.mapper.DemoMapper")
 public interface DemoMapper {
 
 	Demo get(String id);

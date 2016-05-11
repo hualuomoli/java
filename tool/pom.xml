@@ -15,7 +15,8 @@
 
 	<modules>
 
-		<module>./raml-parser</module>
+		<module>./raml</module>
+		<module>./creator</module>
 
 	</modules>
 
