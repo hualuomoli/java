@@ -1,0 +1,149 @@
+<div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">Horizontal form</div>
+        <div class="panel-body">
+          <form class="bs-example form-horizontal">
+            <div class="form-group">
+              <label class="col-md-2 control-label">相对URI</label>
+              <div class="col-md-4">
+                <input ng-model="raml.url" class="form-control" placeholder="访问uri路径">
+              </div>
+              <label class="col-md-2 control-label">访问方式</label>
+              <div class="col-md-4">
+                <select ng-model="raml.method" class="form-control">
+                  <option value="get">GET</option>
+                  <option value="post">POST</option>
+                  <option value="put">PUT</option>
+                  <option value="delete">DELETE</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label">描述</label>
+              <div class="col-md-10">
+                <input class="form-control" ng-model="raml.description" placeholder="描述">
+              </div>
+            </div>
+            <!-- get -->
+            <div class="table-responsive">
+              <table class="table table-striped b-t b-light">
+                <thead>
+                  <tr>
+                    <th>编号</th>
+                    <th>级别</th>
+                    <th>参数名</th>
+                    <th>参数描述</th>
+                    <th>参数类型</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="param in raml.params">
+                    <td><span>{{param.index}}</span></td>
+                    <td><span>{{param.level}}</span></td>
+                    <td>
+                      <div class="input-group" style="width:300px;">
+                        <span class="input-group-addon" ng-repeat="blank in param.blanks">&nbsp;&nbsp;</span>
+                        <input type="text" class="form-control" ng-model="param.displayName" placeholder="参数名">
+                      </div>
+                    </td>
+                    <td><input type="text" class="form-control" ng-model="param.description" placeholder="参数描述"></td>
+                    <td><select ng-model="param.type" class="form-control">
+                        <option value="string">字符串</option>
+                        <option value="integer">数值</option>
+                        <option value="number">小数</option>
+                        <option value="boolean">真假</option>
+                        <option value="object" ng-show="raml.method == 'post' || raml.method == 'put'">对象</option>
+                        <option value="array" ng-show="raml.method == 'post' || raml.method == 'put'">数组</option>
+                      </select></td>
+                    <td>
+                    <td>
+                      <button ng-click="addParams(param)" class="btn btn-primary">添加同级</button>
+                      <button ng-show="param.type =='object' || param.type =='array'" class="btn btn-primary" ng-click="addChildParams(param)">添加子级</button>
+                      <button ng-hide="param.type =='object' || param.type =='array'" data-toggle="modal" class="btn btn-primary"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- ./get -->
+            <div class="form-group">
+              <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-sm btn-info" ng-click="create()">Create</button>
+                <button type="submit" class="btn btn-sm btn-primary" ng-click="gotoList()">Back</button>
+              </div>
+            </div>
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+               aria-labelledby="myModalLabel" aria-hidden="true">
+               <div class="modal-dialog">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">模态框({{valid.description}})</h4>
+                     </div>
+                     <div class="modal-body">
+                      <form class="form-horizontal">
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">是否必填</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.required" type="checkbox" class="form-control" placeholder="是否必填">
+                          </div>
+                          <label class="col-md-2 control-label">例子</label>
+                          <div class="col-md-4">
+                            <select ng-show="valid.type == 'boolean'" class="form-control" ng-model="rule.example">
+                              <option value="false">假</option>
+                              <option value="true">真</option>
+                            </select>
+                            <input ng-hide="valid.type == 'boolean'" ng-model="rule.example" class="form-control" placeholder="例子">
+                          </div>
+                        </div>
+
+                        <!-- 字符串 -->  
+                        <div class="form-group" ng-show="valid.type == 'string'">
+                         <label class="col-md-2 control-label">最小长度</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.minLength" class="form-control" placeholder="最小长度">
+                          </div>
+                          <label class="col-md-2 control-label">最大长度</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.maxLength" class="form-control" placeholder="最大长度">
+                          </div>
+                        </div>
+                        <div class="form-group" ng-show="valid.type == 'string'">
+                          <label class="col-md-2 control-label">正则表达式</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.pattern" class="form-control" placeholder="正则表达式">
+                          </div>
+                        </div>
+                        <!-- ./字符串 -->
+                        
+                        <!-- integer -->
+                        <div class="form-group" ng-show="valid.type == 'integer'">
+                         <label class="col-md-2 control-label">最小值</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.minimum" class="form-control" placeholder="最小值">
+                          </div>
+                          <label class="col-md-2 control-label">最大值</label>
+                          <div class="col-md-4">
+                            <input ng-model="rule.maximum" class="form-control" placeholder="最大值">
+                          </div>
+                        </div>
+                        <!-- ./integer -->
+
+                      </form>
+                     </div>
+                     <!-- /. -->
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="confirmValid(rule);">确定</button>
+                     </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

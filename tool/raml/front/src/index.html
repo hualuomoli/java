@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Be Angular | Bootstrap Admin Web App with AngularJS</title>
+  <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+  <!-- build:css-assets -->
+  <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="../bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" type="text/css" href="../bower_components/simple-line-icons/css/simple-line-icons.css" />
+  <!-- endbuild -->
+  <!-- build:css-app -->
+  <link rel="stylesheet" type="text/css" href="./css/animate.css" />
+  <link rel="stylesheet" type="text/css" href="./css/font.css" />
+  <link rel="stylesheet" type="text/css" href="./css/app.css" />
+  <!-- endbuild -->
+</head>
+
+<body ng-app="app">
+  <div class="app app-header-fixed app-aside-fixed">
+    <div ui-view></div>
+  </div>
+  <!-- build:js-assets -->
+  <script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+  <script type="text/javascript" src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script type="text/javascript" src="../bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+  <!-- ========== -->
+  <script type="text/javascript" src="../bower_components/ngstorage/ngStorage.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-cookies/angular-cookies.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-resource/angular-resource.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-touch/angular-touch.js"></script>
+  <script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- endbuild -->
+ 
+  <!-- build:js-blocks -->
+  <script type="text/javascript" src="../bower_components/front-angular-blocks/dist/front-angular-blocks.min.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js-app -->
+  <!-- js -->
+  <script type="text/javascript" src="./js/app.js"></script>
+  <!-- app -->
+  <script type="text/javascript" src="./app/app.module.js"></script>
+  <script type="text/javascript" src="./app/app.controller.js"></script>
+  <script type="text/javascript" src="./app/app.config.js"></script>
+  <script type="text/javascript" src="./app/app.router.js"></script>
+  <!-- raml -->
+  <script type="text/javascript" src="./app/raml/raml.module.js"></script>
+  <script type="text/javascript" src="./app/raml/raml.controller.js"></script>
+  <script type="text/javascript" src="./app/raml/raml.service.js"></script>
+  <script type="text/javascript" src="./app/raml/raml.router.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js-test -->
+  <!-- <script type="text/javascript" src="./app/test/cors/cors.factory.js"></script>
+  <script type="text/javascript" src="./app/test/cors/cors.service.js"></script>
+  <script type="text/javascript" src="./app/test/test.provider.js"></script>
+  <script type="text/javascript" src="./app/test/test.config.js"></script> -->
+  <!-- endbuild -->
+
+</body>
+
+</html>

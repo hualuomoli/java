@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Responsive Table
+  </div>
+  <div class="row wrapper">
+    <div class="col-sm-3">
+      <div class="input-group">
+        <input type="text" ng-model="search" class="input-sm form-control" placeholder="Search">
+        <span class="input-group-btn">
+            <button class="btn btn-sm btn-default" ng-click="add()" type="button">Add!</button>
+          </span>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped b-t b-light">
+      <thead>
+        <tr>
+          <th>路径</th>
+          <th>请求方式</th>
+          <th>描述</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="raml in ramls | filter:search">
+           <td><a ng-click="update(raml)">{{raml.url}}</a></td>
+           <td>{{raml.method}}</td>
+           <td>{{raml.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
