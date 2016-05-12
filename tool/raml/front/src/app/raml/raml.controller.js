@@ -8,22 +8,22 @@
   /** @ngInject */
   function ramlCtrl($scope, $state, raml) {
     $scope.search = '';
-    $scope.ramls = [];
+    $scope.resources = [];
 
     $scope.add = function () {
       $state.go('app.raml.form')
     }
 
-    $scope.update = function (raml) {
+    $scope.update = function (resource) {
       $state.go('app.raml.form', {
-        id: raml.id
+        id: resource.id
       })
     }
 
     //
     raml.getResources()
       .then(function (datas) {
-        $scope.ramls = datas;
+        $scope.resources = datas;
       });
 
   }
@@ -33,7 +33,7 @@
 
     var update = false; // 是否是修改
 
-    $scope.raml = {};
+    $scope.resource = {};
     $scope.rule = {}; // 规则
     $scope.valid = {}; // 现在校验的param
 
@@ -56,18 +56,42 @@
 
       update = id !== undefined && id !== '';
 
-      raml.getResource(id)
-        .then(function (r) {
-          if (update && r.url === undefined) {
-            throw new Error('no raml to update.');
-          }
-          $scope.raml = angular.extend({}, r);
-          console.log(r.params);
-          add({
-            level: 0,
-            index: r.params === undefined ? 0 : r.params.length
-          });
-        })
+      if (update) {
+        // update
+        raml.getResource(id)
+          .then(function (resource) {
+            // add query params
+            add(resource.queryParams, {
+              level: 0,
+              index: resource.queryParams.length
+            });
+            add(resource.responseParams, {
+              level: 0,
+              index: resource.responseParams.length
+            });
+            $scope.resource = resource
+          })
+      } else {
+        // add
+
+        var resource = {
+          queryParams: [],
+          responseParams: []
+        };
+        // add query params
+        add(resource.queryParams, {
+          level: 0,
+          index: resource.queryParams.length
+        });
+        // add response params
+        add(resource.responseParams, {
+          level: 0,
+          index: resource.responseParams.length
+        });
+        $scope.resource = resource;
+      }
+
+
     }
 
     // 设置校验Object
@@ -84,30 +108,27 @@
     }
 
     // 同级
-    function addParams(param) {
+    function addParams(params, param) {
       var newParam = {};
       newParam.level = param.level;
       newParam.index = param.index + 1;
 
-      add(newParam);
+      add(params, newParam);
 
     }
 
     // 子集
-    function addChildParams(param) {
+    function addChildParams(params, param) {
       var newParam = {};
       newParam.level = param.level + 1;
       newParam.index = param.index + 1;
 
-      add(newParam);
+      add(params, newParam);
 
     }
 
     // 添加到params
-    function add(param) {
-      // params
-      var params = $scope.raml.params || [];
-
+    function add(params, param) {
       // 位置
       var index = param.index;
       // 数据长度
@@ -115,11 +136,6 @@
 
       // 设置空白的个数,与级别相同
       setBlanks(param);
-
-      // 添加到最后
-      if (index > params.length) {
-        throw new Error("not set param to " + index);
-      }
 
       // move index - end
       for (var i = length - 1; i >= index; i--) {
@@ -132,8 +148,6 @@
       // add 
       params[index] = param;
 
-      // 设置到$scope
-      $scope.raml.params = params;
     }
 
     // 设置空白个数
@@ -146,32 +160,25 @@
       param.blanks = blanks;
     }
 
-    function removeEmptyParam(raml) {
-      var params = raml.params;
+    // 移除空白的参数
+    function removeEmptyParam(params) {
       var newParams = [];
-      for (var i = 0; i < params.length; i++) {
+      for (var i = params.length - 1; i >= 0; i--) {
         var param = params[i];
+        // 如果不合法,移除
         if (!validParam(param)) {
-          logger.log('invalid param ', (i + 1))
-        } else {
-          newParams[newParams.length] = param;
+          params.splice(i, 1);
         }
       }
       // 重新设置编号
-      for (var j = 0; j < newParams.length; j++) {
-        newParams[j].index = j;
+      for (var j = 0; j < params.length; j++) {
+        params[j].index = j;
       }
-      raml.params = newParams;
     }
 
+    // 参数是否合法
     function validParam(param) {
-      if (param === null) {
-        return false;
-      }
       if (param.displayName === undefined || param.displayName === '') {
-        return false;
-      }
-      if (param.description === undefined || param.description === '') {
         return false;
       }
       if (param.type === undefined || param.type === '') {
@@ -180,17 +187,40 @@
       return true;
     }
 
+    // raml是否合法
+    function validRaml(resource) {
+      if (resource.url === undefined || resource.url === '') {
+        return false;
+      }
+      if (resource.method === undefined || resource.method === '') {
+        return false;
+      }
+      if (resource.queryMimeType === undefined || resource.queryMimeType === '') {
+        return false;
+      }
+      if (resource.responseMimeType === undefined || resource.responseMimeType === '') {
+        return false;
+      }
+      return true;
+    }
+
     // 生成
     function create() {
-      var r = $scope.raml;
-      removeEmptyParam(r);
-      logger.log("raml", r);
+      var resource = $scope.resource;
+      removeEmptyParam(resource.queryParams);
+      removeEmptyParam(resource.responseParams);
+
+      if (!validRaml(resource)) {
+        return;
+      }
+
+      // showKeys(resource);
 
       var promise;
       if (update) {
-        promise = raml.updateResource(r)
+        promise = raml.updateResource(resource)
       } else {
-        promise = raml.addResource(r)
+        promise = raml.addResource(resource)
       }
 
       promise.then(function (result) {
@@ -201,6 +231,16 @@
         }
       });
 
+    }
+
+    function showKeys(obj) {
+      for (var key in obj) {
+        var value = obj[key];
+        if (typeof value === 'object') {
+          showKeys(value);
+        }
+        console.log(key + ' = ' + value)
+      }
     }
 
     // to list

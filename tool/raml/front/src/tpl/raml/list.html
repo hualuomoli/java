@@ -22,10 +22,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="raml in ramls | filter:search">
-           <td><a ng-click="update(raml)">{{raml.url}}</a></td>
-           <td>{{raml.method}}</td>
-           <td>{{raml.description}}</td>
+        <tr ng-repeat="resource in resources | filter:search">
+           <td><a ng-click="update(resource)">{{resource.url}}</a></td>
+           <td>{{resource.method}}</td>
+           <td>{{resource.description}}</td>
         </tr>
       </tbody>
     </table>
