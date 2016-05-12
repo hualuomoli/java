@@ -42,6 +42,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>ueditor</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
 			<artifactId>creator</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>test</scope>
