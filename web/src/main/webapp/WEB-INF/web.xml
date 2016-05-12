@@ -3,15 +3,15 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
-	<display-name>http://github.com/hualuomoli/my</display-name>
+	<display-name>http://github.com/hualuomoli/java</display-name>
 
 	<!-- Context ConfigLocation -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			classpath*:/spring/application-context-core.xml,
-			classpath*:/spring/application-context-orm.xml,
-			classpath*:/spring/application-context-jdbc.xml
+			classpath*:/orm/spring/application-context-orm.xml,
+			classpath*:/orm/spring/application-context-jdbc.xml
 		</param-value>
 	</context-param>
 	<listener>
