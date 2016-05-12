@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,7 @@ public class UeditorController {
 
 	// 配置文件信息
 	@RequestMapping(value = "", method = { RequestMethod.GET })
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void config(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String action = request.getParameter("action");
 		if (logger.isDebugEnabled()) {
@@ -47,7 +48,8 @@ public class UeditorController {
 				String config = StreamUtils.copyToString(this.getClass().getClassLoader().getResourceAsStream("config/ueditor.json"), CharsetUtils.UTF8);
 				configData = config.replaceAll("/\\*[\\s\\S]*?\\*/", "");
 			}
-			response.getOutputStream().write(configData.getBytes(CharsetUtils.UTF8));
+			response.addHeader("Content-Type", "text/html");
+			this.result(request, response, configData);
 			break;
 		default:
 			throw new IOException("there is no dealer to deal with " + action);
@@ -56,7 +58,7 @@ public class UeditorController {
 	}
 
 	// 文件上传
-	@RequestMapping(value = "", method = { RequestMethod.POST }, consumes = { "multipart/*" }, produces = { "application/json" })
+	@RequestMapping(value = "", method = { RequestMethod.POST }, consumes = { "multipart/*" })
 	public void upload(@RequestParam(value = "upfile", required = true) MultipartFile upfile, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String action = request.getParameter("action");
@@ -79,11 +81,12 @@ public class UeditorController {
 
 		String data = JsonMapper.toJsonString(map);
 
-		response.getOutputStream().write(data.getBytes());
+		response.addHeader("Content-Type", "application/json");
+		this.result(request, response, data);
 	}
 
 	// 涂鸦
-	@RequestMapping(value = "", method = { RequestMethod.POST }, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
+	@RequestMapping(value = "", method = { RequestMethod.POST }, consumes = { "application/x-www-form-urlencoded" })
 	public void uploada(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String action = request.getParameter("action");
@@ -104,8 +107,20 @@ public class UeditorController {
 
 		String data = JsonMapper.toJsonString(map);
 
-		response.getOutputStream().write(data.getBytes());
+		response.addHeader("Content-Type", "application/json");
+		this.result(request, response, data);
+	}
 
+	// 返回结果
+	private void result(HttpServletRequest request, HttpServletResponse response, String result) throws IOException {
+		String callback = request.getParameter("callback");
+		String data;
+		if (StringUtils.isNotBlank(callback)) {
+			data = callback + "(" + result + ")";
+		} else {
+			data = result;
+		}
+		response.getOutputStream().write(data.getBytes(CharsetUtils.UTF8));
 	}
 
 	// 下载文件
