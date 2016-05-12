@@ -73,4 +73,35 @@ public class CollectionUtils {
 
 	}
 
+	/**
+	 * 过滤集合
+	 * @param list 集合数据
+	 * @param filter 过滤器
+	 * @return 过滤后的集合
+	 */
+	public static <T> List<T> filter(List<T> list, Filter<T> filter) {
+
+		if (list == null || list.size() == 0 || filter == null) {
+			return list;
+		}
+
+		List<T> retList = Lists.newArrayList();
+		for (int i = 0; i < list.size(); i++) {
+			T t = list.get(i);
+			if (filter.valid(t)) {
+				retList.add(t);
+			}
+		}
+		return retList;
+
+	}
+
+	// 过滤器
+	public static interface Filter<T> {
+
+		// 是否有效
+		boolean valid(T t);
+
+	}
+
 }
