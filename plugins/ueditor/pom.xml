@@ -5,38 +5,27 @@
 
 	<parent>
 		<groupId>com.github.hualuomoli</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>plugins</artifactId>
 		<version>3.2.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>plugins</artifactId>
-	<packaging>pom</packaging>
+	<artifactId>ueditor</artifactId>
+	<packaging>jar</packaging>
 
-	<modules>
+	<properties>
 
-		<module>./activemq</module>
-		<module>./redis</module>
-		<module>./memcached</module>
-		<module>./jpush</module>
-		<module>./zxing</module>
-		<module>./ueditor</module>
-
-	</modules>
+	</properties>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>commons</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>plugin</artifactId>
+			<artifactId>mvc</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
 	</dependencies>
+
 
 </project>
