@@ -38,22 +38,21 @@ public class CorsFilter extends FilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		// add cross header
-		if (!this.addCrossHeader((HttpServletRequest) request, (HttpServletResponse) response)) {
-			return;
-		}
+		this.addCrossHeader((HttpServletRequest) request, (HttpServletResponse) response);
+
 		// chain
 		chain.doFilter(request, response);
 	}
 
 	// add cross header
-	private boolean addCrossHeader(HttpServletRequest req, HttpServletResponse res) {
+	private void addCrossHeader(HttpServletRequest req, HttpServletResponse res) {
 
 		String origin = req.getHeader("origin");
 
 		// call this server by browser, postman, mocha,
 		// origin is null, not use cross domain
-		if (StringUtils.isEmpty(origin)) {
-			return true;
+		if (StringUtils.isBlank(origin)) {
+			return;
 		}
 
 		// show log
@@ -73,7 +72,6 @@ public class CorsFilter extends FilterBean {
 			// TODO
 		}
 
-		return validation;
 	}
 
 	// is origin valid
