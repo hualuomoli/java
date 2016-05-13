@@ -284,7 +284,7 @@ describe('Raml的基础维护', function () {
       "level": 0,
       "index": 0,
       "blanks": [],
-      "displayName": "msg",
+      "displayName": "code",
       "description": "响应编码",
       "type": "integer",
       "rule": {
@@ -341,13 +341,32 @@ describe('Raml的基础维护', function () {
         "example": "00000002"
       }
     }],
-    "url": "/u/{usercode}/order",
+    "url": "/u/{usercode}/order/{pageNo}",
     "queryMimeType": "application/json",
     "method": "post",
     "responseMimeType": "application/json",
-    "description": "下订单"
+    "description": "下订单",
+    "uriParams": [{
+      "displayName": "usercode",
+      "description": "用户名",
+      "type": "string",
+      "required": true,
+      "rule": {
+        "example": "hualuomoli",
+        "minLength": "3",
+        "maxLength": "20"
+      }
+    }, {
+      "displayName": "pageNo",
+      "description": "页码",
+      "type": "integer",
+      "rule": {
+        "minimum": "1",
+        "maximum": "100",
+        "example": "5"
+      }
+    }]
   };
-
 
 
   it('添加数据', function (done) {

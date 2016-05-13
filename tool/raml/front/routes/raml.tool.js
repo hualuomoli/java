@@ -43,6 +43,29 @@ function getRaml(resource) {
 
 }
 
+// uri参数
+function getUriParameters(resource) {
+  var parameters = '';
+  var uriParams = resource.uriParams;
+  if (uriParams === undefined || uriParams.length === 0) {
+    return parameters;
+  }
+  parameters += getIndent(1) + 'uriParameters:' + '\n';
+  for (var i = 0; i < uriParams.length; i++) {
+    var uriParameter = uriParams[i];
+    parameters += getIndent(2) + uriParameter.displayName + ':' + '\n';
+    parameters += getIndent(3) + 'displayName: ' + uriParameter.displayName + '\n';
+    parameters += getIndent(3) + 'description: ' + uriParameter.description + '\n';
+    parameters += getIndent(3) + 'type: ' + uriParameter.type + '\n';
+    // rule
+    var rule = uriParameter.rule;
+    for (var key in rule) {
+      parameters += getIndent(3) + key + ': ' + rule[key] + '\n';
+    }
+  }
+  return parameters;
+}
+
 // get方法参数
 function getGETParameters(resource) {
   var parameters = '';
@@ -52,8 +75,9 @@ function getGETParameters(resource) {
   }
   parameters += getIndent(2) + 'queryParameters:' + '\n';
   for (var i = 0; i < queryParams.length; i++) {
-    var queryParameter = queryParams[i] + '\n';
-    parameters += getIndent(3) + 'displayName: ' + queryParameter.displayName + '\n';
+    var queryParameter = queryParams[i];
+    parameters += getIndent(3) + queryParameter.displayName + ':' + '\n';
+    parameters += getIndent(4) + 'displayName: ' + queryParameter.displayName + '\n';
     parameters += getIndent(4) + 'description: ' + queryParameter.description + '\n';
     parameters += getIndent(4) + 'type: ' + queryParameter.type + '\n';
     // rule
@@ -77,8 +101,9 @@ function getPostParameters(resource) {
   body += getIndent(4) + 'formParameters:' + '\n';
 
   for (var i = 0; i < queryParams.length; i++) {
-    var queryParameter = queryParams[i] + '\n';
-    body += getIndent(5) + 'displayName: ' + queryParameter.displayName + '\n';
+    var queryParameter = queryParams[i];
+    body += getIndent(5) + queryParameter.displayName + ':' + '\n';
+    body += getIndent(6) + 'displayName: ' + queryParameter.displayName + '\n';
     body += getIndent(6) + 'description: ' + queryParameter.description + '\n';
     body += getIndent(6) + 'type: ' + queryParameter.type + '\n';
     // rule
@@ -101,10 +126,19 @@ function getPostJSONParameters(resource) {
     //
   body += getIndent(2) + 'body:' + '\n';
   body += getIndent(3) + resource.queryMimeType + ':' + '\n';
+
+  // example
   body += getIndent(4) + 'example: |' + '\n';
-  body += getIndent(5) + getExample(jsons) + '\n';
+  body += getIndent(5) + '{';
+  body += getExample(jsons, 6) + '\n';
+  body += getIndent(5) + '}' + '\n';
+
+  // schema
   body += getIndent(4) + 'schema: |' + '\n';
-  body += getIndent(5) + getSchema(jsons) + '\n';
+  body += getIndent(5) + '{';
+  body += getSchema(jsons, 6) + '\n';
+  body += getIndent(5) + '}' + '\n';
+
 
   return body;
 }
@@ -123,176 +157,208 @@ function getResponse(resource) {
   response += getIndent(3) + '200:' + '\n';
   response += getIndent(4) + 'body:' + '\n';
 
-  response += getIndent(5) + resource.queryMimeType + ':' + '\n';
+  response += getIndent(5) + resource.responseMimeType + ':' + '\n';
+
+  // example
   response += getIndent(6) + 'example: |' + '\n';
-  response += getIndent(7) + getExample(jsons) + '\n';
+  response += getIndent(7) + '{';
+  response += getExample(jsons, 8) + '\n';
+  response += getIndent(7) + '}' + '\n';
+
+  // schema
   response += getIndent(6) + 'schema: |' + '\n';
-  response += getIndent(7) + getSchema(jsons) + '\n';
+  response += getIndent(7) + '{';
+  response += getSchema(jsons, 8) + '\n';
+  response += getIndent(7) + '}' + '\n';
 
   return response;
 
 }
 
 // 获取examp
-function getExample(jsons) {
+function getExample(jsons, level) {
   var str = '';
-  //
-  str += '{';
   //
   for (var i = 0; i < jsons.length; i++) {
     var json = jsons[i];
-    // ,
-    if (i > 0) {
-      str += ',';
-    }
+    // // ,
+
+    var data = ''; // key : value
     // key
-    str += '"' + json.displayName + '"';
+    data += '\n' + getIndent(level) + '"' + json.displayName + '"';
     // :
-    str += ':';
+    data += ' : ';
 
     var type = json.type;
     var rule = json.rule || {};
-    var example;
+    var value;
 
     switch (type) {
     case 'object':
       // object
-      example = getExample(json.children);
+      value = '{';
+      value += getExample(json.children, level + 1);
+      value += '\n' + getIndent(level) + '}';
       break;
     case 'array':
       // array
-      example = '[' + getExample(json.children) + ']';
+      value = '[{';
+      value += getExample(json.children, level + 1);
+      value += '\n' + getIndent(level) + '}]';
       break;
     case 'string':
       // string
-      example = '"' + (rule.example ? rule.example : '') + '"';
+      value = '"' + (rule.example ? rule.example : '') + '"';
       break;
     case 'boolean':
       // boolean
-      example = rule.example ? rule.example : 'false';
+      value = rule.example ? rule.example : 'false';
       break;
     case 'date':
       // date
-      example = rule.example ? rule.example : '2016-05-14 12:25:36';
+      value = rule.example ? rule.example : '2016-05-14 12:25:36';
       break;
     case 'integer':
       // integer
-      example = rule.example ? rule.example : '0';
+      value = rule.example ? rule.example : '0';
       break;
     default:
       // default
-      example = '"' + (rule.example ? rule.example : '') + '"';
+      value = '"' + (rule.example ? rule.example : '') + '"';
     }
-    str += example;
+    data += value;
+    //
+    str += data;
+    // add ,
+    if (i < jsons.length - 1) {
+      str += ',';
+    }
 
+    // end json
   }
-
-  // 
-  str += '}';
 
   return str;
 
 }
 
 // 获取schema
-function getSchema(jsons) {
+function getSchema(jsons, level) {
 
   var url = 'http://jsonschema.net';
 
   var str = '';
 
-  str += '{';
-  str += '"$schema": "http://json-schema.org/draft-04/schema#",';
-  str += '"id": "' + url + '",';
-  str += '"type": "object",';
-  str += '"properties": ';
+  str += '\n' + getIndent(level) + '"$schema": "http://json-schema.org/draft-04/schema#",';
+  str += '\n' + getIndent(level) + '"id": "' + url + '",';
+  str += '\n' + getIndent(level) + '"type": "object",';
+  str += '\n' + getIndent(level) + '"properties": {';
 
   // properties
-  str += getSchemaProperties(jsons, url);
-  // required
-  str += getRequired(jsons);
+  str += getSchemaProperties(jsons, level + 1, url);
 
-  str += '}';
+  str += '\n' + getIndent(level) + '},';
+  // required
+  str += getRequired(jsons, level);
 
   return str;
 }
 
 // 获取schema的properties
-function getSchemaProperties(jsons, url) {
+function getSchemaProperties(jsons, level, url) {
   var str = '';
 
-  str += '{';
-
   for (var i = 0; i < jsons.length; i++) {
-    if (i > 0) {
-      str += ',';
-    }
     var json = jsons[i];
 
+    // data
+    var data = ''; // key : value
     // key
-    str += '"' + json.displayName + '"';
+    data += '\n' + getIndent(level) + '"' + json.displayName + '"';
     // :
-    str += ':';
+    data += ' : {';
+
     // value
-    var schema = '';
+    var value = '';
 
     var newUrl = url + '/' + json.displayName;
-    schema += '{';
-    schema += '"id": "' + newUrl + '",';
-    schema += '"type": "' + json.type + '",';
-    schema += '"description": "' + (json.description ? json.description : '') + '"';
+    value += '\n' + getIndent(level + 1) + '"id" : "' + newUrl + '",';
+    value += '\n' + getIndent(level + 1) + '"type" : "' + json.type + '",';
+    value += '\n' + getIndent(level + 1) + '"description" : "' + (json.description ? json.description : '') + '"'; // no ,
+
     // type
     switch (json.type) {
     case 'object':
-      schema += ',"properties": ' + getSchemaProperties(json.children, newUrl);
-      schema += getRequired(json.children);
+      value += ','; // description's ,
+      value += '\n' + getIndent(level + 1) + '"properties" : {';
+      value += getSchemaProperties(json.children, level + 2, newUrl);
+      value += '\n' + getIndent(level + 1) + '},'; // ./properties
+      value += getRequired(json.children, level + 1);
       break;
     case 'array':
+      value += ','; // description's ,
       newUrl += '/0';
-      schema += ',"items": {';
-      schema += '"id": "' + newUrl + '",';
-      schema += '"type": "object",';
-      schema += '"properties": ' + getSchemaProperties(json.children, newUrl);
-      schema += '}';
-      schema += getRequired(json.children);
+      value += '\n' + getIndent(level + 1) + '"items" : {'; // item
+
+      value += '\n' + getIndent(level + 2) + '"id" : "' + newUrl + '",';
+      value += '\n' + getIndent(level + 2) + '"type" : "object",';
+
+      value += '\n' + getIndent(level + 2) + '"properties" : {'; // properties
+      value += getSchemaProperties(json.children, level + 3, newUrl);
+      value += '\n' + getIndent(level + 2) + '},'; // ./properties
+
+      value += getRequired(json.children, level + 2);
+
+      value += '\n' + getIndent(level + 1) + '}'; // ./item
       break;
     default:
       // default
       var rule = json.rule || {};
       var ruleStr = '';
       for (var key in rule) {
-        ruleStr += ',"' + key + '":"' + rule[key] + '"';
+        ruleStr += '\n' + getIndent(level + 1) + '"' + key + '" : "' + rule[key] + '",';
       }
-      schema += ruleStr;
+      if (ruleStr.length > 0) {
+        value += ','; // description's ,
+        value += ruleStr.substring(0, ruleStr.length - 1);
+      }
+
     }
 
-    schema += '}'; // end schema
+    data += value;
 
-    str += schema;
+    data += '\n' + getIndent(level) + '}';
+
+    str += data;
+
+    // ,
+    if (i < jsons.length - 1) {
+      str += ',';
+    }
+
   }
 
-  str += '}';
+
 
   return str;
 }
 
+
 // 获取必填
-function getRequired(jsons) {
+function getRequired(jsons, level) {
   var str = '';
-  str += ',"required": [';
+  str += '\n' + getIndent(level) + '"required": [';
   var required = '';
   for (var i = 0; i < jsons.length; i++) {
     var json = jsons[i];
     if (json.required) {
-      if (required.length > 0) {
-        required += ',';
-      }
-      required += '"' + json.displayName + '"';
+      required += '\n' + getIndent(level + 1) + '"' + json.displayName + '",';
     }
   }
-  str += required;
-  str += ']';
+  if (required.length > 0) {
+    str += required.substring(0, required.length - 1);
+  }
 
+  str += '\n' + getIndent(level) + ']';
 
   return str;
 }
@@ -325,6 +391,7 @@ function getMethodHead(resource) {
   // url
   methodHead += resource.url + ':' + '\n';
   // uri parameters
+  methodHead += getUriParameters(resource);
 
   // method
   methodHead += getIndent(1) + resource.method + ':' + '\n';

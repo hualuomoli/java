@@ -38,6 +38,7 @@
     $scope.valid = {}; // 现在校验的param
 
     // methods
+    $scope.setUriParams = setUriParams;
     $scope.addParams = addParams;
     $scope.addChildParams = addChildParams;
     $scope.setValidObject = setValidObject;
@@ -45,11 +46,11 @@
     $scope.create = create;
     $scope.gotoList = gotoList;
 
-    // init
-    init();
+    // load
+    load();
 
-    // 初始化
-    function init() {
+    // 加载
+    function load() {
 
       var id = $stateParams.id;
       logger.log('id', id);
@@ -60,37 +61,75 @@
         // update
         raml.getResource(id)
           .then(function (resource) {
-            // add query params
-            add(resource.queryParams, {
-              level: 0,
-              index: resource.queryParams.length
-            });
-            add(resource.responseParams, {
-              level: 0,
-              index: resource.responseParams.length
-            });
-            $scope.resource = resource
+            init(resource);
           })
       } else {
         // add
-
         var resource = {
           queryParams: [],
-          responseParams: []
+          responseParams: [],
+          uriParams: []
         };
-        // add query params
-        add(resource.queryParams, {
-          level: 0,
-          index: resource.queryParams.length
-        });
-        // add response params
-        add(resource.responseParams, {
-          level: 0,
-          index: resource.responseParams.length
-        });
-        $scope.resource = resource;
+        init(resource);
       }
+    }
 
+    // 初始化
+    function init(resource) {
+      // add query params
+      add(resource.queryParams, {
+        level: 0,
+        index: resource.queryParams.length
+      });
+      // add response params
+      add(resource.responseParams, {
+        level: 0,
+        index: resource.responseParams.length
+      });
+      // set uri params
+      $scope.saveUriParams = [];
+      angular.extend($scope.saveUriParams, resource.uriParams);
+      // add to scope
+      $scope.resource = resource
+    }
+
+    // 设置uri的参数
+    function setUriParams(uri) {
+
+      //原来保存的参数
+      var saveUriParams = $scope.saveUriParams;
+
+      // 设置当前的参数
+      var uriParams = [];
+
+      var array = uri.split('/');
+      for (var i = 0; i < array.length; i++) {
+        var param = array[i];
+        if (param.length <= 2) {
+          continue;
+        }
+        // 参数
+        if (param.startsWith('{') && param.endsWith('}')) {
+          var displayName = param.substring(1, param.length - 1);
+          var uriParam = {
+            displayName: displayName
+          };
+          // 如果存在保存的参数,使用保存的参数
+          for (var j = 0; j < saveUriParams.length; j++) {
+            var srcUriParam = saveUriParams[j];
+            if (srcUriParam.displayName == displayName) {
+              uriParam = srcUriParam;
+              break;
+            }
+          }
+          uriParams[uriParams.length] = uriParam;
+        }
+      }
+      // 设置新参数到参数集合中
+      $scope.resource.uriParams = uriParams;
+
+      // 保存原参数
+      angular.extend(saveUriParams, uriParams);
 
     }
 
@@ -196,9 +235,6 @@
         return false;
       }
       if (resource.method === undefined || resource.method === '') {
-        return false;
-      }
-      if (resource.queryMimeType === undefined || resource.queryMimeType === '') {
         return false;
       }
       if (resource.responseMimeType === undefined || resource.responseMimeType === '') {

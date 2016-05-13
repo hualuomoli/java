@@ -7,7 +7,7 @@
             <div class="form-group">
               <label class="col-md-2 control-label">相对URI</label>
               <div class="col-md-4">
-                <input ng-model="resource.url" class="form-control" placeholder="访问uri路径">
+                <input ng-model="resource.url" ng-keyup="setUriParams(resource.url)" class="form-control" placeholder="访问uri路径">
               </div>
               <label class="col-md-2 control-label">访问方式</label>
               <div class="col-md-4">
@@ -41,6 +41,38 @@
                 <input class="form-control" ng-model="resource.description" placeholder="描述">
               </div>
             </div>
+            <!-- uri -->
+            <div class="table-responsive">
+              <table class="table table-striped b-t b-light">
+                <thead>
+                  <tr>
+                    <th>参数名</th>
+                    <th>参数描述</th>
+                    <th>参数类型</th>
+                    <th>是否必填</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="param in resource.uriParams">
+                    <td><input type="text" class="form-control" ng-model="param.displayName" placeholder="参数名"></td>
+                    <td><input type="text" class="form-control" ng-model="param.description" placeholder="参数描述"></td>
+                    <td><select ng-model="param.type" class="form-control">
+                        <option value="string">字符串</option>
+                        <option value="integer">数值</option>
+                        <option value="number">小数</option>
+                        <option value="boolean">真假</option>
+                      </select>
+                    </td>
+                    <td><input type="checkbox" class="form-control" ng-model="param.required"></td>
+                    <td>
+                      <button data-toggle="modal" class="btn btn-sm btn-info"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- ./uri -->
             <!-- query -->
             <div class="table-responsive">
               <table class="table table-striped b-t b-light">
