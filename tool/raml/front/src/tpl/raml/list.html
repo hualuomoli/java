@@ -19,6 +19,7 @@
           <th>路径</th>
           <th>请求方式</th>
           <th>描述</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +27,7 @@
            <td><a ng-click="update(resource)">{{resource.url}}</a></td>
            <td>{{resource.method}}</td>
            <td>{{resource.description}}</td>
+           <td><a type="button" class="btn btn-primary" href="/file/{{resource.id}}.html" target="_blank">查看</a></td>
         </tr>
       </tbody>
     </table>

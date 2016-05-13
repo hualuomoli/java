@@ -34,11 +34,15 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // static
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // development
-app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
-app.use(express.static(path.join(__dirname, 'src')));
+// app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+// app.use(express.static(path.join(__dirname, 'src')));
+
+
+app.use('/file', express.static(path.join(__dirname, 'raml')));
+
 
 
 // route
