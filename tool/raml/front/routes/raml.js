@@ -2,7 +2,10 @@ var express = require('express');
 var util = require('util');
 var fs = require('fs');
 var path = require('path');
+var childProcess = require('child_process');
 
+
+var tool = require('./raml.tool');
 var logger = require('../logger/logger');
 
 var router = express.Router();
@@ -53,9 +56,11 @@ router.put('/:id', function (req, res) {
   var filepath = path.join(__dirname, '../files');
   createPath(filepath);
 
-  // 随机文件名
   var id = req.params.id;
   var filename = path.join(filepath, id);
+
+  // 生成raml文件
+  createRamlFile(data);
 
   fs.writeFile(path.join(__dirname, '../files', id), JSON.stringify(data), "UTF-8", function (data) {
     res
@@ -80,6 +85,9 @@ router.post('/', function (req, res) {
   var id = Math.random().toString(36).substr(2);
   data.id = id;
   var filename = path.join(filepath, id);
+
+  // 生成raml文件
+  createRamlFile(data);
 
   fs.writeFile(filename, JSON.stringify(data), "UTF-8", function () {
 
@@ -127,6 +135,22 @@ router.delete('/:id', function (req, res) {
   });
 
 });
+
+// 创建raml文件
+function createRamlFile(data) {
+
+  // raml文件内容
+  var ramlContent = tool.getRaml(data);
+  var filepath = path.join(__dirname, '../raml');
+  createPath(filepath);
+  var filename = path.join(filepath, data.id + '.raml');
+  // 写文件
+  fs.writeFileSync(filename, ramlContent, "UTF-8");
+
+  // 生成html
+  var batFile = path.join(__dirname, '../create.bat');
+  childProcess.execFile(batFile, [data.id]);
+}
 
 // 获取数据
 function getDatas() {

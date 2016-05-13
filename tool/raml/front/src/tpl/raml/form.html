@@ -51,6 +51,7 @@
                     <th>参数名</th>
                     <th>参数描述</th>
                     <th>参数类型</th>
+                    <th>是否必填</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -71,14 +72,15 @@
                         <option value="number">小数</option>
                         <option value="boolean">真假</option>
                         <option value="file" ng-show="resource.method == 'post' && resource.queryMimeType == 'multipart/form-data'">文件</option>
-                        <option value="object" ng-show="resource.method == 'post' || resource.method == 'put'">对象</option>
-                        <option value="array" ng-show="resource.method == 'post' || resource.method == 'put'">数组</option>
+                        <option value="object" ng-show="(resource.method == 'post' || resource.method == 'put') && resource.queryMimeType == 'application/json'">对象</option>
+                        <option value="array" ng-show="(resource.method == 'post' || resource.method == 'put') && resource.queryMimeType == 'application/json'">数组</option>
                       </select>
                     </td>
+                    <td><input type="checkbox" class="form-control" ng-model="param.required"></td>
                     <td>
-                      <button ng-click="addParams(resource.queryParams, param)" class="btn btn-info">添加同级</button>
-                      <button ng-show="param.type =='object' || param.type =='array'" class="btn btn-info" ng-click="addChildParams(resource.queryParams, param)">添加子级</button>
-                      <button ng-hide="param.type =='object' || param.type =='array'" data-toggle="modal" class="btn btn-info"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
+                      <button ng-click="addParams(resource.queryParams, param)" class="btn btn-sm btn-info">添加同级</button>
+                      <button ng-show="param.type =='object' || param.type =='array'" class="btn btn-sm btn-info" ng-click="addChildParams(resource.queryParams, param)">添加子级</button>
+                      <button ng-hide="param.type =='object' || param.type =='array'" data-toggle="modal" class="btn btn-sm btn-info"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
                     </td>
                   </tr>
                 </tbody>
@@ -95,6 +97,7 @@
                     <th>参数名</th>
                     <th>参数描述</th>
                     <th>参数类型</th>
+                    <th>是否必填</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -114,14 +117,15 @@
                         <option value="integer">数值</option>
                         <option value="number">小数</option>
                         <option value="boolean">真假</option>
-                        <option value="object" ng-show="resource.method == 'post' || resource.method == 'put'">对象</option>
-                        <option value="array" ng-show="resource.method == 'post' || resource.method == 'put'">数组</option>
+                        <option value="object">对象</option>
+                        <option value="array">数组</option>
                       </select>
                     </td>
+                    <td><input type="checkbox" class="form-control" ng-model="param.required"></td>
                     <td>
-                      <button ng-click="addParams(resource.responseParams, param)" class="btn btn-primary">添加同级</button>
-                      <button ng-show="param.type =='object' || param.type =='array'" class="btn btn-primary" ng-click="addChildParams(resource.responseParams, param)">添加子级</button>
-                      <button ng-hide="param.type =='object' || param.type =='array'" data-toggle="modal" class="btn btn-primary"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
+                      <button ng-click="addParams(resource.responseParams, param)" class="btn btn-sm btn-info">添加同级</button>
+                      <button ng-show="param.type =='object' || param.type =='array'" class="btn btn-sm btn-info" ng-click="addChildParams(resource.responseParams, param)">添加子级</button>
+                      <button ng-hide="param.type =='object' || param.type =='array'" data-toggle="modal" class="btn btn-sm btn-info"  data-target="#myModal" ng-click="setValidObject(param);">设置规则</button>
                     </td>
                   </tr>
                 </tbody>
@@ -146,12 +150,8 @@
                      <div class="modal-body">
                       <form class="form-horizontal">
                         <div class="form-group">
-                          <label class="col-md-2 control-label">是否必填</label>
-                          <div class="col-md-4">
-                            <input ng-model="rule.required" type="checkbox" class="form-control" placeholder="是否必填">
-                          </div>
                           <label class="col-md-2 control-label">例子</label>
-                          <div class="col-md-4">
+                          <div class="col-md-10">
                             <select ng-show="valid.type == 'boolean'" class="form-control" ng-model="rule.example">
                               <option value="false">假</option>
                               <option value="true">真</option>

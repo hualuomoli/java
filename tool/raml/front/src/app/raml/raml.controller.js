@@ -96,15 +96,18 @@
 
     // 设置校验Object
     function setValidObject(param) {
+      if (param.rule === undefined) {
+        param.rule = {};
+      }
       // set valid
       $scope.valid = param;
       // set rule
-      $scope.rule = angular.extend({}, param);
+      $scope.rule = angular.extend({}, param.rule);
     }
 
     // 确定规则 
     function confirmValid(rule) {
-      angular.extend($scope.valid, rule);
+      angular.extend($scope.valid.rule, rule);
     }
 
     // 同级
