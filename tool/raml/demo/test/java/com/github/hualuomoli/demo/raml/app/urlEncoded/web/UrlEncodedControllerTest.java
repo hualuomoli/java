@@ -1,6 +1,5 @@
 package com.github.hualuomoli.demo.raml.app.urlEncoded.web;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import org.junit.Before;
@@ -10,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.github.hualuomoli.mvc.test.AbstractContextControllerTest;
+import com.github.hualuomoli.tool.raml.AbstractContextControllerTest;
 
 public class UrlEncodedControllerTest extends AbstractContextControllerTest {
 

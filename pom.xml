@@ -10,7 +10,8 @@
 
 	<modules>
 		<module>./commons</module>
-		<module>./web</module>
+		<module>./core</module>
+		<module>./tool/raml</module>
 	</modules>
 
 	<properties>

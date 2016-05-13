@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.github.hualuomoli.mvc.test.AbstractContextControllerTest;
+import com.github.hualuomoli.tool.raml.AbstractContextControllerTest;
 
 public class DeleteControllerTest extends AbstractContextControllerTest {
 
