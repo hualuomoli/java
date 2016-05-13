@@ -1,0 +1,1094 @@
+#%RAML 0.8
+title: 测试
+baseUri: http://localhost:80
+version: 1.0
+
+traits:
+  - success:
+      responses:
+        200:
+          description: 业务处理成功 code=0,否则code不为0
+          body:
+            application/json:
+              example: |
+                {
+                  "code": "0",
+                  "msg": "code不为0时的信息"
+                }
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "响应编码,0=成功,其他业务错误",
+                      "example": "0"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "description": "响应错误信息,code不等于0时有值",
+                      "example": "用户已存在"
+                    }
+                  },
+                  "required": [
+                    "code"
+                  ]
+                }
+
+/app:
+  displayName: app
+  description: APP
+  /get:
+    displayName: get方式请求
+    description: get方式请求
+    /noparam:
+      displayName: noparam
+      description: 没有参数
+      get:
+       is:
+         - success:
+    
+    /uriparam/{id}:
+      displayName: uriparam
+      description: URI参数
+      
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          type: string
+          example: 12345678
+      
+      get:
+        is:
+          - success:
+                    
+  
+    /queryparam:
+      displayName: queryparam
+      description: 查询参数
+      get:
+        queryParameters:
+          username:
+            displayName: username
+            description: 用户名
+            type: string
+            required: true
+            example: hualuomoli
+          password:
+            displayName: password
+            description: 密码
+            type: string
+            required: true
+            example: 123456
+        is:
+          - success:
+    /uriqueryparam/{pageNumber}/{pageSize}:
+      displayName: uriqueryparam
+      description: URI参数和query参数
+      uriParameters:
+        pageNumber:
+          displayName: pageNumber
+          description: 当前页码
+          type: integer
+          required: true
+          example: 2
+        pageSize:
+          displayName: pageSize
+          description: 每页数据个数
+          type: integer
+          required: true
+          example: 20
+      get:
+        queryParameters:
+          startDate:
+            displayName: startDate
+            description: 开始时间
+            required: false
+            type: date
+            example: 2016-01-02 12:20:36
+        is:
+          - success:
+            
+    
+  /delete:
+    displayName: delete
+    description: 删除
+    
+    /noparam:
+      displayName: noparam
+      description: 没有参数
+      delete:
+        is:
+          - success:
+    /uriparam/{id}:
+      displayName: uriparam
+      description: uri参数
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          type: string
+          required: true
+          example: 1234
+      delete:
+        is:
+          - success:
+      
+  /urlEncoded:
+    displayName: post
+    description: 表单提交
+    /noparam:
+      displayName: noparam
+      description: 没有参数
+      post:
+        description: 提交
+        is:
+          - success:
+    /uriparam/{id}:
+      displayName: uriparm
+      description: URI参数
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          required: true
+          type: string
+          example: 1234
+      post:
+        description: URI提交
+        is:
+          - success:
+    /formparam:
+      displayName: formparam
+      description: 表单参数
+      
+      post:
+        body:
+          application/x-www-form-urlencoded:
+            formParameters:
+              username:
+                displayName: username
+                description: 用户名
+                type: string
+                required: true
+                example: hualuomoli
+              password:
+                displayName: password
+                description: 密码
+                type: string
+                required: true
+                example: 123456
+        is:
+          - success:
+    /uriformparam/{pageNumber}/{pageSize}:
+      displayName: uriformparam
+      description: URI的表单参数
+      
+      uriParameters:
+        pageNumber:
+          displayName: pageNumber
+          description: 分页编码
+          type: integer
+          required: true
+          example: 3
+        pageSize:
+          displayName: pageSize
+          description: 每页显示数据个数
+          type: integer
+          required: true
+          example: 30
+      post:
+        body:
+          application/x-www-form-urlencoded:
+            formParameters:
+              username:
+                displayName: username
+                description: 用户名
+                type: string
+                required: true
+                example: hualuomoli
+              password:
+                displayName: password
+                description: 密码
+                type: string
+                required: true
+                example: 123456
+        is:
+          - success:
+  
+  
+  /multipart:
+    displayName: multipart
+    description: 文件上传
+    
+    /file/{id}:
+      displayName: file
+      description: 文件上传
+      
+      uriParameters:
+          id:
+            displayName: id
+            description: ID
+            required: true
+            type: string
+            example: 1234
+      
+      post:
+        description: 文件上传
+        body:
+          multipart/form-data:
+            formParameters:
+              photo:
+                displayName: photo
+                description: 头像
+                type: file
+                required: true
+                example: https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1463049543324&di=2323eb1ffcf05e727c4da748f0a2ccf3&imgtype=jpg&src=http%3A%2F%2Fpic.yesky.com%2FuploadImages%2F2015%2F126%2F48%2F0S0NK034NU00.jpg
+              username:
+                displayName: username
+                description: 用户名
+                type: string
+                required: true
+                example: hualuomoli
+        is:
+          - success:
+  
+  /json:
+      displayName: json
+      description: JSON数据
+      
+      /user/{id}:
+        displayName: update
+        description: 修改
+        
+        uriParameters:
+          id:
+            displayName: id
+            description: ID
+            required: true
+            type: string
+            example: 1234
+        
+        post:
+          description: update
+          body:
+              application/json:
+                example: |
+                  {
+                    "username": "hualuomoli",
+                    "nickname": "花落莫离",
+                    "age": 20,
+                    "sex": "M",
+                    "birthDay": "2016-05-13"
+                  }
+
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string",
+                        "description": "用户名",
+                        "example": "hualuomoli"
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "description": "昵称",
+                        "example": "花落莫离"
+                      },
+                      "age": {
+                        "type": "integer",
+                        "description": "年龄",
+                        "example": 20
+                      },
+                      "sex": {
+                        "type": "string",
+                        "description": "性别",
+                        "example": "M"
+                      },
+                      "birthDay": {
+                        "type": "date",
+                        "description": "生日",
+                        "example": "2016-05-13",
+                        "default": "2016-05-13"
+                      }
+                    },
+                    "required": [
+                      "username",
+                      "nickname",
+                      "sex"
+                    ]
+                  }
+              
+   
+          is: 
+            - success:
+              
+  /ret:
+    displayName: ret
+    description: 响应
+    
+    /nodata:
+      displayName: nodata
+      description: 没有返回数据,只返回数据的状态
+      
+      get:
+        is:
+          - success:
+    /objectdata:
+      displayName: object data
+      description: 返回一个Object
+      
+      get:
+        responses:
+          200:
+            description: 处理成功
+            body:
+              application/json:
+                example: |
+                  {
+                    "code": "0",
+                    "msg": "用户未登录",
+                    "user": {
+                      "username": "hualuomoli",
+                      "nickname": "花落莫离",
+                      "age": 20,
+                      "sex": "M"
+                    }
+                  }
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "description": "响应编码",
+                        "example": "0"
+                      },
+                      "msg": {
+                        "type": "string",
+                        "description": "响应错误信息",
+                        "example": "用户未登录"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "type": "string",
+                            "description": "用户名",
+                            "example": "hualuomoli"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "description": "昵称",
+                            "example": "花落莫离"
+                          },
+                          "age": {
+                            "type": "integer",
+                            "description": "年龄",
+                            "example": 20
+                          },
+                          "sex": {
+                            "type": "string",
+                            "description": "性别",
+                            "example": "M"
+                          }
+                        },
+                        "required": [
+                          "username",
+                          "nickname",
+                          "sex"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "user"
+                    ]
+                  }
+                  
+  
+    /listdata:
+        displayName: list data
+        description: 返回一个 Array
+        
+        get:
+          responses:
+            200:
+              description: 处理成功
+              body:
+                application/json:
+                  example: |
+                    {
+                      "code": "0",
+                      "msg": "用户未登录",
+                      "users": [{
+                        "username": "hualuomoli",
+                        "nickname": "花落莫离",
+                        "age": 20,
+                        "sex": "M"
+                      }]
+                    }
+                  schema: |
+                    {
+                      "$schema": "http://json-schema.org/draft-04/schema#",
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "响应编码",
+                          "example": "0"
+                        },
+                        "msg": {
+                          "type": "string",
+                          "description": "响应错误信息",
+                          "example": "用户未登录"
+                        },
+                        "users": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "username": {
+                                "type": "string",
+                                "description": "用户名",
+                                "example": "hualuomoli"
+                              },
+                              "nickname": {
+                                "type": "string",
+                                "description": "昵称",
+                                "example": "花落莫离"
+                              },
+                              "age": {
+                                "type": "integer",
+                                "description": "年龄",
+                                "example": 20
+                              },
+                              "sex": {
+                                "type": "string",
+                                "description": "性别",
+                                "example": "M"
+                              }
+                            },
+                            "required": [
+                              "username",
+                              "nickname",
+                              "sex"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "user"
+                      ]
+                    }
+    
+    /pagedata:
+        displayName: page data
+        description: 返回一个 Page
+        
+        get:
+          responses:
+            200:
+              description: 处理成功
+              body:
+                application/json:
+                  example: |
+                    {
+                      "code": "0",
+                      "msg": "用户未登录",
+                      "page": {
+                        "total": 200,
+                        "pageNumber": 1,
+                        "pageSize": 10,
+                        "users": [{
+                          "username": "hualuomoli",
+                          "nickname": "花落莫离",
+                          "age": 20,
+                          "sex": "M"
+                        }]
+                      }
+                    }
+                  schema: |
+                    {
+                      "$schema": "http://json-schema.org/draft-04/schema#",
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "响应编码",
+                          "example": "0"
+                        },
+                        "msg": {
+                          "type": "string",
+                          "description": "响应错误信息",
+                          "example": "用户未登录"
+                        },
+                        "page": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer",
+                              "description": "总数量",
+                              "example": "300"
+                            },
+                            "pageNumber": {
+                              "type": "integer",
+                              "description": "当前页码",
+                              "example": 1
+                            },
+                            "pageSize": {
+                              "type": "integer",
+                              "description": "每页数据个数",
+                              "example": 10
+                            },
+                            "users": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "username": {
+                                    "type": "string",
+                                    "description": "用户名",
+                                    "example": "hualuomoli"
+                                  },
+                                  "nickname": {
+                                    "type": "string",
+                                    "description": "昵称",
+                                    "example": "花落莫离"
+                                  },
+                                  "age": {
+                                    "type": "integer",
+                                    "description": "年龄",
+                                    "example": 20
+                                  },
+                                  "sex": {
+                                    "type": "string",
+                                    "description": "性别",
+                                    "example": "M"
+                                  }
+                                },
+                                "required": [
+                                  "username",
+                                  "nickname",
+                                  "age",
+                                  "sex"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "total",
+                            "pageNumber",
+                            "pageSize",
+                            "users"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "msg",
+                        "page"
+                      ]
+                    }
+                    
+  /complex:
+    displayName: complex
+    description: 复杂json参数
+    
+    /uriform/{id}:
+      displayName: complex
+      description: 复杂json数据
+      
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          type: string
+          required: true
+          example: 1234
+      
+      post:
+        description: 提交复杂数据
+        body:
+          application/json:
+            example: |
+              {
+                "username": "hualuomoli",
+                "nickname": "花落莫离",
+                "orders": [{
+                  "id": "1234",
+                  "date": "2015-06-05",
+                  "products": [{
+                    "id": "0001",
+                    "name": "IPAD"
+                  }]
+                }],
+                "address": {
+                  "province": "37",
+                  "city": "02",
+                  "couty": "03",
+                  "name": "合肥路666号,永旺广场"
+                }
+              }
+            schema: |
+              {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "用户名",
+                    "example": "hualuomoli"
+                  },
+                  "nickname": {
+                    "type": "string",
+                    "description": "昵称",
+                    "example": "花落莫离"
+                  },
+                  "orders": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "订单号",
+                          "example": "1234567890"
+                        },
+                        "date": {
+                          "type": "date",
+                          "description": "订单日期",
+                          "example": "2015-06-02"
+                        },
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "商品号",
+                                "example": "0001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "商品名",
+                                "example": "IPAD"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "date",
+                        "products"
+                      ]
+                    }
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "province": {
+                        "type": "string",
+                        "description": "省份",
+                        "example": "37"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "城市",
+                        "example": "02"
+                      },
+                      "couty": {
+                        "type": "string",
+                        "description": "区县",
+                        "example": "03"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "具体地址",
+                        "example": "合肥路666号,永旺广场"
+                      }
+                    },
+                    "required": [
+                      "province",
+                      "city",
+                      "couty",
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "username",
+                  "nickname",
+                  "address"
+                ]
+              }
+        responses:
+          200:
+            description: 成功
+            body:
+              application/json:
+                example: |
+                  {
+                    "code": "0",
+                    "msg": "金额不足",
+                    "user": {
+                      "username": "hualuomoli",
+                      "nickname": "花落莫离",
+                      "orders": [{
+                        "id": "1234",
+                        "date": "2015-06-05",
+                        "products": [{
+                          "id": "0001",
+                          "name": "IPAD"
+                        }]
+                      }],
+                      "address": {
+                        "province": "37",
+                        "city": "02",
+                        "couty": "03",
+                        "name": "合肥路666号,永旺广场"
+                      }
+                    }
+                  }
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "description": "响应编码,0=成功",
+                        "example": "0"
+                      },
+                      "msg": {
+                        "type": "string",
+                        "description": "错误信息",
+                        "example": "金额不足"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "type": "string",
+                            "description": "用户名",
+                            "example": "hualuomoli"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "description": "昵称",
+                            "example": "花落莫离"
+                          },
+                          "orders": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "订单号",
+                                  "example": "1234567890"
+                                },
+                                "date": {
+                                  "type": "date",
+                                  "description": "订单日期",
+                                  "example": "2015-06-02"
+                                },
+                                "products": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "商品号",
+                                        "example": "0001"
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "description": "商品名",
+                                        "example": "IPAD"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name"
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "date",
+                                "products"
+                              ]
+                            }
+                          },
+                          "address": {
+                            "type": "object",
+                            "properties": {
+                              "province": {
+                                "type": "string",
+                                "description": "省份",
+                                "example": "37"
+                              },
+                              "city": {
+                                "type": "string",
+                                "description": "城市",
+                                "example": "02"
+                              },
+                              "couty": {
+                                "type": "string",
+                                "description": "区县",
+                                "example": "03"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "具体地址",
+                                "example": "合肥路666号,永旺广场"
+                              }
+                            },
+                            "required": [
+                              "province",
+                              "city",
+                              "couty",
+                              "name"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "username",
+                          "nickname",
+                          "address"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "msg",
+                      "user"
+                    ]
+                  }
+                  
+  /def:
+    displayName: def
+    description: 默认值
+    
+    /post/{id}:
+      displayName: get
+      description: get请求
+      
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          type: string
+          required: true
+          example: 1234
+          default: 1234
+      
+      post:
+        description: 获取值
+        body:
+          multipart/form-data:
+            formParameters:
+              age:
+                displayName: age
+                description: 年龄
+                type: integer
+                minimum: 10
+                maximum: 100
+                required: true
+                example: 20
+                default: 20
+              salary:
+                displayName: salary
+                description: 工资
+                type: number
+                minimum: 100
+                maximum: 99999
+                required: true
+                example: 100.2
+                default: 100.2
+              phone:
+                displayName: phone
+                description: 用户名
+                type: string
+                minLength: 1
+                maxLength: 20
+                pattern: (\d{3,4}-)?\d{7,8}
+                required: false
+                example: 0532-66668888
+                default: 0532-66668888
+              birthDay:
+                displayName: birthDay
+                description: 生日
+                type: date
+                required: true
+                example: 2016-07-13
+                default: 2016-07-13
+              photo:
+                displayName: photo
+                description: 头像
+                type: file
+                required: true
+                example: https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1463115367411&di=e99d2bf46c388c010010b67cb1732da1&imgtype=jpg&src=http%3A%2F%2Fpic.yesky.com%2FuploadImages%2F2015%2F126%2F48%2F0S0NK034NU00.jpg
+            
+        is:
+          - success:
+            
+            
+            
+    /postjson/{id}:
+      displayName: post
+      description: post请求
+      
+      uriParameters:
+        id:
+          displayName: id
+          description: ID
+          type: string
+          required: true
+          example: 1234
+          default: 1234
+      post:
+        description: post
+        is:
+          - success:
+        body:
+          application/json:
+            example: |
+              {
+                "username": "hualuomoli",
+                "nickname": "花落莫离",
+                "orders": [{
+                  "id": "1234",
+                  "date": "2015-06-05",
+                  "products": [{
+                    "id": "0001",
+                    "name": "IPAD"
+                  }]
+                }],
+                "address": {
+                  "province": "37",
+                  "city": "02",
+                  "couty": "03",
+                  "name": "合肥路666号,永旺广场"
+                }
+              }
+            schema: |
+              {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "用户名",
+                    "example": "hualuomoli",
+                    "default": "hualuomoli"
+                  },
+                  "nickname": {
+                    "type": "string",
+                    "description": "昵称",
+                    "example": "花落莫离"
+                  },
+                  "orders": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "订单号",
+                          "example": "1234567890",
+                          "default": "1234567890"
+                        },
+                        "date": {
+                          "type": "date",
+                          "description": "订单日期",
+                          "example": "2015-06-02",
+                          "default": "2015-06-02"
+                        },
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "商品号",
+                                "example": "0001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "商品名",
+                                "example": "IPAD",
+                                "default": "IPAD"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "date",
+                        "products"
+                      ]
+                    }
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "province": {
+                        "type": "string",
+                        "description": "省份",
+                        "example": "37",
+                        "default": "37"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "城市",
+                        "example": "02"
+                      },
+                      "couty": {
+                        "type": "string",
+                        "description": "区县",
+                        "example": "03"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "具体地址",
+                        "example": "合肥路666号,永旺广场"
+                      }
+                    },
+                    "required": [
+                      "province",
+                      "city",
+                      "couty",
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "username",
+                  "nickname",
+                  "address"
+                ]
+              }
+              
+        

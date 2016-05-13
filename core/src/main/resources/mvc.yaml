@@ -1,0 +1,13 @@
+mvc:
+  view:
+    prefix: /WEB-INF/views/
+    suffix: .jsp
+
+
+  upload:
+    maxSize: 10240000
+    encoding: UTF8
+
+  static:
+    resources: /static/**,/static/,31556926
+    cachePeriod: 31556926

@@ -1,0 +1,19 @@
+project:
+  # 单个值
+  name: commons
+  # object
+  user:
+    username: hualuomoli
+    nickname: 花落莫离
+  # list
+  servers:
+    - server:
+      address: http://localhost
+      port: 1001
+    - server:
+      address: http://www.baidu.com
+      port: 1002
+      
+    
+      
+      

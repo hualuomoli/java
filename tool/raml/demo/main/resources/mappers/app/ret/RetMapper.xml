@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.demo.raml.app.ret.mapper.RetMapper">
+
+	<select id="getObjectdata" resultType="com.github.hualuomoli.demo.raml.app.ret.entity.GetObjectdataResultJsonEntityUser">
+	
+	</select>
+	<select id="getPagedata" resultType="com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataResultJsonEntityUser">
+	
+	</select>
+	<select id="getListdata" resultType="com.github.hualuomoli.demo.raml.app.ret.entity.GetListdataResultJsonEntityUser">
+	
+	</select>
+	
+</mapper>
