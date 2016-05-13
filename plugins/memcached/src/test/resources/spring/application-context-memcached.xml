@@ -30,7 +30,7 @@
 		</constructor-arg>
 		<property name="servers">
 			<list>
-				<value>${mcache.servers.1}</value>
+				<value>${mcache.servers}</value>
 			</list>
 		</property>
 		<property name="initConn">
