@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "code": {
+      "id": "http://jsonschema.net/code",
+      "type": "integer"
+    },
+    "msg": {
+      "id": "http://jsonschema.net/msg",
+      "type": "string"
+    },
+    "data": {
+      "id": "http://jsonschema.net/data",
+      "type": "object",
+      "properties": {
+        "total": {
+          "id": "http://jsonschema.net/data/total",
+          "type": "integer"
+        },
+        "pageNumber": {
+          "id": "http://jsonschema.net/data/pageNumber",
+          "type": "integer"
+        },
+        "pageSize": {
+          "id": "http://jsonschema.net/data/pageSize",
+          "type": "integer"
+        },
+        "productes": {
+          "id": "http://jsonschema.net/data/productes",
+          "type": "array",
+          "items": {
+            "id": "http://jsonschema.net/data/productes/1",
+            "type": "object",
+            "properties": {
+              "name": {
+                "id": "http://jsonschema.net/data/productes/1/name",
+                "type": "string"
+              },
+              "price": {
+                "id": "http://jsonschema.net/data/productes/1/price",
+                "type": "number"
+              },
+              "amount": {
+                "id": "http://jsonschema.net/data/productes/1/amount",
+                "type": "integer"
+              },
+              "def": {
+                "id": "http://jsonschema.net/data/productes/1/def",
+                "type": "boolean"
+              },
+              "time": {
+                "id": "http://jsonschema.net/data/productes/1/time",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "code",
+    "msg",
+    "data"
+  ]
+}
