@@ -3,22 +3,21 @@ package com.github.hualuomoli.demo.entity;
 import java.util.Date;
 import java.util.List;
 
-import com.github.hualuomoli.base.annotation.EntityColumn;
-import com.github.hualuomoli.base.annotation.EntityColumnType;
-import com.github.hualuomoli.base.annotation.EntityIgnore;
-import com.github.hualuomoli.base.annotation.EntityTable;
+import com.github.hualuomoli.base.annotation.entity.EntityColumn;
+import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
+import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
+import com.github.hualuomoli.base.annotation.entity.EntityTable;
+import com.github.hualuomoli.base.entity.CommonField;
 
-@EntityTable(name = "t_demo", comment = "测试demo")
-public class Demo {
+@EntityTable(name = "t_demo", comment = "测试demo", pre = true)
+public class Demo extends CommonField {
 
-	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "ID")
-	private String id;
 	private String name;
 	@EntityColumn(type = EntityColumnType.CHAR, length = 1)
 	private String sex;
 	@EntityColumn(precision = 8, scale = 3, comment = "工资")
 	private Double salary;
-	@EntityColumn(precision = 3)
+	@EntityColumn(precision = 3, defaultValue = "20")
 	private Integer age;
 	@EntityColumn(type = EntityColumnType.DATE, comment = "工资")
 	private Date birthDay;
@@ -26,20 +25,12 @@ public class Demo {
 	private String remarks;
 	@EntityIgnore // 忽略
 	private String orderByStr; // 排序
-	@EntityColumn(comment = "用户")
+	@EntityColumn(comment = "用户", relation = "username")
 	private User user;
 	// 不会使用
 	private List<Address> address;
 
 	public Demo() {
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
