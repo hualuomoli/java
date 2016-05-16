@@ -16,6 +16,7 @@
 	<modules>
 
 		<module>./creator</module>
+		<module>./raml</module>
 
 	</modules>
 
@@ -33,6 +34,7 @@
 	<build>
 		<plugins>
 			<!-- 不安装 -->
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
@@ -41,6 +43,7 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			-->
 			<!-- 不发布 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
