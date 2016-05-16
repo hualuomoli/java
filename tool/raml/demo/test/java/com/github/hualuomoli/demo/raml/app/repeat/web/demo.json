@@ -1,0 +1,26 @@
+{
+  "username": "hualuomoli",
+  "nickname": "花落莫离",
+  "orders": [
+    {
+      "id": "1234",
+      "date": "2015-06-05",
+      "products": [
+        {
+          "id": "0001",
+          "name": "IPAD"
+        }
+      ]
+    }
+  ],
+  "address": {
+    "province": "37",
+    "city": "02",
+    "couty": "03",
+    "name": "合肥路666号,永旺广场",
+    "phones": [
+      "15689952699",
+      "15289982699"
+    ]
+  }
+}

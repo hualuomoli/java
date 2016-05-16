@@ -1,7 +1,5 @@
 package com.github.hualuomoli.demo.raml.app.repeat.web;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
@@ -41,6 +39,21 @@ public class RepeatControllerTest extends AbstractContextControllerTest {
 				.file(new MockMultipartFile("photo", "jdbc.properties", MediaType.TEXT_PLAIN_VALUE,
 						FileUtils.readFileToByteArray(new File("E:/jdbc.properties"))))//
 				.param("username", "hualuomoli"))//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
+				.andReturn();
+	}
+
+	@Test
+	public void testPostJson() throws Exception {
+		String path = this.getClass().getResource(".").getPath();
+		String data = FileUtils.readFileToString(new File(path, "demo.json"), "UTF-8");
+
+		mockMvc.perform(this.json("/json") //
+				.content(data))//
 				// .andDo(this.print())//
 				.andDo(this.showResult()) //
 				.andExpect(this.statusOk())//
