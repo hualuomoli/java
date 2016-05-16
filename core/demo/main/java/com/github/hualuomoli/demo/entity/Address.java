@@ -1,5 +1,7 @@
 package com.github.hualuomoli.demo.entity;
 
-public class Address {
+import com.github.hualuomoli.base.entity.CommonField;
+
+public class Address extends CommonField {
 
 }

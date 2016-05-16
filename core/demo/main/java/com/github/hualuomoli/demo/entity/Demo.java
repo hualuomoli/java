@@ -17,7 +17,7 @@ public class Demo extends CommonField {
 	private String sex;
 	@EntityColumn(precision = 8, scale = 3, comment = "工资")
 	private Double salary;
-	@EntityColumn(precision = 3)
+	@EntityColumn(precision = 3, defaultValue = "20")
 	private Integer age;
 	@EntityColumn(type = EntityColumnType.DATE, comment = "工资")
 	private Date birthDay;
@@ -25,7 +25,7 @@ public class Demo extends CommonField {
 	private String remarks;
 	@EntityIgnore // 忽略
 	private String orderByStr; // 排序
-	@EntityColumn(comment = "用户")
+	@EntityColumn(comment = "用户", relation = "username")
 	private User user;
 	// 不会使用
 	private List<Address> address;

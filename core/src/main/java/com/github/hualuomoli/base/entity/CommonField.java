@@ -10,6 +10,8 @@ public class CommonField {
 
 	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "主键", length = 32)
 	private String id;
+	@EntityColumn(name = "version", comment = "数据版本号")
+	private Integer version;
 	@EntityColumn(name = "create_by", type = EntityColumnType.STRING, comment = "创建人", length = 32)
 	private String createBy;
 	@EntityColumn(name = "create_date", type = EntityColumnType.TIMESTAMP, comment = "创建时间")
@@ -30,6 +32,14 @@ public class CommonField {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
 	public String getCreateBy() {

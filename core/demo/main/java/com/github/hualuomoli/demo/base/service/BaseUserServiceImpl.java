@@ -16,64 +16,64 @@ import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
-import com.github.hualuomoli.demo.base.entity.BaseDemo;
-import com.github.hualuomoli.demo.base.mapper.BaseDemoMapper;
-import com.github.hualuomoli.demo.base.service.BaseDemoService;
+import com.github.hualuomoli.demo.base.entity.BaseUser;
+import com.github.hualuomoli.demo.base.mapper.BaseUserMapper;
+import com.github.hualuomoli.demo.base.service.BaseUserService;
 
 
-// #BaseDemo
-@Service(value = "com.github.hualuomoli.demo.base.service.BaseDemoServiceImpl")
+// #BaseUser
+@Service(value = "com.github.hualuomoli.demo.base.service.BaseUserServiceImpl")
 @Transactional(readOnly = true)
-public class BaseDemoServiceImpl implements BaseDemoService {
+public class BaseUserServiceImpl implements BaseUserService {
 
 	@Autowired
-	private BaseDemoMapper baseDemoMapper;
+	private BaseUserMapper baseUserMapper;
 	
 	@Override
-	public BaseDemo get(BaseDemo baseDemo) {
-		return baseDemoMapper.get(baseDemo);
+	public BaseUser get(BaseUser baseUser) {
+		return baseUserMapper.get(baseUser);
 	}
 	
 	@Override
-	public BaseDemo get(String id) {
-		return baseDemoMapper.get(id);
+	public BaseUser get(String id) {
+		return baseUserMapper.get(id);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PrePersistent(type = Type.INSERT) BaseDemo baseDemo) {
-		return baseDemoMapper.insert(baseDemo);
+	public int insert(@PrePersistent(type = Type.INSERT) BaseUser baseUser) {
+		return baseUserMapper.insert(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PrePersistent(type = Type.BATCH_INSERT)  List<BaseDemo> list) {
+	public int batchInsert(@PrePersistent(type = Type.BATCH_INSERT)  List<BaseUser> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		
 		Config config = new Config(100);
 		while (true) {
-			List<BaseDemo> newList = CollectionUtils.fetchDatas(list, config);
+			List<BaseUser> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
-			baseDemoMapper.batchInsert(newList);
+			baseUserMapper.batchInsert(newList);
 		}
 		return list.size();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PrePersistent(type = Type.UPDATE)  BaseDemo baseDemo) {
-		return baseDemoMapper.update(baseDemo);
+	public int update(@PrePersistent(type = Type.UPDATE)  BaseUser baseUser) {
+		return baseUserMapper.update(baseUser);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(BaseDemo baseDemo) {
-		BaseDemo temp = new BaseDemo();
-		temp.setId(baseDemo.getId());
+	public int logicalDelete(BaseUser baseUser) {
+		BaseUser temp = new BaseUser();
+		temp.setId(baseUser.getId());
 		temp.setStatus(Status.DELETED.getValue());
 		return this.update(temp);
 	}
@@ -81,7 +81,7 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseDemo temp = new BaseDemo();
+		BaseUser temp = new BaseUser();
 		temp.setId(id);
 		temp.setStatus(Status.DELETED.getValue());
 		return this.update(temp);
@@ -89,60 +89,60 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseDemo baseDemo) {
-		return baseDemoMapper.delete(baseDemo);
+	public int delete(BaseUser baseUser) {
+		return baseUserMapper.delete(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int delete(String id) {
-		return baseDemoMapper.delete(id);
+		return baseUserMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int deleteByIds(String[] ids) {
-		return baseDemoMapper.deleteByIds(ids);
+		return baseUserMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int deleteByIds(Collection<String> ids) {
-		return baseDemoMapper.deleteByIds(ids);
+		return baseUserMapper.deleteByIds(ids);
 	}
 
 	@Override
-	public List<BaseDemo> findList(BaseDemo baseDemo) {
-		return baseDemoMapper.findList(baseDemo);
+	public List<BaseUser> findList(BaseUser baseUser) {
+		return baseUserMapper.findList(baseUser);
 	}
 	
 	@Override
-	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize) {
-		return this.findPage(baseDemo, new Pagination(pageNo, pageSize));
+	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize) {
+		return this.findPage(baseUser, new Pagination(pageNo, pageSize));
 	}
 
 	@Override
-	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, String... orderByStrArray) {
-		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orderByStrArray));
+	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, String... orderByStrArray) {
+		return this.findPage(baseUser, new Pagination(pageNo, pageSize, orderByStrArray));
 	}
 
 	@Override
-	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, Order... orders) {
-		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orders));
+	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, Order... orders) {
+		return this.findPage(baseUser, new Pagination(pageNo, pageSize, orders));
 	}
 
 	@Override
-	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, List<Order> orders) {
-		return this.findPage(baseDemo, new Pagination(pageNo, pageSize, orders));
+	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, List<Order> orders) {
+		return this.findPage(baseUser, new Pagination(pageNo, pageSize, orders));
 	}
 	
 	@Override
-	public Page findPage(BaseDemo baseDemo, Pagination pagination) {
+	public Page findPage(BaseUser baseUser, Pagination pagination) {
 
 		// set local thread
 		PaginationInterceptor.pushPagination(pagination);
 		// query
-		List<BaseDemo> list = baseDemoMapper.findList(baseDemo);
+		List<BaseUser> list = baseUserMapper.findList(baseUser);
 		// get local thread and remove
 		pagination = PaginationInterceptor.popPagination();
 

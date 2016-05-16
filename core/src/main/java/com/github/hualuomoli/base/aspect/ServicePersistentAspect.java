@@ -70,40 +70,25 @@ public class ServicePersistentAspect {
 			Type type = prePersistent.type();
 			switch (type) {
 			case INSERT:
-				for (int i = 0; i < args.length; i++) {
-					Object parameter = args[i];
+				for (Object parameter : args) {
 					if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-						parameter = this._doPreInsert((Persistent) parameter);
-						args[i] = parameter;
+						this._doPreInsert((Persistent) parameter);
 					}
 				}
 				break;
 			case UPDATE:
-				for (int i = 0; i < args.length; i++) {
-					Object parameter = args[i];
+				for (Object parameter : args) {
 					if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-						parameter = this._doPreUpdate((Persistent) parameter);
-						args[i] = parameter;
-					}
-				}
-				break;
-			case LOGICAL_DELETE:
-				for (int i = 0; i < args.length; i++) {
-					Object parameter = args[i];
-					if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-						parameter = this._doPreLogicalDelete((Persistent) parameter);
-						args[i] = parameter;
+						this._doPreUpdate((Persistent) parameter);
 					}
 				}
 				break;
 			case BATCH_INSERT:
-				for (int i = 0; i < args.length; i++) {
-					Object parameter = args[i];
+				for (Object parameter : args) {
 					// 批量插入,参数为集合
 					if (Collection.class.isAssignableFrom(parameter.getClass())) {
 						try {
-							parameter = this._doPreBatchInsert((Collection<Persistent>) parameter);
-							args[i] = parameter;
+							this._doPreBatchInsert((Collection<Persistent>) parameter);
 						} catch (Exception e) {
 							logger.warn("{}", e);
 						}
@@ -139,28 +124,19 @@ public class ServicePersistentAspect {
 					switch (type) {
 					case INSERT:
 						if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-							parameter = this._doPreInsert((Persistent) parameter);
-							args[i] = parameter;
+							this._doPreInsert((Persistent) parameter);
 						}
 						break;
 					case UPDATE:
 						if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-							parameter = this._doPreUpdate((Persistent) parameter);
-							args[i] = parameter;
-						}
-						break;
-					case LOGICAL_DELETE:
-						if (Persistent.class.isAssignableFrom(parameter.getClass())) {
-							parameter = this._doPreLogicalDelete((Persistent) parameter);
-							args[i] = parameter;
+							this._doPreUpdate((Persistent) parameter);
 						}
 						break;
 					case BATCH_INSERT:
 						// 批量插入,参数为集合
 						if (Collection.class.isAssignableFrom(parameter.getClass())) {
 							try {
-								parameter = this._doPreBatchInsert((Collection<Persistent>) parameter);
-								args[i] = parameter;
+								this._doPreBatchInsert((Collection<Persistent>) parameter);
 							} catch (Exception e) {
 								logger.warn("{}", e);
 							}
@@ -180,7 +156,7 @@ public class ServicePersistentAspect {
 	 * @param persistent
 	 * @return 
 	 */
-	private Object _doPreInsert(Persistent persistent) {
+	private void _doPreInsert(Persistent persistent) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("插入前预处理");
 		}
@@ -194,7 +170,6 @@ public class ServicePersistentAspect {
 		persistent.setUpdateDate(currentDate);
 		persistent.setStatus(Status.NOMAL.getValue());
 
-		return persistent;
 	}
 
 	/**
@@ -202,7 +177,7 @@ public class ServicePersistentAspect {
 	 * @param persistent
 	 * @return 
 	 */
-	private Object _doPreUpdate(Persistent persistent) {
+	private void _doPreUpdate(Persistent persistent) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("修改前预处理");
 		}
@@ -212,34 +187,6 @@ public class ServicePersistentAspect {
 		persistent.setUpdateBy(username);
 		persistent.setUpdateDate(currentDate);
 
-		return persistent;
-	}
-
-	/**
-	 * 逻辑删除前预处理
-	 * @param persistent
-	 * @return 
-	 */
-	private Object _doPreLogicalDelete(Persistent persistent) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("逻辑删除前预处理");
-		}
-
-		String username = UserUtils.getUsername();
-		Date currentDate = new Date();
-
-		try {
-			Persistent p = persistent.getClass().newInstance();
-
-			p.setId(persistent.getId());
-			p.setUpdateBy(username);
-			p.setUpdateDate(currentDate);
-			p.setStatus(Status.DELETED.getValue());
-			return p;
-		} catch (Exception e) {
-			return persistent;
-		}
-
 	}
 
 	/**
@@ -247,7 +194,7 @@ public class ServicePersistentAspect {
 	 * @param persistent
 	 * @return 
 	 */
-	private Object _doPreBatchInsert(Collection<Persistent> persistents) {
+	private void _doPreBatchInsert(Collection<Persistent> persistents) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("批量插入前预处理");
 		}
@@ -262,8 +209,6 @@ public class ServicePersistentAspect {
 			persistent.setUpdateDate(currentDate);
 			persistent.setStatus(Status.NOMAL.getValue());
 		}
-
-		return persistents;
 
 	}
 

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.demo.base.mapper.BaseDemoMapper">
+
+  <sql id="columns">
+    `id`            as "id"           ,
+    `version`       as "version"      ,
+    `name`          as "name"         ,
+    `sex`           as "sex"          ,
+    `salary`        as "salary"       ,
+    `age`           as "age"          ,
+    `birth_day`     as "birthDay"     ,
+    `remarks`       as "remarks"      ,
+    `user_username` as "user.username"         ,
+    `create_by`     as "createBy"     ,
+    `create_date`   as "createDate"   ,
+    `update_by`     as "updateBy"     ,
+    `update_date`   as "updateDate"   ,
+    `status`        as "status"       
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`            = #{id}           
+    </if>
+    <if test="version != null"> 
+      and `version`       = #{version}      
+    </if>
+    <if test="name != null and name != ''"> 
+      and `name`          = #{name}         
+    </if>
+    <if test="sex != null and sex != ''"> 
+      and `sex`           = #{sex}          
+    </if>
+    <if test="salary != null"> 
+      and `salary`        = #{salary}       
+    </if>
+    <if test="age != null"> 
+      and `age`           = #{age}          
+    </if>
+    <if test="birthDay != null"> 
+      and `birth_day`     = #{birthDay}     
+    </if>
+    <if test="remarks != null and remarks != ''"> 
+      and `remarks`       = #{remarks}      
+    </if>
+    <if test="user != null and user.username != null and user.username != ''"> 
+      and `user_username` = #{user.username}         
+    </if>
+    <if test="createBy != null and createBy != ''"> 
+      and `create_by`     = #{createBy}     
+    </if>
+    <if test="createDate != null"> 
+      and `create_date`   = #{createDate}   
+    </if>
+    <if test="updateBy != null and updateBy != ''"> 
+      and `update_by`     = #{updateBy}     
+    </if>
+    <if test="updateDate != null"> 
+      and `update_date`   = #{updateDate}   
+    </if>
+    <if test="status != null"> 
+      and `status`        = #{status}       
+    </if>
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
+    select 
+      <include refid="columns" />
+    from `t_demo`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `t_demo` (
+      `id`           ,
+      `version`      ,
+      `name`         ,
+      `sex`          ,
+      `salary`       ,
+      `age`          ,
+      `birth_day`    ,
+      `remarks`      ,
+      `user_username`,
+      `create_by`    ,
+      `create_date`  ,
+      `update_by`    ,
+      `update_date`  ,
+      `status`       
+    ) values (
+      #{id}           ,
+      #{version}      ,
+      #{name}         ,
+      #{sex}          ,
+      #{salary}       ,
+      #{age}          ,
+      #{birthDay}     ,
+      #{remarks}      ,
+      #{user.username}         ,
+      #{createBy}     ,
+      #{createDate}   ,
+      #{updateBy}     ,
+      #{updateDate}   ,
+      #{status}       
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `t_demo` (
+      `id`           ,
+      `version`      ,
+      `name`         ,
+      `sex`          ,
+      `salary`       ,
+      `age`          ,
+      `birth_day`    ,
+      `remarks`      ,
+      `user_username`,
+      `create_by`    ,
+      `create_date`  ,
+      `update_by`    ,
+      `update_date`  ,
+      `status`       
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}           ,
+        #{obj.version}      ,
+        #{obj.name}         ,
+        #{obj.sex}          ,
+        #{obj.salary}       ,
+        #{obj.age}          ,
+        #{obj.birthDay}     ,
+        #{obj.remarks}      ,
+        #{obj.user.username}         ,
+        #{obj.createBy}     ,
+        #{obj.createDate}   ,
+        #{obj.updateBy}     ,
+        #{obj.updateDate}   ,
+        #{obj.status}       
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `t_demo`
+    <set>
+      <if test="version != null"> 
+        `version`       = #{version}      ,
+      </if>
+      <if test="name != null"> 
+        `name`          = #{name}         ,
+      </if>
+      <if test="sex != null"> 
+        `sex`           = #{sex}          ,
+      </if>
+      <if test="salary != null"> 
+        `salary`        = #{salary}       ,
+      </if>
+      <if test="age != null"> 
+        `age`           = #{age}          ,
+      </if>
+      <if test="birthDay != null"> 
+        `birth_day`     = #{birthDay}     ,
+      </if>
+      <if test="remarks != null"> 
+        `remarks`       = #{remarks}      ,
+      </if>
+      <if test="user != null and user.username != null and user.username != ''"> 
+        `user_username` = #{user.username}         ,
+      </if>
+      <if test="createBy != null"> 
+        `create_by`     = #{createBy}     ,
+      </if>
+      <if test="createDate != null"> 
+        `create_date`   = #{createDate}   ,
+      </if>
+      <if test="updateBy != null"> 
+        `update_by`     = #{updateBy}     ,
+      </if>
+      <if test="updateDate != null"> 
+        `update_date`   = #{updateDate}   ,
+      </if>
+      <if test="status != null"> 
+        `status`        = #{status}       ,
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `t_demo` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `t_demo`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
+    select
+      <include refid="columns" />
+    from `t_demo`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

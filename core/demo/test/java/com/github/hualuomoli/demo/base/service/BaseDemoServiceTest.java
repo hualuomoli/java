@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Direction;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
@@ -67,6 +68,16 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		Assert.assertNotNull(baseDemo);
 		Assert.assertEquals("修改名称", baseDemo.getName());
 		Assert.assertSame(20, baseDemo.getAge());
+	}
+
+	@Test
+	public void test050LogicDeleteBaseDemo() {
+		BaseDemo baseDemo = new BaseDemo();
+		baseDemo.setId(id);
+		demoService.logicalDelete(baseDemo);
+		baseDemo = demoService.get(id);
+		Assert.assertNotNull(baseDemo);
+		Assert.assertEquals(Status.DELETED.getValue(), baseDemo.getStatus());
 	}
 
 	@Test
