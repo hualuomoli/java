@@ -1,44 +1,43 @@
 package com.github.hualuomoli.demo.raml.app.json.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.github.hualuomoli.commons.util.JsonUtils;
 import com.github.hualuomoli.tool.raml.AbstractContextControllerTest;
+import com.google.common.collect.Maps;
 
 public class JsonControllerTest extends AbstractContextControllerTest {
 
-	private MockMvc mockMvc;
-
-	@Autowired
-	private JsonController jsonController;
-
-	@Before
-	public void setUp() {
-		mockMvc = MockMvcBuilders.standaloneSetup(jsonController).build();
+	@Override
+	protected String getControllerRequestUrl() {
+		return "/app/json";
 	}
 
 	@Test
 	public void testPostUserById() throws Exception {
-		this.mockMvc
-				.perform(post("/app/json/user/{id}", 1)//
-						.characterEncoding("UTF-8")//
-						.contentType(MediaType.APPLICATION_JSON) //
-						.param("sex", "M")//
-						.param("username", "hualuomoli")//
-						.param("nickname", "花落莫离")//
-						.param("age", "20")//
-						.param("birthDay", "2016-05-13"))
+
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("sex", "M");
+		map.put("username", "hualuomoli");
+		map.put("nickname", "花落莫离");
+		map.put("age", 18);
+		map.put("birthDay", "2016-09-15");
+		// map.put("id", UUID.randomUUID().toString());
+
+		String content = JsonUtils.toJson(map);
+
+		mockMvc.perform(post("/user/{id}", 1)//
+				.characterEncoding("UTF-8")//
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(content))
 				// .andDo(print())
+				.andDo(printContent()) //
 				.andExpect(isStatusOk())//
 				.andExpect(isJson())//
 				.andExpect(isSuccess())//
-				.andDo(printContent()) //
 				.andReturn();
 	}
 

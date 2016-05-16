@@ -1,46 +1,35 @@
 package com.github.hualuomoli.demo.raml.app.delete.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.github.hualuomoli.tool.raml.AbstractContextControllerTest;
 
 public class DeleteControllerTest extends AbstractContextControllerTest {
 
-	private MockMvc mockMvc;
-
-	@Autowired
-	private DeleteController deleteController;
-
-	@Before
-	public void setUp() {
-		mockMvc = MockMvcBuilders.standaloneSetup(deleteController).build();
+	@Override
+	protected String getControllerRequestUrl() {
+		return "/app/delete";
 	}
 
 	@Test
 	public void testDeleteNoparam() throws Exception {
-		this.mockMvc.perform(delete("/app/delete/noparam"))
+		mockMvc.perform(delete("/noparam"))
 				// .andDo(print())
+				.andDo(printContent()) //
 				.andExpect(isStatusOk())//
 				.andExpect(isJson())//
 				.andExpect(isSuccess())//
-				.andDo(printContent()) //
 				.andReturn();
 	}
 
 	@Test
 	public void testDeleteUriparamById() throws Exception {
-		this.mockMvc.perform(delete("/app/delete/uriparam/{id}", "123456"))
+		mockMvc.perform(delete("/uriparam/{id}", "123456"))
 				// .andDo(print())
+				.andDo(printContent()) //
 				.andExpect(isStatusOk())//
 				.andExpect(isJson())//
 				.andExpect(isSuccess())//
-				.andDo(printContent()) //
 				.andReturn();
 	}
 

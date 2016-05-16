@@ -2,10 +2,10 @@ package ${packageName};
 
 import java.util.Date;
 
-import com.github.hualuomoli.base.annotation.EntityColumn;
-import com.github.hualuomoli.base.annotation.EntityIgnore;
-import com.github.hualuomoli.base.annotation.EntityTable;
-import com.github.hualuomoli.base.annotation.EntityColumnType;
+import com.github.hualuomoli.base.annotation.entity.EntityColumn;
+import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
+import com.github.hualuomoli.base.annotation.entity.EntityTable;
+import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
  * @Description ${desc}

@@ -12,6 +12,7 @@
 		<module>./commons</module>
 		<module>./core</module>
 		<module>./tool/raml</module>
+		<module>./tool/creator</module>
 	</modules>
 
 	<properties>
@@ -219,6 +220,7 @@
 					<excludes>
 						<!-- 忽略demo目录 -->
 						<exclude>com/github/hualuomoli/demo/**</exclude>
+						<exclude>demo/**</exclude>
 						<exclude>mappers/demo/**</exclude>
 					</excludes>
 				</configuration>
