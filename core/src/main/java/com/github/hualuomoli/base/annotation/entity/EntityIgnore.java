@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.annotation;
+package com.github.hualuomoli.base.annotation.entity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

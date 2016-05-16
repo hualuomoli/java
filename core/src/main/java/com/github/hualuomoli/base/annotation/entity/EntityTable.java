@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.annotation;
+package com.github.hualuomoli.base.annotation.entity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,5 +19,9 @@ public @interface EntityTable {
 
 	// 注释
 	String comment() default "";
+
+	// 是否预处理,如果预处理,需要提供id,createBy,createDate,updateBy,updateDate,status的属性
+	// 子类实现Persistent接口
+	boolean pre() default false;
 
 }

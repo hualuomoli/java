@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.annotation;
+package com.github.hualuomoli.base.annotation.entity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,6 +16,9 @@ public @interface EntityColumn {
 
 	// 数据库列名,默认使用驼峰命名法转换
 	String name() default "";
+
+	// 关联属性,默认为id关联
+	String relation() default "id";
 
 	// 数据类型
 	EntityColumnType type() default EntityColumnType.AUTO;

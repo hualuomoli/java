@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.annotation;
+package com.github.hualuomoli.base.annotation.entity;
 
 /**
  * 列类型
@@ -12,7 +12,7 @@ public enum EntityColumnType {
 	STRING(), // 字符串
 	TIMESTAMP(), // 时间戳
 	DATE(), // 日期
-	TIME(), // 日期
+	TIME(), // 时间
 	CLOB(), // 大字符
 	;
 
