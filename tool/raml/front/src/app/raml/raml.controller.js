@@ -36,6 +36,7 @@
     $scope.resource = {};
     $scope.rule = {}; // 规则
     $scope.valid = {}; // 现在校验的param
+    $scope.process = 'header'; // 默认为header
 
     // methods
     $scope.setUriParams = setUriParams;
@@ -66,9 +67,10 @@
       } else {
         // add
         var resource = {
+          headerParams: [],
+          uriParams: [],
           queryParams: [],
-          responseParams: [],
-          uriParams: []
+          responseParams: []
         };
         init(resource);
       }
@@ -76,6 +78,14 @@
 
     // 初始化
     function init(resource) {
+      // add header param
+      add(resource.headerParams, {
+        level: 0,
+        index: resource.headerParams.length
+      });
+      // set uri params
+      $scope.saveUriParams = [];
+      angular.extend($scope.saveUriParams, resource.uriParams);
       // add query params
       add(resource.queryParams, {
         level: 0,
@@ -86,9 +96,6 @@
         level: 0,
         index: resource.responseParams.length
       });
-      // set uri params
-      $scope.saveUriParams = [];
-      angular.extend($scope.saveUriParams, resource.uriParams);
       // add to scope
       $scope.resource = resource
     }
@@ -246,6 +253,7 @@
     // 生成
     function create() {
       var resource = $scope.resource;
+      removeEmptyParam(resource.headerParams);
       removeEmptyParam(resource.queryParams);
       removeEmptyParam(resource.responseParams);
 
