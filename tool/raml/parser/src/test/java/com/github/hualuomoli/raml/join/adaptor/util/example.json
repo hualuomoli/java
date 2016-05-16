@@ -1,0 +1,25 @@
+{
+  "code" : 0,
+  "msg" : "处理成功",
+  "data" : {
+    "total" : 100,
+    "pageNumber" : 2,
+    "pageSize" : 20,
+    "productes" : [
+      {
+        "name" : "Ipad 64G",
+        "price" : 3200.15,
+        "amount": 10,
+        "def" : false,
+        "time" : "2015-01-02 15:23:48"
+      },
+      {
+        "name" : "Ipad 64G",
+        "price" : 3200.15,
+        "amount": 10,
+        "def" : false,
+        "time" : "2015-01-02 15:23:48"
+      }
+    ]
+  }
+}

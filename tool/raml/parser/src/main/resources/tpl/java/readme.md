@@ -1,0 +1,1 @@
+# JAVA web项目默认存放路径，可以通过重写getCopyTemplateFolder方法设置自定义路径
