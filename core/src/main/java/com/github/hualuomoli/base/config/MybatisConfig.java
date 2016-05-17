@@ -31,7 +31,7 @@ public class MybatisConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(MybatisConfig.class);
 
-	private String mapperLocations = YamlBaseConfig.getValue("mybatis", "mapperLocations");
+	private String mapperLocations = YamlBaseConfig.getInstance().getValue("mybatis.mapperLocations");
 
 	@Resource(name = "dataSource")
 	DataSource dataSource;

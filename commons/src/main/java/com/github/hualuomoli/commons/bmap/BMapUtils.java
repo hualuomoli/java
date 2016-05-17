@@ -2,7 +2,7 @@ package com.github.hualuomoli.commons.bmap;
 
 import java.util.Map;
 
-import com.github.hualuomoli.commons.CommonConfig;
+import com.github.hualuomoli.commons.YamlCommonConfig;
 import com.github.hualuomoli.commons.bmap.decode.DecodeParam;
 import com.github.hualuomoli.commons.bmap.decode.DecodeResult;
 import com.github.hualuomoli.commons.bmap.encode.EncodeParam;
@@ -20,7 +20,7 @@ public class BMapUtils {
 
 	private static final String URL = "http://api.map.baidu.com/geocoder/v2/";
 	private static final String resultType = "json";
-	private static final String security = CommonConfig.getValue("bmap", "security");
+	private static final String security = YamlCommonConfig.getInstance().getValue(new String[] { "bmap", "security" });
 
 	/**
 	 * 根据名称获取坐标

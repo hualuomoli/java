@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="UTF-8">
+  <title>cors</title>
+  <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html,body{
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body ng-controller="ctrl">
+  <div ng-click="doGet()">GET</div>
+  <div ng-click="doPost()">POST</div>
+  <div ng-click="doJson()">JSON</div>
+  <textarea style="width:100%;height:80%;">{{resp}}</textarea>
+  <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/angular.js/1.5.7/angular.js"></script>
+  <script>
+    angular
+      .module('app', [])
+      .config(['$httpProvider', function($httpProvider){
+        $httpProvider.defaults.withCredentials = true;
+      }])
+      .controller('ctrl',['$scope', '$http', function ($scope, $http){
+
+       $scope.resp = '';
+       $scope.doGet = doGet;
+       $scope.doPost = doPost;
+       $scope.doJson = doJson;
+        
+        function doGet(){
+          $http({
+            method: 'GET',
+            url: 'http://localhost/demo/cors',
+            params: {
+              "username" : "hualuomoli",
+              "nickname" : "花落莫离"
+            }
+          })
+          .success(function(data){
+            $scope.resp = data;
+          })
+        }
+
+        function doPost(){
+          $http({
+            method: 'POST',
+            url: 'http://localhost/demo/cors',
+            data: $.param({
+              "username" : "hualuomoli",
+              "nickname" : "花落莫离"
+            }),
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+          .success(function(data){
+            $scope.resp = data;
+          })
+        }
+
+        function doJson(){
+          $http({
+            method: 'POST',
+            url: 'http://localhost/demo/cors',
+            data: {
+              "username" : "hualuomoli",
+              "nickname" : "花落莫离",
+              "addresses": [{
+                "province": "山东省",
+                "city": "青岛市",
+                "county": "市北区",
+                "name": "合肥路666号"
+              },{
+                "province": "山东省",
+                "city": "青岛市",
+                "county": "崂山区",
+                "name": "国际创新园"
+              }],
+              "info": {
+                "username" : "hualuomoli",
+                "nickname" : "花落莫离",
+                "age" : "20",
+                "sex" : "M",
+                "wigth" : 120.4,
+                "height" : 170
+              }
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .success(function(data){
+            $scope.resp = data;
+          })
+        }
+
+        // end
+      }])
+  </script>
+</body>
+</html>

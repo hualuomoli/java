@@ -20,8 +20,8 @@ public class FileuploadConfig {
 	private static final Logger logger = LoggerFactory.getLogger(FileuploadConfig.class);
 
 	// 文件上传
-	private long maxUploadSize = Long.parseLong(YamlMvcConfig.getValue("upload", "maxSize"));
-	private String defaultEncoding = YamlMvcConfig.getValue("upload", "encoding");
+	private long maxUploadSize = Long.parseLong(YamlMvcConfig.getInstance().getValue("upload.maxSize"));
+	private String defaultEncoding = YamlMvcConfig.getInstance().getValue("upload.encoding");
 
 	// 文件上传
 	@Bean

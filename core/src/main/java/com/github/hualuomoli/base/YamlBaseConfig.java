@@ -1,18 +1,30 @@
 package com.github.hualuomoli.base;
 
-import java.util.List;
+import com.github.hualuomoli.commons.YamlConfig;
 
-import com.github.hualuomoli.commons.util.YamlUtils;
-import com.google.common.collect.Lists;
+public class YamlBaseConfig extends YamlConfig {
 
-public class YamlBaseConfig {
+	private static YamlBaseConfig config = null;
 
-	private static final YamlUtils utils = YamlUtils.getInstance("base.yaml");
+	public static YamlBaseConfig getInstance() {
+		if (config == null) {
+			synchronized (OBJECT) {
+				if (config == null) {
+					config = new YamlBaseConfig();
+				}
+			}
+		}
+		return config;
+	}
 
-	public static String getValue(String... keys) {
-		List<String> list = Lists.newArrayList(keys);
-		list.add(0, "base");
-		return utils.getValue(list.toArray(new String[] {}));
+	@Override
+	public String[] getFiles() {
+		return new String[] { "base.yaml" };
+	}
+
+	@Override
+	public String getPrefix() {
+		return "base";
 	}
 
 }

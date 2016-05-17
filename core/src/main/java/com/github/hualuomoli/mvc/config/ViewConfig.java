@@ -15,8 +15,8 @@ public class ViewConfig {
 	private static final Logger logger = LoggerFactory.getLogger(ViewConfig.class);
 
 	// 视图
-	private String prefix = YamlMvcConfig.getValue("view", "prefix");
-	private String suffix = YamlMvcConfig.getValue("view", "suffix");
+	private String prefix = YamlMvcConfig.getInstance().getValue("view.prefix");
+	private String suffix = YamlMvcConfig.getInstance().getValue("view.suffix");
 
 	// 视图
 	@Bean

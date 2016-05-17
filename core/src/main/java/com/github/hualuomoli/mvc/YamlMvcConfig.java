@@ -1,23 +1,30 @@
 package com.github.hualuomoli.mvc;
 
-import java.util.List;
+import com.github.hualuomoli.commons.YamlConfig;
 
-import com.github.hualuomoli.commons.util.YamlUtils;
-import com.github.hualuomoli.commons.util.YamlUtils.Config;
-import com.google.common.collect.Lists;
+public class YamlMvcConfig extends YamlConfig {
 
-public class YamlMvcConfig {
+	private static YamlMvcConfig config = null;
 
-	private static final YamlUtils utils = YamlUtils.getInstance("mvc.yaml");
-
-	public static String getValue(String... keys) {
-		List<String> list = Lists.newArrayList(keys);
-		list.add(0, "mvc");
-		return utils.getValue(list.toArray(new String[] {}));
+	public static YamlMvcConfig getInstance() {
+		if (config == null) {
+			synchronized (OBJECT) {
+				if (config == null) {
+					config = new YamlMvcConfig();
+				}
+			}
+		}
+		return config;
 	}
 
-	public static Config getConfig() {
-		return utils.getConfig("mvc");
+	@Override
+	public String[] getFiles() {
+		return new String[] { "mvc.yaml" };
+	}
+
+	@Override
+	public String getPrefix() {
+		return "mvc";
 	}
 
 }

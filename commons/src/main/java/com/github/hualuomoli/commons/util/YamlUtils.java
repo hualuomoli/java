@@ -33,25 +33,22 @@ public class YamlUtils {
 	private List<Map<String, Object>> yamlList = Lists.newArrayList();
 
 	@SuppressWarnings("unchecked")
-	private YamlUtils(String... files) {
-		if (files == null || files.length == 0) {
+	private YamlUtils(String... resourceLocations) {
+		if (resourceLocations == null || resourceLocations.length == 0) {
 			throw new RuntimeException();
 		}
 
 		InputStream is = null;
-		for (String file : files) {
+		for (String resourceLocation : resourceLocations) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("load file {}", file);
+				logger.debug("load resource {}", resourceLocation);
 			}
 			try {
-				is = YamlUtils.class.getClassLoader().getResourceAsStream(file);
+				is = ResourceUtils.load(resourceLocation).getInputStream();
 				yamlList.add(new Yaml().loadAs(is, HashMap.class));
 			} catch (Exception e) {
 				// 资源未找到
-				logger.warn("can not load file {}", file);
-				if (logger.isDebugEnabled()) {
-					logger.debug("{}", e);
-				}
+				logger.warn("can not load resource {}", resourceLocation);
 			} finally {
 				if (is != null) {
 					try {
@@ -162,6 +159,9 @@ public class YamlUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public Config getConfig(String key) {
+		if (StringUtils.isBlank(key)) {
+			throw new RuntimeException("key must not be empty.");
+		}
 		List<Map<String, Object>> dataList = Lists.newArrayList();
 		for (int i = yamlList.size() - 1; i >= 0; i--) {
 			Map<String, Object> map = yamlList.get(i);
@@ -189,6 +189,9 @@ public class YamlUtils {
 		 */
 		@SuppressWarnings("unchecked")
 		public Config getConfig(String key) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			List<Map<String, Object>> list = Lists.newArrayList();
 			for (Map<String, Object> dataMap : dataList) {
 				if (dataMap.containsKey(key)) {
@@ -205,9 +208,12 @@ public class YamlUtils {
 		 * @return 值
 		 */
 		public String getValue(String key) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			for (Map<String, Object> dataMap : dataList) {
 				if (dataMap.containsKey(key)) {
-					return (String) dataMap.get(key);
+					return String.valueOf(dataMap.get(key));
 				}
 			}
 			return null;
@@ -220,6 +226,9 @@ public class YamlUtils {
 		 */
 		@SuppressWarnings("unchecked")
 		public Map<String, Object> getObject(String key) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			for (Map<String, Object> dataMap : dataList) {
 				if (dataMap.containsKey(key)) {
 					return (Map<String, Object>) dataMap.get(key);
@@ -235,6 +244,9 @@ public class YamlUtils {
 		 * @return module
 		 */
 		public <T> T getObject(String key, Class<T> cls) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			return this._parseMap2Object(this.getObject(key), cls);
 		}
 
@@ -245,6 +257,9 @@ public class YamlUtils {
 		 */
 		@SuppressWarnings("unchecked")
 		public List<Map<String, Object>> getList(String key) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			for (Map<String, Object> dataMap : dataList) {
 				if (dataMap.containsKey(key)) {
 					return (List<Map<String, Object>>) dataMap.get(key);
@@ -260,6 +275,9 @@ public class YamlUtils {
 		* @return module
 		*/
 		public <T> List<T> getList(String key, Class<T> cls) {
+			if (StringUtils.isBlank(key)) {
+				throw new RuntimeException("key must not be empty.");
+			}
 			return this._parseMap2List(this.getList(key), cls);
 		}
 
