@@ -1,5 +1,6 @@
 package com.github.hualuomoli.mvc.aspect;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -59,6 +60,8 @@ public class ControllerLogAspect {
 			} else if (obj.getClass().getName().startsWith("java.util")) {
 				logger.debug("调用的方法参数{}值 = {}", (i + 1), obj);
 			} else if (validatorClass.isAssignableFrom(obj.getClass())) {
+				logger.debug("调用的方法参数{}值 = {}", (i + 1), JsonUtils.toJson(obj));
+			} else if (StringUtils.startsWith(obj.getClass().getName(), "com.github.hualuomoli")) {
 				logger.debug("调用的方法参数{}值 = {}", (i + 1), JsonUtils.toJson(obj));
 			} else {
 				logger.warn("未知类型 {}", obj.getClass().getName());

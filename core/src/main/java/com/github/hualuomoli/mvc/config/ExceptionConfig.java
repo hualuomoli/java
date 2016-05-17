@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,6 +47,20 @@ public class ExceptionConfig {
 		this.flushJson(response, Code.AuthException, e.getMessage());
 	}
 
+	// 请求方法不允许
+	@ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	public void methodNotAllowed(HttpServletResponse response, HttpRequestMethodNotSupportedException e) {
+		this.flushJson(response, Code.METHOD_NOT_ALLOWED, e.getMessage());
+	}
+
+	// 请求协议不允许
+	@ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
+	@ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+	public void unsupportedMediaType(HttpServletResponse response, HttpMediaTypeNotSupportedException e) {
+		this.flushJson(response, Code.METHOD_NOT_ALLOWED, e.getMessage());
+	}
+
 	// 运行时异常
 	@ExceptionHandler(value = RuntimeException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -60,7 +76,7 @@ public class ExceptionConfig {
 
 	}
 
-	// 运行时异常
+	// 异常
 	@ExceptionHandler(value = Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public void exception(HttpServletResponse response, Exception e) {
@@ -107,6 +123,9 @@ public class ExceptionConfig {
 	enum Code {
 
 		AuthException("401"), // 没有权限
+		NOT_FOUND("404"), // 没找到
+		METHOD_NOT_ALLOWED("405"), // 方法不允许
+		UNSUPPORTED_MEDIA_TYPE("415"), // 协议不允许
 		Exception("500"), // 系统错误
 		InvalidEntityException("9999"); // 参数不合法
 

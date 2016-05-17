@@ -10,6 +10,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import com.github.hualuomoli.mvc.filter.CorsFilter;
+
 /**
  * 初始化web.xml
  * @author hualuomoli
@@ -30,7 +32,11 @@ public class WebInitializer implements WebApplicationInitializer {
 		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
 		encodingFilter.setEncoding("UTF-8");
 		encodingFilter.setForceEncoding(true);
-		servletContext.addFilter("encodingFilter", encodingFilter).addMappingForUrlPatterns(getDispatcherTypes(), isAsyncSupported(), "/");
+		servletContext.addFilter("encodingFilter", encodingFilter).addMappingForUrlPatterns(getDispatcherTypes(), isAsyncSupported(), "/*");
+
+		// 跨域
+		CorsFilter corsFilter = new CorsFilter();
+		servletContext.addFilter("corsFilter", corsFilter).addMappingForUrlPatterns(getDispatcherTypes(), isAsyncSupported(), "/*");
 
 	}
 
@@ -42,4 +48,5 @@ public class WebInitializer implements WebApplicationInitializer {
 	protected boolean isAsyncSupported() {
 		return true;
 	}
+
 }

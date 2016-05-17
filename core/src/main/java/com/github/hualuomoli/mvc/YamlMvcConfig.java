@@ -3,6 +3,7 @@ package com.github.hualuomoli.mvc;
 import java.util.List;
 
 import com.github.hualuomoli.commons.util.YamlUtils;
+import com.github.hualuomoli.commons.util.YamlUtils.Config;
 import com.google.common.collect.Lists;
 
 public class YamlMvcConfig {
@@ -13,6 +14,10 @@ public class YamlMvcConfig {
 		List<String> list = Lists.newArrayList(keys);
 		list.add(0, "mvc");
 		return utils.getValue(list.toArray(new String[] {}));
+	}
+
+	public static Config getConfig() {
+		return utils.getConfig("mvc");
 	}
 
 }
