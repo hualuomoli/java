@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.creator;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.util.Collection;
 
@@ -12,15 +12,22 @@ public class CreatorUtils {
 	/**
 	 * 获取相对包名
 	 * @param entityCls 实体类名
-	 * @param skip 跳过的字符串
+	 * @param projectPackageName 跳过的字符串
 	 * @return 相对包名
 	 */
-	public static String getRelativePackageName(Class<?> entityCls, String skip) {
+	public static String getRelativePackageName(Class<?> entityCls, String projectPackageName) {
+
+		if (projectPackageName == null) {
+			projectPackageName = "";
+		} else if (!projectPackageName.endsWith(".")) {
+			projectPackageName = projectPackageName + ".";
+		}
+
 		String packageName = getPackageName(entityCls);
 		String relativePackageName;
 		// 去掉前缀
-		if (skip != null && packageName.startsWith(skip)) {
-			relativePackageName = packageName.substring(skip.length());
+		if (projectPackageName != null && packageName.startsWith(projectPackageName)) {
+			relativePackageName = packageName.substring(projectPackageName.length());
 		} else {
 			relativePackageName = packageName;
 		}
@@ -55,9 +62,9 @@ public class CreatorUtils {
 		}
 		int max = -1;
 		for (T t : datas) {
-			String str = checker.getCompareString(t);
-			if (str != null && str.length() > max) {
-				max = str.length();
+			int length = checker.getCompareLength(t);
+			if (length > max) {
+				max = length;
 			}
 		}
 		return max;
@@ -66,7 +73,7 @@ public class CreatorUtils {
 	public interface Checker<T> {
 
 		// Object's length greater max
-		String getCompareString(T t);
+		int getCompareLength(T t);
 
 	}
 
@@ -76,8 +83,8 @@ public class CreatorUtils {
 	 * @param max 总长度
 	 * @return 空白数据
 	 */
-	public static String getBlank(String str, int max) {
-		int t = max - str.length();
+	public static String getBlank(int dataLength, int max) {
+		int t = max - dataLength;
 		String blanks = "";
 		for (int i = 0; i < t; i++) {
 			blanks += " ";

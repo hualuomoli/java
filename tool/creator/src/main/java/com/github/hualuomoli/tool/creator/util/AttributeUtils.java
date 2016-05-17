@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.creator;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,10 +23,11 @@ public class AttributeUtils extends CreatorUtils {
 	 * 获取属性集合
 	 * @param entityCls 实体类class
 	 * @param ignores 忽略的属性名
+	 * @param projectPackageName 项目包名,如com.github.hualuomoli
 	 * @return 属性集合
 	 */
-	public static List<Attribute> getAttributes(Class<?> entityCls, Set<String> ignores) {
-		List<Attribute> attributes = loadAttributes(entityCls, ignores);
+	public static List<Attribute> getAttributes(Class<?> entityCls, Set<String> ignores, String projectPackageName) {
+		List<Attribute> attributes = loadAttributes(entityCls, ignores, projectPackageName);
 		configAttributes(attributes);
 		return attributes;
 	}
@@ -40,20 +41,20 @@ public class AttributeUtils extends CreatorUtils {
 		// set fill db name
 		int nameMax = getMaxLength(attributes, new Checker<Attribute>() {
 			@Override
-			public String getCompareString(Attribute t) {
-				return t.getName();
+			public int getCompareLength(Attribute attribute) {
+				return attribute.getNameLength();
 			}
 		});
 		int dbNameMax = getMaxLength(attributes, new Checker<Attribute>() {
 			@Override
-			public String getCompareString(Attribute t) {
-				return t.getDbName();
+			public int getCompareLength(Attribute attribute) {
+				return attribute.getDbNameLength();
 			}
 		});
 
 		for (Attribute attribute : attributes) {
-			String blanks = getBlank(attribute.getName(), nameMax);
-			String dbBlanks = getBlank(attribute.getDbName(), dbNameMax);
+			String blanks = getBlank(attribute.getNameLength(), nameMax);
+			String dbBlanks = getBlank(attribute.getDbNameLength(), dbNameMax);
 			attribute.setBlanks(blanks);
 			attribute.setDbBlanks(dbBlanks);
 		}
@@ -64,9 +65,10 @@ public class AttributeUtils extends CreatorUtils {
 	 * 获取类的属性
 	 * @param entityCls class
 	 * @param ignores 忽略属性
+	 * @param projectPackageName 项目包名,如com.github.hualuomoli
 	 * @return 是否有效
 	 */
-	private static List<Attribute> loadAttributes(Class<?> entityCls, Set<String> ignores) {
+	private static List<Attribute> loadAttributes(Class<?> entityCls, Set<String> ignores, String projectPackageName) {
 
 		List<Attribute> attributes = Lists.newArrayList();
 
@@ -79,6 +81,7 @@ public class AttributeUtils extends CreatorUtils {
 
 		Field[] fields = entityCls.getDeclaredFields();
 		for (Field field : fields) {
+			Attribute attribute = new Attribute();
 			// ignore
 			if (ignores.contains(field.getName())) {
 				continue;
@@ -87,15 +90,45 @@ public class AttributeUtils extends CreatorUtils {
 			if (!valid(field, entityCls)) {
 				continue;
 			}
-			String attributeName = field.getName();
-			Attribute attribute = new Attribute();
-			attribute.setName(attributeName);
-			attribute.setDbName(unCamel(attributeName));
-			attribute.setString(field.getType() == String.class);
+			// List<Bean> beans
+			// 一对多
+			if (field.getType() == java.util.List.class || field.getType() == java.util.ArrayList.class) {
+				continue;
+			}
+			// 一对一
+			if (StringUtils.startsWith(field.getType().getName(), projectPackageName)) {
+				String attributeName = field.getName();
+
+				// 实体类
+				attribute.setName(attributeName);
+				attribute.setNameLength(attributeName.length() + 3); // 实体类长度加3 user.id
+
+				// 数据库列
+				attribute.setDbName(unCamel(attributeName));
+				attribute.setDbNameLength(attribute.getDbName().length() + 3); // 数据库列长度加3 user_id
+
+				// 其他
+				attribute.setEntity(true);
+			} else {
+				// 普通类型
+				String attributeName = field.getName();
+
+				// 实体类
+				attribute.setName(attributeName);
+				attribute.setNameLength(attributeName.length());
+
+				// 数据库列
+				attribute.setDbName(unCamel(attributeName));
+				attribute.setDbNameLength(attribute.getDbName().length());
+
+				// 其他,是否是字符串
+				attribute.setString(field.getType() == String.class);
+			}
+
 			attributes.add(attribute);
 		}
 
-		attributes.addAll(loadAttributes(entityCls.getSuperclass(), ignores));
+		attributes.addAll(loadAttributes(entityCls.getSuperclass(), ignores, projectPackageName));
 
 		return attributes;
 
@@ -107,7 +140,7 @@ public class AttributeUtils extends CreatorUtils {
 	 * @param cls class
 	 * @return 是否合法
 	 */
-	private static boolean valid(Field field, Class<?> cls) {
+	public static boolean valid(Field field, Class<?> cls) {
 
 		int mod = field.getModifiers();
 
@@ -132,9 +165,14 @@ public class AttributeUtils extends CreatorUtils {
 			}
 
 			Method getMethod = null;
+			// 如果是boolean,判断是否是is方法
 			if (StringUtils.equalsIgnoreCase(type.getSimpleName(), "boolean")) {
-				getMethod = cls.getMethod("is" + upperName);
-			} else {
+				try {
+					getMethod = cls.getMethod("is" + upperName);
+				} catch (Exception e) {
+				}
+			}
+			if (getMethod == null) {
 				getMethod = cls.getMethod("get" + upperName);
 			}
 

@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.creator;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.util.Set;
 
@@ -16,20 +16,15 @@ public class MapperUtils extends CreatorUtils {
 	 * 根据实体类的class获取实体类mapper信息
 	 * @param entityCls 实体类的class
 	 * @param ignores 忽略的属性列
+	 * @param projectPackageName 项目包名,如com.github.hualuomoli
 	 * @return 实体类mapper信息
 	 */
-	public static Mapper getMapper(Class<?> entityCls, Set<String> ignores, String skip) {
-
-		if (skip == null) {
-			skip = "";
-		} else if (!skip.endsWith(".")) {
-			skip = skip + ".";
-		}
+	public static Mapper getMapper(Class<?> entityCls, Set<String> ignores, String projectPackageName) {
 
 		Mapper mapper = new Mapper();
 
 		// get entity
-		Entity entity = EntityUtils.getEntity(entityCls, ignores);
+		Entity entity = EntityUtils.getEntity(entityCls, ignores, projectPackageName);
 
 		//
 		String name = entity.getSimpleName() + "Mapper";
@@ -38,7 +33,7 @@ public class MapperUtils extends CreatorUtils {
 		String filename = name + ".java";
 		String filepath = packageName.replaceAll("[.]", "/");
 		String configFileName = name + ".xml";
-		String configFilePath = getRelativePackageName(entityCls, skip).replaceAll("[.]", "/");
+		String configFilePath = getRelativePackageName(entityCls, projectPackageName).replaceAll("[.]", "/");
 
 		// set
 		mapper.setEntity(entity);

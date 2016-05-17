@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.creator;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.util.Set;
 
@@ -17,20 +17,15 @@ public class ServiceUtils extends CreatorUtils {
 	 * 根据实体类的class获取实体类service信息
 	 * @param entityCls 实体类的class
 	 * @param ignores 忽略的属性列
+	 * @param projectPackageName 项目包名,如com.github.hualuomoli
 	 * @return 实体类service信息
 	 */
-	public static Service getService(Class<?> entityCls, Set<String> ignores, String skip) {
-
-		if (skip == null) {
-			skip = "";
-		} else if (!skip.endsWith(".")) {
-			skip = skip + ".";
-		}
+	public static Service getService(Class<?> entityCls, Set<String> ignores, String projectPackageName) {
 
 		Service service = new Service();
 
 		// get mapper
-		Mapper mapper = MapperUtils.getMapper(entityCls, ignores, skip);
+		Mapper mapper = MapperUtils.getMapper(entityCls, ignores, projectPackageName);
 		Entity entity = mapper.getEntity();
 		//
 		String name = entity.getSimpleName() + "Service";
