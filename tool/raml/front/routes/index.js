@@ -6,7 +6,8 @@ module.exports = function (app) {
   setCross(app);
 
   // demo
-  app.use('/demo', require('./demo'));
+  app.use('/', require('./login'));
+  app.use('/user', require('./user'));
   app.use('/raml', require('./raml'));
 
 }

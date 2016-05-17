@@ -1,3 +1,5 @@
+// raml工具
+
 var logger = require('../logger/logger');
 
 
@@ -426,9 +428,9 @@ function getIndent(level) {
 
 
 var tool = {
-  getJsons: getJsons,
-  getExample: getExample,
-  getSchema: getSchema,
+  // getJsons: getJsons,
+  // getExample: getExample,
+  // getSchema: getSchema,
   getRaml: getRaml
 }
 

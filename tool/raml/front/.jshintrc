@@ -8,6 +8,10 @@
     "__dirname",
     "module",
     "describe",
+    "before",
+    "after",
+    "beforeEach",
+    "afterEach",
     "it"
   ],
   "strict": false,

@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session')
 var multer = require('multer');
 var colors = require('colors');
 
@@ -32,13 +33,27 @@ app.use(bodyParser.urlencoded({
 
 // parse cookie
 app.use(cookieParser());
+// session
+app.use(session({
+  name: "administrator", // cookie的名称
+  secret: 'hualuomoli',
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 30
+  },
+  resave: false,
+  rolling: true,
+  saveUninitialized: false
+}))
 
 // static
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // development
-// app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
-// app.use(express.static(path.join(__dirname, 'src')));
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'src')));
 
 
 app.use('/file', express.static(path.join(__dirname, 'raml')));

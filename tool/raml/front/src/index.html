@@ -39,30 +39,36 @@
   <script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <!-- endbuild -->
  
-  <!-- build:js-blocks -->
-  <script type="text/javascript" src="../bower_components/front-angular-blocks/dist/front-angular-blocks.min.js"></script>
-  <!-- endbuild -->
-
   <!-- build:js-app -->
   <!-- js -->
   <script type="text/javascript" src="./js/app.js"></script>
+  <!-- assets -->
+  <!-- logger -->
+  <script type="text/javascript" src="./app/logger/logger.module.js"></script>
+  <script type="text/javascript" src="./app/logger/logger.provider.js"></script>
+  <script type="text/javascript" src="./app/logger/logger.factory.js"></script>
+  <!-- ./assets -->
+
   <!-- app -->
   <script type="text/javascript" src="./app/app.module.js"></script>
   <script type="text/javascript" src="./app/app.controller.js"></script>
   <script type="text/javascript" src="./app/app.config.js"></script>
   <script type="text/javascript" src="./app/app.router.js"></script>
+
+  <!-- business -->
+  <!-- user -->
+  <script type="text/javascript" src="./app/user/user.module.js"></script>
+  <script type="text/javascript" src="./app/user/user.service.js"></script>
+  <script type="text/javascript" src="./app/user/user.controller.js"></script>
+  <script type="text/javascript" src="./app/user/user.interceptor.js"></script>
+  <script type="text/javascript" src="./app/user/user.config.js"></script>
+  <script type="text/javascript" src="./app/user/user.router.js"></script>
   <!-- raml -->
   <script type="text/javascript" src="./app/raml/raml.module.js"></script>
   <script type="text/javascript" src="./app/raml/raml.controller.js"></script>
   <script type="text/javascript" src="./app/raml/raml.service.js"></script>
   <script type="text/javascript" src="./app/raml/raml.router.js"></script>
-  <!-- endbuild -->
-
-  <!-- build:js-test -->
-  <!-- <script type="text/javascript" src="./app/test/cors/cors.factory.js"></script>
-  <script type="text/javascript" src="./app/test/cors/cors.service.js"></script>
-  <script type="text/javascript" src="./app/test/test.provider.js"></script>
-  <script type="text/javascript" src="./app/test/test.config.js"></script> -->
+  <!-- ./business -->
   <!-- endbuild -->
 
 </body>

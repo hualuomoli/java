@@ -16,6 +16,7 @@
         abstract: true,
         url: '/app',
         templateUrl: 'tpl/app.html',
+        controller: 'appCtrl'
       })
       .state('app.dashboard', {
         url: '/dashboard',

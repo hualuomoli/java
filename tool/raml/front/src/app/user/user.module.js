@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('app.raml', [
+  angular.module('app.user', [
+    'ui.router',
     'app.logger'
   ]);
 

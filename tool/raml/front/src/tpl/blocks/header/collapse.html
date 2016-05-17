@@ -142,7 +142,7 @@
 <!-- / link and dropdown -->
 
 <!-- search form -->
-<form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="TypeaheadDemoCtrl">
+<form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" >
   <div class="form-group">
     <div class="input-group">
       <input type="text" ng-model="selected" onkeyup="console.log('========' + this.value);" uib-typeahead="state.name || state.opcode for state in states | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search projects...">

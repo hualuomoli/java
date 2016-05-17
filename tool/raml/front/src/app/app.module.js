@@ -2,15 +2,11 @@
   'use strict';
 
   angular.module('app', [
-    'blocks.logger',
-    'blocks.exception',
-    'blocks.routehelper',
-    'blocks.http',
-    'blocks.user',
+    'ui.router',
+    'app.logger',
 
-    'ui.bootstrap',
-    'oc.lazyLoad',
-
+    // business
+    'app.user',
     'app.raml'
 
   ]);

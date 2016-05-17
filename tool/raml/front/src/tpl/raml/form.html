@@ -22,7 +22,7 @@
             <div class="form-group">
               <label class="col-md-2 control-label">请求协议</label>
               <div class="col-md-4">
-                <select ng-model="resource.queryMimeType" class="form-control">
+                <select ng-show="resource.method == 'post' || resource.method == 'put'" ng-model="resource.queryMimeType" class="form-control">
                   <option value="application/x-www-form-urlencoded">URLEncoded</option>
                   <option value="application/json">JSON</option>
                   <option value="multipart/form-data">Multpart</option>

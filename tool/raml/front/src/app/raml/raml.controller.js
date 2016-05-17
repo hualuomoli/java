@@ -36,7 +36,7 @@
     $scope.resource = {};
     $scope.rule = {}; // 规则
     $scope.valid = {}; // 现在校验的param
-    $scope.process = 'header'; // 默认为header
+    $scope.process = 'uri'; // 默认为header
 
     // methods
     $scope.setUriParams = setUriParams;
@@ -78,6 +78,9 @@
 
     // 初始化
     function init(resource) {
+
+      console.log(resource);
+
       // add header param
       add(resource.headerParams, {
         level: 0,
@@ -102,6 +105,10 @@
 
     // 设置uri的参数
     function setUriParams(uri) {
+
+      if (!uri || uri === '') {
+        return;
+      }
 
       //原来保存的参数
       var saveUriParams = $scope.saveUriParams;
@@ -246,6 +253,11 @@
       }
       if (resource.responseMimeType === undefined || resource.responseMimeType === '') {
         return false;
+      }
+      if (resource.method === 'post' || resource.method === 'put') {
+        if (resource.queryMimeType === undefined || resource.queryMimeType === '') {
+          return false;
+        }
       }
       return true;
     }
