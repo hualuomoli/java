@@ -5,7 +5,7 @@
 
 	<groupId>com.github.hualuomoli</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.1</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -248,7 +248,12 @@
 					<!-- 没有web.xml不报错 -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<!-- 打包忽略demo目录 -->
-					<packagingExcludes>WEB-INF/classes/com/github/hualuomoli/demo/**,WEB-INF/classes/demo/**,WEB-INF/classes/mappers/demo/**</packagingExcludes>
+					<packagingExcludes>
+						WEB-INF/classes/com/github/hualuomoli/demo/**,
+						WEB-INF/classes/demo/**,
+						WEB-INF/classes/mappers/demo/**,
+						WEB-INF/lib/**
+					</packagingExcludes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -279,13 +284,13 @@
 	<!-- 发布仓库 -->
 	<distributionManagement>
 		<repository>
-			<id>local</id>
+			<id>local-repo</id>
 			<name>Repository for local builds</name>
 			<url>http://localhost:8081/nexus/content/repositories/local-repo</url>
 		</repository>
 		<snapshotRepository>
-			<id>local</id>
-			<name>Repository for local builds</name>
+			<id>local-repo-s</id>
+			<name>Snapshot for local builds</name>
 			<url>http://localhost:8081/nexus/content/repositories/local-repo-s</url>
 		</snapshotRepository>
 	</distributionManagement>
