@@ -145,7 +145,11 @@ public class YamlUtils {
 			}
 			// 如果找到数据,返回
 			if (tempMap.containsKey(keys[keys.length - 1])) {
-				return String.valueOf(tempMap.get(keys[keys.length - 1]));
+				Object obj = tempMap.get(keys[keys.length - 1]);
+				if (obj == null) {
+					return null;
+				}
+				return String.valueOf(obj);
 			}
 		}
 		// 默认没找到
@@ -213,7 +217,11 @@ public class YamlUtils {
 			}
 			for (Map<String, Object> dataMap : dataList) {
 				if (dataMap.containsKey(key)) {
-					return String.valueOf(dataMap.get(key));
+					Object obj = dataMap.get(key);
+					if (obj == null) {
+						return null;
+					}
+					return String.valueOf(obj);
 				}
 			}
 			return null;

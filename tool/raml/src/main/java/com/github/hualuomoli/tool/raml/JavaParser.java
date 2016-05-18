@@ -2,10 +2,8 @@ package com.github.hualuomoli.tool.raml;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,7 +111,7 @@ public abstract class JavaParser extends AbstractParser {
 		map.put("desc", resource.getDescription());
 		map.put("author", this.getConfig().author);
 		map.put("version", this.getConfig().version);
-		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+		map.put("date", this.getConfig().date);
 
 		map.put("packageName", entityPackageName); // 包名
 		map.put("javaName", entityJavaName); // 类名
@@ -186,7 +184,7 @@ public abstract class JavaParser extends AbstractParser {
 		map.put("desc", resource.getDescription());
 		map.put("author", this.getConfig().author);
 		map.put("version", this.getConfig().version);
-		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+		map.put("date", this.getConfig().date);
 
 		// REST风格的响应
 		map.put("restResponsePackageName", this.getConfig().restResponse.getPackage().getName());
@@ -344,43 +342,71 @@ public abstract class JavaParser extends AbstractParser {
 		ramlParam.setName(abstractParam.getDisplayName());
 
 		String def = abstractParam.getDefaultValue();
+		boolean repeat = abstractParam.isRepeat();
 
 		// type
 		switch (abstractParam.getType()) {
 		case STRING:
-			ramlParam.setType("String");
-			if (def != null) {
-				ramlParam.setDef("\"" + def + "\"");
+			if (repeat) {
+				ramlParam.setType("String[]");
+			} else {
+				ramlParam.setType("String");
+				if (def != null) {
+					ramlParam.setDef("\"" + def + "\"");
+				}
 			}
 			break;
 		case INTEGER:
-			BigDecimal maxinum = abstractParam.getMaximum();
-			if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
-				ramlParam.setType("Long");
+			if (repeat) {
+				BigDecimal maxinum = abstractParam.getMaximum();
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlParam.setType("Long[]");
+				} else {
+					ramlParam.setType("Integer[]");
+				}
 			} else {
-				ramlParam.setType("Integer");
-			}
-			if (def != null) {
-				ramlParam.setDef(def);
+				BigDecimal maxinum = abstractParam.getMaximum();
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlParam.setType("Long");
+				} else {
+					ramlParam.setType("Integer");
+				}
+				if (def != null) {
+					ramlParam.setDef(def);
+				}
 			}
 			break;
 		case NUMBER:
-			ramlParam.setType("Double");
-			if (def != null) {
-				ramlParam.setDef(def + "D");
+			if (repeat) {
+				ramlParam.setType("Double[]");
+			} else {
+				ramlParam.setType("Double");
+				if (def != null) {
+					ramlParam.setDef(def + "D");
+				}
 			}
 			break;
 		case BOOLEAN:
 			throw new RuntimeException("please use string replace boolean.");
 		case DATE:
-			ramlParam.setType("Date");
-			if (def != null) {
-				ramlParam.setDef("DateUtils.parse(\"" + def + "\")");
+			if (repeat) {
+				throw new RuntimeException("can not set date parameter repeat.");
+			} else {
+				ramlParam.setType("Date");
+				if (def != null) {
+					ramlParam.setDef("DateUtils.parse(\"" + def + "\")");
+				}
 			}
 			break;
 		case FILE:
-			ramlParam.setType("MultipartFile");
+			if (repeat) {
+				ramlParam.setType("MultipartFile[]");
+			} else {
+				ramlParam.setType("MultipartFile");
+			}
 			break;
+		default:
+			throw new RuntimeException();
 		}
 		ramlParam.setComment(StringUtils.isBlank(abstractParam.getDescription()) ? "注释" : abstractParam.getDescription());
 		ramlParam.setAnnos(new Valid(abstractParam).getValid());
@@ -887,6 +913,8 @@ public abstract class JavaParser extends AbstractParser {
 		private String description;
 		private String displayName;
 		private String message;
+		private boolean repeat;
+		private boolean required;
 
 		public Valid(AbstractParam abstractParam) {
 			this.abstractParam = abstractParam;
@@ -896,6 +924,8 @@ public abstract class JavaParser extends AbstractParser {
 				throw new RuntimeException("please set descripion for " + this.displayName);
 			}
 			this.message = this.description + " - " + this.displayName;
+			repeat = abstractParam.isRepeat();
+			required = abstractParam.isRequired();
 		}
 
 		/**
@@ -906,19 +936,78 @@ public abstract class JavaParser extends AbstractParser {
 		List<String> getValid() {
 			List<String> valids = Lists.newArrayList();
 
-			String notNull = _getNotNull();
-			String notBlank = _getNotBlank();
-			String length = _getLength();
-			String min = _getMin();
-			String max = _getMax();
-			String pattern = _getStringPattern();
-			String dateFormatPattern = _getDateFormatPattern();
+			String notNull = null;
+			String notBlank = null;
+			String notEmpty = null;
+			String length = null;
+			String min = null;
+			String max = null;
+			String pattern = null;
+			String dateFormatPattern = null;
+
+			// type
+			switch (abstractParam.getType()) {
+			case STRING:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					notBlank = _getNotBlank();
+					length = _getLength();
+					pattern = _getStringPattern();
+				}
+				break;
+			case INTEGER:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					min = _getMin();
+					max = _getMax();
+				}
+				break;
+			case NUMBER:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					min = _getMin();
+					max = _getMax();
+				}
+				break;
+			case BOOLEAN:
+				throw new RuntimeException("please use string replace boolean.");
+			case DATE:
+				if (repeat) {
+					throw new RuntimeException();
+				} else {
+					notNull = _getNotNull();
+					dateFormatPattern = _getDateFormatPattern();
+				}
+				break;
+			case FILE:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+				}
+				break;
+			default:
+				throw new RuntimeException();
+			}
 
 			if (notNull != null) {
 				valids.add(notNull);
 			}
 			if (notBlank != null) {
 				valids.add(notBlank);
+			}
+			if (notEmpty != null) {
+				valids.add(notEmpty);
 			}
 			if (length != null) {
 				valids.add(length);
@@ -939,19 +1028,10 @@ public abstract class JavaParser extends AbstractParser {
 			return valids;
 		}
 
-		/**
-		 * 是否必填
-		 * @param jsonParam
-		 * @return
-		 */
-		boolean _isRequired() {
-			return abstractParam.isRequired();
-		}
-
 		// 不能为空
 		// @NotNull(message = "")
 		String _getNotNull() {
-			if (!_isRequired()) {
+			if (!required) {
 				return null;
 			}
 			return "@NotNull(message = \"" + message + " 必填\")";
@@ -960,10 +1040,19 @@ public abstract class JavaParser extends AbstractParser {
 		// 不能为空(字符串)
 		// @NotBlank(message = "")
 		String _getNotBlank() {
-			if (abstractParam.getType() != ParamType.STRING) {
+			if (!required || abstractParam.getType() != ParamType.STRING) {
 				return null;
 			}
 			return "@NotBlank(message = \"" + message + "不能为空\")";
+		}
+
+		// 不能为空(集合)
+		// @NotEmpty(message = "")
+		String _getNotEmpty() {
+			if (!required || !repeat) {
+				return null;
+			}
+			return "@NotEmpty(message = \"" + message + "不能为空\")";
 		}
 
 		// 长度限制
@@ -1868,6 +1957,7 @@ public abstract class JavaParser extends AbstractParser {
 		private String projectPackageName; // 项目包名
 		private String author; // 作者
 		private String version; // 版本
+		private String date; // 日期
 
 		private String codeName; // 返回编码的名称
 		private String msgName; // 返回错误信息的名称
@@ -1891,6 +1981,10 @@ public abstract class JavaParser extends AbstractParser {
 
 		public void setVersion(String version) {
 			this.version = version;
+		}
+
+		public void setDate(String date) {
+			this.date = date;
 		}
 
 		public void setCodeName(String codeName) {

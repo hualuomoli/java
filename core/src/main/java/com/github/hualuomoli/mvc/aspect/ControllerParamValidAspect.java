@@ -37,7 +37,9 @@ public class ControllerParamValidAspect {
 
 		for (int i = 0; i < args.length; i++) {
 			Object obj = args[i];
-
+			if (obj == null) {
+				continue;
+			}
 			if (validatorClass.isAssignableFrom(obj.getClass())) {
 				EntityValidatorUtils.valid((EntityValidator) obj);
 			}

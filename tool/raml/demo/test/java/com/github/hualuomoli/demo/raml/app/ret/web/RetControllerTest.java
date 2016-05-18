@@ -1,6 +1,4 @@
 
-
-
 package com.github.hualuomoli.demo.raml.app.ret.web;
 
 import org.junit.Test;
@@ -16,49 +14,45 @@ public class RetControllerTest extends AbstractContextControllerTest {
 
 	@Test
 	public void testGetNodata() throws Exception {
-		mockMvc.perform(get("/nodata")//
-				.characterEncoding("UTF-8"))//
-				// .andDo(print()) //
-				.andDo(printContent())//
-				.andExpect(isStatusOk()) //
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/nodata"))//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetObjectdata() throws Exception {
-		mockMvc.perform(get("/objectdata")//
-				.characterEncoding("UTF-8"))//
-				// .andDo(print()) //
-				.andDo(printContent())//
-				.andExpect(isStatusOk()) //
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/objectdata"))//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetListdata() throws Exception {
-		mockMvc.perform(get("/listdata")//
-				.characterEncoding("UTF-8"))//
-				// .andDo(print()) //
-				.andDo(printContent())//
-				.andExpect(isStatusOk()) //
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/listdata"))//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetPagedata() throws Exception {
-		mockMvc.perform(get("/pagedata")//
-				.characterEncoding("UTF-8"))//
-				// .andDo(print()) //
-				.andDo(printContent())//
-				.andExpect(isStatusOk()) //
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/pagedata"))//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 

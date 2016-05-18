@@ -13,50 +13,48 @@ public class GetControllerTest extends AbstractContextControllerTest {
 
 	@Test
 	public void testGetNoparam() throws Exception {
-		mockMvc.perform(get("/noparam")) //
-				// .andDo(print())
-				.andDo(printContent()) //
-				.andExpect(isStatusOk())//
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/noparam")) //
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetUriparamById() throws Exception {
-		mockMvc.perform(get("/uriparam/{id}", "1")) //
-				// .andDo(print())
-				.andDo(printContent()) //
-				.andExpect(isStatusOk())//
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+		mockMvc.perform(this.get("/uriparam/{id}", "1")) //
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetQueryparam() throws Exception {
-		mockMvc.perform(get("/queryparam")//
-				.characterEncoding("UTF-8")//
+		mockMvc.perform(this.get("/queryparam")//
 				.param("username", "hualuomoli")//
 				.param("password", "123456"))
-				// .andDo(print())
-				.andDo(printContent()) //
-				.andExpect(isStatusOk())//
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 
 	@Test
 	public void testGetUriqueryparamByPageNumberPageSize() throws Exception {
-		mockMvc.perform(get("/uriqueryparam/{pageNumber}/{pageSize}", 1, 2)//
-				.characterEncoding("UTF-8")//
+		mockMvc.perform(this.get("/uriqueryparam/{pageNumber}/{pageSize}", 1, 2)//
 				.param("startDate", "2015-06-07 12:24:30"))
-				// .andDo(print())
-				.andDo(printContent()) //
-				.andExpect(isStatusOk())//
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 

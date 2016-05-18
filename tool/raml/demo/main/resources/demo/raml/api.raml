@@ -1092,3 +1092,75 @@ traits:
               }
               
         
+        
+  /repeat:
+    displayName: repeat
+    description: 重复值
+    
+    /urlencoded:
+      displayName: urlencoded
+      description: urlencoded
+      
+      post:
+        description: 获取值
+        body:
+          application/x-www-form-urlencoded:
+            formParameters:
+              age:
+                displayName: age
+                description: 年龄
+                type: integer
+                minimum: 10
+                maximum: 100
+                required: true
+                example: 20
+                repeat: true
+              salary:
+                displayName: salary
+                description: 工资
+                type: number
+                minimum: 100
+                maximum: 99999
+                required: true
+                example: 100.2
+                repeat: true
+              phone:
+                displayName: phone
+                description: 用户名
+                type: string
+                minLength: 1
+                maxLength: 20
+                pattern: (\d{3,4}-)?\d{7,8}
+                required: false
+                example: 0532-66668888
+                repeat: true
+            
+        is:
+          - success:
+            
+    /file:
+      displayName: urlencoded
+      description: urlencoded
+      
+      post:
+        description: 获取值
+        body:
+          multipart/form-data:
+            formParameters:
+              username:
+                displayName: username
+                description: 用户名
+                type: string
+                minLength: 1
+                maxLength: 20
+                required: false
+                example: hualuomoli
+              photo:
+                displayName: photo
+                description: 头像
+                type: file
+                required: true
+                repeat: true
+            
+        is:
+          - success:

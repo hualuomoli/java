@@ -41,13 +41,28 @@ public class AbstractContextControllerTest {
 	// andExpect：添加ResultMatcher验证规则，验证控制器执行完成后结果是否正确；
 	// andReturn：最后返回相应的MvcResult；然后进行自定义验证/进行下一步的异步处理；
 
+	private static final String characterEncoding = "UTF-8";
+
 	@Autowired
 	private WebApplicationContext wac;
 	protected MockMvc mockMvc;
 
 	@Before
 	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+		if (mockMvc != null) {
+			return;
+		}
+		synchronized (wac) {
+			if (mockMvc != null) {
+				return;
+			}
+			mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+		}
+	}
+
+	// server访问URL
+	protected String getServerUrl() {
+		return "";
 	}
 
 	// controller访问URL
@@ -56,44 +71,59 @@ public class AbstractContextControllerTest {
 	}
 
 	// get请求
-	public MockHttpServletRequestBuilder get(String relativeUrl, Object... urlParams) {
-		return MockMvcRequestBuilders.get(this.getUrl(relativeUrl), urlParams);
+	public final MockHttpServletRequestBuilder get(String relativeUrl, Object... urlParams) {
+		return MockMvcRequestBuilders.get(this.getUrl(relativeUrl), urlParams)//
+				.characterEncoding(characterEncoding);
 	}
 
 	// delete
-	public MockHttpServletRequestBuilder delete(String relativeUrl, Object... urlParams) {
+	public final MockHttpServletRequestBuilder delete(String relativeUrl, Object... urlParams) {
 		return MockMvcRequestBuilders.delete(this.getUrl(relativeUrl), urlParams);
 	}
 
 	// post
-	public MockHttpServletRequestBuilder post(String relativeUrl, Object... urlParams) {
-		return MockMvcRequestBuilders.post(this.getUrl(relativeUrl), urlParams);
+	public final MockHttpServletRequestBuilder post(String relativeUrl, Object... urlParams) {
+		return MockMvcRequestBuilders.post(this.getUrl(relativeUrl), urlParams)//
+				.characterEncoding(characterEncoding);
+	}
+
+	// urlEncoded
+	public final MockHttpServletRequestBuilder urlEncoded(String relativeUrl, Object... urlParams) {
+		return this.post(relativeUrl, urlParams) //
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED);
+	}
+
+	// json
+	public final MockHttpServletRequestBuilder json(String relativeUrl, Object... urlParams) {
+		return this.post(relativeUrl, urlParams) //
+				.contentType(MediaType.APPLICATION_JSON);
 	}
 
 	// fileUpload
-	public MockMultipartHttpServletRequestBuilder fileUpload(String relativeUrl, Object... urlParams) {
+	public final MockMultipartHttpServletRequestBuilder fileUpload(String relativeUrl, Object... urlParams) {
 		return MockMvcRequestBuilders.fileUpload(this.getUrl(relativeUrl), urlParams);
 	}
 
 	// 获取URL
-	private String getUrl(String relativeUrl) {
-		return this.getControllerRequestUrl() + relativeUrl;
+	private final String getUrl(String relativeUrl) {
+		return this.getServerUrl() + this.getControllerRequestUrl() + relativeUrl;
 	}
 
 	// 是否成功
-	protected ResultMatcher isStatusOk() {
+	public final ResultMatcher statusOk() {
 		return MockMvcResultMatchers.status().isOk();
 	}
 
 	// 是否是JSON
-	protected ResultMatcher isJson() {
+	public final ResultMatcher resultJson() {
 		return MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON);
 	}
 
 	// 是否业务执行成功
-	@SuppressWarnings("unchecked")
-	protected ResultMatcher isSuccess() {
+	public final ResultMatcher resultSuccess() {
 		return new ResultMatcher() {
+
+			@SuppressWarnings("unchecked")
 			@Override
 			public void match(MvcResult result) throws Exception {
 				String content = result.getResponse().getContentAsString();
@@ -104,18 +134,18 @@ public class AbstractContextControllerTest {
 	}
 
 	// 打印响应信息
-	protected ResultHandler print() {
+	public final ResultHandler print() {
 		return MockMvcResultHandlers.print();
 	}
 
 	// 打印响应内容
-	protected ResultHandler printContent() {
+	public final ResultHandler showResult() {
 		return new ResultHandler() {
 
 			@Override
 			public void handle(MvcResult result) throws Exception {
 				byte[] bytes = result.getResponse().getContentAsByteArray();
-				System.out.println(new String(bytes, "UTF-8"));
+				System.out.println(new String(bytes, characterEncoding));
 			}
 		};
 	}

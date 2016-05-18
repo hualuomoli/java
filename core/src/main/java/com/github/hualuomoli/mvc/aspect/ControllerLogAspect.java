@@ -45,11 +45,17 @@ public class ControllerLogAspect {
 		logger.debug("调用的方法 {}", methodName);
 		for (int i = 0; i < args.length; i++) {
 			Object obj = args[i];
+			if (obj == null) {
+				continue;
+			}
 			logger.debug("调用的方法参数{}类型 {}", (i + 1), obj.getClass().getName());
 		}
 
 		for (int i = 0; i < args.length; i++) {
 			Object obj = args[i];
+			if (obj == null) {
+				continue;
+			}
 			// Spring的参数不输出
 			if (obj.getClass().getName().startsWith("org.springframework")) {
 				continue;

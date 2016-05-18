@@ -3,7 +3,6 @@ package com.github.hualuomoli.demo.raml.app.json.web;
 import java.util.Map;
 
 import org.junit.Test;
-import org.springframework.http.MediaType;
 
 import com.github.hualuomoli.commons.util.JsonUtils;
 import com.github.hualuomoli.tool.raml.AbstractContextControllerTest;
@@ -29,15 +28,13 @@ public class JsonControllerTest extends AbstractContextControllerTest {
 
 		String content = JsonUtils.toJson(map);
 
-		mockMvc.perform(post("/user/{id}", 1)//
-				.characterEncoding("UTF-8")//
-				.contentType(MediaType.APPLICATION_JSON) //
+		mockMvc.perform(this.json("/user/{id}", 1)//
 				.content(content))
-				// .andDo(print())
-				.andDo(printContent()) //
-				.andExpect(isStatusOk())//
-				.andExpect(isJson())//
-				.andExpect(isSuccess())//
+				// .andDo(this.print())//
+				.andDo(this.showResult()) //
+				.andExpect(this.statusOk())//
+				.andExpect(this.resultJson())//
+				.andExpect(this.resultSuccess())//
 				.andReturn();
 	}
 

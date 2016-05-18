@@ -1,5 +1,8 @@
 package com.github.hualuomoli.tool.raml;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,6 +20,7 @@ public class JavaParserTest {
 		config.setProjectPackageName("com.github.hualuomoli.demo.raml");
 		config.setAuthor("hualuomoli");
 		config.setVersion("1.0");
+		config.setDate(new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
 		config.setCodeName("code");
 		config.setMsgName("msg");
 		config.setPageName("page");
