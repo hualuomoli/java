@@ -1332,7 +1332,11 @@ traits:
                         "province": "37",
                         "city": "02",
                         "couty": "03",
-                        "name": "合肥路666号,永旺广场"
+                        "name": "合肥路666号,永旺广场",
+                        "phones": [
+                          "15689952699",
+                          "15289982699"
+                        ]
                       }
                     }
                   }
@@ -1431,6 +1435,14 @@ traits:
                                 "type": "string",
                                 "description": "具体地址",
                                 "example": "合肥路666号,永旺广场"
+                              },
+                              "phones": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "description": "联系电话",
+                                  "example": ["15689952699", "15289982699"]
+                                }
                               }
                             },
                             "required": [

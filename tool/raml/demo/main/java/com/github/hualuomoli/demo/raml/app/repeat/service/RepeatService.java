@@ -37,7 +37,7 @@ public class RepeatService {
 	PostJsonResultJsonEntityUser
 	postJson(PostJsonJsonEntity postJsonJsonEntity) {
 		// TODO
-		PostJsonResultJsonEntityUser obj = JsonUtils.parseObject("{\"username\":\"hualuomoli\",\"address\":{\"name\":\"合肥路666号,永旺广场\",\"couty\":\"03\",\"province\":\"37\",\"city\":\"02\"},\"nickname\":\"花落莫离\",\"orders\":[{\"id\":\"1234\",\"date\":\"2015-06-05\",\"products\":[{\"id\":\"0001\",\"name\":\"IPAD\"}]}]}", PostJsonResultJsonEntityUser.class);
+		PostJsonResultJsonEntityUser obj = JsonUtils.parseObject("{\"username\":\"hualuomoli\",\"address\":{\"name\":\"合肥路666号,永旺广场\",\"couty\":\"03\",\"province\":\"37\",\"phones\":[\"15689952699\",\"15289982699\"],\"city\":\"02\"},\"nickname\":\"花落莫离\",\"orders\":[{\"id\":\"1234\",\"date\":\"2015-06-05\",\"products\":[{\"id\":\"0001\",\"name\":\"IPAD\"}]}]}", PostJsonResultJsonEntityUser.class);
 		return obj;
 	}
 	@Transactional(readOnly = false)

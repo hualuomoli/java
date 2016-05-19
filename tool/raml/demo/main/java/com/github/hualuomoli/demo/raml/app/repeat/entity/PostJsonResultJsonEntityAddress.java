@@ -18,6 +18,7 @@ public class PostJsonResultJsonEntityAddress {
   private String name;
   private String couty;
   private String province;
+  private String[] phones;
   private String city;
   
   public String getName(){
@@ -40,6 +41,13 @@ public class PostJsonResultJsonEntityAddress {
   
   public void setProvince(String province){
     this.province = province;
+  }
+  public String[] getPhones(){
+    return phones;
+  }
+  
+  public void setPhones(String[] phones){
+    this.phones = phones;
   }
   public String getCity(){
     return city;

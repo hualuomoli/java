@@ -22,6 +22,8 @@ public class Address {
 	private String couty;
 	@EntityColumn(comment = "具体地址")
 	private String name;
+	@EntityColumn(comment = "联系电话")
+	private String[] phones;
 	@EntityColumn(comment = "省份")
 	private String province;
 
@@ -46,6 +48,13 @@ public class Address {
 
 	public void setName(String name){
 		this.name = name;
+	}
+	public String[] getPhones(){
+		return phones;
+	}
+
+	public void setPhones(String[] phones){
+		this.phones = phones;
 	}
 	public String getProvince(){
 		return province;
