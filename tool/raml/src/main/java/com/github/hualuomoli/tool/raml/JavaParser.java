@@ -413,6 +413,148 @@ public abstract class JavaParser extends AbstractParser {
 		return ramlParam;
 	}
 
+	// 参数
+	private static RamlJsonParam _getReqJsonParam(JSONObject jsonObject, String displayName, boolean repeat, boolean required) {
+		RamlJsonParam ramlJsonParam = new RamlJsonParam();
+		ramlJsonParam.setName(displayName);
+
+		String type = jsonObject.getString(Schema.TYPE);
+		String description = null;
+		String def = null;
+		if (jsonObject.has(Schema.DESCRIPTION)) {
+			description = jsonObject.getString(Schema.DESCRIPTION);
+		}
+		if (jsonObject.has(Schema.DEFAULT)) {
+			def = jsonObject.getString(Schema.DEFAULT);
+		}
+
+		// type
+		switch (type) {
+		case Schema.DATA_TYPE_STRING:
+			if (repeat) {
+				ramlJsonParam.setType("String[]");
+			} else {
+				ramlJsonParam.setType("String");
+				if (def != null) {
+					ramlJsonParam.setDef("\"" + def + "\"");
+				}
+			}
+			break;
+		case Schema.DATA_TYPE_INTEGER:
+			Long maxinum = null;
+			if (jsonObject.has(Schema.MAXIMUM)) {
+				maxinum = Long.parseLong(String.valueOf(jsonObject.get(Schema.MAXIMUM)));
+			}
+			if (repeat) {
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlJsonParam.setType("Long[]");
+				} else {
+					ramlJsonParam.setType("Integer[]");
+				}
+			} else {
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlJsonParam.setType("Long");
+				} else {
+					ramlJsonParam.setType("Integer");
+				}
+				if (def != null) {
+					ramlJsonParam.setDef(def);
+				}
+			}
+			break;
+		case Schema.DATA_TYPE_NUMBER:
+			if (repeat) {
+				ramlJsonParam.setType("Double[]");
+			} else {
+				ramlJsonParam.setType("Double");
+				if (def != null) {
+					ramlJsonParam.setDef(def + "D");
+				}
+			}
+			break;
+		case Schema.DATA_TYPE_BOOLEAN:
+			throw new RuntimeException("please use string replace boolean.");
+		case Schema.DATA_TYPE_DATE:
+			if (repeat) {
+				throw new RuntimeException("can not set date parameter repeat.");
+			} else {
+				ramlJsonParam.setType("Date");
+				if (def != null) {
+					ramlJsonParam.setDef("DateUtils.parse(\"" + def + "\")");
+				}
+			}
+			break;
+		default:
+			throw new RuntimeException();
+		}
+		ramlJsonParam.setComment(description);
+		ramlJsonParam.setAnnos(new JsonValid(jsonObject, displayName, repeat, required).getValid());
+		return ramlJsonParam;
+	}
+
+	// 参数
+	private static RamlJsonParam _getResJsonParam(JSONObject jsonObject, String displayName, boolean repeat) {
+		RamlJsonParam ramlJsonParam = new RamlJsonParam();
+		ramlJsonParam.setName(displayName);
+
+		String type = jsonObject.getString(Schema.TYPE);
+		String description = null;
+		if (jsonObject.has(Schema.DESCRIPTION)) {
+			description = jsonObject.getString(Schema.DESCRIPTION);
+		}
+
+		// type
+		switch (type) {
+		case Schema.DATA_TYPE_STRING:
+			if (repeat) {
+				ramlJsonParam.setType("String[]");
+			} else {
+				ramlJsonParam.setType("String");
+			}
+			break;
+		case Schema.DATA_TYPE_INTEGER:
+			Long maxinum = null;
+			if (jsonObject.has(Schema.MAXIMUM)) {
+				maxinum = Long.parseLong(String.valueOf(jsonObject.get(Schema.MAXIMUM)));
+			}
+			if (repeat) {
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlJsonParam.setType("Long[]");
+				} else {
+					ramlJsonParam.setType("Integer[]");
+				}
+			} else {
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlJsonParam.setType("Long");
+				} else {
+					ramlJsonParam.setType("Integer");
+				}
+			}
+			break;
+		case Schema.DATA_TYPE_NUMBER:
+			if (repeat) {
+				ramlJsonParam.setType("Double[]");
+			} else {
+				ramlJsonParam.setType("Double");
+			}
+			break;
+		case Schema.DATA_TYPE_BOOLEAN:
+			throw new RuntimeException("please use string replace boolean.");
+		case Schema.DATA_TYPE_DATE:
+			if (repeat) {
+				throw new RuntimeException("can not set date parameter repeat.");
+			} else {
+				ramlJsonParam.setType("Date");
+			}
+			break;
+		default:
+			throw new RuntimeException();
+		}
+		ramlJsonParam.setComment(description);
+		return ramlJsonParam;
+
+	}
+
 	// 移除array的后缀,如s, es, list
 	private static String _removeArraySuffix(String key) {
 		if (StringUtils.endsWithIgnoreCase(key, "s")) {
@@ -1185,6 +1327,19 @@ public abstract class JavaParser extends AbstractParser {
 			return _getParams(jsonObject);
 		}
 
+		// 必填
+		Set<String> _getRequired(JSONObject jsonObject) {
+			Set<String> sets = Sets.newHashSet();
+			if (!jsonObject.has(Schema.REQUIRED)) {
+				return sets;
+			}
+			JSONArray required = jsonObject.getJSONArray(Schema.REQUIRED);
+			for (Object object : required) {
+				sets.add(object.toString());
+			}
+			return sets;
+		}
+
 		// 请求参数,添加验证注解
 		List<RamlJsonParam> _getParams(JSONObject jsonObject) {
 
@@ -1198,36 +1353,35 @@ public abstract class JavaParser extends AbstractParser {
 				JSONObject keyObject = properties.getJSONObject(key);
 				String type = keyObject.getString(Schema.TYPE);
 				String description = "";
-				String example = "";
-				String message = "";
-
-				if (!StringUtils.equalsIgnoreCase(type, "object") && !StringUtils.equalsIgnoreCase(type, "array")) {
-					if (!keyObject.has(Schema.DESCRIPTION) || !keyObject.has(Schema.EXAMPLE)) {
-						logger.warn("invalid key {}", key);
-						throw new RuntimeException("please set description and example.");
-					}
+				if (keyObject.has(Schema.DESCRIPTION)) {
 					description = keyObject.getString(Schema.DESCRIPTION);
-					example = String.valueOf(keyObject.get(Schema.EXAMPLE));
-					message = description + " - " + key; // 提示信息
 				}
+				boolean required = requredSet.contains(key); // 是否必填
 
 				switch (type) {
 				case "array": // 数组
-					RamlJsonParam arrayJsonParam = new RamlJsonParam();
-					String name = _removeArraySuffix(key); // 移除后缀
-
-					String arrayCalssName = StringUtils.capitalize(name);
-					arrayJsonParam.setClassName(arrayCalssName);
-					arrayJsonParam.setName(key);
-					arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
-					arrayJsonParam.setComment(description);
 					JSONObject newJsonObject = keyObject.getJSONObject(Schema.ITEMS);
-					arrayJsonParam.setChildren(_getParams(newJsonObject));
-					ramlJsonParamList.add(arrayJsonParam);
 
-					// annos
-					if (requredSet.contains(key)) {
-						// @NotEmpty(message = "必填选项")
+					if (StringUtils.equals(newJsonObject.getString(Schema.TYPE), "object")) {
+						// 内部是object
+						RamlJsonParam arrayJsonParam = new RamlJsonParam();
+						List<String> arrayAnnos = Lists.newArrayList();
+						String name = _removeArraySuffix(key); // 移除后缀
+						String arrayCalssName = StringUtils.capitalize(name);
+						arrayJsonParam.setClassName(arrayCalssName);
+						arrayJsonParam.setName(key);
+						arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
+						arrayJsonParam.setComment(description);
+						arrayJsonParam.setChildren(_getParams(newJsonObject));
+						arrayJsonParam.setAnnos(arrayAnnos);
+						ramlJsonParamList.add(arrayJsonParam);
+
+						// annos
+						// if (required) {
+						// arrayAnnos.add("@NotEmpty(message = \"必填选项\")");
+						// }
+					} else {
+						ramlJsonParamList.add(_getReqJsonParam(newJsonObject, key, true, required));
 					}
 					break;
 				case "object": // Object
@@ -1241,155 +1395,301 @@ public abstract class JavaParser extends AbstractParser {
 					objectJsonParam.setChildren(_getParams(keyObject));
 					ramlJsonParamList.add(objectJsonParam);
 					break;
-				case "integer": // integer
-					RamlJsonParam integerJsonParam = new RamlJsonParam();
-					List<String> integerAnnos = Lists.newArrayList();
-					// @Min(value = 1, message = "")
-					if (keyObject.has(Schema.MINIMUM)) {
-						long minimum = Long.parseLong(keyObject.getString(Schema.MINIMUM));
-						integerAnnos.add("@Min(value = " + minimum + ", message = \"" + message + "不能小于" + minimum + "\")");
-					}
-					// @Max(value = 1, message = "")
-					if (keyObject.has(Schema.MAXIMUM)) {
-						long maximum = Long.parseLong(keyObject.getString(Schema.MAXIMUM));
-						integerAnnos.add("@Max(value = " + maximum + ", message = \"" + message + "不能大于" + maximum + "\")");
-					}
-					// 默认值
-					if (keyObject.has(Schema.DEFAULT)) {
-						String def = String.valueOf(keyObject.get(Schema.DEFAULT));
-						integerJsonParam.setDef(def);
-					}
-					integerJsonParam.setName(key);
-					integerJsonParam.setType("Integer");
-					integerJsonParam.setComment(description);
-					integerJsonParam.setAnnos(integerAnnos);
-					ramlJsonParamList.add(integerJsonParam);
-					break;
-				case "number": // double
-					RamlJsonParam doubleJsonParam = new RamlJsonParam();
-					List<String> doubleAnnos = Lists.newArrayList();
-					// @Min(value = 1, message = "")
-					if (keyObject.has(Schema.MINIMUM)) {
-						double minimum = Double.parseDouble(keyObject.getString(Schema.MINIMUM));
-						doubleAnnos.add("@Min(value = " + minimum + "D, message = \"" + message + "不能小于" + minimum + "\")");
-					}
-					// @Max(value = 1, message = "")
-					if (keyObject.has(Schema.MAXIMUM)) {
-						double maximum = Double.parseDouble(keyObject.getString(Schema.MAXIMUM));
-						doubleAnnos.add("@Max(value = " + maximum + "D, message = \"" + message + "不能大于" + maximum + "\")");
-					}
-					// 默认值
-					if (keyObject.has(Schema.DEFAULT)) {
-						String def = String.valueOf(keyObject.get(Schema.DEFAULT));
-						doubleJsonParam.setDef(def + "D");
-					}
-					doubleJsonParam.setName(key);
-					doubleJsonParam.setType("Double");
-					doubleJsonParam.setComment(description);
-					doubleJsonParam.setAnnos(doubleAnnos);
-					ramlJsonParamList.add(doubleJsonParam);
-					break;
-				case "string": // string
-					RamlJsonParam stringJsonParam = new RamlJsonParam();
-					List<String> stringAnnos = Lists.newArrayList();
-					// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
-					int minLength = 0;
-					int maxLength = 0;
-					if (keyObject.has(Schema.MIN_LENGTH)) {
-						minLength = Integer.parseInt(keyObject.getString(Schema.MIN_LENGTH));
-					}
-					if (keyObject.has(Schema.MAX_LENGTH)) {
-						maxLength = Integer.parseInt(keyObject.getString(Schema.MAX_LENGTH));
-					}
-					if (minLength > 0 && maxLength > 0) {
-						stringAnnos.add("@Length(min = " + minLength + ", max = " + maxLength + ", message = \"" + message + "长度在" + minLength + " - "
-								+ maxLength + "之间\")");
-					} else if (minLength > 0) {
-						stringAnnos.add("@Length(min = " + minLength + ", message = \"" + message + "长度不能小于" + minLength + "\")");
-					} else if (maxLength > 0) {
-						stringAnnos.add("@Length(max = " + minLength + ", message = \"" + message + "长度不能大于" + maxLength + "\")");
-					}
-					// @Pattern(regexp = "", message = "")
-					if (keyObject.has(Schema.PATTERN)) {
-						String pattern = keyObject.getString(Schema.PATTERN);
-						stringAnnos.add(
-								"@Pattern(regexp = \"" + pattern.replaceAll("\\\\", "\\\\\\\\") + "\", message = \"" + message + "格式不正确,如:" + example + "\")");
-					}
-					// 默认值
-					if (keyObject.has(Schema.DEFAULT)) {
-						String def = String.valueOf(keyObject.get(Schema.DEFAULT));
-						stringJsonParam.setDef("\"" + def + "\"");
-					}
-					stringJsonParam.setName(key);
-					stringJsonParam.setType("String");
-					stringJsonParam.setComment(description);
-					stringJsonParam.setAnnos(stringAnnos);
-					ramlJsonParamList.add(stringJsonParam);
-					break;
-				case "date":
-					RamlJsonParam dateJsonParam = new RamlJsonParam();
-					List<String> dateAnnos = Lists.newArrayList();
-					// @DateTimeFormat(pattern = "")
-					String pattern;
-					if (example.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "yyyy-MM-dd kk:mm:ss";
-					} else if (example.matches("\\d{4}-\\d{2}-\\d{2}")) {
-						pattern = "yyyy-MM-dd";
-					} else if (example.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "yyyy/MM/dd kk:mm:ss";
-					} else if (example.matches("\\d{4}/\\d{2}/\\d{2}")) {
-						pattern = "yyyy/MM/dd";
-					} else if (example.matches("\\d{14}")) {
-						pattern = "yyyyMMddkkmmss";
-					} else if (example.matches("\\d{8}")) {
-						pattern = "yyyyMMdd";
-					} else if (example.matches("\\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "kkmmss";
-					} else {
-						throw new RuntimeException("can not support patter " + example);
-					}
-					dateAnnos.add("@DateTimeFormat(pattern = \"" + pattern + "\")");
-					// 默认值
-					if (keyObject.has(Schema.DEFAULT)) {
-						String def = String.valueOf(keyObject.get(Schema.DEFAULT));
-						dateJsonParam.setDef("DateUtils.parse(\"" + def + "\")");
-					}
-					dateJsonParam.setName(key);
-					dateJsonParam.setType("Date");
-					dateJsonParam.setComment(description);
-					dateJsonParam.setAnnos(dateAnnos);
-					ramlJsonParamList.add(dateJsonParam);
-					break;
-				case "boolean":
-					// RamlJsonParam booleanJsonParam = new RamlJsonParam();
-					// List<String> booleanAnnos = Lists.newArrayList();
-					//
-					// booleanJsonParam.setName(key);
-					// booleanJsonParam.setType("Boolean");
-					// booleanJsonParam.setComment(description);
-					// booleanJsonParam.setAnnos(booleanAnnos);
-					// ramlJsonParamList.add(booleanJsonParam);
-					// break;
-					throw new RuntimeException("please use string replace boolean");
 				default:
-					throw new RuntimeException("can not support type " + type);
+					ramlJsonParamList.add(_getReqJsonParam(keyObject, key, false, required));
 				}
 				// end switch
 			}
 			return ramlJsonParamList;
 		}
 
-		// 必填
-		Set<String> _getRequired(JSONObject jsonObject) {
-			Set<String> sets = Sets.newHashSet();
-			if (!jsonObject.has(Schema.REQUIRED)) {
-				return sets;
+	}
+
+	// 有效性注解
+	static class JsonValid {
+
+		private JSONObject jsonObject; // 数据
+		private String displayName; // 名称
+		private boolean repeat; // 是否重复
+		private boolean required; // 是否必填
+
+		private String description; // 描述
+		private String message; // 错误提示信息
+		private String type; // 类型
+
+		public JsonValid(JSONObject jsonObject, String displayName, boolean repeat, boolean required) {
+			if (!jsonObject.has(Schema.DESCRIPTION)) {
+				logger.warn("invalid key {}", displayName);
+				throw new RuntimeException("please set description.");
 			}
-			JSONArray required = jsonObject.getJSONArray(Schema.REQUIRED);
-			for (Object object : required) {
-				sets.add(object.toString());
+			this.jsonObject = jsonObject;
+			this.displayName = displayName;
+			this.repeat = repeat;
+			this.required = required;
+
+			this.description = jsonObject.getString(Schema.DESCRIPTION);
+			this.message = description + " - " + this.displayName; // 提示信息
+			this.type = jsonObject.getString(Schema.TYPE);
+		}
+
+		/**
+		 * 获取校验规则
+		 * @param jsonParam 参数
+		 * @return 校验规则
+		 */
+		List<String> getValid() {
+			List<String> valids = Lists.newArrayList();
+
+			String notNull = null;
+			String notBlank = null;
+			String notEmpty = null;
+			String length = null;
+			String min = null;
+			String max = null;
+			String pattern = null;
+			String dateFormatPattern = null;
+
+			// type
+			switch (type) {
+			case Schema.DATA_TYPE_STRING:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					notBlank = _getNotBlank();
+					length = _getLength();
+					pattern = _getStringPattern();
+				}
+				break;
+			case Schema.DATA_TYPE_INTEGER:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					min = _getMin();
+					max = _getMax();
+				}
+				break;
+			case Schema.DATA_TYPE_NUMBER:
+				if (repeat) {
+					notNull = _getNotNull();
+					notEmpty = _getNotEmpty();
+				} else {
+					notNull = _getNotNull();
+					min = _getMin();
+					max = _getMax();
+				}
+				break;
+			case Schema.DATA_TYPE_BOOLEAN:
+				throw new RuntimeException("please use string replace boolean.");
+			case Schema.DATA_TYPE_DATE:
+				if (repeat) {
+					throw new RuntimeException();
+				} else {
+					notNull = _getNotNull();
+					dateFormatPattern = _getDateFormatPattern();
+				}
+				break;
+			default:
+				throw new RuntimeException();
 			}
-			return sets;
+
+			if (notNull != null) {
+				valids.add(notNull);
+			}
+			if (notBlank != null) {
+				valids.add(notBlank);
+			}
+			if (notEmpty != null) {
+				valids.add(notEmpty);
+			}
+			if (length != null) {
+				valids.add(length);
+			}
+			if (min != null) {
+				valids.add(min);
+			}
+			if (max != null) {
+				valids.add(max);
+			}
+			if (pattern != null) {
+				valids.add(pattern);
+			}
+			if (dateFormatPattern != null) {
+				valids.add(dateFormatPattern);
+			}
+
+			return valids;
+		}
+
+		// 不能为空
+		// @NotNull(message = "")
+		String _getNotNull() {
+			if (!required) {
+				return null;
+			}
+			return "@NotNull(message = \"" + message + " 必填\")";
+		}
+
+		// 不能为空(字符串)
+		// @NotBlank(message = "")
+		String _getNotBlank() {
+			if (!required || !StringUtils.equals(type, Schema.DATA_TYPE_STRING)) {
+				return null;
+			}
+			return "@NotBlank(message = \"" + message + "不能为空\")";
+		}
+
+		// 不能为空(集合)
+		// @NotEmpty(message = "")
+		String _getNotEmpty() {
+			if (!required || !repeat) {
+				return null;
+			}
+			return "@NotEmpty(message = \"" + message + "不能为空\")";
+		}
+
+		// 长度限制
+		// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+		String _getLength() {
+			if (!StringUtils.equals(type, Schema.DATA_TYPE_STRING)) {
+				return null;
+			}
+			Integer minLength = null;
+			Integer maxLength = null;
+
+			if (jsonObject.has(Schema.MIN_LENGTH)) {
+				minLength = Integer.parseInt(String.valueOf(jsonObject.get(Schema.MIN_LENGTH)));
+			}
+			if (jsonObject.has(Schema.MAX_LENGTH)) {
+				maxLength = Integer.parseInt(String.valueOf(jsonObject.get(Schema.MAX_LENGTH)));
+			}
+
+			if (minLength == null && maxLength == null) {
+				return null;
+			}
+
+			int min = minLength == null ? 0 : minLength.intValue();
+			int max = maxLength == null ? 0 : maxLength.intValue();
+
+			if (min > 0 && max == 0) {
+				// 只设置了最小长度
+				// @Length(min = 1, message = "数据长度不能小于1")
+				return "@Length(min = " + min + ", message = \"" + message + "长度不能小于" + min + "\")";
+			} else if (min == 0 && max > 0) {
+				// 只设置了最大长度
+				// @Length(max = 5, message = "数据长度不能大于5")
+				return "@Length(max = " + max + ", message = \"" + message + "长度不能大于" + max + "\")";
+			} else if (min > 0 && max > 0) {
+				// 设置了最小长度和最大长度
+				// @Length(min = 1, max = 5, message = "用户名长度在1-5之间")
+				return "@Length(min = " + min + ", max = " + max + ", message = \"" + message + "长度在" + min + "-" + max + "之间\")";
+			}
+			return null;
+		}
+
+		// 设置了最小值
+		// @Min(value = 1, message = "")
+		String _getMin() {
+			if (!StringUtils.equals(type, Schema.DATA_TYPE_INTEGER) || !StringUtils.equals(type, Schema.DATA_TYPE_NUMBER)) {
+				return null;
+			}
+			// @Min(value = 1, message = "")
+			Long minimum = null;
+
+			if (jsonObject.has(Schema.MINIMUM)) {
+				minimum = Long.parseLong(String.valueOf(Schema.MINIMUM));
+			}
+
+			if (minimum == null) {
+				return null;
+			}
+			long min = minimum.longValue();
+			return "@Min(value = " + min + "L, message = \"" + message + "最小值" + min + "\")";
+		}
+
+		// 设置了最大值
+		// @Max(value = 10, message = "")
+		String _getMax() {
+			if (!StringUtils.equals(type, Schema.DATA_TYPE_INTEGER) || !StringUtils.equals(type, Schema.DATA_TYPE_NUMBER)) {
+				return null;
+			}
+			// @Max(value = 10, message = "")
+			Long maxinum = null;
+
+			if (jsonObject.has(Schema.MAXIMUM)) {
+				maxinum = Long.parseLong(String.valueOf(Schema.MAXIMUM));
+			}
+
+			if (maxinum == null) {
+				return null;
+			}
+			long max = maxinum.longValue();
+			return "@Max(value = " + max + "L, message = \"" + message + "最大值" + max + "\")";
+		}
+
+		// 正则表达式
+		// @Pattern(regexp = "", message = "")
+		String _getStringPattern() {
+			if (!StringUtils.equals(type, Schema.DATA_TYPE_STRING)) {
+				return null;
+			}
+			String example = null;
+			if (jsonObject.has(Schema.EXAMPLE)) {
+				example = String.valueOf(jsonObject.get(Schema.EXAMPLE));
+			} else {
+				throw new RuntimeException("please set example for string.");
+			}
+
+			String pattern = null;
+			if (jsonObject.has(Schema.PATTERN)) {
+				pattern = String.valueOf(jsonObject.get(Schema.PATTERN));
+			}
+			if (StringUtils.isBlank(pattern)) { // 不需要正则表达式验证
+				return null;
+			}
+			String regexp = pattern.replaceAll("\\\\", "\\\\\\\\");
+			return "@Pattern(regexp = \"" + regexp + "\", message = \"" + message + "格式不正确,如:" + example + "\")";
+		}
+
+		// 日期格式化
+		// @DateTimeFormat(pattern = "")
+		String _getDateFormatPattern() {
+			if (!StringUtils.equals(type, Schema.DATA_TYPE_DATE)) {
+				return null;
+			}
+			String example = null;
+			if (jsonObject.has(Schema.EXAMPLE)) {
+				example = String.valueOf(jsonObject.get(Schema.EXAMPLE));
+			} else {
+				throw new RuntimeException("please set example for date.");
+			}
+
+			if (StringUtils.isBlank(example)) {
+				throw new RuntimeException("please set example first.");
+			}
+
+			String pattern;
+			if (example.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+				pattern = "yyyy-MM-dd kk:mm:ss";
+			} else if (example.matches("\\d{4}-\\d{2}-\\d{2}")) {
+				pattern = "yyyy-MM-dd";
+			} else if (example.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+				pattern = "yyyy/MM/dd kk:mm:ss";
+			} else if (example.matches("\\d{4}/\\d{2}/\\d{2}")) {
+				pattern = "yyyy/MM/dd";
+			} else if (example.matches("\\d{14}")) {
+				pattern = "yyyyMMddkkmmss";
+			} else if (example.matches("\\d{8}")) {
+				pattern = "yyyyMMdd";
+			} else if (example.matches("\\d{2}:\\d{2}:\\d{2}")) {
+				pattern = "kkmmss";
+			} else {
+				throw new RuntimeException("can not support patter " + example);
+			}
+			return "@DateTimeFormat(pattern = \"" + pattern + "\")";
 		}
 
 	}
@@ -1628,38 +1928,34 @@ public abstract class JavaParser extends AbstractParser {
 			List<RamlJsonParam> ramlJsonParamList = Lists.newArrayList();
 
 			JSONObject properties = jsonObject.getJSONObject(Schema.PROPERTIES);
-			// Set<String> requredSet = _getRequired(jsonObject);
 
 			Set<String> keys = properties.keySet();
 			for (String key : keys) {
 				JSONObject keyObject = properties.getJSONObject(key);
 				String type = keyObject.getString(Schema.TYPE);
-
 				String description = "";
-				String example = "";
-
-				if (!StringUtils.equalsIgnoreCase(type, "object") && !StringUtils.equalsIgnoreCase(type, "array")) {
-					if (!keyObject.has(Schema.DESCRIPTION) || !keyObject.has(Schema.EXAMPLE)) {
-						logger.warn("invalid key {}", key);
-						throw new RuntimeException("please set description and example.");
-					}
+				if (keyObject.has(Schema.DESCRIPTION)) {
 					description = keyObject.getString(Schema.DESCRIPTION);
-					example = String.valueOf(keyObject.get(Schema.EXAMPLE));
 				}
 
 				switch (type) {
 				case "array": // 数组
-					RamlJsonParam arrayJsonParam = new RamlJsonParam();
-					String name = _removeArraySuffix(key); // 移除后缀
-
-					String arrayCalssName = prefixResponseClassName + StringUtils.capitalize(name);
-					arrayJsonParam.setClassName(arrayCalssName);
-					arrayJsonParam.setName(key);
-					arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
-					// arrayJsonParam.setComment(description);
 					JSONObject newJsonObject = keyObject.getJSONObject(Schema.ITEMS);
-					arrayJsonParam.setChildren(_getParams(newJsonObject));
-					ramlJsonParamList.add(arrayJsonParam);
+
+					if (StringUtils.equals(newJsonObject.getString(Schema.TYPE), "object")) {
+						RamlJsonParam arrayJsonParam = new RamlJsonParam();
+						String name = _removeArraySuffix(key); // 移除后缀
+
+						String arrayCalssName = prefixResponseClassName + StringUtils.capitalize(name);
+						arrayJsonParam.setClassName(arrayCalssName);
+						arrayJsonParam.setName(key);
+						arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
+						arrayJsonParam.setComment(description);
+						arrayJsonParam.setChildren(_getParams(newJsonObject));
+						ramlJsonParamList.add(arrayJsonParam);
+					} else {
+						ramlJsonParamList.add(_getResJsonParam(newJsonObject, key, true));
+					}
 
 					break;
 				case "object": // Object
@@ -1669,97 +1965,17 @@ public abstract class JavaParser extends AbstractParser {
 					objectJsonParam.setClassName(objectCalssName);
 					objectJsonParam.setName(key);
 					objectJsonParam.setType(objectCalssName);
-					// objectJsonParam.setComment(description);
+					objectJsonParam.setComment(description);
 					objectJsonParam.setChildren(_getParams(keyObject));
 					ramlJsonParamList.add(objectJsonParam);
 					break;
-				case "integer": // integer
-					RamlJsonParam integerJsonParam = new RamlJsonParam();
-					List<String> integerAnnos = Lists.newArrayList();
-					integerJsonParam.setName(key);
-					integerJsonParam.setType("Integer");
-					integerJsonParam.setComment(description);
-					integerJsonParam.setAnnos(integerAnnos);
-					ramlJsonParamList.add(integerJsonParam);
-					break;
-				case "number": // double
-					RamlJsonParam doubleJsonParam = new RamlJsonParam();
-					List<String> doubleAnnos = Lists.newArrayList();
-					doubleJsonParam.setName(key);
-					doubleJsonParam.setType("Double");
-					doubleJsonParam.setComment(description);
-					doubleJsonParam.setAnnos(doubleAnnos);
-					ramlJsonParamList.add(doubleJsonParam);
-					break;
-				case "string": // string
-					RamlJsonParam stringJsonParam = new RamlJsonParam();
-					List<String> stringAnnos = Lists.newArrayList();
-					stringJsonParam.setName(key);
-					stringJsonParam.setType("String");
-					stringJsonParam.setComment(description);
-					stringJsonParam.setAnnos(stringAnnos);
-					ramlJsonParamList.add(stringJsonParam);
-					break;
-				case "date":
-					RamlJsonParam dateJsonParam = new RamlJsonParam();
-					List<String> dateAnnos = Lists.newArrayList();
-					// @DateTimeFormat(pattern = "")
-					String pattern;
-					if (example.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "yyyy-MM-dd kk:mm:ss";
-					} else if (example.matches("\\d{4}-\\d{2}-\\d{2}")) {
-						pattern = "yyyy-MM-dd";
-					} else if (example.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "yyyy/MM/dd kk:mm:ss";
-					} else if (example.matches("\\d{4}/\\d{2}/\\d{2}")) {
-						pattern = "yyyy/MM/dd";
-					} else if (example.matches("\\d{14}")) {
-						pattern = "yyyyMMddkkmmss";
-					} else if (example.matches("\\d{8}")) {
-						pattern = "yyyyMMdd";
-					} else if (example.matches("\\d{2}:\\d{2}:\\d{2}")) {
-						pattern = "kkmmss";
-					} else {
-						throw new RuntimeException("can not support patter " + example);
-					}
-					dateAnnos.add("@DateTimeFormat(pattern = \"" + pattern + "\")");
-
-					dateJsonParam.setName(key);
-					dateJsonParam.setType("Date");
-					dateJsonParam.setComment(description);
-					dateJsonParam.setAnnos(dateAnnos);
-					ramlJsonParamList.add(dateJsonParam);
-					break;
-				case "boolean":
-					// RamlJsonParam booleanJsonParam = new RamlJsonParam();
-					// List<String> booleanAnnos = Lists.newArrayList();
-					// booleanJsonParam.setName(key);
-					// booleanJsonParam.setType("Boolean");
-					// booleanJsonParam.setComment(description);
-					// booleanJsonParam.setAnnos(booleanAnnos);
-					// ramlJsonParamList.add(booleanJsonParam);
-					// break;
-					throw new RuntimeException("please use string replace boolean");
 				default:
-					throw new RuntimeException("can not support type " + type);
+					ramlJsonParamList.add(_getResJsonParam(keyObject, key, false));
 				}
 				// end switch
 			}
 			return ramlJsonParamList;
 		}
-
-		// // 必填
-		// Set<String> _getRequired(JSONObject jsonObject) {
-		// Set<String> sets = Sets.newHashSet();
-		// if (!jsonObject.has(Schema.REQUIRED)) {
-		// return sets;
-		// }
-		// JSONArray required = jsonObject.getJSONArray(Schema.REQUIRED);
-		// for (Object object : required) {
-		// sets.add(object.toString());
-		// }
-		// return sets;
-		// }
 
 	}
 
@@ -1780,6 +1996,12 @@ public abstract class JavaParser extends AbstractParser {
 		public static final String MAX_LENGTH = "maxLength"; // 最大长度
 		public static final String MINIMUM = "minimum"; // 最小值
 		public static final String MAXIMUM = "maximum"; // 最大值
+
+		public static final String DATA_TYPE_STRING = "string";
+		public static final String DATA_TYPE_INTEGER = "integer";
+		public static final String DATA_TYPE_NUMBER = "number";
+		public static final String DATA_TYPE_DATE = "date";
+		public static final String DATA_TYPE_BOOLEAN = "boolean";
 
 	}
 

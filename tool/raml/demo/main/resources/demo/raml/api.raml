@@ -1139,8 +1139,8 @@ traits:
           - success:
             
     /file:
-      displayName: urlencoded
-      description: urlencoded
+      displayName: file
+      description: file
       
       post:
         description: 获取值
@@ -1164,3 +1164,293 @@ traits:
             
         is:
           - success:
+            
+    /json:
+      displayName: json
+      description: json
+      
+      post:
+        description: json
+        body:
+          application/json:
+            example: |
+              {
+                "username": "hualuomoli",
+                "nickname": "花落莫离",
+                "orders": [
+                  {
+                    "id": "1234",
+                    "date": "2015-06-05",
+                    "products": [
+                      {
+                        "id": "0001",
+                        "name": "IPAD"
+                      }
+                    ]
+                  }
+                ],
+                "address": {
+                  "province": "37",
+                  "city": "02",
+                  "couty": "03",
+                  "name": "合肥路666号,永旺广场",
+                  "phones": [
+                    "15689952699",
+                    "15289982699"
+                  ]
+                }
+              }
+            schema: | 
+              {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "用户名",
+                    "example": "hualuomoli"
+                  },
+                  "nickname": {
+                    "type": "string",
+                    "description": "昵称",
+                    "example": "花落莫离"
+                  },
+                  "orders": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "订单号",
+                          "example": "1234567890"
+                        },
+                        "date": {
+                          "type": "date",
+                          "description": "订单日期",
+                          "example": "2015-06-02"
+                        },
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "商品号",
+                                "example": "0001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "商品名",
+                                "example": "IPAD"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "date",
+                        "products"
+                      ]
+                    }
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "province": {
+                        "type": "string",
+                        "description": "省份",
+                        "example": "37"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "城市",
+                        "example": "02"
+                      },
+                      "couty": {
+                        "type": "string",
+                        "description": "区县",
+                        "example": "03"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "具体地址",
+                        "example": "合肥路666号,永旺广场"
+                      },
+                      "phones": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "联系电话",
+                          "example": ["15689952699", "15289982699"]
+                        }
+                      }
+                    },
+                    "required": [
+                      "province",
+                      "city",
+                      "couty",
+                      "name",
+                      "phones"
+                    ]
+                  }
+                },
+                "required": [
+                  "username",
+                  "nickname",
+                  "address"
+                ]
+              }
+        
+        responses:
+          200:
+            description: 成功
+            body:
+              application/json:
+                example: |
+                  {
+                    "code": "0",
+                    "msg": "金额不足",
+                    "user": {
+                      "username": "hualuomoli",
+                      "nickname": "花落莫离",
+                      "orders": [{
+                        "id": "1234",
+                        "date": "2015-06-05",
+                        "products": [{
+                          "id": "0001",
+                          "name": "IPAD"
+                        }]
+                      }],
+                      "address": {
+                        "province": "37",
+                        "city": "02",
+                        "couty": "03",
+                        "name": "合肥路666号,永旺广场"
+                      }
+                    }
+                  }
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "description": "响应编码,0=成功",
+                        "example": "0"
+                      },
+                      "msg": {
+                        "type": "string",
+                        "description": "错误信息",
+                        "example": "金额不足"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "type": "string",
+                            "description": "用户名",
+                            "example": "hualuomoli"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "description": "昵称",
+                            "example": "花落莫离"
+                          },
+                          "orders": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "订单号",
+                                  "example": "1234567890"
+                                },
+                                "date": {
+                                  "type": "date",
+                                  "description": "订单日期",
+                                  "example": "2015-06-02"
+                                },
+                                "products": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "商品号",
+                                        "example": "0001"
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "description": "商品名",
+                                        "example": "IPAD"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name"
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "date",
+                                "products"
+                              ]
+                            }
+                          },
+                          "address": {
+                            "type": "object",
+                            "properties": {
+                              "province": {
+                                "type": "string",
+                                "description": "省份",
+                                "example": "37"
+                              },
+                              "city": {
+                                "type": "string",
+                                "description": "城市",
+                                "example": "02"
+                              },
+                              "couty": {
+                                "type": "string",
+                                "description": "区县",
+                                "example": "03"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "具体地址",
+                                "example": "合肥路666号,永旺广场"
+                              }
+                            },
+                            "required": [
+                              "province",
+                              "city",
+                              "couty",
+                              "name"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "username",
+                          "nickname",
+                          "address"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "msg",
+                      "user"
+                    ]
+                  }
