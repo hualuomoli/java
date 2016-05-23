@@ -2,6 +2,8 @@ package com.github.hualuomoli.commons.socket.dealer;
 
 import java.nio.charset.Charset;
 
+import com.github.hualuomoli.commons.util.CharsetUtils;
+
 /**
  * 处理人
  * @author hualuomoli
@@ -9,44 +11,34 @@ import java.nio.charset.Charset;
  */
 public abstract class SocketDealerAbstract implements SocketDealer {
 
-	public static final int DEFAULT_WAIT_SECIBDS = 100; // 0.1s
-
-	private int waitSeconds = DEFAULT_WAIT_SECIBDS;
+	@Override
+	public long heartSeconds() {
+		return 0;
+	}
 
 	@Override
-	public long getWaitSeconds() {
-		return waitSeconds;
+	public long timeout() {
+		return 0;
 	}
 
-	public void setWaitSeconds(int waitSeconds) {
-		this.waitSeconds = waitSeconds;
+	@Override
+	public String quit() {
+		return null;
 	}
 
-	private Charset inputCharset; // 输入编码
-	private Charset outputCharset; // 输出编码
-
-	public Charset getInputCharset() {
-		return inputCharset;
+	@Override
+	public String loginSuccessMesssage() {
+		return null;
 	}
 
-	public void setInputCharset(Charset inputCharset) {
-		this.inputCharset = inputCharset;
+	@Override
+	public String loginErrorMesssage() {
+		return null;
 	}
 
-	public Charset getOutputCharset() {
-		return outputCharset;
-	}
-
-	public void setOutputCharset(Charset outputCharset) {
-		this.outputCharset = outputCharset;
-	}
-
-	public void setInputCharset(String inputCharset) {
-		this.inputCharset = Charset.forName(inputCharset);
-	}
-
-	public void setOutputCharset(String outputCharset) {
-		this.outputCharset = Charset.forName(outputCharset);
+	@Override
+	public Charset charset() {
+		return CharsetUtils.UTF8;
 	}
 
 }

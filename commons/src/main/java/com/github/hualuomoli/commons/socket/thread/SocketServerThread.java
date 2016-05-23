@@ -21,7 +21,20 @@ public class SocketServerThread implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketServerThread.class);
 
+	private static final long DEFAULT_HEART_SECONDS = 100; // 默认100毫秒
+	private static final long DEFAULT_TIME_OUT = 1000 * 60 * 10; // 默认十分钟
+	private static final String DEFAULT_QUIT = "quit";
+	private static final String DEFAULT_LOGIN_SUCCESS_MESSAGE = "登录成功";
+	private static final String DEFAULT_LOGIN_ERROR_MESSAGE = "用户名或密码错误";
+
 	private boolean close; // 是否关闭
+	private long heartSeconds; // 心跳检测时长(单位毫秒)
+	private long timeout; // 超时时长(单位毫秒)
+	private boolean login; // 是否登录
+	private long timer; // 计时器
+	private String quit;// 退出字符串
+	private String loginSuccessMessage; // 登录成功的消息
+	private String loginErrorMessage; // 登录失败的消息
 
 	private Socket socket;
 	private SocketDealer dealer;
@@ -30,15 +43,28 @@ public class SocketServerThread implements Runnable {
 	private OutputStream out = null;
 
 	public SocketServerThread(Socket socket, SocketDealer dealer) {
-		this(socket, dealer, 10 * 60); // 默认十分钟
-	}
-
-	public SocketServerThread(Socket socket, SocketDealer dealer, long timeout) {
 		this.socket = socket;
 		this.dealer = dealer;
 		close = false;
 
 		try {
+			// 心跳,默认100毫秒
+			long heartSeconds = dealer.heartSeconds();
+			this.heartSeconds = heartSeconds == 0 ? DEFAULT_HEART_SECONDS : heartSeconds;
+			// 超时,默认30分钟
+			long timeout = dealer.timeout();
+			this.timeout = timeout == 0 ? DEFAULT_TIME_OUT : timeout;
+			// 退出,默认 quit
+			String quit = dealer.quit();
+			this.quit = quit == null ? DEFAULT_QUIT : quit;
+			// 消息
+			String loginSuccessMessage = dealer.loginSuccessMesssage();
+			this.loginSuccessMessage = loginSuccessMessage == null ? DEFAULT_LOGIN_SUCCESS_MESSAGE : loginSuccessMessage;
+			String loginErrorMessage = dealer.loginErrorMesssage();
+			this.loginErrorMessage = loginErrorMessage == null ? DEFAULT_LOGIN_ERROR_MESSAGE : loginErrorMessage;
+			// 计时器
+			this.timer = 0;
+			// 输入输出流
 			in = socket.getInputStream();
 			out = socket.getOutputStream();
 		} catch (IOException e) {
@@ -57,15 +83,32 @@ public class SocketServerThread implements Runnable {
 			// 使用循环的方式，不停的与客户端交互会话
 			while (!close) {
 
-				// 验证用户信息
-				if (!dealer.isLogin()) {
-					String flush = dealer.login(read(in, dealer.getInputCharset()));
-					write(out, flush, dealer.getOutputCharset());
-				} else {
-					String flush = dealer.execute(read(in, dealer.getInputCharset()));
-					write(out, flush, dealer.getOutputCharset());
-				}
+				// 读取数据
+				String input = this.read(in, dealer.charset());
+				// 返回数据
+				String flush;
 
+				// 是否退出
+				if (StringUtils.equals(input, quit)) {
+					if (logger.isInfoEnabled()) {
+						logger.info("close socket.");
+					}
+					break;
+				}
+				// 验证用户信息
+				if (!login) {
+					boolean success = dealer.login(input);
+					if (success) {
+						login = true;
+						flush = loginSuccessMessage;
+					} else {
+						flush = loginErrorMessage;
+					}
+				} else {
+					flush = dealer.execute(input);
+				}
+				// 输出
+				write(out, flush, dealer.charset());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,7 +124,7 @@ public class SocketServerThread implements Runnable {
 					socket.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 	}
@@ -99,14 +142,37 @@ public class SocketServerThread implements Runnable {
 			available = in.available();
 
 			if (available == 0) {
+				// 没有输入
+				// 休眠等待
 				try {
-					Thread.sleep(dealer.getWaitSeconds());
+					Thread.sleep(heartSeconds);
+					timer += heartSeconds;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				// 验证客户端是否已经断开 SocketOptions.SO_OOBINLINE
-				socket.sendUrgentData(9);
+				// 判断是否超时
+				if (timer >= timeout) {
+					close = true;
+					if (logger.isInfoEnabled()) {
+						logger.info("timeout.");
+					}
+					return quit;
+				}
+
+				// 客户端断开链接
+				// try {
+				// socket.sendUrgentData(0xFF);
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// close = true;
+				// if (logger.isInfoEnabled()) {
+				// logger.info("client close.");
+				// }
+				// return quit;
+				// }
 			} else {
+				// 有输入
+				timer = 0;
 				break;
 			}
 		}

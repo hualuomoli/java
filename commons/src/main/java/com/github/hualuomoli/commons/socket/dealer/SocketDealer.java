@@ -1,7 +1,8 @@
 package com.github.hualuomoli.commons.socket.dealer;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
+
+import com.github.hualuomoli.commons.socket.exception.SocketException;
 
 /**
  * 处理人
@@ -11,45 +12,55 @@ import java.nio.charset.Charset;
 public interface SocketDealer {
 
 	/**
-	 * 如果没有输入,等待时间,单位为毫秒
-	 * @return 等待时间,单位为毫秒
+	 * 心跳检测时长
+	 * @return 心跳检测时长
 	 */
-	long getWaitSeconds();
+	long heartSeconds();
 
 	/**
-	 * 是否已经登录
-	 * @return 是否已经登录
-	 * @throws IOException 异常
+	 * 超时时长
+	 * @return 超时时长
 	 */
-	boolean isLogin() throws IOException;
+	long timeout();
+
+	/**
+	 * 退出字符串
+	 * @return 退出字符串
+	 */
+	String quit();
 
 	/**
 	 * 获取输入流编码
 	 * @return 编码集
 	 */
-	Charset getInputCharset();
+	Charset charset();
 
 	/**
 	 * 登录
-	 * @param in 输入流
-	 * @param out 输出流
-	 * @return 登录返回结果
-	 * @throws IOException 异常
+	 * @param input 输入
+	 * @return 是否登录成功
+	 * @throws SocketException 异常
 	 */
-	String login(String input) throws IOException;
+	boolean login(String input);
 
 	/**
-	 * 获取输出流编码
-	 * @return 编码集
+	 * 登录成功的消息
+	 * @return 登录成功的消息
 	 */
-	Charset getOutputCharset();
+	String loginSuccessMesssage();
+
+	/**
+	 * 登录失败的消息
+	 * @return 登录失败的消息
+	 */
+	String loginErrorMesssage();
 
 	/**
 	 * 执行
-	 * @param in 输入流
-	 * @param out 输出流
-	 * @throws IOException 异常
+	 * @param input 输入
+	 * @return 执行返回结果
+	 * @throws SocketException 异常
 	 */
-	String execute(String input) throws IOException;
+	String execute(String input);
 
 }
