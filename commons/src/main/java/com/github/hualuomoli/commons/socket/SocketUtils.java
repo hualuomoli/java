@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.github.hualuomoli.commons.socket.dealer.SocketDealer;
 import com.github.hualuomoli.commons.socket.thread.SocketServerThread;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * 线程工具类
@@ -29,7 +27,23 @@ public class SocketUtils {
 	 * @param port 端口
 	 * @param dealer 处理者
 	 */
-	public static void open(int port, SocketDealer dealer) {
+	public static void open(final int port, final SocketDealer dealer) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// 使用新线程开启,不然会阻塞
+				doOpen(port, dealer);
+			}
+		}).start();
+	}
+
+	/**
+	 * 开启
+	 * @param port 端口
+	 * @param dealer 处理者
+	 */
+	private static void doOpen(int port, SocketDealer dealer) {
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(port);
