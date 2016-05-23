@@ -15,13 +15,13 @@ public class SocketUtilsTest {
 		SocketDealerAbstract dealer = new SocketDealerAbstract() {
 
 			@Override
-			public long heartSeconds() {
+			public long waitSeconds() {
 				return (long) (1000 * 0.1);
 			}
 
 			@Override
 			public long timeout() {
-				return 1000 * 5;
+				return 1000 * 10;
 			}
 
 			@Override

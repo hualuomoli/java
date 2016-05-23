@@ -22,8 +22,7 @@ import com.google.common.collect.Sets;
 public class SocketUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketUtils.class);
-
-	private static final Map<Integer, Set<SocketServerThread>> portServers = Maps.newHashMap();
+	private static final Map<Integer, ServerSocket> serverSockets = Maps.newHashMap();
 
 	/**
 	 * 开启
@@ -32,19 +31,21 @@ public class SocketUtils {
 	 */
 	public static void open(int port, SocketDealer dealer) {
 		ServerSocket serverSocket = null;
-		Set<SocketServerThread> servers = Sets.newHashSet();
 		try {
 			serverSocket = new ServerSocket(port);
-			logger.info("create server success.");
-			portServers.put(port, servers);
+			serverSockets.put(port, serverSocket);
+			if (logger.isInfoEnabled()) {
+				logger.info("create server {} success.", port);
+			}
 
 			// 使用循环方式一直等待客户端的连接
 			while (true) {
 				Socket accept = serverSocket.accept();
-				logger.debug("accept client.{}", accept);
+				if (logger.isInfoEnabled()) {
+					logger.debug("accept client.{}", accept);
+				}
 				// 启动一个新的线程，接管与当前客户端的交互会话
 				SocketServerThread portServer = new SocketServerThread(accept, dealer);
-				servers.add(portServer);
 				new Thread(portServer).start();
 			}
 		} catch (IOException e) {
@@ -54,10 +55,32 @@ public class SocketUtils {
 				if (serverSocket != null) {
 					serverSocket.close();
 				}
-				logger.info("close socket");
+				if (logger.isInfoEnabled()) {
+					logger.info("close server {} ", port);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * 开启
+	 * @param port 端口
+	 * @param dealer 处理者
+	 */
+	public static void close(int port) {
+		if (!serverSockets.containsKey(port)) {
+			return;
+		}
+		ServerSocket serverSocket = serverSockets.get(port);
+		if (serverSocket == null || serverSocket.isClosed()) {
+			return;
+		}
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

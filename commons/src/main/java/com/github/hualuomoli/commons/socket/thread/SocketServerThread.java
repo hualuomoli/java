@@ -21,23 +21,26 @@ public class SocketServerThread implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketServerThread.class);
 
-	private static final long DEFAULT_HEART_SECONDS = 100; // 默认100毫秒
+	private static final long DEFAULT_WAIT_SECONDS = 100; // 默认100毫秒
 	private static final long DEFAULT_TIME_OUT = 1000 * 60 * 10; // 默认十分钟
 	private static final String DEFAULT_QUIT = "quit";
+	private static final String DEFAULT_HEART = "heart";
 	private static final String DEFAULT_LOGIN_SUCCESS_MESSAGE = "登录成功";
 	private static final String DEFAULT_LOGIN_ERROR_MESSAGE = "用户名或密码错误";
 
-	private boolean close; // 是否关闭
-	private long heartSeconds; // 心跳检测时长(单位毫秒)
 	private long timeout; // 超时时长(单位毫秒)
-	private boolean login; // 是否登录
-	private long timer; // 计时器
 	private String quit;// 退出字符串
+	private long waitSeconds; // 心跳检测时长(单位毫秒)
+	private String heart; // 心跳字符串
 	private String loginSuccessMessage; // 登录成功的消息
 	private String loginErrorMessage; // 登录失败的消息
 
 	private Socket socket;
 	private SocketDealer dealer;
+
+	private boolean close; // 是否关闭
+	private boolean login; // 是否登录
+	private long timer; // 计时器
 
 	private InputStream in = null;
 	private OutputStream out = null;
@@ -45,25 +48,30 @@ public class SocketServerThread implements Runnable {
 	public SocketServerThread(Socket socket, SocketDealer dealer) {
 		this.socket = socket;
 		this.dealer = dealer;
+
 		close = false;
+		login = false;
+		timer = 0;
+
+		// 配置信息
+		// 超时,默认30分钟
+		long timeout = dealer.timeout();
+		this.timeout = timeout == 0 ? DEFAULT_TIME_OUT : timeout;
+		// 退出,默认 quit
+		String quit = dealer.quit();
+		this.quit = quit == null ? DEFAULT_QUIT : quit;
+		// 心跳,默认100毫秒
+		long waitSeconds = dealer.waitSeconds();
+		this.waitSeconds = waitSeconds == 0 ? DEFAULT_WAIT_SECONDS : waitSeconds;
+		String heart = dealer.heart();
+		this.heart = heart == null ? DEFAULT_HEART : heart;
+		// 消息
+		String loginSuccessMessage = dealer.loginSuccessMesssage();
+		this.loginSuccessMessage = loginSuccessMessage == null ? DEFAULT_LOGIN_SUCCESS_MESSAGE : loginSuccessMessage;
+		String loginErrorMessage = dealer.loginErrorMesssage();
+		this.loginErrorMessage = loginErrorMessage == null ? DEFAULT_LOGIN_ERROR_MESSAGE : loginErrorMessage;
 
 		try {
-			// 心跳,默认100毫秒
-			long heartSeconds = dealer.heartSeconds();
-			this.heartSeconds = heartSeconds == 0 ? DEFAULT_HEART_SECONDS : heartSeconds;
-			// 超时,默认30分钟
-			long timeout = dealer.timeout();
-			this.timeout = timeout == 0 ? DEFAULT_TIME_OUT : timeout;
-			// 退出,默认 quit
-			String quit = dealer.quit();
-			this.quit = quit == null ? DEFAULT_QUIT : quit;
-			// 消息
-			String loginSuccessMessage = dealer.loginSuccessMesssage();
-			this.loginSuccessMessage = loginSuccessMessage == null ? DEFAULT_LOGIN_SUCCESS_MESSAGE : loginSuccessMessage;
-			String loginErrorMessage = dealer.loginErrorMesssage();
-			this.loginErrorMessage = loginErrorMessage == null ? DEFAULT_LOGIN_ERROR_MESSAGE : loginErrorMessage;
-			// 计时器
-			this.timer = 0;
 			// 输入输出流
 			in = socket.getInputStream();
 			out = socket.getOutputStream();
@@ -94,6 +102,13 @@ public class SocketServerThread implements Runnable {
 						logger.info("close socket.");
 					}
 					break;
+				}
+				// 是否心跳检测
+				if (StringUtils.equals(input, heart)) {
+					if (logger.isInfoEnabled()) {
+						logger.info("heart checker.");
+					}
+					continue;
 				}
 				// 验证用户信息
 				if (!login) {
@@ -145,8 +160,8 @@ public class SocketServerThread implements Runnable {
 				// 没有输入
 				// 休眠等待
 				try {
-					Thread.sleep(heartSeconds);
-					timer += heartSeconds;
+					Thread.sleep(waitSeconds);
+					timer += waitSeconds;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

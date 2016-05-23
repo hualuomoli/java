@@ -76,6 +76,9 @@ class ClientThread implements Runnable {
 				if (i >= 90) {
 					data = "quit";
 					System.out.println(id + " quit");
+				} else if (i > 80) {
+					write(out, "heart", CharsetUtils.GBK);
+					continue;
 				}
 				write(out, data, CharsetUtils.GBK);
 				System.out.println("begin read message from server.");

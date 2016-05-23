@@ -12,10 +12,10 @@ import com.github.hualuomoli.commons.socket.exception.SocketException;
 public interface SocketDealer {
 
 	/**
-	 * 心跳检测时长
+	 * 等待输入时长
 	 * @return 心跳检测时长
 	 */
-	long heartSeconds();
+	long waitSeconds();
 
 	/**
 	 * 超时时长
@@ -24,16 +24,22 @@ public interface SocketDealer {
 	long timeout();
 
 	/**
+	 * 获取输入流编码
+	 * @return 编码集
+	 */
+	Charset charset();
+
+	/**
 	 * 退出字符串
 	 * @return 退出字符串
 	 */
 	String quit();
 
 	/**
-	 * 获取输入流编码
-	 * @return 编码集
+	 * 心跳字符串
+	 * @return
 	 */
-	Charset charset();
+	String heart();
 
 	/**
 	 * 登录
