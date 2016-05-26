@@ -34,7 +34,16 @@ public class HttpURLUtils {
 
 	// do get
 	public static String doGet(String urlStr) {
-		return doGet(urlStr, null);
+		return doGet(urlStr, StringUtils.EMPTY);
+	}
+
+	// do get
+	public static String doGet(String urlStr, Map<String, String> dataMap) {
+		String data = "";
+		for (String key : dataMap.keySet()) {
+			data += "&" + key + "=" + dataMap.get(key);
+		}
+		return doGet(urlStr, data);
 	}
 
 	// do get
@@ -130,8 +139,7 @@ public class HttpURLUtils {
 		}
 
 		// get response
-		String outStr = org.apache.commons.codec.binary.StringUtils
-				.newStringUtf8(StreamUtils.getBytes(conn.getInputStream()));
+		String outStr = org.apache.commons.codec.binary.StringUtils.newStringUtf8(StreamUtils.getBytes(conn.getInputStream()));
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("response {}", outStr);
