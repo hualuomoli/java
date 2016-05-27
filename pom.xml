@@ -122,6 +122,7 @@
 					<excludes>
 						<!-- 忽略demo目录 -->
 						<exclude>com/github/hualuomoli/demo/**</exclude>
+						<exclude>mappers/demo/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
