@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.hualuomoli.base.demo.mapper.DemoMapper">
+<mapper namespace="com.github.hualuomoli.demo.base.mapper.DemoMapper">
 
 	<sql id="columns">
 		id				as "id",
@@ -16,7 +16,7 @@
 		address			as "address"
 	</sql>
 	
-	<select id="get" resultType="com.github.hualuomoli.base.demo.entity.Demo">
+	<select id="get" resultType="com.github.hualuomoli.demo.base.entity.Demo">
 		select 
 		<include refid="columns" />
 		from demo
@@ -82,7 +82,7 @@
 		delete from demo where id = #{id}
 	</delete>
 	
-	<select id="findList" resultType="com.github.hualuomoli.base.demo.entity.Demo">
+	<select id="findList" resultType="com.github.hualuomoli.demo.base.entity.Demo">
 		select
 		<include refid="columns" />
 		from demo

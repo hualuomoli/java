@@ -22,7 +22,7 @@
 
 	<description>Spring JDBC Configuration</description>
 
-	<context:property-placeholder ignore-unresolvable="true" location="classpath:prop/jdbc.properties" />
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:orm/prop/jdbc.properties" />
 
 	<!-- 默认数据源配置, 使用 Druid 数据库连接池 -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
