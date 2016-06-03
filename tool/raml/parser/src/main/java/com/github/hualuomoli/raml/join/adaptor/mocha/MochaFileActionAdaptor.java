@@ -26,6 +26,9 @@ public class MochaFileActionAdaptor extends MochaActionAdaptor {
 		if (adapter.action.getType() != ActionType.POST) {
 			return false;
 		}
+		if (!RamlUtils.isEmptyOr200JsonResponse(adapter)) {
+			return false;
+		}
 		Map<String, MimeType> body = adapter.action.getBody();
 		if (body == null) {
 			return false;

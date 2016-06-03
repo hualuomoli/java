@@ -19,7 +19,13 @@ public class MochaDeleteActionAdaptor extends MochaActionAdaptor {
 
 	@Override
 	public boolean support(Adapter adapter) {
-		return adapter.action.getType() == ActionType.DELETE;
+		if (adapter.action.getType() != ActionType.DELETE) {
+			return false;
+		}
+		if (!RamlUtils.isEmptyOr200JsonResponse(adapter)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override

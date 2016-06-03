@@ -19,7 +19,13 @@ public class MochaGetActionAdaptor extends MochaActionAdaptor {
 
 	@Override
 	public boolean support(Adapter adapter) {
-		return adapter.action.getType() == ActionType.GET;
+		if (adapter.action.getType() != ActionType.GET) {
+			return false;
+		}
+		if (!RamlUtils.is200JsonResponse(adapter)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -40,7 +46,8 @@ public class MochaGetActionAdaptor extends MochaActionAdaptor {
 		Map<String, String> queryParams = Tool.getQueryParams(adapter);
 
 		for (String displayName : queryParams.keySet()) {
-			datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + displayName + "=' + encodeURIComponent('" + queryParams.get(displayName) + "'))");
+			datas.add(
+					RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".query('" + displayName + "=' + encodeURIComponent('" + queryParams.get(displayName) + "'))");
 		}
 		datas.add(RamlUtils.getIndentCharts(INDENT_CHAR, 1) + ".expect(200)");
 

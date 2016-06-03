@@ -11,6 +11,8 @@ import org.raml.model.Action;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 
+import com.github.hualuomoli.raml.join.JoinParser.Adapter;
+import com.github.hualuomoli.raml.join.adaptor.ActionAdaptor;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -267,6 +269,36 @@ public class RamlUtils {
 		fullMap.putAll(parentMap);
 
 		return fullMap;
+	}
+
+	/**
+	 * 是否为200的响应
+	 * @param adapter 适配者
+	 * @return 是否是200响应
+	 */
+	public static boolean is200JsonResponse(Adapter adapter) {
+
+		if (!StringUtils.equals(adapter.responseCode, "200")) {
+			return false;
+		}
+		if (adapter.responseMimeType == null || !StringUtils.equals(adapter.responseMimeType.getType(), ActionAdaptor.MIME_TYPE_JSON)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	* 是否为200的响应或者无响应
+	* @param adapter 适配者
+	* @return 是否是200响应
+	*/
+	public static boolean isEmptyOr200JsonResponse(Adapter adapter) {
+
+		// 为空
+		if (adapter.responseCode == null && adapter.responseMimeType == null) {
+			return true;
+		}
+		return is200JsonResponse(adapter);
 	}
 
 }

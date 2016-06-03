@@ -7,6 +7,7 @@ import org.raml.model.ActionType;
 import com.github.hualuomoli.raml.join.JoinParser.Adapter;
 import com.github.hualuomoli.raml.join.adaptor.JavaActionAdaptor;
 import com.github.hualuomoli.raml.util.JSONUtils.JsonParam;
+import com.github.hualuomoli.raml.util.RamlUtils;
 import com.google.common.collect.Lists;
 
 /**
@@ -18,7 +19,13 @@ public class JavaDeleteActionAdaptor extends JavaActionAdaptor {
 
 	@Override
 	public boolean support(Adapter adapter) {
-		return adapter.action.getType() == ActionType.DELETE;
+		if (adapter.action.getType() != ActionType.DELETE) {
+			return false;
+		}
+		if (!RamlUtils.isEmptyOr200JsonResponse(adapter)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override

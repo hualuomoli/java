@@ -7,6 +7,7 @@ import org.raml.model.ActionType;
 import com.github.hualuomoli.raml.join.JoinParser.Adapter;
 import com.github.hualuomoli.raml.join.adaptor.JavaActionAdaptor;
 import com.github.hualuomoli.raml.util.JSONUtils.JsonParam;
+import com.github.hualuomoli.raml.util.RamlUtils;
 import com.google.common.collect.Lists;
 
 /**
@@ -18,7 +19,13 @@ public class JavaGetActionAdaptor extends JavaActionAdaptor {
 
 	@Override
 	public boolean support(Adapter adapter) {
-		return adapter.action.getType() == ActionType.GET;
+		if (adapter.action.getType() != ActionType.GET) {
+			return false;
+		}
+		if (!RamlUtils.is200JsonResponse(adapter)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override

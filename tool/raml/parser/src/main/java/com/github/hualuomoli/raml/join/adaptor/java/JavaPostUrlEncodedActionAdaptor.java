@@ -9,6 +9,7 @@ import org.raml.model.parameter.FormParameter;
 
 import com.github.hualuomoli.raml.join.JoinParser.Adapter;
 import com.github.hualuomoli.raml.join.adaptor.JavaActionAdaptor;
+import com.github.hualuomoli.raml.util.RamlUtils;
 import com.github.hualuomoli.raml.util.JSONUtils.JsonParam;
 import com.google.common.collect.Lists;
 
@@ -22,6 +23,9 @@ public class JavaPostUrlEncodedActionAdaptor extends JavaActionAdaptor {
 	@Override
 	public boolean support(Adapter adapter) {
 		if (adapter.action.getType() != ActionType.POST) {
+			return false;
+		}
+		if (!RamlUtils.isEmptyOr200JsonResponse(adapter)) {
 			return false;
 		}
 		Map<String, MimeType> body = adapter.action.getBody();

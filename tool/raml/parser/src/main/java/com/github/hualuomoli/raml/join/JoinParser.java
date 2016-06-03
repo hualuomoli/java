@@ -13,6 +13,8 @@ import org.raml.model.MimeType;
 import org.raml.model.Raml;
 import org.raml.model.Resource;
 import org.raml.model.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.raml.ParserAbstract;
 import com.github.hualuomoli.raml.join.adaptor.ActionAdaptor;
@@ -26,6 +28,8 @@ import com.google.common.collect.Maps;
  *
  */
 public abstract class JoinParser extends ParserAbstract {
+
+	private static final Logger logger = LoggerFactory.getLogger(JoinParser.class);
 
 	private JoinFileDealer dealer;
 	private List<ActionAdaptor> adaptors;
@@ -151,6 +155,10 @@ public abstract class JoinParser extends ParserAbstract {
 	 * @return 数据
 	 */
 	private List<String> getData(Action action, boolean child) {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("get data from {}", RamlUtils.getFullUri(action));
+		}
 
 		List<String> actionDatas = Lists.newArrayList();
 
