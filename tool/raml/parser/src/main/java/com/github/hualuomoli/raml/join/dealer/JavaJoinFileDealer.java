@@ -185,7 +185,7 @@ public abstract class JavaJoinFileDealer implements JoinFileDealer {
 		public static String getPackageName(Resource resource, JavaConfig javaConfig) {
 			String fullUri = RamlUtils.getFullUri(resource);
 			String uri = RamlUtils.removePrefix(RamlUtils.removeUriParam(fullUri), javaConfig.getIgnoreUriPrefix());
-			return javaConfig.getRootPackageName() + uri.replaceAll("/", ".") + ".web";
+			return javaConfig.getRootPackageName() + uri.replaceAll("/", ".");
 
 		}
 

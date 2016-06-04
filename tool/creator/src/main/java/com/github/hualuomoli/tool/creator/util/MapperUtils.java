@@ -27,7 +27,7 @@ public class MapperUtils extends CreatorUtils {
 		Entity entity = EntityUtils.getEntity(entityCls, ignores, projectPackageName);
 
 		//
-		String name = entity.getSimpleName() + "Mapper";
+		String name = entity.getSimpleName() + "BaseMapper";
 		String packageName = getPackageName(entityCls) + ".mapper";
 		String fullName = packageName + "." + name;
 		String filename = name + ".java";

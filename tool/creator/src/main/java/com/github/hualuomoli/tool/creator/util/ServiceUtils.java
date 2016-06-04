@@ -28,7 +28,7 @@ public class ServiceUtils extends CreatorUtils {
 		Mapper mapper = MapperUtils.getMapper(entityCls, ignores, projectPackageName);
 		Entity entity = mapper.getEntity();
 		//
-		String name = entity.getSimpleName() + "Service";
+		String name = entity.getSimpleName() + "BaseService";
 		String packageName = getPackageName(entityCls) + ".service";
 		String fullName = packageName + "." + name;
 		String filename = name + ".java";

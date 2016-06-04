@@ -3,13 +3,16 @@ package com.github.hualuomoli.commons.template;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StreamUtils;
 
 import com.github.hualuomoli.commons.template.exception.TemplateException;
 
@@ -39,7 +42,7 @@ public class TemplateUtils {
 
 	/**
 	 * 执行输出
-	 * @param templateAbsolutePath 模板文件绝对路径
+	 * @param templateResourcePath 模板文件资源路径
 	 * @param templateName 模板名称
 	 * @param data 数据
 	 * @param output 输出文件
@@ -50,14 +53,53 @@ public class TemplateUtils {
 
 	/**
 	 * 执行输出
-	 * @param templateAbsolutePath 模板文件绝对路径
+	 * @param templateResourcePath 模板文件资源路径
 	 * @param templateName 模板名称
 	 * @param templateEncoding 模板编码
 	 * @param data 数据
 	 * @param output 输出文件
 	 */
 	public static void processByResource(String templateResourcePath, String templateName, String templateEncoding, Object data, File output) {
-		process(getAbsolutePath(templateResourcePath), templateName, templateEncoding, data, output);
+		if (logger.isDebugEnabled()) {
+			logger.debug("templateResourcePath {}", templateResourcePath);
+			logger.debug("templateName {}", templateName);
+			logger.debug("templateEncoding {}", templateEncoding);
+			logger.debug("data {} ", ToStringBuilder.reflectionToString(data));
+			logger.debug("output {} ", output);
+		}
+
+		// 临时文件名
+		String randomId = UUID.randomUUID().toString().replaceAll("[-]", "");
+
+		try {
+
+			// 复制资源文件到临时目录
+			String filename = templateResourcePath + "/" + templateName;
+			InputStream in = TemplateUtils.class.getClassLoader().getResourceAsStream(filename);
+			FileOutputStream out = new FileOutputStream(new File("/", randomId));
+			StreamUtils.copy(in, out);
+			out.flush();
+
+			/** 创建Configuration对象 */
+			Configuration config = new Configuration();
+			/** 指定模板路径 */
+			File file = new File("/");
+			/** 设置要解析的模板所在的目录，并加载模板文件 */
+			config.setDirectoryForTemplateLoading(file);
+			/** 设置包装器，并将对象包装为数据模型 */
+			config.setObjectWrapper(new DefaultObjectWrapper());
+			/** 获取模板,并设置编码方式，这个编码必须要与页面中的编码格式一致 */
+			Template template = config.getTemplate(randomId, templateEncoding);
+			/** 输出到文件 */
+			process(template, data, output);
+		} catch (Exception e) {
+			throw new TemplateException(e);
+		} finally {
+			File file = new File("/", randomId);
+			if (file.exists()) {
+				file.delete();
+			}
+		}
 	}
 
 	/**
