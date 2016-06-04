@@ -27,7 +27,7 @@ import com.google.common.collect.Maps;
  * @author hualuomoli
  *
  */
-public abstract class JoinParser extends ParserAbstract {
+public class JoinParser extends ParserAbstract {
 
 	private static final Logger logger = LoggerFactory.getLogger(JoinParser.class);
 
@@ -166,7 +166,15 @@ public abstract class JoinParser extends ParserAbstract {
 		for (Adapter adapter : adapters) {
 			ActionAdaptor adaptor = ActionTool.getAdapter(adaptors, adapter);
 			if (adaptor == null) {
-				logger.error("can not find support adaptor for  {}", RamlUtils.getFullUri(action.getResource()));
+				logger.error(//
+						"can not find support adaptor for  uri={}, type={}, formMimeType={}, responseCode={}, responseMimeType={}", //
+						RamlUtils.getFullUri(action.getResource()), //
+						adapter.action.getType().toString(), //
+						adapter.formMimeType == null ? "" : adapter.formMimeType.getType(), //
+						adapter.responseCode, //
+						adapter.responseMimeType == null ? "" : adapter.responseMimeType.getType() //
+				//
+				);
 				continue;
 			}
 			adapter.child = child;

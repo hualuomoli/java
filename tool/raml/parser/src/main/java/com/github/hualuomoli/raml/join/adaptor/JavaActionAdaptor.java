@@ -70,6 +70,8 @@ public abstract class JavaActionAdaptor implements ActionAdaptor {
 		// start
 		datas.add("/**");
 
+		// 注释
+		datas.add(" * " + RamlUtils.dealDescription(adapter.action.getDescription()));
 		// 实体类定义
 		datas.add(" * @param " + RamlUtils.unCap(entityName) + " " + RamlUtils.dealDescription(adapter.action.getDescription()));
 

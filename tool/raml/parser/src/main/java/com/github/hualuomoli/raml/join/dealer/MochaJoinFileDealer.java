@@ -1,10 +1,7 @@
 package com.github.hualuomoli.raml.join.dealer;
 
-import java.io.File;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.raml.model.Raml;
 import org.raml.model.Resource;
 
 import com.github.hualuomoli.raml.Parser.Config;
@@ -17,53 +14,13 @@ import com.google.common.collect.Lists;
  * @author hualuomoli
  *
  */
-public class MochaJoinFileDealer implements JoinFileDealer {
+public abstract class MochaJoinFileDealer implements JoinFileDealer {
 
-	private MochaConfig mochaConfig;
+	protected MochaConfig mochaConfig;
 
 	@Override
 	public void setConfig(Config config) {
 		mochaConfig = (MochaConfig) config;
-	}
-
-	@Override
-	public void configure(Raml[] ramls) {
-		try {
-
-			String path = this.getClass().getClassLoader().getResource(".").getPath();
-			String testProjectFilepath = path.substring(0, path.indexOf("/target")) + "/src/test/resources/demo/mocha";
-
-			// filename folder
-			String filename;
-
-			// .gitignore
-			filename = ".gitignore";
-			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
-			// .jshintrc
-			filename = ".jshintrc";
-			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
-			// favicon.ico
-			filename = "favicon.ico";
-			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
-			// package.json
-			filename = "package.json";
-			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
-
-			// test/mocha.opts
-			filename = "test/mocha.opts";
-			FileUtils.copyFile(new File(testProjectFilepath, filename), new File(mochaConfig.getOutputFilepath(), filename));
-
-			// create request.js
-			// var request = require('supertest').agent('http://localhost:80/web');
-			List<String> datas = Lists.newArrayList();
-			datas.add("var request = require('supertest').agent('" + ramls[0].getBaseUri() + "');");
-			datas.add("module.exports = request;");
-
-			FileUtils.writeLines(new File(mochaConfig.getOutputFilepath(), "test/request.js"), mochaConfig.getEncoding().name(), datas);
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	@Override
