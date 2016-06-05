@@ -29,7 +29,7 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 	 * @return 默认为32
 	 */
 	protected int getIdLength() {
-		return 32;
+		return 64;
 	}
 
 	/**
@@ -37,7 +37,7 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 	 * @return 默认为12位
 	 */
 	protected int getUserLength() {
-		return 12;
+		return 64;
 	}
 
 	/**
@@ -189,7 +189,7 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 	}
 
 	// add version,createBy,createDate,updateBy,updateDate,status,remark
-	private List<Column> getCommonColumns(Set<String> ignores) {
+	protected List<Column> getCommonColumns(Set<String> ignores) {
 		List<Column> columns = Lists.newArrayList();
 
 		// createBy
