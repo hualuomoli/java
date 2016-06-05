@@ -6,10 +6,10 @@
 	<#list entity.attributes as attribute>
 		<#if attribute.entity>
 		<#-- 实体类 -->
-		${attribute.dbName}_id${attribute.dbBlanks} as "${attribute.name}.id"<#if entity.attributes?size - attribute_index gt 1>,</#if>
+		`${attribute.dbName}_id`${attribute.dbBlanks} as "${attribute.name}.id"<#if entity.attributes?size - attribute_index gt 1>,</#if>
 		<#else>
 		<#-- 普通类型 -->
-		${attribute.dbName}${attribute.dbBlanks} as "${attribute.name}"<#if entity.attributes?size - attribute_index gt 1>,</#if>
+		`${attribute.dbName}`${attribute.dbBlanks} as "${attribute.name}"<#if entity.attributes?size - attribute_index gt 1>,</#if>
 		</#if>
 	</#list>
 	</sql>
@@ -19,17 +19,17 @@
 		<#if attribute.entity>
 		<#-- 实体类 -->
 		<if test="${attribute.name} != null and ${attribute.name}.id != null and ${attribute.name}.id != ''">	
-			${attribute.dbName}_id${attribute.dbBlanks} = ${r"#{"}${attribute.name}.id${r"}"}${attribute.blanks}
+			and `${attribute.dbName}_id`${attribute.dbBlanks} = ${r"#{"}${attribute.name}.id${r"}"}${attribute.blanks}
 		</if>
 		<#elseif attribute.string>
 		<#-- 字符串 -->
 		<if test="${attribute.name} != null and ${attribute.name} != ''">	
-			${attribute.dbName}${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks}
+			and `${attribute.dbName}`${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks}
 		</if>
 		<#else>
 		<#-- 非字符串普通类型 -->
 		<if test="${attribute.name} != null">	
-			${attribute.dbName}${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks}
+			and `${attribute.dbName}`${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks}
 		</if>
 		</#if>
 	</#list>
@@ -39,19 +39,19 @@
 	<select id="get" resultType="${entity.fullName}">
 		select 
 			<include refid="columns" />
-		from ${entity.dbName}
+		from `${entity.dbName}`
 		where id =  ${r"#{"}id${r"}"}
 	</select>
 	
 	<insert id="insert">
-		insert into ${entity.dbName} (
+		insert into `${entity.dbName}` (
 		<#list entity.attributes as attribute>
 			<#if attribute.entity>
 			<#-- 实体类 -->
-			${attribute.dbName}_id${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
+			`${attribute.dbName}_id`${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
 			<#else>
 			<#-- 普通类型 -->
-			${attribute.dbName}${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
+			`${attribute.dbName}`${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
 			</#if>
 		</#list>	
 		) values (
@@ -68,14 +68,14 @@
 	</insert>
 	
 	<insert id="batchInsert">
-		insert into ${entity.dbName} (
+		insert into `${entity.dbName}` (
 		<#list entity.attributes as attribute>
 			<#if attribute.entity>
 			<#-- 实体类 -->
-			${attribute.dbName}_id${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
+			`${attribute.dbName}_id`${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
 			<#else>
 			<#-- 普通类型 -->
-			${attribute.dbName}${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
+			`${attribute.dbName}`${attribute.dbBlanks}<#if entity.attributes?size - attribute_index gt 1>,</#if>
 			</#if>
 		</#list>	
 		) 
@@ -94,24 +94,24 @@
 	</insert>
 	
 	<update id="update">
-		update ${entity.dbName}
+		update `${entity.dbName}`
 		<set>
 		<#list entity.attributes as attribute>
 			<#if attribute.name != 'id'>
 			<#if attribute.entity>
 			<#-- 实体类 -->
 			<if test="${attribute.name} != null and ${attribute.name}.id != null and ${attribute.name}.id != ''">	
-				${attribute.dbName}_id${attribute.dbBlanks} = ${r"#{"}${attribute.name}.id${r"}"}${attribute.blanks},
+				`${attribute.dbName}_id`${attribute.dbBlanks} = ${r"#{"}${attribute.name}.id${r"}"}${attribute.blanks},
 			</if>
 			<#elseif attribute.string>
 			<#-- 字符串 -->
 			<if test="${attribute.name} != null">	
-				${attribute.dbName}${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks},
+				`${attribute.dbName}`${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks},
 			</if>
 			<#else>
 			<#-- 普通类型 -->
 			<if test="${attribute.name} != null">	
-				${attribute.dbName}${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks},
+				`${attribute.dbName}`${attribute.dbBlanks} = ${r"#{"}${attribute.name}${r"}"}${attribute.blanks},
 			</if>
 			</#if>
 			</#if>
@@ -121,11 +121,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from ${entity.dbName} where id =  ${r"#{"}id${r"}"}
+		delete from `${entity.dbName}` where id =  ${r"#{"}id${r"}"}
 	</delete>
 	
 	<delete id="deleteByIds">
-		delete from ${entity.dbName}
+		delete from `${entity.dbName}`
 		<where>
 	        <foreach collection="ids" item="id" separator="or">
 	            id = ${r"#{"}id${r"}"}
@@ -136,7 +136,7 @@
 	<select id="findList" resultType="${entity.fullName}">
 		select
 			<include refid="columns" />
-		from ${entity.dbName}
+		from `${entity.dbName}`
 		<where>
 			<include refid="querys" />
 		</where>
