@@ -17,6 +17,7 @@
 
 		<module>./activemq</module>
 		<module>./redis</module>
+		<module>./memcached</module>
 		<module>./jpush</module>
 		<module>./zxing</module>
 
