@@ -139,7 +139,7 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 	}
 
 	// 获取列
-	private Column getColumn(Class<?> cls, DBColumn dbColumn, String name, String comment, boolean notNull, String defaultValue) {
+	protected Column getColumn(Class<?> cls, DBColumn dbColumn, String name, String comment, boolean notNull, String defaultValue) {
 		Column column = new Column();
 
 		column.setName(name);
@@ -220,16 +220,16 @@ public abstract class TableDealerAbstract extends CreatorUtils implements TableD
 	}
 
 	// 自定义注解
-	private class MyDBColumn implements DBColumn {
+	protected class MyDBColumn implements DBColumn {
 
 		private int length;
 		private int precision;
 		private int scale;
 
-		private MyDBColumn() {
+		public MyDBColumn() {
 		}
 
-		private MyDBColumn(int length) {
+		public MyDBColumn(int length) {
 			this.length = length;
 		}
 
