@@ -2,21 +2,37 @@
 
 cd %~dp0
 rem set bat script path
+set basepath=%cd%
+
 cd ..
 set batPath=%cd%
 
-SET CLASSPATH=%CLASSPATH%;%batPath%\script\assemble.jar
+SET CLASSPATH=%CLASSPATH%;%basepath%\assemble.jar
 
-set destPath=%batPath%\web-all
-set tempPomFileName=%batPath%\script\pom.txt
-set modules=%batPath%\commons,%batPath%\base,%batPath%\plugin,%batPath%\mvc,%batPath%\plugins\activemq,%batPath%\plugins\redis,%batPath%\plugins\jpush,%batPath%\web
-set groupId=com.github.hualuomoli
+rem 项目目录
+set projectPath=%batPath%
+rem 输出目录
+set outputPath=%batPath%\web-all
+rem 项目 groupId
+set useGroupId=com.github.hualuomoli
+rem 项目名称
+set projectName=web-all
+rem 是否强制删除输出目录
+set force=true
 
 
+rd /s/q %outputPath%
+
+rem 默认
+java com.github.hualuomoli.tool.Assemble %projectPath% %outputPath% %useGroupId%
+
+rem 指定输出项目名称
+rem java com.github.hualuomoli.tool.Assemble %projectPath% %outputPath% %useGroupId% %projectName%
+
+rem 指定输出项目名称,强制删除输出目录
+rem java com.github.hualuomoli.tool.Assemble %projectPath% %outputPath% %useGroupId% %projectName% %force%
 
 
-rd /s/q %destPath%
-
-java com.github.hualuomoli.all.AllUtil %destPath% %tempPomFileName% %modules% %groupId%
+cd %basepath%
 
 pause
