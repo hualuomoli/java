@@ -229,6 +229,9 @@
 						<!-- 忽略demo目录 -->
 						<exclude>com/github/hualuomoli/demo/**</exclude>
 						<exclude>mappers/demo/**</exclude>
+						<!-- 忽略生成器目录 -->
+						<exclude>com/github/hualuomoli/plugin/creator/**</exclude>
+						<exclude>tpl/creator/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
