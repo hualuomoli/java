@@ -1,0 +1,47 @@
+package com.github.hualuomoli.tool.raml.join.adaptor.java;
+
+import java.util.List;
+
+import org.raml.model.ActionType;
+
+import com.github.hualuomoli.tool.raml.join.JoinParser.Adapter;
+import com.github.hualuomoli.tool.raml.join.adaptor.JavaActionAdaptor;
+import com.github.hualuomoli.tool.raml.util.JSONUtils.JsonParam;
+import com.github.hualuomoli.tool.raml.util.RamlUtils;
+import com.google.common.collect.Lists;
+
+/**
+ * DELETE
+ * @author hualuomoli
+ *
+ */
+public class JavaDeleteActionAdaptor extends JavaActionAdaptor {
+
+	@Override
+	public boolean support(Adapter adapter) {
+		if (adapter.action.getType() != ActionType.DELETE) {
+			return false;
+		}
+		if (!RamlUtils.isEmptyOr200JsonResponse(adapter)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected List<String> getEntityDefinition(Adapter adapter) {
+
+		List<JsonParam> jsonParams = Lists.newArrayList();
+		// URI
+		jsonParams.addAll(Tool.getUriParams(adapter));
+		// QUERY
+		jsonParams.addAll(Tool.getQueryParams(adapter));
+		// FORM
+		jsonParams.addAll(Tool.getFormParams(adapter, MIME_TYPE_URLENCODED));
+
+		String entityName = Tool.getEntityName(adapter);
+
+		return Tool.getClassDefinition(jsonParams, entityName, 0, true);
+	}
+
+}

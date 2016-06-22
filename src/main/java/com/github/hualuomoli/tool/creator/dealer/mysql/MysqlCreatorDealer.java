@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator.dealer.mysql;
+package com.github.hualuomoli.tool.creator.dealer.mysql;
 
 import java.io.File;
 import java.util.List;
@@ -9,12 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.github.hualuomoli.base.annotation.Column;
 import com.github.hualuomoli.base.annotation.Table;
 import com.github.hualuomoli.commons.util.TemplateUtils;
-import com.github.hualuomoli.plugin.creator._Attribute;
-import com.github.hualuomoli.plugin.creator.db.DBColumn;
-import com.github.hualuomoli.plugin.creator.db.DBTable;
-import com.github.hualuomoli.plugin.creator.dealer.AbstractCreatorDealer;
-import com.github.hualuomoli.plugin.creator.util.AttributeUtils;
-import com.github.hualuomoli.plugin.creator.util.CreatorUtils;
+import com.github.hualuomoli.tool.creator._Attribute;
+import com.github.hualuomoli.tool.creator.db.DBColumn;
+import com.github.hualuomoli.tool.creator.db.DBTable;
+import com.github.hualuomoli.tool.creator.dealer.AbstractCreatorDealer;
+import com.github.hualuomoli.tool.creator.util.AttributeUtils;
+import com.github.hualuomoli.tool.creator.util.CreatorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 

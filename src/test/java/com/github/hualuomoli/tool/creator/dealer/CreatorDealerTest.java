@@ -1,11 +1,11 @@
-package com.github.hualuomoli.plugin.creator.dealer;
+package com.github.hualuomoli.tool.creator.dealer;
 
 import java.util.List;
 
 import org.junit.Test;
 
 import com.github.hualuomoli.demo.entity.Demo;
-import com.github.hualuomoli.plugin.creator.dealer.mysql.MysqlCreatorDealer;
+import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlCreatorDealer;
 import com.google.common.collect.Lists;
 
 public class CreatorDealerTest {

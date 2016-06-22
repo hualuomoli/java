@@ -203,6 +203,12 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Raml -->
+		<dependency>
+			<groupId>org.raml</groupId>
+			<artifactId>raml-parser</artifactId>
+			<version>0.8.12</version>
+		</dependency>
 	</dependencies>
 
 	<build>

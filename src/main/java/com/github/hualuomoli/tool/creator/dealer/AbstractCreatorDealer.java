@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator.dealer;
+package com.github.hualuomoli.tool.creator.dealer;
 
 import java.util.List;
 

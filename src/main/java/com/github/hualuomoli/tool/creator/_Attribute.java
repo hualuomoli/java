@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator;
+package com.github.hualuomoli.tool.creator;
 
 import java.lang.reflect.Field;
 

@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator.util;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.annotation.Ignore;
-import com.github.hualuomoli.plugin.creator._Attribute;
+import com.github.hualuomoli.tool.creator._Attribute;
 import com.google.common.collect.Lists;
 
 /**

@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator.db;
+package com.github.hualuomoli.tool.creator.db;
 
 import java.util.List;
 

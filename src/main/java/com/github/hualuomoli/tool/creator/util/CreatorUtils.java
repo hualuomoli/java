@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.creator.util;
+package com.github.hualuomoli.tool.creator.util;
 
 import java.util.Collection;
 
