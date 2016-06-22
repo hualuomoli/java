@@ -21,6 +21,16 @@ import com.google.common.collect.Maps;
 public class MysqlCreatorDealer extends AbstractCreatorDealer {
 
 	private static final String tplPath = "tpl/creator/mysql";
+	private String main = "main"; // 是否输出到main,默认为main,可设置为test
+
+	public MysqlCreatorDealer() {
+	}
+
+	public MysqlCreatorDealer(Boolean test) {
+		if (test) {
+			main = "test";
+		}
+	}
 
 	private List<DBTable> dbTableList = Lists.newArrayList();
 
@@ -48,7 +58,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		map.put("extends", entityCls.getName()); // 继承类
 
 		// 创建目录
-		File dir = new File(outputPath, "src/main/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/entity");
+		File dir = new File(outputPath, "src/" + main + "/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/entity");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -73,7 +83,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		map.put("mapperJavaName", "Base" + entityCls.getSimpleName() + "Mapper"); // 类名
 
 		// 创建目录
-		File dir = new File(outputPath, "src/main/resources/mappers/base");
+		File dir = new File(outputPath, "src/" + main + "/resources/mappers/base");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -94,7 +104,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		map.put("entityJavaName", "Base" + entityCls.getSimpleName()); // 类名
 
 		// 创建目录
-		File dir = new File(outputPath, "src/main/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/mapper");
+		File dir = new File(outputPath, "src/" + main + "/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/mapper");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -115,7 +125,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		map.put("entityJavaName", "Base" + entityCls.getSimpleName()); // 类名
 
 		// 创建目录
-		File dir = new File(outputPath, "src/main/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/service");
+		File dir = new File(outputPath, "src/" + main + "/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/service");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -141,7 +151,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		map.put("mapperJavaName", "Base" + entityCls.getSimpleName() + "Mapper"); // 类名
 
 		// 创建目录
-		File dir = new File(outputPath, "src/main/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/service");
+		File dir = new File(outputPath, "src/" + main + "/java/" + projectPackageName.replaceAll("[.]", "/") + "/base/service");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
