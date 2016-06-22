@@ -219,22 +219,6 @@
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
-			<!-- 忽略目录 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<excludes>
-						<!-- 忽略demo目录 -->
-						<exclude>com/github/hualuomoli/demo/**</exclude>
-						<exclude>mappers/demo/**</exclude>
-						<!-- 忽略生成器目录 -->
-						<exclude>com/github/hualuomoli/plugin/creator/**</exclude>
-						<exclude>tpl/creator/**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
 			<!-- 打包 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
