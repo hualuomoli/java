@@ -18,6 +18,7 @@ public class MysqlCreatorDealerTest {
 		List<Class<?>> clses = Lists.newArrayList();
 		clses.add(Demo.class);
 
+		// true生成文件放在test目录
 		CreatorDealer dealer = new MysqlCreatorDealer(true);
 		dealer.execute(clses, projectPackageName, outputPath);
 	}

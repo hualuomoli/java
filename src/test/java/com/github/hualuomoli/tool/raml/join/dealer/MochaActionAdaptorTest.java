@@ -1,4 +1,4 @@
-package com.github.hualuomoli.tool.raml.join.adaptor;
+package com.github.hualuomoli.tool.raml.join.dealer;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -11,6 +11,8 @@ import org.raml.model.Raml;
 
 import com.github.hualuomoli.tool.raml.join.JoinFileDealer;
 import com.github.hualuomoli.tool.raml.join.JoinParser;
+import com.github.hualuomoli.tool.raml.join.adaptor.ActionAdaptor;
+import com.github.hualuomoli.tool.raml.join.adaptor.MochaActionAdaptor;
 import com.github.hualuomoli.tool.raml.join.adaptor.mocha.MochaDeleteActionAdaptor;
 import com.github.hualuomoli.tool.raml.join.adaptor.mocha.MochaFileActionAdaptor;
 import com.github.hualuomoli.tool.raml.join.adaptor.mocha.MochaGetActionAdaptor;
