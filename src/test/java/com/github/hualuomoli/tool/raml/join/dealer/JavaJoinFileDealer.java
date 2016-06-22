@@ -133,7 +133,6 @@ public abstract class JavaJoinFileDealer implements JoinFileDealer {
 
 		private String author; // 作者
 		private double version; // 版本
-		private String projectName; // 项目名称
 		private String rootPackageName; // 根包名
 
 		public JavaConfig() {
@@ -153,14 +152,6 @@ public abstract class JavaJoinFileDealer implements JoinFileDealer {
 
 		public void setVersion(double version) {
 			this.version = version;
-		}
-
-		public String getProjectName() {
-			return projectName;
-		}
-
-		public void setProjectName(String projectName) {
-			this.projectName = projectName;
 		}
 
 		public String getRootPackageName() {
