@@ -18,7 +18,7 @@ public interface BaseDemoMapper {
 
 	int insert(BaseDemo baseDemo);
 	
-	int batchInsert(List<BaseDemo> list);
+	int batchInsert(@Param(value = "list") List<BaseDemo> list);
 
 	int update(BaseDemo baseDemo);
 

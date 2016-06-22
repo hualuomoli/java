@@ -109,6 +109,8 @@ public class ${javaName} implements ${implements} {
 		List<${entityJavaName}> list = ${mapperJavaName?uncap_first}.findList(${entityJavaName?uncap_first});
 		// get local thread
 		pagination = PaginationInterceptor.getPagination();
+		// remove local thread
+		PaginationInterceptor.clearPagination();
 
 		// set page
 		Page page = new Page();

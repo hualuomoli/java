@@ -18,7 +18,7 @@ public interface ${javaName} {
 
 	int insert(${entityJavaName} ${entityJavaName?uncap_first});
 	
-	int batchInsert(List<${entityJavaName}> list);
+	int batchInsert(@Param(value = "list") List<${entityJavaName}> list);
 
 	int update(${entityJavaName} ${entityJavaName?uncap_first});
 

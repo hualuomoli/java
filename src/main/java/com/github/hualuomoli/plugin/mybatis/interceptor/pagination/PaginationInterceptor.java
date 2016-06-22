@@ -78,4 +78,9 @@ public class PaginationInterceptor extends BaseInterceptor {
 		LOCAL_PAGE.set(pagination);
 	}
 
+	// 清除分页属性,执行分页查询后需要设置
+	public static void clearPagination() {
+		LOCAL_PAGE.remove();
+	}
+
 }

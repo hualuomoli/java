@@ -3,13 +3,13 @@
 <mapper namespace="com.github.hualuomoli.demo.base.mapper.BaseDemoMapper">
 
 	<sql id="columns">
-		`id`        as "id      ",
-		`name`      as "name    ",
-		`sex`       as "sex     ",
-		`salary`    as "salary  ",
-		`age`       as "age     ",
+		`id`        as "id"      ,
+		`name`      as "name"    ,
+		`sex`       as "sex"     ,
+		`salary`    as "salary"  ,
+		`age`       as "age"     ,
 		`birth_day` as "birthDay",
-		`remarks`   as "remarks ",
+		`remarks`   as "remarks" ,
 		`user_id`   as "user.id" 
 	</sql>
 	

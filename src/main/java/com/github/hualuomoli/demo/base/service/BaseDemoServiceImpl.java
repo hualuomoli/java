@@ -109,6 +109,8 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 		List<BaseDemo> list = baseDemoMapper.findList(baseDemo);
 		// get local thread
 		pagination = PaginationInterceptor.getPagination();
+		// remove local thread
+		PaginationInterceptor.clearPagination();
 
 		// set page
 		Page page = new Page();

@@ -9,7 +9,7 @@
 		`${attribute.dbName}_id`${attribute.dbBlanks} as "${attribute.javaName}.id"${attribute.javaBlanks}<#if attributes?size - attribute_index gt 1>,</#if>
 		<#else>
 		<#-- 普通类型 -->
-		`${attribute.dbName}`${attribute.dbBlanks} as "${attribute.javaName}${attribute.javaBlanks}"<#if attributes?size - attribute_index gt 1>,</#if>
+		`${attribute.dbName}`${attribute.dbBlanks} as "${attribute.javaName}"${attribute.javaBlanks}<#if attributes?size - attribute_index gt 1>,</#if>
 		</#if>
 	</#list>
 	</sql>
