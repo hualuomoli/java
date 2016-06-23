@@ -1,17 +1,17 @@
 package com.github.hualuomoli.tool.raml;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.raml.model.Raml;
 import org.raml.model.Resource;
+import org.raml.model.parameter.UriParameter;
 import org.raml.parser.visitor.RamlDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -19,70 +19,9 @@ import com.google.common.collect.Sets;
  * @author hualuomoli
  *
  */
-public abstract class ParserAbstract implements Parser {
+public abstract class AbstractParser implements Parser {
 
-	public static final Logger logger = LoggerFactory.getLogger(Parser.class);
-
-	protected Config config;
-
-	@Override
-	public void init(Config config) {
-
-		// set config
-		setConfig(config);
-
-		// valid
-		this.valid();
-		// clear output folder
-		this.clearFolder();
-		// init output folder
-		this.initFolder();
-
-	}
-
-	// 设置配置文件
-	protected void setConfig(Config config) {
-		this.config = config;
-	}
-
-	/** 配置参数是否有效 */
-	private boolean valid() {
-		String outputFilepath = config.getOutputFilepath();
-		if (StringUtils.isEmpty(outputFilepath)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// clear output folder
-	private void initFolder() {
-		String outputFilepath = config.getOutputFilepath();
-		File dir = new File(outputFilepath);
-		if (!dir.exists()) {
-			boolean success = dir.mkdirs();
-			if (!success) {
-				throw new RuntimeException("can not create folder " + dir.getAbsolutePath());
-			}
-		}
-	}
-
-	// clear output folder
-	private void clearFolder() {
-		if (!config.isClear()) {
-			return;
-		}
-		String outputFilepath = config.getOutputFilepath();
-		File dir = new File(outputFilepath);
-		if (dir.exists()) {
-			try {
-				FileUtils.forceDelete(dir);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-
-		}
-	}
+	protected static final Logger logger = LoggerFactory.getLogger(Parser.class);
 
 	@Override
 	public void execute(String[] ramlResources) {
@@ -144,6 +83,8 @@ public abstract class ParserAbstract implements Parser {
 
 	/**
 	 * 创建文件
+	 * 处理当前资源的Actions
+	 * 处理当前资源下非子资源的资源 child.getResource == empty
 	 * @param resource 资源
 	 */
 	protected abstract void create(Resource resource);
@@ -160,7 +101,7 @@ public abstract class ParserAbstract implements Parser {
 		 * @param resource 资源 
 		 * @return 叶子资源集合
 		 */
-		public static Set<Resource> getLeafResources(Resource resource) {
+		static Set<Resource> getLeafResources(Resource resource) {
 			Set<Resource> resources = Sets.newHashSet();
 
 			Map<String, Resource> resourceMap = resource.getResources();
@@ -169,7 +110,7 @@ public abstract class ParserAbstract implements Parser {
 			}
 
 			for (Resource r : resourceMap.values()) {
-				if (isLeaf(r)) {
+				if (_isLeaf(r)) {
 					resources.add(r);
 				}
 			}
@@ -183,7 +124,7 @@ public abstract class ParserAbstract implements Parser {
 		* @param resource 资源 
 		* @return 叶子资源集合
 		*/
-		public static Set<Resource> getNotLeafResources(Resource resource) {
+		static Set<Resource> getNotLeafResources(Resource resource) {
 			Set<Resource> resources = Sets.newHashSet();
 
 			Map<String, Resource> resourceMap = resource.getResources();
@@ -192,7 +133,7 @@ public abstract class ParserAbstract implements Parser {
 			}
 
 			for (Resource r : resourceMap.values()) {
-				if (!isLeaf(r)) {
+				if (!_isLeaf(r)) {
 					resources.add(r);
 				}
 			}
@@ -206,9 +147,37 @@ public abstract class ParserAbstract implements Parser {
 		 * @param resource 资源 
 		 * @return 是否是叶子资源
 		 */
-		private static boolean isLeaf(Resource resource) {
+
+		private static boolean _isLeaf(Resource resource) {
 			Map<String, Resource> rs = resource.getResources();
 			return rs == null || rs.size() == 0;
+		}
+
+		/**
+		 * 获取资源全路径
+		 * @param resource 资源
+		 * @return 资源全路径
+		 */
+		static String getResourceFullUri(Resource resource) {
+			if (resource == null) {
+				return StringUtils.EMPTY;
+			}
+			return getResourceFullUri(resource.getParentResource()) + resource.getRelativeUri();
+		}
+
+		/**
+		 * 获取资源参数
+		 * @param resource  资源
+		 * @return 资源参数
+		 */
+		static Map<String, UriParameter> getResourceFullUriParameters(Resource resource) {
+			Map<String, UriParameter> map = Maps.newHashMap();
+			if (resource == null) {
+				return map;
+			}
+			map.putAll(getResourceFullUriParameters(resource.getParentResource()));
+			map.putAll(resource.getUriParameters());
+			return map;
 		}
 
 	}
