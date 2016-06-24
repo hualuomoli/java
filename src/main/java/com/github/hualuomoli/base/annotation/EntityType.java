@@ -1,6 +1,6 @@
 package com.github.hualuomoli.base.annotation;
 
-public enum Type {
+public enum EntityType {
 
 	AUTO(), // 自动转换
 	CHAR(), // 单个字符
@@ -11,7 +11,7 @@ public enum Type {
 	CLOB(), // 大字符
 	;
 
-	private Type() {
+	private EntityType() {
 	}
 
 }

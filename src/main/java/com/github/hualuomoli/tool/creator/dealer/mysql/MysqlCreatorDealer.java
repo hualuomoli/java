@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.hualuomoli.base.annotation.Column;
-import com.github.hualuomoli.base.annotation.Table;
+import com.github.hualuomoli.base.annotation.EntityColumn;
+import com.github.hualuomoli.base.annotation.EntityTable;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator._Attribute;
 import com.github.hualuomoli.tool.creator.db.DBColumn;
@@ -71,7 +71,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("attributes", attributes); // 属性
-		Table table = entityCls.getAnnotation(Table.class);
+		EntityTable table = entityCls.getAnnotation(EntityTable.class);
 		map.put("dbName", table == null ? CreatorUtils.unCamel(entityCls.getSimpleName()) : table.name());
 
 		// entity
@@ -184,7 +184,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		}
 		dbTable.setColumnList(columnList);
 		// 表信息
-		Table table = entityCls.getAnnotation(Table.class);
+		EntityTable table = entityCls.getAnnotation(EntityTable.class);
 		if (table == null) {
 			dbTable.setName(CreatorUtils.unCamel(entityCls.getSimpleName()));
 			dbTable.setComment("");
@@ -228,7 +228,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setType("integer");
 			dbColumn.setLength("11");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -257,7 +257,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setType("bigint");
 			dbColumn.setLength("20");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -285,7 +285,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setName(attribute.getDbName());
 			dbColumn.setType("double");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -309,7 +309,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 		}
 
 		private static final DBColumn _parseString(_Attribute attribute) {
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			if (column == null) {
 				return _parseVarchar(attribute);
 			}
@@ -345,7 +345,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setType("varchar");
 			dbColumn.setLength("32");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 
 			// 根据注解设置
 			if (column != null) {
@@ -376,7 +376,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setType("varchar");
 			dbColumn.setLength("1");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -400,7 +400,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setName(attribute.getDbName());
 			dbColumn.setType("text");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -424,7 +424,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setName(attribute.getDbName());
 			dbColumn.setType("longtext");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment
@@ -448,7 +448,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setName(attribute.getDbName());
 			dbColumn.setType("timestamp");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// type
@@ -486,7 +486,7 @@ public class MysqlCreatorDealer extends AbstractCreatorDealer {
 			dbColumn.setType("varchar");
 			dbColumn.setLength("32");
 
-			Column column = attribute.getField().getAnnotation(Column.class);
+			EntityColumn column = attribute.getField().getAnnotation(EntityColumn.class);
 			// 根据注解设置
 			if (column != null) {
 				// comment

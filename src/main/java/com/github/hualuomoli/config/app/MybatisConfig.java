@@ -19,9 +19,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.github.hualuomoli.commons.ResourceUtils;
 import com.github.hualuomoli.plugin.mybatis.dialect.db.MySQLDialect;
 import com.github.hualuomoli.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
+import com.github.hualuomoli.util.ResourceUtils;
 
 @Configuration
 @PropertySource(value = { //

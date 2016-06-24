@@ -3,30 +3,30 @@ package com.github.hualuomoli.demo.entity;
 import java.util.Date;
 import java.util.List;
 
-import com.github.hualuomoli.base.annotation.Column;
-import com.github.hualuomoli.base.annotation.Ignore;
-import com.github.hualuomoli.base.annotation.Table;
-import com.github.hualuomoli.base.annotation.Type;
+import com.github.hualuomoli.base.annotation.EntityColumn;
+import com.github.hualuomoli.base.annotation.EntityIgnore;
+import com.github.hualuomoli.base.annotation.EntityTable;
+import com.github.hualuomoli.base.annotation.EntityType;
 
-@Table(name = "t_demo", comment = "测试demo")
+@EntityTable(name = "t_demo", comment = "测试demo")
 public class Demo {
 
-	@Column(name = "id", type = Type.STRING, comment = "ID")
+	@EntityColumn(name = "id", type = EntityType.STRING, comment = "ID")
 	private String id;
 	private String name;
-	@Column(type = Type.CHAR, length = 1)
+	@EntityColumn(type = EntityType.CHAR, length = 1)
 	private String sex;
-	@Column(precision = 8, scale = 3, comment = "工资")
+	@EntityColumn(precision = 8, scale = 3, comment = "工资")
 	private Double salary;
-	@Column(precision = 3)
+	@EntityColumn(precision = 3)
 	private Integer age;
-	@Column(type = Type.DATE, comment = "工资")
+	@EntityColumn(type = EntityType.DATE, comment = "工资")
 	private Date birthDay;
-	@Column(type = Type.CLOB)
+	@EntityColumn(type = EntityType.CLOB)
 	private String remarks;
-	@Ignore // 忽略
+	@EntityIgnore // 忽略
 	private String orderByStr; // 排序
-	@Column(comment = "用户")
+	@EntityColumn(comment = "用户")
 	private User user;
 	// 不会使用
 	private List<Address> address;

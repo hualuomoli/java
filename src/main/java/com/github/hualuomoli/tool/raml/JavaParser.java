@@ -27,6 +27,7 @@ import com.github.hualuomoli.commons.util.SerializeUtils;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.raml.entity.RamlJsonParam;
 import com.github.hualuomoli.tool.raml.entity.RamlMethod;
+import com.github.hualuomoli.tool.raml.entity.RamlMethodMimeType;
 import com.github.hualuomoli.tool.raml.entity.RamlParam;
 import com.github.hualuomoli.tool.raml.entity.RamlRequest;
 import com.github.hualuomoli.tool.raml.entity.RamlResponse;
@@ -45,9 +46,16 @@ public class JavaParser extends AbstractParser {
 	private String outputPath = ProjectUtils.getLocation();
 	private String main = "main";
 
-	private String projectPackageName;
-	private String author;
-	private String version;
+	// 配置
+	public String projectPackageName = "com.github.hualuomoli";
+	public String author = "hualuomoli";
+	public String version = "1.0";
+	public static boolean autoRemoveResultWrap = true; // 自动去除返回的外层封装
+	public static String pageSizeName = "pageSize";
+	public static String pageNumberName = "pageNumber";
+	public static String pageTotalName = "total";
+	public static String restResponsePackageName = "com.github.hualuomoli.rest";
+	public static String restResponseClassName = "AppRestResponse";
 
 	private Resource resource; // 资源
 	private String fullUri; // URI
@@ -77,17 +85,37 @@ public class JavaParser extends AbstractParser {
 
 		ramlMethodList = Lists.newArrayList();
 
+		// 当前资源下的请求
 		Map<ActionType, Action> actions = resource.getActions();
 		for (Action action : actions.values()) {
-			ramlMethodList.addAll(JavaTool.parse(action));
+			JavaTool tool = new JavaTool(action, action.getResource().getRelativeUri());
+			List<RamlMethod> list = tool.parse();
+			ramlMethodList.addAll(list);
 		}
 
+		// 当前资源下没有子资源的请求
 		Set<Resource> resources = Tool.getLeafResources(resource);
 		for (Resource r : resources) {
-			ramlMethodList.addAll(JavaTool.parse(r));
+			Map<ActionType, Action> as = r.getActions();
+			for (Action a : as.values()) {
+				JavaTool tool = new JavaTool(a, r.getRelativeUri());
+				List<RamlMethod> list = tool.parse();
+				ramlMethodList.addAll(list);
+			}
 		}
-		//
+
+		// 生成
+		this._create();
+	}
+
+	// 生成
+	private void _create() {
 		this._createController();
+		if (autoRemoveResultWrap) {
+			this._createService();
+			this._createDao();
+			this._createXml();
+		}
 	}
 
 	private void _createController() {
@@ -104,8 +132,15 @@ public class JavaParser extends AbstractParser {
 		map.put("uri", fullUri);
 
 		// service
-		map.put("servicePackageName", projectPackageName + "." + packageName + ".web");
+		map.put("servicePackageName", projectPackageName + "." + packageName + ".service");
 		map.put("serviceJavaName", entityName + "Service");
+
+		// rest response
+		map.put("restResponsePackageName", restResponsePackageName);
+		map.put("restResponseClassName", restResponseClassName);
+
+		// autoRemoveResultWrap
+		map.put("autoRemoveResultWrap", autoRemoveResultWrap ? "Y" : "N");
 
 		map.put("methods", ramlMethodList);
 
@@ -116,6 +151,94 @@ public class JavaParser extends AbstractParser {
 		}
 		// 输出
 		TemplateUtils.processByResource(tplPath, "controller.tpl", map, new File(dir.getAbsolutePath(), controllerJavaName + ".java"));
+
+	}
+
+	private void _createService() {
+		String servicePackageName = projectPackageName + "." + packageName + ".service";
+		String serviceJavaName = entityName + "Service";
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("desc", resource.getDescription());
+		map.put("author", author);
+		map.put("version", version);
+		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+
+		map.put("packageName", servicePackageName); // 包名
+		map.put("javaName", serviceJavaName); // 类名
+
+		// controller
+		map.put("controllerPackageName", projectPackageName + "." + packageName + ".web");
+		map.put("controllerJavaName", entityName + "Controller");
+
+		// mapper
+		map.put("mapperPackageName", projectPackageName + "." + packageName + ".mapper");
+		map.put("mapperJavaName", entityName + "Mapper");
+
+		map.put("methods", ramlMethodList);
+
+		// 创建目录
+		File dir = new File(outputPath, "src/" + main + "/java/" + servicePackageName.replaceAll("[.]", "/"));
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// 输出
+		TemplateUtils.processByResource(tplPath, "service.tpl", map, new File(dir.getAbsolutePath(), serviceJavaName + ".java"));
+
+	}
+
+	private void _createDao() {
+		String mapperPackageName = projectPackageName + "." + packageName + ".mapper";
+		String mapperJavaName = entityName + "Mapper";
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("desc", resource.getDescription());
+		map.put("author", author);
+		map.put("version", version);
+		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+
+		map.put("packageName", mapperPackageName); // 包名
+		map.put("javaName", mapperJavaName); // 类名
+
+		// controller
+		map.put("controllerPackageName", projectPackageName + "." + packageName + ".web");
+		map.put("controllerJavaName", entityName + "Controller");
+
+		map.put("methods", ramlMethodList);
+
+		// 创建目录
+		File dir = new File(outputPath, "src/" + main + "/java/" + mapperPackageName.replaceAll("[.]", "/"));
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// 输出
+		TemplateUtils.processByResource(tplPath, "dao.tpl", map, new File(dir.getAbsolutePath(), mapperJavaName + ".java"));
+
+	}
+
+	private void _createXml() {
+		String mapperPackageName = projectPackageName + "." + packageName + ".mapper";
+		String mapperJavaName = entityName + "Mapper";
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("desc", resource.getDescription());
+		map.put("author", author);
+		map.put("version", version);
+		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+
+		map.put("packageName", mapperPackageName); // 包名
+		map.put("javaName", mapperJavaName); // 类名
+
+		// controller
+		map.put("controllerPackageName", projectPackageName + "." + packageName + ".web");
+		map.put("controllerJavaName", entityName + "Controller");
+
+		map.put("methods", ramlMethodList);
+
+		// 创建目录
+		File dir = new File(outputPath, "src/" + main + "/resources/mappers/" + packageName.replaceAll("[.]", "/"));
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// 输出
+		TemplateUtils.processByResource(tplPath, "xml.tpl", map, new File(dir.getAbsolutePath(), mapperJavaName + ".xml"));
 
 	}
 
@@ -138,64 +261,158 @@ public class JavaParser extends AbstractParser {
 	}
 
 	// 工具
-	private static class JavaTool {
+	public static class JavaTool {
 
-		// 解析
-		static List<RamlMethod> parse(Resource resource) {
-			List<RamlMethod> ramlMethodList = Lists.newArrayList();
-			Map<ActionType, Action> actions = resource.getActions();
-			for (Action action : actions.values()) {
-				ramlMethodList.addAll(_parse(action, resource.getRelativeUri()));
+		private Action action; // 事件
+		private String relativeUri; // 相对URI(方法上的资源地址注解)
+		private boolean hasResult = true; // 是否有返回值
+		private String entityName; // 实体类名称
+		private String methodName; // 请求方法名称
+		private String upperMethodName; // 请求方法名称
+
+		public JavaTool(Action action, String relativeUri) {
+			this.action = action;
+			this.relativeUri = relativeUri;
+			_init();
+		}
+
+		// 初始化
+		private void _init() {
+			// 设置是否有返回值
+			Map<String, Response> responses = action.getResponses();
+			if (responses == null || responses.size() == 0) {
+				// 没有响应
+				hasResult = false;
 			}
-			return ramlMethodList;
+			// 设置实体类名称
+			_setEntityName();
+			// 设置方法名称
+			methodName = action.getType().toString().toLowerCase() + entityName;
+			upperMethodName = StringUtils.capitalize(methodName);
+			// 设置URI
+		}
+
+		// 设置实体类名称
+		private void _setEntityName() {
+			entityName = "";
+			if (StringUtils.isBlank(relativeUri)) {
+				return;
+			}
+			String[] array = relativeUri.substring(1).split("[/]");
+			boolean dynamic = false;
+			for (String str : array) {
+				if (str.startsWith("{") && str.endsWith("}")) {
+					if (!dynamic) {
+						dynamic = true;
+						entityName += "By";
+					}
+					// 去掉前后的{}
+					str = str.substring(1, str.length() - 1);
+				}
+				entityName += StringUtils.capitalize(str);
+			}
 		}
 
 		// 解析
-		static List<RamlMethod> parse(Action action) {
-			return _parse(action, action.getResource().getRelativeUri());
-		}
-
-		// 解析
-		private static List<RamlMethod> _parse(Action action, String uri) {
-			if (!_valid(action)) {
-				throw new RuntimeException("invalid " + action.getResource().getRelativeUri());
-			}
+		public List<RamlMethod> parse() {
 
 			RamlMethod ramlMethod = new RamlMethod();
-			ramlMethod.setResultType(_noResult(action) ? "void" : "String");
-			ramlMethod.setMethodName(_getMethodName(uri, action.getType()));
-			ramlMethod.setUriParams(_getUriParams(action));
-			ramlMethod.setFileParams(_getFileParams(action));
+			ramlMethod.setHasResult(hasResult ? "Y" : "N");
+			ramlMethod.setMethodName(methodName);
+			ramlMethod.setUriParams(this._getUriParams());
+			ramlMethod.setFileParams(this._getFileParams());
+			// mimeType
+			RamlMethodMimeType methodMimeType = new RamlMethodMimeType();
+			methodMimeType.setUri(relativeUri);
+			methodMimeType.setMethod(action.getType().toString());
+			ramlMethod.setMethodMimeType(methodMimeType);
+
 			// 增加request请求,对于post请求可能会有多个
-			List<RamlMethod> ramlMethodList = Req.addRequest(action, ramlMethod);
+			List<RamlMethod> ramlMethodList = new Req().getParams(ramlMethod);
 			// 增加response响应,响应可能有多个类型
-			ramlMethodList = Res.addResponse(action, ramlMethodList);
+			ramlMethodList = new Res().addResponse(ramlMethodList);
 			return ramlMethodList;
+		}
+
+		// URI参数
+		private List<RamlParam> _getUriParams() {
+			List<RamlParam> params = Lists.newArrayList();
+
+			Map<String, UriParameter> uriParameters = Tool.getResourceFullUriParameters(action.getResource());
+			if (uriParameters == null || uriParameters.size() == 0) {
+				return params;
+			}
+
+			for (UriParameter uriParameter : uriParameters.values()) {
+				RamlParam param = _getParam(uriParameter);
+				// 该注解为路径注解,非属性注解
+				List<String> annos = Lists.newArrayList();
+				String anno = "@PathVariable(value = \"" + uriParameter.getDisplayName() + "\")";
+				annos.add(anno);
+				param.setAnnos(annos);
+
+				params.add(param);
+			}
+
+			return params;
+		}
+
+		// File参数
+		private List<RamlParam> _getFileParams() {
+			List<RamlParam> params = Lists.newArrayList();
+
+			Map<String, MimeType> body = action.getBody();
+			if (body == null || body.size() == 0) {
+				return params;
+			}
+
+			if (!body.containsKey(MIME_TYPE_MULTIPART)) {
+				return params;
+			}
+
+			Map<String, List<FormParameter>> formParameters = body.get(MIME_TYPE_MULTIPART).getFormParameters();
+			for (String displayName : formParameters.keySet()) {
+				List<FormParameter> list = formParameters.get(displayName);
+				if (list == null || list.size() != 1) {
+					throw new RuntimeException(displayName + "'s size must be 1.");
+				}
+				FormParameter formParameter = list.get(0);
+				// 文件
+				if (formParameter.getType() == ParamType.FILE) {
+					RamlParam param = _getParam(formParameter);
+					// 该注解为路径注解,非属性注解
+					List<String> annos = Lists.newArrayList();
+					String anno = "@RequestParam(value = \"" + formParameter.getDisplayName() + "\", required = " + (formParameter.isRequired() ? "true" : "false") + ")";
+					annos.add(anno);
+					param.setAnnos(annos);
+
+					params.add(param);
+				}
+			}
+
+			return params;
 		}
 
 		// 请求
-		static class Req {
+		class Req {
 
 			// 请求
-			static List<RamlMethod> addRequest(Action action, RamlMethod ramlMethod) {
-
-				String methodName = _getMethodName(action.getResource().getRelativeUri(), action.getType());
-				String className = StringUtils.capitalize(methodName) + "Entity";
+			List<RamlMethod> getParams(RamlMethod ramlMethod) {
 
 				// method
 				switch (action.getType()) {
 				case GET:
 					// 一个
 					RamlRequest getRequest = new RamlRequest();
-					getRequest.setClassName(className);
-					getRequest.setParams(_getParamsForGetRequest(action));
+					getRequest.setClassName(upperMethodName + "Entity");
+					getRequest.setParams(this._getParamsForGetRequest());
 					ramlMethod.setRequest(getRequest);
 					return Lists.newArrayList(ramlMethod);
 				case DELETE:
 					// 一个
 					RamlRequest deleteRequest = new RamlRequest();
-					deleteRequest.setClassName(className);
-					deleteRequest.setParams(_getParamsForDeleteRequest(action));
+					deleteRequest.setClassName(upperMethodName + "Entity");
+					deleteRequest.setParams(this._getParamsForDeleteRequest());
 					ramlMethod.setRequest(deleteRequest);
 					return Lists.newArrayList(ramlMethod);
 				case POST:
@@ -206,7 +423,7 @@ public class JavaParser extends AbstractParser {
 					if (body == null || body.size() == 0) {
 						// 没有参数
 						RamlRequest postRequest = new RamlRequest();
-						postRequest.setClassName(className);
+						postRequest.setClassName(upperMethodName + "Entity");
 						ramlMethod.setRequest(postRequest);
 						return Lists.newArrayList(ramlMethod);
 					}
@@ -215,24 +432,30 @@ public class JavaParser extends AbstractParser {
 						if (StringUtils.equals(mimeType, MIME_TYPE_URLENCODED)) {
 							RamlMethod urlencodedRamlMethod = SerializeUtils.clone(ramlMethod);
 							RamlRequest request = new RamlRequest();
-							request.setClassName(className);
-							request.setParams(_getParamsForPostOrPutUrlEncodedRequest(action));
+							request.setClassName(upperMethodName + "Entity");
+							request.setParams(this._getParamsForPostOrPutUrlEncodedRequest());
 							urlencodedRamlMethod.setRequest(request);
+							// set consumes
+							urlencodedRamlMethod.getMethodMimeType().setConsumes(MIME_TYPE_URLENCODED);
 							ramlMethodList.add(urlencodedRamlMethod);
 						} else if (StringUtils.equals(mimeType, MIME_TYPE_MULTIPART)) {
 							RamlMethod multipartRamlMethod = SerializeUtils.clone(ramlMethod);
 							RamlRequest request = new RamlRequest();
-							request.setClassName(className + "File");
-							request.setParams(_getParamsForPostOrPutMultipartRequest(action));
+							request.setClassName(upperMethodName + "FileEntity");
+							request.setParams(this._getParamsForPostOrPutMultipartRequest());
 							multipartRamlMethod.setRequest(request);
+							// set consumes
+							multipartRamlMethod.getMethodMimeType().setConsumes(MIME_TYPE_MULTIPART);
 							ramlMethodList.add(multipartRamlMethod);
 						} else if (StringUtils.equals(mimeType, MIME_TYPE_JSON)) {
 							RamlMethod jsonRamlMethod = SerializeUtils.clone(ramlMethod);
 							RamlRequest request = new RamlRequest();
-							request.setClassName(className + "Json");
-							request.setParams(_getParamsForPostOrPutJsonRequest(action));
-							request.setJsonParams(_getJsonParamsForPostOrPutJsonRequest(action));
+							request.setClassName(upperMethodName + "JsonEntity");
+							request.setParams(this._getParamsForPostOrPutJsonRequest());
+							request.setJsonParams(this._getJsonParamsForPostOrPutJsonRequest());
 							jsonRamlMethod.setRequest(request);
+							// set consumes
+							jsonRamlMethod.getMethodMimeType().setConsumes(MIME_TYPE_JSON);
 							ramlMethodList.add(jsonRamlMethod);
 						} else {
 							throw new RuntimeException("can not supoort mimeType " + mimeType);
@@ -247,7 +470,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// GET请求的参数
-			private static List<RamlParam> _getParamsForGetRequest(Action action) {
+			private List<RamlParam> _getParamsForGetRequest() {
 				List<RamlParam> ramlParms = Lists.newArrayList();
 
 				// uri
@@ -265,7 +488,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// DELETE请求的参数
-			private static List<RamlParam> _getParamsForDeleteRequest(Action action) {
+			private List<RamlParam> _getParamsForDeleteRequest() {
 				List<RamlParam> ramlParms = Lists.newArrayList();
 
 				// uri
@@ -278,7 +501,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// POST/PUT - application/x-www-form-urlencoded 请求的参数
-			private static List<RamlParam> _getParamsForPostOrPutUrlEncodedRequest(Action action) {
+			private List<RamlParam> _getParamsForPostOrPutUrlEncodedRequest() {
 				List<RamlParam> ramlParms = Lists.newArrayList();
 
 				// uri
@@ -314,7 +537,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// POST/PUT - multipart/form-data 请求的参数
-			private static List<RamlParam> _getParamsForPostOrPutMultipartRequest(Action action) {
+			private List<RamlParam> _getParamsForPostOrPutMultipartRequest() {
 				List<RamlParam> ramlParms = Lists.newArrayList();
 
 				// uri
@@ -350,7 +573,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// POST/PUT - application/json 请求的参数
-			private static List<RamlParam> _getParamsForPostOrPutJsonRequest(Action action) {
+			private List<RamlParam> _getParamsForPostOrPutJsonRequest() {
 				List<RamlParam> ramlParms = Lists.newArrayList();
 
 				// uri
@@ -363,7 +586,7 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// POST/PUT - application/json 请求的参数
-			private static List<RamlJsonParam> _getJsonParamsForPostOrPutJsonRequest(Action action) {
+			private List<RamlJsonParam> _getJsonParamsForPostOrPutJsonRequest() {
 				List<RamlJsonParam> jsonParms = Lists.newArrayList();
 
 				Map<String, MimeType> body = action.getBody();
@@ -376,25 +599,27 @@ public class JavaParser extends AbstractParser {
 				}
 
 				String schema = body.get(MIME_TYPE_JSON).getSchema();
-				if (StringUtils.isBlank(schema)) {
-					throw new RuntimeException("schema must not be empty.");
+				String example = body.get(MIME_TYPE_JSON).getExample();
+				if (StringUtils.isBlank(schema) || StringUtils.isBlank(example)) {
+					throw new RuntimeException("schema and example must not be empty.");
 				}
-				return Json.getParams(schema);
+				Json json = new Json(schema, example);
+				return json.getRequestParams();
 			}
 		}
 
 		// 响应
-		static class Res {
+		class Res {
 
-			static List<RamlMethod> addResponse(Action action, List<RamlMethod> ramlMethodList) {
+			List<RamlMethod> addResponse(List<RamlMethod> ramlMethodList) {
 				List<RamlMethod> resultList = Lists.newArrayList();
 				for (RamlMethod ramlMethod : ramlMethodList) {
-					resultList.addAll(_addResponse(action, ramlMethod));
+					resultList.addAll(this._addResponse(ramlMethod));
 				}
 				return resultList;
 			}
 
-			private static List<RamlMethod> _addResponse(Action action, RamlMethod ramlMethod) {
+			private List<RamlMethod> _addResponse(RamlMethod ramlMethod) {
 				List<RamlMethod> ramlMethodList = Lists.newArrayList();
 
 				Map<String, Response> responses = action.getResponses();
@@ -404,7 +629,8 @@ public class JavaParser extends AbstractParser {
 
 				for (String status : responses.keySet()) {
 					if (StringUtils.equals(status, STATUS_OK)) {
-						ramlMethodList.addAll(OK.addResponse(action, ramlMethod));
+						Response response = responses.get(status);
+						ramlMethodList.addAll(new OK().addResponse(response, ramlMethod));
 					} else {
 						throw new RuntimeException("can not support status " + status);
 					}
@@ -414,11 +640,11 @@ public class JavaParser extends AbstractParser {
 			}
 
 			// OK
-			static class OK {
+			class OK {
 
-				private static List<RamlMethod> addResponse(Action action, RamlMethod ramlMethod) {
+				private List<RamlMethod> addResponse(Response response, RamlMethod ramlMethod) {
 
-					Map<String, MimeType> body = action.getResponses().get(STATUS_OK).getBody();
+					Map<String, MimeType> body = response.getBody();
 					if (body == null || body.size() == 0) {
 						return Lists.newArrayList(ramlMethod);
 					}
@@ -427,30 +653,37 @@ public class JavaParser extends AbstractParser {
 					for (String mimeType : body.keySet()) {
 						if (StringUtils.equals(mimeType, MIME_TYPE_JSON)) {
 							RamlMethod jsonRamlMethod = SerializeUtils.clone(ramlMethod);
-							_addResponseForJson(action, jsonRamlMethod);
+							MimeType jsonMimeType = body.get(mimeType);
+							_addResponseForJson(jsonMimeType, jsonRamlMethod);
+							// set produces
+							jsonRamlMethod.getMethodMimeType().setProduces(MIME_TYPE_JSON);
 							resultList.add(jsonRamlMethod);
+						} else {
+							throw new RuntimeException("can not support response mimtType " + mimeType);
 						}
 					}
 					return resultList;
 				}
 
 				// json
-				private static void _addResponseForJson(Action action, RamlMethod ramlMethod) {
+				private void _addResponseForJson(MimeType jsonMimeType, RamlMethod jsonRamlMethod) {
 
-					String schema = action.getResponses().get(STATUS_OK).getBody().get(MIME_TYPE_JSON).getSchema();
-					if (StringUtils.isBlank(schema)) {
+					String schema = jsonMimeType.getSchema();
+					String example = jsonMimeType.getExample();
+					if (StringUtils.isBlank(schema) || StringUtils.isBlank(example)) {
 						throw new RuntimeException("schema must not be empty.");
 					}
 
-					String methodName = _getMethodName(action.getResource().getRelativeUri(), action.getType());
 					String className = StringUtils.capitalize(methodName) + "ResultEntity";
 
-					// TODO
-					List<RamlJsonParam> jsonParams = Json.getParams(schema);
+					Json json = new Json(schema, example);
+
+					List<RamlJsonParam> jsonParams = json.getResponseParams();
 					RamlResponse res = new RamlResponse();
+					res.setJson(json);
 					res.setClassName(className);
 					res.setJsonParams(jsonParams);
-					ramlMethod.setResponse(res);
+					jsonRamlMethod.setResponse(res);
 				}
 
 			}
@@ -458,7 +691,7 @@ public class JavaParser extends AbstractParser {
 		}
 
 		// JSON
-		static class Json {
+		public static class Json {
 
 			/** 
 			* {
@@ -563,14 +796,47 @@ public class JavaParser extends AbstractParser {
 			*   ]
 			* }
 			*/
-			// 参数
-			static List<RamlJsonParam> getParams(String schema) {
-				JSONObject jsonObject = new JSONObject(schema);
-				return _getObjectParams(jsonObject);
+
+			private String schema;
+			private String example;
+			int type;
+			String resultName;
+			private String pageDataName;
+
+			public int getType() {
+				return type;
 			}
 
-			// Object参数
-			static List<RamlJsonParam> _getObjectParams(JSONObject jsonObject) {
+			public void setType(int type) {
+				this.type = type;
+			}
+
+			public String getResultName() {
+				return resultName;
+			}
+
+			public void setResultName(String resultName) {
+				this.resultName = resultName;
+			}
+
+			public static final int TYPE_NO_DATA = 2;
+			public static final int TYPE_OBJECT = 3;
+			public static final int TYPE_ARRAY = 4;
+			public static final int TYPE_PAGE = 5;
+
+			public Json(String schema, String example) {
+				this.schema = schema;
+				this.example = example;
+			}
+
+			// 请求参数
+			List<RamlJsonParam> getRequestParams() {
+				JSONObject jsonObject = new JSONObject(schema);
+				return _getRequestObjectParams(jsonObject);
+			}
+
+			// 请求参数,添加验证注解
+			List<RamlJsonParam> _getRequestObjectParams(JSONObject jsonObject) {
 
 				List<RamlJsonParam> ramlJsonParamList = Lists.newArrayList();
 
@@ -599,7 +865,8 @@ public class JavaParser extends AbstractParser {
 						arrayJsonParam.setName(key);
 						arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
 						arrayJsonParam.setComment(description);
-						arrayJsonParam.setChildren(_getArrayParams(keyObject));
+						JSONObject newJsonObject = keyObject.getJSONObject(Schema.ITEMS);
+						arrayJsonParam.setChildren(_getRequestObjectParams(newJsonObject));
 						ramlJsonParamList.add(arrayJsonParam);
 
 						// annos
@@ -615,7 +882,7 @@ public class JavaParser extends AbstractParser {
 						objectJsonParam.setName(key);
 						objectJsonParam.setType(objectCalssName);
 						objectJsonParam.setComment(description);
-						objectJsonParam.setChildren(_getObjectParams(keyObject));
+						objectJsonParam.setChildren(_getRequestObjectParams(keyObject));
 						ramlJsonParamList.add(objectJsonParam);
 						break;
 					case "integer": // integer
@@ -737,13 +1004,8 @@ public class JavaParser extends AbstractParser {
 				return ramlJsonParamList;
 			}
 
-			// Array参数
-			static List<RamlJsonParam> _getArrayParams(JSONObject jsonObject) {
-				return _getObjectParams(jsonObject.getJSONObject(Schema.ITEMS));
-			}
-
 			// 必填
-			static Set<String> _getRequired(JSONObject jsonObject) {
+			Set<String> _getRequired(JSONObject jsonObject) {
 				Set<String> sets = Sets.newHashSet();
 				if (!jsonObject.has(Schema.REQUIRED)) {
 					return sets;
@@ -755,115 +1017,208 @@ public class JavaParser extends AbstractParser {
 				return sets;
 			}
 
-			// schema
-			static class Schema {
+			// 响应内容
+			List<RamlJsonParam> getResponseParams() {
+				JSONObject jsonObject = new JSONObject(schema);
 
-				public static final String TYPE = "type"; // 类型
-				public static final String REQUIRED = "required"; // properties中参数是否必填
-				public static final String PROPERTIES = "properties";
-				public static final String ITEMS = "items";
-
-				public static final String DESCRIPTION = "description";
-				public static final String DEFAULT = "default"; // 默认值
-				public static final String EXAMPLE = "example"; // 例子
-				// 验证
-				public static final String PATTERN = "pattern"; // 正则表达式
-				public static final String MIN_LENGTH = "minLength"; // 最小长度
-				public static final String MAX_LENGTH = "maxLength"; // 最大长度
-				public static final String MINIMUM = "minimum"; // 最小值
-				public static final String MAXIMUM = "maximum"; // 最大值
-
-			}
-
-		}
-
-		// URI参数
-		private static List<RamlParam> _getUriParams(Action action) {
-			List<RamlParam> params = Lists.newArrayList();
-
-			// uri
-			Map<String, UriParameter> uriParameters = Tool.getResourceFullUriParameters(action.getResource());
-			for (UriParameter uriParameter : uriParameters.values()) {
-				RamlParam param = _getParam(uriParameter);
-				// 该注解为路径注解,非属性注解
-				List<String> annos = Lists.newArrayList();
-				String anno = "@PathVariable(value = \"" + uriParameter.getDisplayName() + "\")";
-				annos.add(anno);
-				param.setAnnos(annos);
-
-				params.add(param);
-			}
-
-			return params;
-		}
-
-		// File参数
-		private static List<RamlParam> _getFileParams(Action action) {
-			List<RamlParam> params = Lists.newArrayList();
-
-			// file
-			// body
-			Map<String, MimeType> body = action.getBody();
-			if (body != null && body.size() > 0) {
-				if (body.size() > 1) {
-					throw new RuntimeException("can not support " + body.size() + "form mimeType for " + action.getResource().getRelativeUri());
+				if (autoRemoveResultWrap) {
+					// 自动转换,去掉通用
+					JSONObject obj = removeCommonField(jsonObject);
+					if (obj == null) {
+						return Lists.newArrayList();
+					} else {
+						return _getResponseObjectParams(obj);
+					}
+				} else {
+					return _getResponseObjectParams(jsonObject);
 				}
-				if (body.containsKey("multipart/form-data")) {
-					Map<String, List<FormParameter>> formParameters = body.get("multipart/form-data").getFormParameters();
-					for (String displayName : formParameters.keySet()) {
-						List<FormParameter> list = formParameters.get(displayName);
-						FormParameter formParameter = list.get(0);
-						// 文件
-						if (formParameter.getType() == ParamType.FILE) {
-							RamlParam param = _getParam(formParameter);
-							// 该注解为路径注解,非属性注解
-							List<String> annos = Lists.newArrayList();
-							String anno = "@RequestParam(value = \"" + formParameter.getDisplayName() + "\", required = " + (formParameter.isRequired() ? "true" : "false") + ")";
-							annos.add(anno);
-							param.setAnnos(annos);
 
-							params.add(param);
+			}
+
+			JSONObject removeCommonField(JSONObject jsonObject) {
+
+				JSONObject properties = jsonObject.getJSONObject(Schema.PROPERTIES);
+				Set<String> keys = properties.keySet();
+				for (String key : keys) {
+					JSONObject keyObject = properties.getJSONObject(key);
+					switch (keyObject.getString(Schema.TYPE)) {
+					case "object":
+						JSONObject pageProperties = keyObject.getJSONObject(Schema.PROPERTIES);
+						Set<String> pageKeys = pageProperties.keySet();
+						Set<String> sets = Sets.newHashSet(pageTotalName, pageNumberName, pageSizeName);
+
+						if (pageKeys.containsAll(sets)) {
+							// page
+							pageKeys.removeAll(sets);
+							List<String> nameList = Lists.newArrayList(pageKeys);
+							if (nameList.size() != 1) {
+								throw new RuntimeException("we wan't page but find invalid schema " + schema);
+							}
+							String pageName = nameList.get(0);
+							JSONObject pageDataObject = pageProperties.getJSONObject(pageName);
+							if (!StringUtils.equals(pageDataObject.getString(Schema.TYPE), "array")) {
+								throw new RuntimeException("we wan't array jsonObject,but find " + pageDataObject.getString(Schema.TYPE));
+							}
+							type = TYPE_PAGE;
+							resultName = key;
+							setPageDataName(pageName);
+							return pageDataObject.getJSONObject(Schema.ITEMS);
+						} else {
+							type = TYPE_OBJECT;
+							resultName = key;
+							return keyObject;
 						}
+					case "array": // list data
+						type = TYPE_ARRAY;
+						resultName = key;
+						return keyObject.getJSONObject(Schema.ITEMS);
+					default:
+						break;
 					}
 				}
+
+				// return code,msg
+				type = TYPE_NO_DATA;
+				return null;
 			}
 
-			return params;
-		}
+			// 响应内容,添加数据转换
+			List<RamlJsonParam> _getResponseObjectParams(JSONObject jsonObject) {
 
-		// 参数
-		private static RamlParam _getParam(AbstractParam abstractParam) {
-			RamlParam ramlParam = new RamlParam();
-			ramlParam.setName(abstractParam.getDisplayName());
-			// type
-			switch (abstractParam.getType()) {
-			case STRING:
-				ramlParam.setType("String");
-				break;
-			case INTEGER:
-				BigDecimal maxinum = abstractParam.getMaximum();
-				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
-					ramlParam.setType("Long");
-				} else {
-					ramlParam.setType("Integer");
+				List<RamlJsonParam> ramlJsonParamList = Lists.newArrayList();
+
+				JSONObject properties = jsonObject.getJSONObject(Schema.PROPERTIES);
+				Set<String> requredSet = _getRequired(jsonObject);
+
+				Set<String> keys = properties.keySet();
+				for (String key : keys) {
+					JSONObject keyObject = properties.getJSONObject(key);
+					String type = keyObject.getString(Schema.TYPE);
+					String description = keyObject.has(Schema.DESCRIPTION) ? keyObject.getString(Schema.DESCRIPTION) : "描述";
+					switch (type) {
+					case "array": // 数组
+						RamlJsonParam arrayJsonParam = new RamlJsonParam();
+						String name = key;
+						if (key.endsWith("s") || key.endsWith("S")) {
+							name = key.substring(0, key.length() - 1);
+						} else if (StringUtils.equalsIgnoreCase(key, "list")) {
+							logger.warn("please set property name. not use list");
+							name = "list";
+						} else if (key.endsWith("list") || key.endsWith("List")) {
+							name = key.substring(0, key.length() - 4);
+						}
+						String arrayCalssName = StringUtils.capitalize(name);
+						arrayJsonParam.setClassName(arrayCalssName);
+						arrayJsonParam.setName(key);
+						arrayJsonParam.setType("java.util.List<" + arrayCalssName + ">");
+						arrayJsonParam.setComment(description);
+						JSONObject newJsonObject = keyObject.getJSONObject(Schema.ITEMS);
+						arrayJsonParam.setChildren(_getRequestObjectParams(newJsonObject));
+						ramlJsonParamList.add(arrayJsonParam);
+
+						// annos
+						if (requredSet.contains(key)) {
+							// @NotEmpty(message = "必填选项")
+						}
+						break;
+					case "object": // Object
+						RamlJsonParam objectJsonParam = new RamlJsonParam();
+
+						String objectCalssName = StringUtils.capitalize(key);
+						objectJsonParam.setClassName(objectCalssName);
+						objectJsonParam.setName(key);
+						objectJsonParam.setType(objectCalssName);
+						objectJsonParam.setComment(description);
+						objectJsonParam.setChildren(_getRequestObjectParams(keyObject));
+						ramlJsonParamList.add(objectJsonParam);
+						break;
+					case "integer": // integer
+						RamlJsonParam integerJsonParam = new RamlJsonParam();
+						List<String> integerAnnos = Lists.newArrayList();
+						integerJsonParam.setName(key);
+						integerJsonParam.setType("Integer");
+						integerJsonParam.setComment(description);
+						integerJsonParam.setAnnos(integerAnnos);
+						ramlJsonParamList.add(integerJsonParam);
+						break;
+					case "number": // double
+						RamlJsonParam doubleJsonParam = new RamlJsonParam();
+						List<String> doubleAnnos = Lists.newArrayList();
+						doubleJsonParam.setName(key);
+						doubleJsonParam.setType("Double");
+						doubleJsonParam.setComment(description);
+						doubleJsonParam.setAnnos(doubleAnnos);
+						ramlJsonParamList.add(doubleJsonParam);
+						break;
+					case "string": // string
+						RamlJsonParam stringJsonParam = new RamlJsonParam();
+						List<String> stringAnnos = Lists.newArrayList();
+						stringJsonParam.setName(key);
+						stringJsonParam.setType("String");
+						stringJsonParam.setComment(description);
+						stringJsonParam.setAnnos(stringAnnos);
+						ramlJsonParamList.add(stringJsonParam);
+						break;
+					case "date":
+						RamlJsonParam dateJsonParam = new RamlJsonParam();
+						List<String> dateAnnos = Lists.newArrayList();
+						// @DateTimeFormat(pattern = "")
+						String example = jsonObject.has(Schema.EXAMPLE) ? jsonObject.getString(Schema.EXAMPLE) : "";
+						if (StringUtils.isNotBlank(example)) {
+							// TODO
+							// 日期输出格式
+							// String pattern;
+							// if (example.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+							// pattern = "yyyy-MM-dd kk:mm:ss";
+							// } else if (example.matches("\\d{4}-\\d{2}-\\d{2}")) {
+							// pattern = "yyyy-MM-dd";
+							// } else if (example.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+							// pattern = "yyyy/MM/dd kk:mm:ss";
+							// } else if (example.matches("\\d{4}/\\d{2}/\\d{2}")) {
+							// pattern = "yyyy/MM/dd";
+							// } else if (example.matches("\\d{14}")) {
+							// pattern = "yyyyMMddkkmmss";
+							// } else if (example.matches("\\d{8}")) {
+							// pattern = "yyyyMMdd";
+							// } else if (example.matches("\\d{2}:\\d{2}:\\d{2}")) {
+							// pattern = "kkmmss";
+							// } else {
+							// throw new RuntimeException("can not support patter " + example);
+							// }
+							// dateAnnos.add("@DateTimeFormat(pattern = \"" + pattern + "\")");
+						}
+
+						dateJsonParam.setName(key);
+						dateJsonParam.setType("Date");
+						dateJsonParam.setComment(description);
+						dateJsonParam.setAnnos(dateAnnos);
+						ramlJsonParamList.add(dateJsonParam);
+						break;
+					case "boolean":
+						RamlJsonParam booleanJsonParam = new RamlJsonParam();
+						List<String> booleanAnnos = Lists.newArrayList();
+						booleanJsonParam.setName(key);
+						booleanJsonParam.setType("Boolean");
+						booleanJsonParam.setComment(description);
+						booleanJsonParam.setAnnos(booleanAnnos);
+						ramlJsonParamList.add(booleanJsonParam);
+						break;
+					default:
+						throw new RuntimeException("can not support type " + type);
+					}
+					// end switch
 				}
-				break;
-			case NUMBER:
-				ramlParam.setType("Double");
-				break;
-			case BOOLEAN:
-				ramlParam.setType("String");
-				break;
-			case DATE:
-				ramlParam.setType("Date");
-				break;
-			case FILE:
-				ramlParam.setType("MultipartFile");
-				break;
+				return ramlJsonParamList;
 			}
-			ramlParam.setComment(abstractParam.getDescription());
-			ramlParam.setAnnos(Valid.getValid(abstractParam));
-			return ramlParam;
+
+			public String getPageDataName() {
+				return pageDataName;
+			}
+
+			public void setPageDataName(String pageDataName) {
+				this.pageDataName = pageDataName;
+			}
+
 		}
 
 		// 有效性注解
@@ -1046,85 +1401,61 @@ public class JavaParser extends AbstractParser {
 
 		}
 
-		// end
-		// 获取方法名
-		private static String _getMethodName(String uri, ActionType actionType) {
-			return actionType.toString().toLowerCase() + StringUtils.capitalize(_getEntityName(uri));
-		}
-
-		// end
-		// 获取实体类名
-		private static String _getEntityName(String uri) {
-			String methodName = "";
-			if (StringUtils.isBlank(uri)) {
-				return methodName;
-			}
-			String[] array = uri.substring(1).split("[/]");
-			boolean dynamic = false;
-			for (String str : array) {
-				if (str.startsWith("{") && str.endsWith("}")) {
-					if (!dynamic) {
-						dynamic = true;
-						methodName += "By";
-					}
-					// 去掉前后的{}
-					str = str.substring(1, str.length() - 1);
+		// 参数
+		private RamlParam _getParam(AbstractParam abstractParam) {
+			RamlParam ramlParam = new RamlParam();
+			ramlParam.setName(abstractParam.getDisplayName());
+			// type
+			switch (abstractParam.getType()) {
+			case STRING:
+				ramlParam.setType("String");
+				break;
+			case INTEGER:
+				BigDecimal maxinum = abstractParam.getMaximum();
+				if (maxinum != null && maxinum.doubleValue() > Integer.MAX_VALUE) {
+					ramlParam.setType("Long");
+				} else {
+					ramlParam.setType("Integer");
 				}
-				methodName += StringUtils.capitalize(str);
+				break;
+			case NUMBER:
+				ramlParam.setType("Double");
+				break;
+			case BOOLEAN:
+				ramlParam.setType("String");
+				break;
+			case DATE:
+				ramlParam.setType("Date");
+				break;
+			case FILE:
+				ramlParam.setType("MultipartFile");
+				break;
 			}
-			return methodName;
-		}
-
-		// 是否没有响应
-		private static boolean _noResult(Action action) {
-			Map<String, Response> responses = action.getResponses();
-			if (responses == null || responses.size() == 0) {
-				// 没有响应,如文件下载
-				return true;
-			}
-			return false;
-		}
-
-		// 是否有效
-		private static boolean _valid(Action action) {
-			Map<String, Response> responses = action.getResponses();
-			if (responses == null || responses.size() == 0) {
-				// 没有响应,如文件下载
-				return true;
-			}
-			for (String status : responses.keySet()) {
-				if (!StringUtils.equals(status, "200")) {
-					logger.error("can not support response status ", status);
-					return false;
-				}
-				Response response = responses.get(status);
-				Map<String, MimeType> body = response.getBody();
-				if (body == null) {
-					// 没有响应,如文件下载
-					return true;
-				}
-				for (String mimeType : body.keySet()) {
-					if (!StringUtils.equals(mimeType, MIME_TYPE_JSON)) {
-						logger.error("can not support response body mimeType ", mimeType);
-						return false;
-					}
-				}
-			}
-			return true;
+			ramlParam.setComment(abstractParam.getDescription());
+			ramlParam.setAnnos(Valid.getValid(abstractParam));
+			return ramlParam;
 		}
 
 	}
 
-	public void setProjectPackageName(String projectPackageName) {
-		this.projectPackageName = projectPackageName;
-	}
+	// schema
+	static class Schema {
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+		public static final String TYPE = "type"; // 类型
+		public static final String REQUIRED = "required"; // properties中参数是否必填
+		public static final String PROPERTIES = "properties";
+		public static final String ITEMS = "items";
 
-	public void setVersion(String version) {
-		this.version = version;
+		public static final String DESCRIPTION = "description";
+		public static final String DEFAULT = "default"; // 默认值
+		public static final String EXAMPLE = "example"; // 例子
+		// 验证
+		public static final String PATTERN = "pattern"; // 正则表达式
+		public static final String MIN_LENGTH = "minLength"; // 最小长度
+		public static final String MAX_LENGTH = "maxLength"; // 最大长度
+		public static final String MINIMUM = "minimum"; // 最小值
+		public static final String MAXIMUM = "maximum"; // 最大值
+
 	}
 
 }

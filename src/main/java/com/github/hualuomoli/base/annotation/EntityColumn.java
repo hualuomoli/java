@@ -12,13 +12,13 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
+public @interface EntityColumn {
 
 	// 数据库列名,默认使用驼峰命名法转换
 	String name() default "";
 
 	// 数据类型
-	Type type() default Type.AUTO;
+	EntityType type() default EntityType.AUTO;
 
 	// 注释
 	String comment() default "";

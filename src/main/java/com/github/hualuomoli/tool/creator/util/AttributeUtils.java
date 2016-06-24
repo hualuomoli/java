@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.hualuomoli.base.annotation.Ignore;
+import com.github.hualuomoli.base.annotation.EntityIgnore;
 import com.github.hualuomoli.tool.creator._Attribute;
 import com.google.common.collect.Lists;
 
@@ -103,7 +103,7 @@ public class AttributeUtils extends CreatorUtils {
 			_Attribute attribute = new _Attribute();
 			attribute.setField(field);
 			// ignore
-			Ignore ignore = field.getAnnotation(Ignore.class);
+			EntityIgnore ignore = field.getAnnotation(EntityIgnore.class);
 			if (ignore != null) {
 				continue;
 			}

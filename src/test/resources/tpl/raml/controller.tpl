@@ -11,8 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.base.validator.EntityValidator;
 import com.github.hualuomoli.commons.json.JsonMapper;
+<#if autoRemoveResultWrap == 'Y'>
+import ${servicePackageName}.${serviceJavaName};
+</#if>
+import ${restResponsePackageName}.${restResponseClassName};
+import com.github.hualuomoli.base.entity.Page;
 
 /**
  * @Description ${desc!''}
@@ -37,10 +40,10 @@ import com.github.hualuomoli.commons.json.JsonMapper;
 @RequestMapping(value = "${uri}")
 public class ${javaName} {
 
-	private static final Logger logger = LoggerFactory.getLogger(${javaName}.class);
-	
-	// @Autowired
-    // private ${serviceJavaName} ${serviceJavaName?uncap_first};
+	<#if autoRemoveResultWrap == 'Y'>
+	@Autowired
+    private ${serviceJavaName} ${serviceJavaName?uncap_first};
+    </#if>
 	
 	<#list methods as method>
 	<#-- method -->
@@ -52,7 +55,17 @@ public class ${javaName} {
 	 * @param ${fileParam.name} ${fileParam.comment}
 	</#list>
 	 */
-	public ${method.resultType} ${method.methodName}(
+	@RequestMapping(value = "${method.methodMimeType.uri}", method = RequestMethod.${method.methodMimeType.method}<#if method.methodMimeType.consumes??>, consumes = { "${method.methodMimeType.consumes}" }</#if><#if method.methodMimeType.produces??>, produces = { "${method.methodMimeType.produces}" }</#if>)
+	<#if method.hasResult == 'Y'>
+	@ResponseBody
+	</#if>
+	public 
+	<#if method.hasResult == 'Y'>
+	String
+	<#else>
+	void
+	</#if>
+	${method.methodName}(
 	<#list method.uriParams as uriParam>
 	<#list uriParam.annos as anno>
 	${anno}
@@ -76,8 +89,42 @@ public class ${javaName} {
 		<#list method.fileParams as fileParam>
 		${method.request.className?uncap_first}.set${fileParam.name?cap_first}(${fileParam.name});
 		</#list>
+		
+		<#if autoRemoveResultWrap == 'Y'>
+		<#-- 响应结果自动包装 -->
+		<#if method.hasResult == 'Y'>
+		<#-- 有响应 -->
+		<#-- 根据不同返回类型,返回数据 -->
+		<#if method.response.json.type == 2><#-- 不返回业务数据 -->
+		${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getNoData();
+		<#elseif method.response.json.type == 3><#-- Object -->
+		${method.response.className} ${method.response.className?uncap_first} = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getObjectData("${method.response.json.resultName}", ${method.response.className?uncap_first});
+		<#elseif method.response.json.type == 4><#-- list -->
+		java.util.List<${method.response.className}> list = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getListData("${method.response.json.resultName}", list);
+		<#elseif method.response.json.type == 5><#-- page -->
+		Page page = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getPageData("${method.response.json.resultName}", "${method.response.json.pageDataName}", page);
+		</#if>
+		<#-- ./根据不同返回类型,返回数据 -->
+		<#-- ./有响应 -->
+		<#else>
+		<#-- 没有响应 -->
+		${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		<#-- ./没有响应 -->
+		</#if>
+		<#-- ./响应结果自动包装 -->
+		<#else>
+		<#-- 响应结果不处理 -->
 		// TODO
+		<#if method.hasResult == 'Y'>
 		return null;
+		</#if>
+		<#-- ./响应结果不处理 -->
+		</#if>
+		
 	}
 	<#-- ./method -->
 	
@@ -227,7 +274,7 @@ public class ${javaName} {
 	<#-- ./请求实体类 -->
 
 	<#-- 响应实体类 -->
-	<#if method.response??>
+	<#if method.hasResult == 'Y' && method.response.json.type != 2>
 	public static class ${method.response.className} {
 		
 		<#list method.response.jsonParams as jsonParam>

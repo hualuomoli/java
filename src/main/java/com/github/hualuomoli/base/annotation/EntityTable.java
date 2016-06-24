@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
+public @interface EntityTable {
 
 	// 数据库表名,默认使用驼峰命名法转换
 	String name() default "";

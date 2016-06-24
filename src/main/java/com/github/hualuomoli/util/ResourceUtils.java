@@ -1,4 +1,4 @@
-package com.github.hualuomoli.commons;
+package com.github.hualuomoli.util;
 
 import java.io.IOException;
 import java.io.InputStream;
