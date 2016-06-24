@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ${mapperPackageName}.${mapperJavaName};
 import com.github.hualuomoli.base.entity.Page;
+import com.github.hualuomoli.commons.json.JsonMapper;
 
 /**
  * @Description ${desc!''}
@@ -20,10 +21,9 @@ import com.github.hualuomoli.base.entity.Page;
 public class ${javaName} {
 
 	protected static final Logger logger = LoggerFactory.getLogger(${javaName}.class);
-	
 
 	@Autowired
-    private ${mapperJavaName} ${mapperJavaName?uncap_first};
+    protected ${mapperJavaName} ${mapperJavaName?uncap_first};
 	
 	<#list methods as method>
 	<#if method.methodMimeType.method == 'POST' || method.methodMimeType.method == 'PUT' || method.methodMimeType.method == 'DELETE'>
@@ -44,18 +44,23 @@ public class ${javaName} {
 	void
 	</#if>
 	${method.methodName}(${controllerPackageName}.${controllerJavaName}.${method.request.className} ${method.request.className?uncap_first}) {
+		// TODO
 		<#if method.hasResult == 'Y'>
-		<#if method.response.json.type == 2>
-		// TODO
-		<#elseif method.response.json.type == 3>
-		return null;
-		<#elseif method.response.json.type == 4>
-		return null;
-		<#elseif method.response.json.type == 5>
-		return null;
+		<#if method.response.json.type == 3><#-- object -->
+		${controllerPackageName}.${controllerJavaName}.${method.response.className} obj = JsonMapper.fromJsonString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		return obj;
+		<#elseif method.response.json.type == 4><#-- list -->
+		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		return list;
+		<#elseif method.response.json.type == 5><#-- page -->
+		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		Page page = new Page();
+		page.setPageNo(3);
+		page.setPageSize(10);
+		page.setCount(100);
+		page.setDataList(list);
+		return page;
 		</#if>
-		<#else>
-		// TODO
 		</#if>
 	}
 	<#-- method -->

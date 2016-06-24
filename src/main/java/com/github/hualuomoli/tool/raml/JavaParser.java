@@ -807,16 +807,16 @@ public class JavaParser extends AbstractParser {
 				return type;
 			}
 
-			public void setType(int type) {
-				this.type = type;
-			}
-
 			public String getResultName() {
 				return resultName;
 			}
 
-			public void setResultName(String resultName) {
-				this.resultName = resultName;
+			public String getPageDataName() {
+				return pageDataName;
+			}
+
+			public String getExample() {
+				return example;
 			}
 
 			public static final int TYPE_NO_DATA = 2;
@@ -1027,6 +1027,8 @@ public class JavaParser extends AbstractParser {
 					if (obj == null) {
 						return Lists.newArrayList();
 					} else {
+						// replace example ""
+						this.example = this.example.replaceAll("[\"]", "\\\\\"");
 						return _getResponseObjectParams(obj);
 					}
 				} else {
@@ -1061,16 +1063,22 @@ public class JavaParser extends AbstractParser {
 							}
 							type = TYPE_PAGE;
 							resultName = key;
-							setPageDataName(pageName);
+							this.pageDataName = pageName;
+							// set example
+							this.example = new JSONObject(getExample()).getJSONObject(key).getJSONArray(pageName).toString();
 							return pageDataObject.getJSONObject(Schema.ITEMS);
 						} else {
 							type = TYPE_OBJECT;
 							resultName = key;
+							// set example
+							this.example = new JSONObject(getExample()).getJSONObject(key).toString();
 							return keyObject;
 						}
 					case "array": // list data
 						type = TYPE_ARRAY;
 						resultName = key;
+						// set example
+						this.example = new JSONObject(getExample()).getJSONArray(key).toString();
 						return keyObject.getJSONObject(Schema.ITEMS);
 					default:
 						break;
@@ -1209,14 +1217,6 @@ public class JavaParser extends AbstractParser {
 					// end switch
 				}
 				return ramlJsonParamList;
-			}
-
-			public String getPageDataName() {
-				return pageDataName;
-			}
-
-			public void setPageDataName(String pageDataName) {
-				this.pageDataName = pageDataName;
 			}
 
 		}
