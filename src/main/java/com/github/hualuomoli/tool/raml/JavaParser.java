@@ -15,6 +15,7 @@ import org.raml.model.Action;
 import org.raml.model.ActionType;
 import org.raml.model.MimeType;
 import org.raml.model.ParamType;
+import org.raml.model.Raml;
 import org.raml.model.Resource;
 import org.raml.model.Response;
 import org.raml.model.parameter.AbstractParam;
@@ -25,6 +26,9 @@ import org.raml.model.parameter.UriParameter;
 import com.github.hualuomoli.commons.util.ProjectUtils;
 import com.github.hualuomoli.commons.util.SerializeUtils;
 import com.github.hualuomoli.commons.util.TemplateUtils;
+import com.github.hualuomoli.tool.raml.JavaParser.JavaTool.Entity;
+import com.github.hualuomoli.tool.raml.JavaParser.JavaTool.Entity.Column;
+import com.github.hualuomoli.tool.raml.JavaParser.JavaTool.Entity.Dependent;
 import com.github.hualuomoli.tool.raml.entity.RamlJsonParam;
 import com.github.hualuomoli.tool.raml.entity.RamlMethod;
 import com.github.hualuomoli.tool.raml.entity.RamlMethodMimeType;
@@ -62,12 +66,47 @@ public class JavaParser extends AbstractParser {
 	private String packageName; // 包名
 	private String entityName; // 实体类名称
 	private List<RamlMethod> ramlMethodList; // 方法
+	private static Map<String, Entity> entityMap = Maps.newHashMap();
 
 	public JavaParser() {
 	}
 
 	public JavaParser(Boolean test) {
 		main = "test";
+	}
+
+	@Override
+	protected void configure(Raml[] ramls) {
+		for (String entityName : entityMap.keySet()) {
+			Entity entity = entityMap.get(entityName);
+			this._createEntity(entity);
+		}
+
+	}
+
+	// 创建entity
+	private void _createEntity(Entity entity) {
+		String entityPackageName = projectPackageName + ".base.entity";
+		String entityJavaName = entity.getName();
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("desc", resource.getDescription());
+		map.put("author", author);
+		map.put("version", version);
+		map.put("date", new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+
+		map.put("packageName", entityPackageName); // 包名
+		map.put("javaName", entityJavaName); // 类名
+
+		map.put("entity", entity);
+
+		// 创建目录
+		File dir = new File(outputPath, "src/" + main + "/java/" + entityPackageName.replaceAll("[.]", "/"));
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// 输出
+		TemplateUtils.processByResource(tplPath, "entity.tpl", map, new File(dir.getAbsolutePath(), entityJavaName + ".java"));
+
 	}
 
 	/**
@@ -331,6 +370,9 @@ public class JavaParser extends AbstractParser {
 			List<RamlMethod> ramlMethodList = new Req().getParams(ramlMethod);
 			// 增加response响应,响应可能有多个类型
 			ramlMethodList = new Res().addResponse(ramlMethodList);
+			// 设置entity
+			new Res().setEntity(ramlMethodList);
+
 			return ramlMethodList;
 		}
 
@@ -688,6 +730,255 @@ public class JavaParser extends AbstractParser {
 
 			}
 
+			// 设置实体类
+			void setEntity(List<RamlMethod> ramlMethodList) {
+				for (RamlMethod ramlMethod : ramlMethodList) {
+					RamlResponse res = ramlMethod.getResponse();
+					if (res == null) {
+						return;
+					}
+					Json json = res.getJson();
+					if (json == null || StringUtils.isBlank(json.schema) || StringUtils.isBlank(json.example)) {
+						return;
+					}
+					Json newJson = new Json(json.schema, json.example);
+					JSONObject obj = newJson.removeCommonField(new JSONObject(json.schema));
+					switch (newJson.type) {
+					case Json.TYPE_NO_DATA:
+						break;
+					case Json.TYPE_OBJECT:
+					case Json.TYPE_ARRAY:
+					case Json.TYPE_PAGE:
+						String name = newJson.pageDataName == null ? newJson.resultName : newJson.pageDataName;
+						if (name.equalsIgnoreCase("data") || name.equalsIgnoreCase("datas") || name.equalsIgnoreCase("list") || name.equalsIgnoreCase("dataList")) {
+							_setEntity(entityName, obj);
+						} else {
+							_setEntity(StringUtils.capitalize(name), obj);
+						}
+						break;
+					default:
+						throw new RuntimeException("not find type " + newJson.type);
+					}
+				}
+			}
+
+			void _setEntity(String entityName, JSONObject jsonObject) {
+				Entity entity = entityMap.get(entityName);
+				if (entity == null) {
+					entity = new Entity();
+					entity.setName(entityName);
+					entityMap.put(entityName, entity);
+				}
+
+				List<Column> columnList = entity.getColumnList();
+				List<Dependent> dependentList = entity.getDependentList();
+
+				JSONObject properties = jsonObject.getJSONObject(Schema.PROPERTIES);
+				Set<String> keys = properties.keySet();
+				for (String key : keys) {
+					JSONObject keyObject = properties.getJSONObject(key);
+					String upperKey = StringUtils.capitalize(key);
+
+					switch (keyObject.getString(Schema.TYPE)) {
+					case "object":
+						Dependent objectDependent = new Dependent();
+						objectDependent.name = key;
+						objectDependent.type = upperKey;
+						objectDependent.relation = Dependent.RELATION_OBJECT;
+						if (!dependentList.contains(objectDependent)) {
+							dependentList.add(objectDependent);
+						}
+						this._setEntity(upperKey, keyObject);
+						break;
+					case "array":
+						Dependent arrayDependent = new Dependent();
+						String name = key;
+						if (key.endsWith("s") || key.endsWith("S")) {
+							name = key.substring(0, key.length() - 1);
+						} else if (StringUtils.equalsIgnoreCase(key, "list")) {
+							logger.warn("please set property name. not use list");
+							name = "list";
+						} else if (key.endsWith("list") || key.endsWith("List")) {
+							name = key.substring(0, key.length() - 4);
+						}
+						arrayDependent.name = key;
+						arrayDependent.type = StringUtils.capitalize(name);
+						arrayDependent.relation = Dependent.RELATION_ARRAY;
+						if (!dependentList.contains(arrayDependent)) {
+							dependentList.add(arrayDependent);
+						}
+						this._setEntity(arrayDependent.type, keyObject.getJSONObject(Schema.ITEMS));
+						break;
+					case "integer":
+						Column integerColumn = new Column();
+						integerColumn.name = key;
+						integerColumn.type = "Integer";
+						if (!columnList.contains(integerColumn)) {
+							columnList.add(integerColumn);
+						}
+						break;
+					case "number":
+						Column doubleColumn = new Column();
+						doubleColumn.name = key;
+						doubleColumn.type = "Double";
+						if (!columnList.contains(doubleColumn)) {
+							columnList.add(doubleColumn);
+						}
+						break;
+					case "string":
+						Column stringColumn = new Column();
+						stringColumn.name = key;
+						stringColumn.type = "String";
+						if (!columnList.contains(stringColumn)) {
+							columnList.add(stringColumn);
+						}
+						break;
+					case "date":
+						Column dateColumn = new Column();
+						dateColumn.name = key;
+						dateColumn.type = "Date";
+						if (!columnList.contains(dateColumn)) {
+							columnList.add(dateColumn);
+						}
+						break;
+					case "boolean":
+						Column booleanColumn = new Column();
+						booleanColumn.name = key;
+						booleanColumn.type = "String";
+						if (!columnList.contains(booleanColumn)) {
+							columnList.add(booleanColumn);
+						}
+						break;
+					default:
+						throw new RuntimeException("can not support type " + keyObject.getString(Schema.TYPE));
+					}
+				}
+
+				// end for
+			}
+
+		}
+
+		public static class Entity {
+
+			private String name; // 名称
+			private List<Column> columnList = Lists.newArrayList(); // 列
+			private List<Dependent> dependentList = Lists.newArrayList();// 依赖
+
+			public Entity() {
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+
+			public List<Column> getColumnList() {
+				return columnList;
+			}
+
+			public void setColumnList(List<Column> columnList) {
+				this.columnList = columnList;
+			}
+
+			public List<Dependent> getDependentList() {
+				return dependentList;
+			}
+
+			public void setDependentList(List<Dependent> dependentList) {
+				this.dependentList = dependentList;
+			}
+
+			// 列
+			public static class Column {
+				private String name;
+				private String type;
+
+				public Column() {
+				}
+
+				public String getName() {
+					return name;
+				}
+
+				public void setName(String name) {
+					this.name = name;
+				}
+
+				public String getType() {
+					return type;
+				}
+
+				public void setType(String type) {
+					this.type = type;
+				}
+
+				@Override
+				public boolean equals(Object obj) {
+					if (obj == null) {
+						return false;
+					}
+					if (obj.getClass() != this.getClass()) {
+						return false;
+					}
+					Column column = (Column) obj;
+					return StringUtils.equals(column.getName(), this.getName());
+				}
+
+			}
+
+			public static class Dependent {
+				String name;
+				String type;
+				int relation;
+
+				public static final int RELATION_OBJECT = 1;
+				public static final int RELATION_ARRAY = 2;
+
+				public Dependent() {
+				}
+
+				public String getName() {
+					return name;
+				}
+
+				public void setName(String name) {
+					this.name = name;
+				}
+
+				public String getType() {
+					return type;
+				}
+
+				public void setType(String type) {
+					this.type = type;
+				}
+
+				public int getRelation() {
+					return relation;
+				}
+
+				public void setRelation(int relation) {
+					this.relation = relation;
+				}
+
+				@Override
+				public boolean equals(Object obj) {
+					if (obj == null) {
+						return false;
+					}
+					if (obj.getClass() != this.getClass()) {
+						return false;
+					}
+					Dependent dependent = (Dependent) obj;
+					return StringUtils.equals(dependent.getName(), this.getName());
+				}
+
+			}
+
 		}
 
 		// JSON
@@ -801,7 +1092,8 @@ public class JavaParser extends AbstractParser {
 			private String example;
 			int type;
 			String resultName;
-			private String pageDataName;
+			String pageDataName;
+			String exampleData;
 
 			public int getType() {
 				return type;
@@ -817,6 +1109,14 @@ public class JavaParser extends AbstractParser {
 
 			public String getExample() {
 				return example;
+			}
+
+			public String getSchema() {
+				return schema;
+			}
+
+			public String getExampleData() {
+				return exampleData;
 			}
 
 			public static final int TYPE_NO_DATA = 2;
@@ -1027,8 +1327,8 @@ public class JavaParser extends AbstractParser {
 					if (obj == null) {
 						return Lists.newArrayList();
 					} else {
-						// replace example ""
-						this.example = this.example.replaceAll("[\"]", "\\\\\"");
+						// replace exampleData ""
+						this.exampleData = this.exampleData.replaceAll("[\"]", "\\\\\"");
 						return _getResponseObjectParams(obj);
 					}
 				} else {
@@ -1038,7 +1338,11 @@ public class JavaParser extends AbstractParser {
 			}
 
 			JSONObject removeCommonField(JSONObject jsonObject) {
-
+				if (!jsonObject.has(Schema.PROPERTIES)) {
+					// return code,msg
+					type = TYPE_NO_DATA;
+					return null;
+				}
 				JSONObject properties = jsonObject.getJSONObject(Schema.PROPERTIES);
 				Set<String> keys = properties.keySet();
 				for (String key : keys) {
@@ -1065,20 +1369,20 @@ public class JavaParser extends AbstractParser {
 							resultName = key;
 							this.pageDataName = pageName;
 							// set example
-							this.example = new JSONObject(getExample()).getJSONObject(key).getJSONArray(pageName).toString();
+							this.exampleData = new JSONObject(example).getJSONObject(key).getJSONArray(pageName).toString();
 							return pageDataObject.getJSONObject(Schema.ITEMS);
 						} else {
 							type = TYPE_OBJECT;
 							resultName = key;
 							// set example
-							this.example = new JSONObject(getExample()).getJSONObject(key).toString();
+							this.exampleData = new JSONObject(example).getJSONObject(key).toString();
 							return keyObject;
 						}
 					case "array": // list data
 						type = TYPE_ARRAY;
 						resultName = key;
 						// set example
-						this.example = new JSONObject(getExample()).getJSONArray(key).toString();
+						this.exampleData = new JSONObject(example).getJSONArray(key).toString();
 						return keyObject.getJSONObject(Schema.ITEMS);
 					default:
 						break;
@@ -1431,7 +1735,7 @@ public class JavaParser extends AbstractParser {
 				ramlParam.setType("MultipartFile");
 				break;
 			}
-			ramlParam.setComment(abstractParam.getDescription());
+			ramlParam.setComment(StringUtils.isBlank(abstractParam.getDescription()) ? "注释" : abstractParam.getDescription());
 			ramlParam.setAnnos(Valid.getValid(abstractParam));
 			return ramlParam;
 		}

@@ -47,13 +47,13 @@ public class ${javaName} {
 		// TODO
 		<#if method.hasResult == 'Y'>
 		<#if method.response.json.type == 3><#-- object -->
-		${controllerPackageName}.${controllerJavaName}.${method.response.className} obj = JsonMapper.fromJsonString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		${controllerPackageName}.${controllerJavaName}.${method.response.className} obj = JsonMapper.fromJsonString("${method.response.json.exampleData}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
 		return obj;
 		<#elseif method.response.json.type == 4><#-- list -->
-		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.exampleData}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
 		return list;
 		<#elseif method.response.json.type == 5><#-- page -->
-		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.example}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
+		java.util.List<${controllerPackageName}.${controllerJavaName}.${method.response.className}> list = JsonMapper.fromJsonListString("${method.response.json.exampleData}", ${controllerPackageName}.${controllerJavaName}.${method.response.className}.class);
 		Page page = new Page();
 		page.setPageNo(3);
 		page.setPageSize(10);

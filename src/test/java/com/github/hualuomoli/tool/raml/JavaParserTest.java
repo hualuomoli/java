@@ -12,10 +12,7 @@ public class JavaParserTest {
 		parser.author = "hualuomoli";
 
 		parser.execute(new String[] { //
-				"raml/json.raml", //
-				"raml/response.raml", //
-				"raml/type.raml", //
-				"raml/uri.raml", //
+				"raml/api.raml" //
 		});
 	}
 
