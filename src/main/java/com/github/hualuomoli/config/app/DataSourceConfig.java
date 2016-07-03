@@ -15,6 +15,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 @Configuration
 @PropertySource(value = { //
 		"classpath:prop/jdbc.properties", //
+		"file:E:/jdbc.properties", //
 		"file:path/to/test", // 测试环境绝对路径
 		"file:path/to/publish", // 生产环境绝对路径
 }, ignoreResourceNotFound = true)

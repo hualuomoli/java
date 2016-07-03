@@ -145,6 +145,10 @@ public class PaginationSQLHelper {
 		if (dialect.supportsLimit()) {
 			int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
 			int limit = pagination.getPageSize();
+			// add order by
+			if (StringUtils.isNotBlank(pagination.getOrderByStr())) {
+				sql = removeOrders(sql) + " order by " + pagination.getOrderByStr();
+			}
 			return dialect.getLimitString(sql, offset, limit);
 		} else {
 			return sql;

@@ -15,7 +15,6 @@ import com.github.hualuomoli.demo.base.mapper.BaseDemoMapper;
 import com.github.hualuomoli.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 
-
 // #BaseDemo
 @Service(value = "com.github.hualuomoli.demo.base.service.BaseDemoServiceImpl")
 @Transactional(readOnly = true)
@@ -23,12 +22,12 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 
 	@Autowired
 	private BaseDemoMapper baseDemoMapper;
-	
+
 	@Override
 	public BaseDemo get(BaseDemo baseDemo) {
 		return baseDemoMapper.get(baseDemo);
 	}
-	
+
 	@Override
 	public BaseDemo get(String id) {
 		return baseDemoMapper.get(id);
@@ -40,14 +39,14 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 		// baseDemo.preInsert();
 		return baseDemoMapper.insert(baseDemo);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public int batchInsert(List<BaseDemo> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
-		}	
-		
+		}
+
 		// BaseUtils.preBatchInsert(list);
 
 		Config config = new Config(100);
@@ -73,19 +72,19 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 	public int delete(BaseDemo baseDemo) {
 		return baseDemoMapper.delete(baseDemo);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public int delete(String id) {
 		return baseDemoMapper.delete(id);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public int deleteByIds(String[] ids) {
 		return baseDemoMapper.deleteByIds(ids);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public int deleteByIds(Collection<String> ids) {
@@ -96,30 +95,25 @@ public class BaseDemoServiceImpl implements com.github.hualuomoli.demo.base.serv
 	public List<BaseDemo> findList(BaseDemo baseDemo) {
 		return baseDemoMapper.findList(baseDemo);
 	}
-	
+
 	@Override
-	public Page findPage(BaseDemo baseDemo, Integer pageNumber, Integer pageSize) {
-		Pagination pagination = new Pagination();
-		pagination.setPageNo(pageNumber);
-		pagination.setPageSize(pageSize);
+	public Page findPage(BaseDemo baseDemo, Pagination pagination) {
 
 		// set local thread
-		PaginationInterceptor.setPagination(pagination);
+		PaginationInterceptor.pushPagination(pagination);
 		// query
 		List<BaseDemo> list = baseDemoMapper.findList(baseDemo);
 		// get local thread
-		pagination = PaginationInterceptor.getPagination();
-		// remove local thread
-		PaginationInterceptor.clearPagination();
+		pagination = PaginationInterceptor.popPagination();
 
 		// set page
 		Page page = new Page();
 		page.setCount(pagination.getCount());
-		page.setPageNo(pageNumber);
-		page.setPageSize(pageSize);
+		page.setPageNo(pagination.getPageNo());
+		page.setPageSize(pagination.getPageSize());
 		page.setDataList(list);
 
 		return page;
 	}
-	
+
 }

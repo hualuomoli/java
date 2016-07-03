@@ -68,18 +68,28 @@ public class PaginationInterceptor extends BaseInterceptor {
 		return invocation.proceed();
 	}
 
-	// 获取分页属性
-	public static Pagination getPagination() {
+	// 获取分页属性,用于分页判断
+	private static Pagination getPagination() {
 		return LOCAL_PAGE.get();
 	}
 
 	// 设置分页属性,执行分页查询前需要设置
-	public static void setPagination(Pagination pagination) {
+	public static void pushPagination(Pagination pagination) {
 		LOCAL_PAGE.set(pagination);
 	}
 
+	// 获取分页属性
+	public static Pagination popPagination() {
+		Pagination pagination = LOCAL_PAGE.get();
+
+		// 获取后,移除分页属性,防止影响下一次查询
+		clearPagination();
+
+		return pagination;
+	}
+
 	// 清除分页属性,执行分页查询后需要设置
-	public static void clearPagination() {
+	private static void clearPagination() {
 		LOCAL_PAGE.remove();
 	}
 

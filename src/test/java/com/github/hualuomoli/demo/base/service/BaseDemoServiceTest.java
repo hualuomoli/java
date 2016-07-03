@@ -11,6 +11,7 @@ import org.junit.runners.MethodSorters;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.commons.util.RandomUtils;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.test.AnnotationConfigTest;
 import com.google.common.collect.Lists;
 
@@ -218,13 +219,17 @@ public class BaseDemoServiceTest extends AnnotationConfigTest {
 		baseDemo.setAge(20);
 
 		// total = 6 * 16 = 96
-		Page page = demoService.findPage(baseDemo, 3, 5);
+		Page page = demoService.findPage(baseDemo, new Pagination(3, 5));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
-		page = demoService.findPage(baseDemo, 4, 5);
+		page = demoService.findPage(baseDemo, new Pagination(4, 5));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(2, page.getDataList().size());
+
+		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc,id asc"));
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
 	}
 
 	@Test
