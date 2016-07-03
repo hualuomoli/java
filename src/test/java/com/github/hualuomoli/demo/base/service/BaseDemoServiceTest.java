@@ -11,6 +11,8 @@ import org.junit.runners.MethodSorters;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.commons.util.RandomUtils;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.plugin.mybatis.entity.Direction;
+import com.github.hualuomoli.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.test.AnnotationConfigTest;
 import com.google.common.collect.Lists;
@@ -227,9 +229,29 @@ public class BaseDemoServiceTest extends AnnotationConfigTest {
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(2, page.getDataList().size());
 
+		// add order
 		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc,id asc"));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
+
+		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc"));
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+
+		// use orders
+		List<Order> orders1 = Lists.newArrayList();
+		orders1.add(new Order("salary", Direction.DESC));
+		orders1.add(new Order("sex"));
+		page = demoService.findPage(baseDemo, new Pagination(3, 5, orders1));
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+
+		List<Order> orders2 = Lists.newArrayList();
+		orders2.add(new Order("salary", Direction.DESC));
+		page = demoService.findPage(baseDemo, new Pagination(3, 5, orders2));
+		Assert.assertSame(17, page.getCount());
+		Assert.assertSame(5, page.getDataList().size());
+
 	}
 
 	@Test

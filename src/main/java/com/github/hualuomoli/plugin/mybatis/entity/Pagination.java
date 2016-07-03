@@ -1,5 +1,7 @@
 package com.github.hualuomoli.plugin.mybatis.entity;
 
+import java.util.List;
+
 /**
  * Mybatis 分页
  * @author hualuomoli
@@ -11,6 +13,7 @@ public class Pagination {
 	private Integer pageNo; // 当前页码，默认为1
 	private Integer pageSize; // 每页数据，默认为10
 	private String orderByStr; // 排序字符串
+	private List<Order> orders; // 排序,如果排序字符串未设置,使用该集合排序
 
 	public Pagination() {
 	}
@@ -24,6 +27,12 @@ public class Pagination {
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
 		this.orderByStr = orderByStr;
+	}
+
+	public Pagination(Integer pageNo, Integer pageSize, List<Order> orders) {
+		this.pageNo = pageNo;
+		this.pageSize = pageSize;
+		this.orders = orders;
 	}
 
 	public Integer getPageNo() {
@@ -56,6 +65,14 @@ public class Pagination {
 
 	public void setOrderByStr(String orderByStr) {
 		this.orderByStr = orderByStr;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 }
