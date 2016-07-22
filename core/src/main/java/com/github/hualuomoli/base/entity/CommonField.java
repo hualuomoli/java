@@ -1,12 +1,15 @@
 package com.github.hualuomoli.base.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 // 公共属性
-public class CommonField {
+public class CommonField implements Serializable {
+
+	private static final long serialVersionUID = 4623441259087418777L;
 
 	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "主键", length = 32)
 	private String id;

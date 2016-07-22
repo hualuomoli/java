@@ -37,6 +37,7 @@ public class ${controllerJavaName} {
 	<#list methods as method>
 	<#-- 方法 -->
 	/**
+	 * ${method.description!''}
 	<#list method.uriParams as uriParam>
 	 * @param ${uriParam.name} ${uriParam.comment}
 	</#list>

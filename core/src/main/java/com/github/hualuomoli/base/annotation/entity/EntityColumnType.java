@@ -14,6 +14,8 @@ public enum EntityColumnType {
 	DATE_TIME(), // 日期,时间
 	DATE(), // 日期
 	TIME(), // 时间
+	TEXT(), // 大字符
+	LONG_TEXT(), // 大字符
 	CLOB(), // 大字符
 	;
 

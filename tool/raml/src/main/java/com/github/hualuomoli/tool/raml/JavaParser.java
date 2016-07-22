@@ -579,10 +579,12 @@ public abstract class JavaParser extends AbstractParser {
 		private String relativeUri; // 相对URI(方法上的资源地址注解)
 		private String entityName; // 实体类名称
 		private String methodName; // 请求方法名称
+		private String description; // 注释
 
 		public JavaTool(JavaParser javaParser, Action action, String relativeUri) {
 			this.javaParser = javaParser;
 			this.action = action;
+			this.description = action.getDescription();
 			this.relativeUri = relativeUri;
 			_init();
 		}
@@ -627,6 +629,7 @@ public abstract class JavaParser extends AbstractParser {
 
 			RamlMethod ramlMethod = new RamlMethod();
 			ramlMethod.setMethodName(methodName);
+			ramlMethod.setDescription(description);
 			ramlMethod.setUriParams(this._getUriParams());
 			ramlMethod.setFileParams(this._getFileParams());
 			// mimeType

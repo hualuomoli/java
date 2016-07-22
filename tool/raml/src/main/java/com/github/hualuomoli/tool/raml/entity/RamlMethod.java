@@ -14,6 +14,7 @@ public class RamlMethod implements Serializable {
 
 	// private String hasResult; // 是否有返回值
 	private String methodName; // 方法名
+	private String description; // 注释
 	private List<RamlParam> uriParams; // URI参数
 	private List<RamlParam> fileParams; // File参数
 
@@ -31,6 +32,14 @@ public class RamlMethod implements Serializable {
 
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public RamlRequest getRequest() {

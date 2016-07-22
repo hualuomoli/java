@@ -7,11 +7,15 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
+import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @EntityTable(name = "t_demo", comment = "测试demo", pre = true)
 public class Demo extends CommonField {
 
+	private static final long serialVersionUID = -4883650844038266045L;
+
+	@EntityUnique
 	private String name;
 	@EntityColumn(type = EntityColumnType.CHAR, length = 1)
 	private String sex;
