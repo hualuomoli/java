@@ -144,6 +144,7 @@ public class CreatorUtils {
 		for (Field field : fields) {
 			CreatorColumn attribute = new CreatorColumn();
 			attribute.setField(field);
+			attribute.setJavaTypeName(field.getType().getName());
 			// ignore
 			EntityIgnore ignore = field.getAnnotation(EntityIgnore.class);
 			if (ignore != null) {

@@ -1,10 +1,14 @@
 package com.github.hualuomoli.tool.creator.dealer.mysql;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
+import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer;
+import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
 import com.github.hualuomoli.tool.creator.entity.CreatorTable;
 import com.google.common.collect.Maps;
 
@@ -33,12 +37,30 @@ public class MysqlFileDealer implements FileDealer {
 
 		map.put("dbName", dbName);
 		map.put("table", creatorTable);
+		map.put("unique", this.getUnique(creatorTable));
 
 		this.createEntity(map);
 		this.createMapper(map);
 		this.createXml(map);
 		this.createService(map);
 		this.createServiceImpl(map);
+
+	}
+
+	private CreatorColumn getUnique(CreatorTable creatorTable) {
+
+		List<CreatorColumn> columns = creatorTable.getColumns();
+		for (CreatorColumn creatorColumn : columns) {
+			// 查找具有该注解的属性
+			Field field = creatorColumn.getField();
+			EntityUnique entityUnique = field.getAnnotation(EntityUnique.class);
+			if (entityUnique != null) {
+				// 找到
+				return creatorColumn;
+			}
+		}
+
+		return null;
 
 	}
 
@@ -93,7 +115,7 @@ public class MysqlFileDealer implements FileDealer {
 	private void createServiceImpl(Map<String, Object> map) {
 
 		// 创建目录
-		File dir = new File(this.config.output, this.config.javaPath + this.config.projectPackageName.replaceAll("[.]", "/") + "/base/service");
+		File dir = new File(this.config.output, this.config.javaPath + this.config.projectPackageName.replaceAll("[.]", "/") + "/base/service/impl");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}

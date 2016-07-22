@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
+import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
@@ -83,7 +84,26 @@ public class MysqlDbDealer implements DbDealer {
 
 		dBTable.setColumnList(columnList);
 
+		// 设置唯一
+		dBTable.setUnique(this.getUnique(columns));
+
 		return dBTable;
+	}
+
+	// 获取唯一键
+	private DBColumn getUnique(List<CreatorColumn> columns) {
+		for (CreatorColumn creatorColumn : columns) {
+
+			// 查找具有该注解的属性
+			Field field = creatorColumn.getField();
+			EntityUnique entityUnique = field.getAnnotation(EntityUnique.class);
+			if (entityUnique == null) {
+				return null;
+			}
+			// 找到
+			return this.getDBColumn(creatorColumn);
+		}
+		return null;
 	}
 
 	// 获取列

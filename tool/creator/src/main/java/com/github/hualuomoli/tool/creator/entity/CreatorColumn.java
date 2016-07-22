@@ -11,6 +11,7 @@ public class CreatorColumn {
 
 	private Field field; // 属性
 	// java
+	private String javaTypeName; // 类型名称
 	private String javaName; // 名称
 	private int javaNameLength; // 长度
 	private String javaBlanks; // 需要补充空白长度
@@ -115,6 +116,14 @@ public class CreatorColumn {
 
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+
+	public String getJavaTypeName() {
+		return javaTypeName;
+	}
+
+	public void setJavaTypeName(String javaTypeName) {
+		this.javaTypeName = javaTypeName;
 	}
 
 }

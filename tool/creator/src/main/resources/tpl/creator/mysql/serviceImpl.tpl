@@ -1,4 +1,4 @@
-package ${packageName}.base.service;
+package ${packageName}.base.service.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.github.hualuomoli.base.annotation.persistent.PrePersistent;
 import com.github.hualuomoli.base.annotation.persistent.Type;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.base.entity.Page;
+import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
@@ -38,6 +39,22 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 	public Base${javaName} get(String id) {
 		return base${javaName}Mapper.get(id);
 	}
+	
+	<#if unique??>
+	@Override
+	public Base${javaName} getBy${unique.javaName?cap_first}(${unique.javaTypeName} ${unique.javaName}) {
+		Base${javaName} base${javaName} = new Base${javaName}();
+		base${javaName}.set${unique.javaName?cap_first}(${unique.javaName});
+		List<Base${javaName}> list = this.findList(base${javaName});
+		if (list == null || list.size() == 0) {
+			return null;
+		}
+		if (list.size() != 1) {
+			throw new MoreDataFoundException();
+		}
+		return list.get(0);
+	}
+	</#if>
 
 	@Override
 	@Transactional(readOnly = false)

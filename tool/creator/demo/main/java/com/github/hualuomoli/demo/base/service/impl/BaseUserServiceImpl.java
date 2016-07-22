@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.base.service;
+package com.github.hualuomoli.demo.base.service.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.github.hualuomoli.base.annotation.persistent.PrePersistent;
 import com.github.hualuomoli.base.annotation.persistent.Type;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.base.entity.Page;
+import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
@@ -38,6 +39,7 @@ public class BaseUserServiceImpl implements BaseUserService {
 	public BaseUser get(String id) {
 		return baseUserMapper.get(id);
 	}
+	
 
 	@Override
 	@Transactional(readOnly = false)

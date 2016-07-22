@@ -11,6 +11,7 @@ public class DBTable {
 
 	private String name;
 	private String comment;
+	private DBColumn unique; // 唯一列
 	private List<DBColumn> columnList;
 
 	public DBTable() {
@@ -38,6 +39,14 @@ public class DBTable {
 
 	public void setColumnList(List<DBColumn> columnList) {
 		this.columnList = columnList;
+	}
+
+	public DBColumn getUnique() {
+		return unique;
+	}
+
+	public void setUnique(DBColumn unique) {
+		this.unique = unique;
 	}
 
 }

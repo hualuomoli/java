@@ -14,6 +14,10 @@ public interface Base${javaName}Service {
 	Base${javaName} get(Base${javaName} base${javaName});
 	
 	Base${javaName} get(String id);
+	
+	<#if unique??>
+	Base${javaName} getBy${unique.javaName?cap_first}(${unique.javaTypeName} ${unique.javaName});
+	</#if>
 
 	int insert(Base${javaName} base${javaName});
 	

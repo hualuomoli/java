@@ -3,6 +3,7 @@ package com.github.hualuomoli.tool.creator;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.hualuomoli.commons.util.ProjectUtils;
 import com.github.hualuomoli.demo.entity.Demo;
 import com.github.hualuomoli.demo.entity.User;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
@@ -16,7 +17,10 @@ public class CreatorTest {
 
 	@Before
 	public void before() {
-		String output = "E:/github/hualuomoli/java-servlet3-multi/core";
+		String output = ProjectUtils.getProjectPath();
+
+		// output = "E:/github/hualuomoli/java-servlet3-multi/core";
+
 		CreatorAdaptor creatorAdaptor = new CreatorAdaptor();
 		Config creatorConfig = new Config();
 		creatorConfig.output = output;
