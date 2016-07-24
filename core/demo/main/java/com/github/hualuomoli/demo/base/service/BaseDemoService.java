@@ -14,6 +14,8 @@ public interface BaseDemoService {
 	BaseDemo get(BaseDemo baseDemo);
 	
 	BaseDemo get(String id);
+	
+	BaseDemo getByName(java.lang.String name);
 
 	int insert(BaseDemo baseDemo);
 	

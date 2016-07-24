@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
+import com.github.hualuomoli.base.annotation.entity.EntityQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.base.entity.CommonField;
@@ -16,20 +17,25 @@ public class Demo extends CommonField {
 	private static final long serialVersionUID = -4883650844038266045L;
 
 	@EntityUnique
+	@EntityQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)
 	private String name;
 	@EntityColumn(type = EntityColumnType.CHAR, length = 1)
 	private String sex;
 	@EntityColumn(precision = 8, scale = 3, comment = "工资")
+	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
 	private Double salary;
-	@EntityColumn(precision = 3, defaultValue = "20")
+	@EntityColumn(precision = 3, defaultValue = "20", comment = "年龄")
+	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
 	private Integer age;
-	@EntityColumn(type = EntityColumnType.DATE, comment = "工资")
+	@EntityColumn(type = EntityColumnType.DATE, comment = "生日")
+	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true)
 	private Date birthDay;
 	@EntityColumn(type = EntityColumnType.CLOB)
 	private String remarks;
 	@EntityIgnore // 忽略
 	private String orderByStr; // 排序
 	@EntityColumn(comment = "用户", relation = "username")
+	@EntityQuery(inArray = true)
 	private User user;
 	// 不会使用
 	private List<Address> address;

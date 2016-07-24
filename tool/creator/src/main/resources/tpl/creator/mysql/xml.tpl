@@ -33,6 +33,28 @@
     </if>
     </#if>
   </#list>
+	<!-- 比较查询 -->
+  <#list table.queryColumns as queryColumn>
+  	<#if queryColumn.array>
+    <#-- array -->
+    <if test="${queryColumn.javaName} != null"> 
+      and
+      <foreach collection="${queryColumn.javaName}" open="(" close=")" separator="or" item="data">
+    		`${queryColumn.dbName}` = ${r"#{"}data${r"}"}
+    	</foreach>
+    </if>
+    <#elseif queryColumn.string>
+    <#-- 字符串 -->
+    <if test="${queryColumn.javaName} != null and ${queryColumn.javaName} != ''"> 
+      and `${queryColumn.dbName}`${queryColumn.dbBlanks} ${queryColumn.operator} ${r"#{"}${queryColumn.javaName}${r"}"}${queryColumn.javaBlanks}
+    </if>
+    <#else>
+    <#-- 非字符串普通类型 -->
+    <if test="${queryColumn.javaName} != null"> 
+      and `${queryColumn.dbName}`${queryColumn.dbBlanks} ${queryColumn.operator} ${r"#{"}${queryColumn.javaName}${r"}"}${queryColumn.javaBlanks}
+    </if>
+    </#if>
+  </#list>
   </sql>
   
   <#-- 根据主键查询 -->

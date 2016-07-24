@@ -62,6 +62,76 @@
     <if test="status != null"> 
       and `status`        = #{status}       
     </if>
+	<!-- 比较查询 -->
+    <if test="nameLeftLike != null and nameLeftLike != ''"> 
+      and `name` like #{nameLeftLike}         
+    </if>
+    <if test="nameRightLike != null and nameRightLike != ''"> 
+      and `name` like #{nameRightLike}         
+    </if>
+    <if test="nameBothLike != null and nameBothLike != ''"> 
+      and `name` like #{nameBothLike}         
+    </if>
+    <if test="nameArray != null"> 
+      and
+      <foreach collection="nameArray" open="(" close=")" separator="or" item="data">
+    		`name` = #{data}
+    	</foreach>
+    </if>
+    <if test="salaryGreaterThan != null"> 
+      and `salary` <![CDATA[>]]> #{salaryGreaterThan}         
+    </if>
+    <if test="salaryGreaterEqual != null"> 
+      and `salary` <![CDATA[>=]]> #{salaryGreaterEqual}         
+    </if>
+    <if test="salaryLessThan != null"> 
+      and `salary` <![CDATA[<]]> #{salaryLessThan}         
+    </if>
+    <if test="salaryLessEqual != null"> 
+      and `salary` <![CDATA[<=]]> #{salaryLessEqual}         
+    </if>
+    <if test="salaryArray != null"> 
+      and
+      <foreach collection="salaryArray" open="(" close=")" separator="or" item="data">
+    		`salary` = #{data}
+    	</foreach>
+    </if>
+    <if test="ageGreaterThan != null"> 
+      and `age` <![CDATA[>]]> #{ageGreaterThan}         
+    </if>
+    <if test="ageGreaterEqual != null"> 
+      and `age` <![CDATA[>=]]> #{ageGreaterEqual}         
+    </if>
+    <if test="ageLessThan != null"> 
+      and `age` <![CDATA[<]]> #{ageLessThan}         
+    </if>
+    <if test="ageLessEqual != null"> 
+      and `age` <![CDATA[<=]]> #{ageLessEqual}         
+    </if>
+    <if test="ageArray != null"> 
+      and
+      <foreach collection="ageArray" open="(" close=")" separator="or" item="data">
+    		`age` = #{data}
+    	</foreach>
+    </if>
+    <if test="birthDayGreaterThan != null"> 
+      and `birth_day` <![CDATA[>]]> #{birthDayGreaterThan}         
+    </if>
+    <if test="birthDayGreaterEqual != null"> 
+      and `birth_day` <![CDATA[>=]]> #{birthDayGreaterEqual}         
+    </if>
+    <if test="birthDayLessThan != null"> 
+      and `birth_day` <![CDATA[<]]> #{birthDayLessThan}         
+    </if>
+    <if test="birthDayLessEqual != null"> 
+      and `birth_day` <![CDATA[<=]]> #{birthDayLessEqual}         
+    </if>
+    <if test="userUsernameArray != null"> 
+      and
+      <foreach collection="userUsernameArray" open="(" close=")" separator="or" item="data">
+    		`user_username` = #{data}
+    	</foreach>
+    </if>
   </sql>
   
   <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">

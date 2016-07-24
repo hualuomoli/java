@@ -11,6 +11,7 @@ import com.github.hualuomoli.base.annotation.persistent.PrePersistent;
 import com.github.hualuomoli.base.annotation.persistent.Type;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.base.entity.Page;
+import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
@@ -37,6 +38,20 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 	@Override
 	public BaseDemo get(String id) {
 		return baseDemoMapper.get(id);
+	}
+	
+	@Override
+	public BaseDemo getByName(java.lang.String name) {
+		BaseDemo baseDemo = new BaseDemo();
+		baseDemo.setName(name);
+		List<BaseDemo> list = this.findList(baseDemo);
+		if (list == null || list.size() == 0) {
+			return null;
+		}
+		if (list.size() != 1) {
+			throw new MoreDataFoundException();
+		}
+		return list.get(0);
 	}
 
 	@Override

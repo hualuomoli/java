@@ -13,6 +13,7 @@ public class User extends CommonField {
 	@EntityColumn(length = 20)
 	private String username;
 	private String nickname;
+	private Integer number;
 
 	public User() {
 	}
@@ -39,6 +40,14 @@ public class User extends CommonField {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 
 }

@@ -7,6 +7,7 @@ public class CreatorTable {
 	private String dbName;
 	private String comments;
 	private List<CreatorColumn> columns;
+	private List<CreatorColumnQuery> queryColumns;
 
 	public CreatorTable() {
 	}
@@ -33,6 +34,14 @@ public class CreatorTable {
 
 	public void setColumns(List<CreatorColumn> columns) {
 		this.columns = columns;
+	}
+
+	public List<CreatorColumnQuery> getQueryColumns() {
+		return queryColumns;
+	}
+
+	public void setQueryColumns(List<CreatorColumnQuery> queryColumns) {
+		this.queryColumns = queryColumns;
 	}
 
 }

@@ -7,6 +7,7 @@
     `version`     as "version"   ,
     `username`    as "username"  ,
     `nickname`    as "nickname"  ,
+    `number`      as "number"    ,
     `create_by`   as "createBy"  ,
     `create_date` as "createDate",
     `update_by`   as "updateBy"  ,
@@ -27,6 +28,9 @@
     <if test="nickname != null and nickname != ''"> 
       and `nickname`    = #{nickname}  
     </if>
+    <if test="number != null"> 
+      and `number`      = #{number}    
+    </if>
     <if test="createBy != null and createBy != ''"> 
       and `create_by`   = #{createBy}  
     </if>
@@ -42,6 +46,7 @@
     <if test="status != null"> 
       and `status`      = #{status}    
     </if>
+	<!-- 比较查询 -->
   </sql>
   
   <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseUser">
@@ -57,6 +62,7 @@
       `version`    ,
       `username`   ,
       `nickname`   ,
+      `number`     ,
       `create_by`  ,
       `create_date`,
       `update_by`  ,
@@ -67,6 +73,7 @@
       #{version}   ,
       #{username}  ,
       #{nickname}  ,
+      #{number}    ,
       #{createBy}  ,
       #{createDate},
       #{updateBy}  ,
@@ -81,6 +88,7 @@
       `version`    ,
       `username`   ,
       `nickname`   ,
+      `number`     ,
       `create_by`  ,
       `create_date`,
       `update_by`  ,
@@ -93,6 +101,7 @@
         #{obj.version}   ,
         #{obj.username}  ,
         #{obj.nickname}  ,
+        #{obj.number}    ,
         #{obj.createBy}  ,
         #{obj.createDate},
         #{obj.updateBy}  ,
@@ -112,6 +121,9 @@
       </if>
       <if test="nickname != null"> 
         `nickname`    = #{nickname}  ,
+      </if>
+      <if test="number != null"> 
+        `number`      = #{number}    ,
       </if>
       <if test="createBy != null"> 
         `create_by`   = #{createBy}  ,

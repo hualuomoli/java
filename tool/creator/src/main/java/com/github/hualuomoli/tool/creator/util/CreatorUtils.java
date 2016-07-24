@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
+import com.github.hualuomoli.base.annotation.entity.EntityQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
+import com.github.hualuomoli.tool.creator.entity.CreatorColumnQuery;
 import com.github.hualuomoli.tool.creator.entity.CreatorTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -43,8 +45,259 @@ public class CreatorUtils {
 		creatorTable.setDbName(Tool.unCamel(StringUtils.isBlank(annotation.name()) ? entityCls.getSimpleName() : annotation.name()));
 		creatorTable.setComments(StringUtils.isBlank(annotation.comment()) ? "表" : annotation.comment());
 		creatorTable.setColumns(getAttributes(entityCls));
+		creatorTable.setQueryColumns(getQueryAttributes(creatorTable.getColumns()));
 
 		return creatorTable;
+	}
+
+	// 查询属性
+	private static List<CreatorColumnQuery> getQueryAttributes(List<CreatorColumn> columns) {
+		List<CreatorColumnQuery> queryColumns = loadQueryAttributes(columns);
+		configQueryAttributes(queryColumns);
+		return queryColumns;
+	}
+
+	// 配置属性
+	private static void configQueryAttributes(List<CreatorColumnQuery> attributes) {
+
+		// set fill db name
+		int nameMax = Tool.getMaxLength(attributes, new Comparator<CreatorColumnQuery>() {
+			@Override
+			public int getCompareLength(CreatorColumnQuery attribute) {
+				return attribute.getJavaNameLength() + (attribute.isEntity() ? attribute.getRelation().length() + 1 : 0);
+			}
+		});
+		int dbNameMax = Tool.getMaxLength(attributes, new Comparator<CreatorColumnQuery>() {
+			@Override
+			public int getCompareLength(CreatorColumnQuery attribute) {
+				return attribute.getDbNameLength();
+			}
+		});
+
+		for (CreatorColumnQuery attribute : attributes) {
+			String javaBlanks = Tool.getBlank(attribute.getJavaNameLength(), nameMax);
+			String dbBlanks = Tool.getBlank(attribute.getDbNameLength(), dbNameMax);
+			attribute.setJavaBlanks(javaBlanks);
+			attribute.setDbBlanks(dbBlanks);
+		}
+
+	}
+
+	// 查询属性
+	private static List<CreatorColumnQuery> loadQueryAttributes(List<CreatorColumn> columns) {
+		List<CreatorColumnQuery> queryColumns = Lists.newArrayList();
+
+		for (CreatorColumn creatorColumn : columns) {
+			Field field = creatorColumn.getField();
+			EntityQuery entityQuery = field.getAnnotation(EntityQuery.class);
+			if (entityQuery == null) {
+				continue;
+			}
+
+			switch (field.getType().getName()) {
+			case "java.lang.Integer":
+			case "int":
+				queryColumns.addAll(getCompareColumnQuery(creatorColumn));
+				queryColumns.addAll(getArrayColumnQuery(creatorColumn));
+				break;
+			case "java.lang.Long":
+			case "long":
+				queryColumns.addAll(getCompareColumnQuery(creatorColumn));
+				queryColumns.addAll(getArrayColumnQuery(creatorColumn));
+				break;
+			case "java.lang.Double":
+			case "double":
+				queryColumns.addAll(getCompareColumnQuery(creatorColumn));
+				queryColumns.addAll(getArrayColumnQuery(creatorColumn));
+				break;
+			case "java.lang.String":
+				queryColumns.addAll(getLikeColumnQuery(creatorColumn));
+				queryColumns.addAll(getArrayColumnQuery(creatorColumn));
+				break;
+			case "java.util.Date":
+				queryColumns.addAll(getCompareColumnQuery(creatorColumn));
+				break;
+			default:
+				if (creatorColumn.isEntity()) {
+					// entity
+					queryColumns.addAll(getEntityColumnQuery(creatorColumn));
+				} else {
+					throw new RuntimeException("type " + field.getType().getName());
+				}
+			}
+		}
+
+		return queryColumns;
+	}
+
+	// 比较
+	private static List<CreatorColumnQuery> getCompareColumnQuery(CreatorColumn creatorColumn) {
+		List<CreatorColumnQuery> compareQueryColumns = Lists.newArrayList();
+
+		Field field = creatorColumn.getField();
+		EntityQuery entityQuery = field.getAnnotation(EntityQuery.class);
+
+		// 没有配置
+		if (entityQuery == null) {
+			return compareQueryColumns;
+		}
+
+		// 大于
+		if (entityQuery.greaterThan()) {
+			CreatorColumnQuery greaterThanColumnQuery = clone(creatorColumn);
+			greaterThanColumnQuery.setOperator("<![CDATA[>]]>");
+			greaterThanColumnQuery.setJavaName(greaterThanColumnQuery.getJavaName() + "GreaterThan");
+			greaterThanColumnQuery.setComment(greaterThanColumnQuery.getComment() + " - 大于");
+			compareQueryColumns.add(greaterThanColumnQuery);
+		}
+		// 大于等于
+		if (entityQuery.greaterEqual()) {
+			CreatorColumnQuery greaterEqualColumnQuery = clone(creatorColumn);
+			greaterEqualColumnQuery.setOperator("<![CDATA[>=]]>");
+			greaterEqualColumnQuery.setJavaName(greaterEqualColumnQuery.getJavaName() + "GreaterEqual");
+			greaterEqualColumnQuery.setComment(greaterEqualColumnQuery.getComment() + " - 大于等于");
+			compareQueryColumns.add(greaterEqualColumnQuery);
+		}
+		// 小于
+		if (entityQuery.lessThan()) {
+			CreatorColumnQuery lessThanColumnQuery = clone(creatorColumn);
+			lessThanColumnQuery.setOperator("<![CDATA[<]]>");
+			lessThanColumnQuery.setJavaName(lessThanColumnQuery.getJavaName() + "LessThan");
+			lessThanColumnQuery.setComment(lessThanColumnQuery.getComment() + " - 小于");
+			compareQueryColumns.add(lessThanColumnQuery);
+		}
+		// 小于等于
+		if (entityQuery.lessEqual()) {
+			CreatorColumnQuery lessEqualColumnQuery = clone(creatorColumn);
+			lessEqualColumnQuery.setOperator("<![CDATA[<=]]>");
+			lessEqualColumnQuery.setJavaName(lessEqualColumnQuery.getJavaName() + "LessEqual");
+			lessEqualColumnQuery.setComment(lessEqualColumnQuery.getComment() + " - 小于等于");
+			compareQueryColumns.add(lessEqualColumnQuery);
+		}
+
+		return compareQueryColumns;
+	}
+
+	// like
+	private static List<CreatorColumnQuery> getLikeColumnQuery(CreatorColumn creatorColumn) {
+		List<CreatorColumnQuery> likeQueryColumns = Lists.newArrayList();
+
+		Field field = creatorColumn.getField();
+		EntityQuery entityQuery = field.getAnnotation(EntityQuery.class);
+
+		// 没有配置
+		if (entityQuery == null) {
+			return likeQueryColumns;
+		}
+
+		// 左like
+		if (entityQuery.leftLike()) {
+			CreatorColumnQuery leftLikeColumnQuery = clone(creatorColumn);
+			leftLikeColumnQuery.setOperator("like");
+			leftLikeColumnQuery.setLike(true);
+			leftLikeColumnQuery.setJavaName(leftLikeColumnQuery.getJavaName() + "LeftLike");
+			leftLikeColumnQuery.setComment(leftLikeColumnQuery.getComment() + " - 左like");
+			leftLikeColumnQuery.setLikeJavaName(leftLikeColumnQuery.getJavaName() + " + \"%\"");
+			likeQueryColumns.add(leftLikeColumnQuery);
+		}
+
+		// 右like
+		if (entityQuery.rightLike()) {
+			CreatorColumnQuery rightLikeColumnQuery = clone(creatorColumn);
+			rightLikeColumnQuery.setOperator("like");
+			rightLikeColumnQuery.setLike(true);
+			rightLikeColumnQuery.setJavaName(rightLikeColumnQuery.getJavaName() + "RightLike");
+			rightLikeColumnQuery.setComment(rightLikeColumnQuery.getComment() + " - 右like");
+			rightLikeColumnQuery.setLikeJavaName("\"%\" + " + rightLikeColumnQuery.getJavaName());
+			likeQueryColumns.add(rightLikeColumnQuery);
+		}
+
+		// 左右like
+		if (entityQuery.bothLike()) {
+			CreatorColumnQuery bothLikeColumnQuery = clone(creatorColumn);
+			bothLikeColumnQuery.setOperator("like");
+			bothLikeColumnQuery.setLike(true);
+			bothLikeColumnQuery.setJavaName(bothLikeColumnQuery.getJavaName() + "BothLike");
+			bothLikeColumnQuery.setComment(bothLikeColumnQuery.getComment() + " - 左右like");
+			bothLikeColumnQuery.setLikeJavaName("\"%\" + " + bothLikeColumnQuery.getJavaName() + " + \"%\"");
+			likeQueryColumns.add(bothLikeColumnQuery);
+		}
+
+		return likeQueryColumns;
+	}
+
+	// 数组
+	private static List<CreatorColumnQuery> getArrayColumnQuery(CreatorColumn creatorColumn) {
+		List<CreatorColumnQuery> arrayQueryColumns = Lists.newArrayList();
+
+		Field field = creatorColumn.getField();
+		EntityQuery entityQuery = field.getAnnotation(EntityQuery.class);
+
+		// 没有配置
+		if (entityQuery == null) {
+			return arrayQueryColumns;
+		}
+
+		// array
+		if (entityQuery.inArray()) {
+			CreatorColumnQuery columnQuery = clone(creatorColumn);
+			columnQuery.setArray(true);
+			columnQuery.setJavaName(columnQuery.getJavaName() + "Array");
+			columnQuery.setComment(columnQuery.getComment() + " - 查询数组");
+			columnQuery.setJavaTypeName(columnQuery.getJavaTypeName() + "[]");
+			arrayQueryColumns.add(columnQuery);
+		}
+
+		return arrayQueryColumns;
+	}
+
+	// 实体类
+	private static List<CreatorColumnQuery> getEntityColumnQuery(CreatorColumn creatorColumn) {
+		List<CreatorColumnQuery> entityQueryColumns = Lists.newArrayList();
+
+		Field field = creatorColumn.getField();
+		EntityQuery entityQuery = field.getAnnotation(EntityQuery.class);
+
+		// 没有配置
+		if (entityQuery == null) {
+			return entityQueryColumns;
+		}
+
+		// entity
+		if (entityQuery.inArray()) {
+			CreatorColumnQuery columnQuery = clone(creatorColumn);
+			columnQuery.setArray(true);
+			columnQuery.setJavaName(columnQuery.getJavaName() + StringUtils.capitalize(columnQuery.getRelation()) + "Array");
+			columnQuery.setComment(columnQuery.getComment() + " - 查询数组");
+			// 设置类型
+			List<Field> fs = getFields(field.getType());
+			String relation = creatorColumn.getRelation();
+			for (Field f : fs) {
+				if (StringUtils.equals(relation, f.getName())) {
+					columnQuery.setJavaTypeName(f.getType().getName() + "[]");
+					break;
+				}
+			}
+			entityQueryColumns.add(columnQuery);
+		}
+
+		return entityQueryColumns;
+	}
+
+	private static CreatorColumnQuery clone(CreatorColumn creatorColumn) {
+		CreatorColumnQuery columnQuery = new CreatorColumnQuery();
+
+		columnQuery.setField(creatorColumn.getField());
+		columnQuery.setJavaTypeName(creatorColumn.getJavaTypeName());
+		columnQuery.setJavaName(creatorColumn.getJavaName());
+		columnQuery.setDbName(creatorColumn.getDbName());
+
+		columnQuery.setComment(creatorColumn.getComment());
+		columnQuery.setString(creatorColumn.isString());
+		columnQuery.setEntity(creatorColumn.isEntity());
+		columnQuery.setRelation(creatorColumn.getRelation());
+
+		return columnQuery;
 	}
 
 	// 获取属性集合
@@ -213,6 +466,8 @@ public class CreatorUtils {
 				logger.warn("请在 {} 上增加 @EntityTable", field.getName());
 				throw new RuntimeException("can not support type " + field.getType().getName());
 			}
+
+			attribute.setComment(annotation == null ? "" : annotation.comment());
 
 			// 添加
 			attributes.add(attribute);

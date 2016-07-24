@@ -54,7 +54,7 @@ public class SerializeUtils {
 	}
 
 	// 克隆
-	public static <T> T clone(T t) {
+	public static <T, R> R clone(T t) {
 		return unserialize(serialize(t));
 	}
 

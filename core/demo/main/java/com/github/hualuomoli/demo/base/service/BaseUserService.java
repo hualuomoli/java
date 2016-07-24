@@ -14,6 +14,7 @@ public interface BaseUserService {
 	BaseUser get(BaseUser baseUser);
 	
 	BaseUser get(String id);
+	
 
 	int insert(BaseUser baseUser);
 	
