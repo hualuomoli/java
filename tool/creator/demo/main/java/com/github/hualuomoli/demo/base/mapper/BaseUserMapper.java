@@ -12,7 +12,6 @@ import com.github.hualuomoli.demo.base.entity.BaseUser;
 @Repository(value = "com.github.hualuomoli.demo.base.mapper.BaseUserMapper")
 public interface BaseUserMapper {
 
-	BaseUser get(BaseUser baseUser);
 	
 	BaseUser get(String id);
 
@@ -22,13 +21,11 @@ public interface BaseUserMapper {
 
 	int update(BaseUser baseUser);
 
-	int delete(BaseUser baseUser);
 	
 	int delete(String id);
 	
 	int deleteByIds(@Param(value = "ids") String[] ids);
 	
-	int deleteByIds(@Param(value = "ids") Collection<String> ids);
 
 	List<BaseUser> findList(BaseUser baseUser);
 

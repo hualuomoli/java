@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.hualuomoli.base.annotation.persistent.PrePersistent;
-import com.github.hualuomoli.base.annotation.persistent.Type;
-import com.github.hualuomoli.base.constant.Status;
+import com.github.hualuomoli.base.annotation.persistent.PreBatchInsert;
+import com.github.hualuomoli.base.annotation.persistent.PreDelete;
+import com.github.hualuomoli.base.annotation.persistent.PreInsert;
+import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
@@ -32,7 +33,7 @@ public class BaseUserServiceImpl implements BaseUserService {
 	
 	@Override
 	public BaseUser get(BaseUser baseUser) {
-		return baseUserMapper.get(baseUser);
+		return this.get(baseUser.getId());
 	}
 	
 	@Override
@@ -43,15 +44,15 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PrePersistent(type = Type.INSERT) BaseUser baseUser) {
-		return baseUserMapper.insert(baseUser);
+	public void insert(@PreInsert BaseUser baseUser) {
+		baseUserMapper.insert(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PrePersistent(type = Type.BATCH_INSERT)  List<BaseUser> list) {
+	public void batchInsert(@PreBatchInsert  List<BaseUser> list) {
 		if (list == null || list.size() == 0) {
-			return 0;
+			return;
 		}	
 		
 		Config config = new Config(100);
@@ -62,55 +63,56 @@ public class BaseUserServiceImpl implements BaseUserService {
 			}
 			baseUserMapper.batchInsert(newList);
 		}
-		return list.size();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PrePersistent(type = Type.UPDATE)  BaseUser baseUser) {
-		return baseUserMapper.update(baseUser);
+	public void update(@PreUpdate BaseUser baseUser) {
+		baseUserMapper.update(baseUser);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(BaseUser baseUser) {
-		BaseUser temp = new BaseUser();
-		temp.setId(baseUser.getId());
-		temp.setStatus(Status.DELETED.getValue());
-		return this.update(temp);
+	public void logicalDelete(@PreDelete BaseUser baseUser) {
+		baseUserMapper.update(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(String id) {
+	public void logicalDelete(String id) {
 		BaseUser temp = new BaseUser();
 		temp.setId(id);
-		temp.setStatus(Status.DELETED.getValue());
-		return this.update(temp);
+		this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseUser baseUser) {
-		return baseUserMapper.delete(baseUser);
+	public void delete(BaseUser baseUser) {
+		this.delete(baseUser.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(String id) {
-		return baseUserMapper.delete(id);
+	public void delete(String id) {
+		baseUserMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int deleteByIds(String[] ids) {
-		return baseUserMapper.deleteByIds(ids);
+	public void deleteByIds(String[] ids) {
+		if (ids == null || ids.length == 0) {
+			return;
+		}
+		baseUserMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int deleteByIds(Collection<String> ids) {
-		return baseUserMapper.deleteByIds(ids);
+	public void deleteByIds(Collection<String> ids) {
+		if (ids == null || ids.size() == 0) {
+			return;
+		}
+		this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

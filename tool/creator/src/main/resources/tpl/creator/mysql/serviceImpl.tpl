@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.hualuomoli.base.annotation.persistent.PrePersistent;
-import com.github.hualuomoli.base.annotation.persistent.Type;
-import com.github.hualuomoli.base.constant.Status;
+import com.github.hualuomoli.base.annotation.persistent.PreBatchInsert;
+import com.github.hualuomoli.base.annotation.persistent.PreDelete;
+import com.github.hualuomoli.base.annotation.persistent.PreInsert;
+import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
@@ -32,7 +33,7 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 	
 	@Override
 	public Base${javaName} get(Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.get(base${javaName});
+		return this.get(base${javaName}.getId());
 	}
 	
 	@Override
@@ -58,15 +59,15 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PrePersistent(type = Type.INSERT) Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.insert(base${javaName});
+	public void insert(@PreInsert Base${javaName} base${javaName}) {
+		base${javaName}Mapper.insert(base${javaName});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PrePersistent(type = Type.BATCH_INSERT)  List<Base${javaName}> list) {
+	public void batchInsert(@PreBatchInsert  List<Base${javaName}> list) {
 		if (list == null || list.size() == 0) {
-			return 0;
+			return;
 		}	
 		
 		Config config = new Config(100);
@@ -77,55 +78,56 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 			}
 			base${javaName}Mapper.batchInsert(newList);
 		}
-		return list.size();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PrePersistent(type = Type.UPDATE)  Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.update(base${javaName});
+	public void update(@PreUpdate Base${javaName} base${javaName}) {
+		base${javaName}Mapper.update(base${javaName});
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(Base${javaName} base${javaName}) {
-		Base${javaName} temp = new Base${javaName}();
-		temp.setId(base${javaName}.getId());
-		temp.setStatus(Status.DELETED.getValue());
-		return this.update(temp);
+	public void logicalDelete(@PreDelete Base${javaName} base${javaName}) {
+		base${javaName}Mapper.update(base${javaName});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(String id) {
+	public void logicalDelete(String id) {
 		Base${javaName} temp = new Base${javaName}();
 		temp.setId(id);
-		temp.setStatus(Status.DELETED.getValue());
-		return this.update(temp);
+		this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.delete(base${javaName});
+	public void delete(Base${javaName} base${javaName}) {
+		this.delete(base${javaName}.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(String id) {
-		return base${javaName}Mapper.delete(id);
+	public void delete(String id) {
+		base${javaName}Mapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int deleteByIds(String[] ids) {
-		return base${javaName}Mapper.deleteByIds(ids);
+	public void deleteByIds(String[] ids) {
+		if (ids == null || ids.length == 0) {
+			return;
+		}
+		base${javaName}Mapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int deleteByIds(Collection<String> ids) {
-		return base${javaName}Mapper.deleteByIds(ids);
+	public void deleteByIds(Collection<String> ids) {
+		if (ids == null || ids.size() == 0) {
+			return;
+		}
+		this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

@@ -15,15 +15,15 @@ public class CommonField implements Serializable {
 	private String id;
 	@EntityColumn(name = "version", comment = "数据版本号")
 	private Integer version;
-	@EntityColumn(name = "create_by", type = EntityColumnType.STRING, comment = "创建人", length = 32)
+	@EntityColumn(name = "create_by", type = EntityColumnType.STRING, comment = "创建人", length = 32, nullable = false)
 	private String createBy;
-	@EntityColumn(name = "create_date", type = EntityColumnType.TIMESTAMP, comment = "创建时间")
+	@EntityColumn(name = "create_date", type = EntityColumnType.TIMESTAMP, comment = "创建时间", nullable = false)
 	private Date createDate;
-	@EntityColumn(name = "update_by", type = EntityColumnType.STRING, comment = "修改人", length = 32)
+	@EntityColumn(name = "update_by", type = EntityColumnType.STRING, comment = "修改人", length = 32, nullable = false)
 	private String updateBy;
-	@EntityColumn(name = "update_date", type = EntityColumnType.TIMESTAMP, comment = "修改时间")
+	@EntityColumn(name = "update_date", type = EntityColumnType.TIMESTAMP, comment = "修改时间", nullable = false)
 	private Date updateDate;
-	@EntityColumn(name = "status", comment = "数据状态")
+	@EntityColumn(name = "status", comment = "数据状态", nullable = false)
 	private Integer status;
 
 	public CommonField() {

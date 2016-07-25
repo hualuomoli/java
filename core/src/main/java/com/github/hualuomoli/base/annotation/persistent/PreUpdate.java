@@ -6,15 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 持久化预处理
+ * 修改前持久化预处理
  * @author hualuomoli
  *
  */
-@Target({ ElementType.METHOD, ElementType.PARAMETER })
+@Target({ ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PrePersistent {
-
-	// 持久化类型
-	Type type();
+public @interface PreUpdate {
 
 }

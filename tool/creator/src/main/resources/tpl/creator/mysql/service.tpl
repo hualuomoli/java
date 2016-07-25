@@ -19,23 +19,23 @@ public interface Base${javaName}Service {
 	Base${javaName} getBy${unique.javaName?cap_first}(${unique.javaTypeName} ${unique.javaName});
 	</#if>
 
-	int insert(Base${javaName} base${javaName});
+	void insert(Base${javaName} base${javaName});
 	
-	int batchInsert(List<Base${javaName}> list);
+	void batchInsert(List<Base${javaName}> list);
 
-	int update(Base${javaName} base${javaName});
+	void update(Base${javaName} base${javaName});
 	
-	int logicalDelete(Base${javaName} base${javaName});
+	void logicalDelete(Base${javaName} base${javaName});
 
-	int logicalDelete(String id);
+	void logicalDelete(String id);
 
-	int delete(Base${javaName} base${javaName});
+	void delete(Base${javaName} base${javaName});
 	
-	int delete(String id);
+	void delete(String id);
 	
-	int deleteByIds(String[] ids);
+	void deleteByIds(String[] ids);
 	
-	int deleteByIds(Collection<String> ids);
+	void deleteByIds(Collection<String> ids);
 
 	List<Base${javaName}> findList(Base${javaName} base${javaName});
 	

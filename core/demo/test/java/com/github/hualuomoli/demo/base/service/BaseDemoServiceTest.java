@@ -74,6 +74,7 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 	public void test050LogicDeleteBaseDemo() {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setId(id);
+		baseDemo.setName("hualuomoli");
 		demoService.logicalDelete(baseDemo);
 		baseDemo = demoService.get(id);
 		Assert.assertNotNull(baseDemo);

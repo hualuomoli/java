@@ -9,11 +9,11 @@ CREATE TABLE `t_demo` (
 	`birth_day` date COMMENT '生日',
 	`remarks` longtext,
 	`user_username` varchar(20),
-	`create_by` varchar(32) COMMENT '创建人',
-	`create_date` timestamp COMMENT '创建时间',
-	`update_by` varchar(32) COMMENT '修改人',
-	`update_date` timestamp COMMENT '修改时间',
-	`status` integer(11) COMMENT '数据状态',
+	`create_by` varchar(32) NOT NULL COMMENT '创建人',
+	`create_date` timestamp NOT NULL COMMENT '创建时间',
+	`update_by` varchar(32) NOT NULL COMMENT '修改人',
+	`update_date` timestamp NOT NULL COMMENT '修改时间',
+	`status` integer(11) NOT NULL COMMENT '数据状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试demo';
 
@@ -24,11 +24,11 @@ CREATE TABLE `t_user` (
 	`username` varchar(20),
 	`nickname` varchar(32),
 	`number` integer(11),
-	`create_by` varchar(32) COMMENT '创建人',
-	`create_date` timestamp COMMENT '创建时间',
-	`update_by` varchar(32) COMMENT '修改人',
-	`update_date` timestamp COMMENT '修改时间',
-	`status` integer(11) COMMENT '数据状态',
+	`create_by` varchar(32) NOT NULL COMMENT '创建人',
+	`create_date` timestamp NOT NULL COMMENT '创建时间',
+	`update_by` varchar(32) NOT NULL COMMENT '修改人',
+	`update_date` timestamp NOT NULL COMMENT '修改时间',
+	`status` integer(11) NOT NULL COMMENT '数据状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表';
 
