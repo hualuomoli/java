@@ -6,17 +6,15 @@
 		<groupId>com.github.hualuomoli</groupId>
 		<artifactId>parent</artifactId>
 		<version>0.0.2.1</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>plugin-redis</artifactId>
+	<artifactId>plugin</artifactId>
 	<packaging>jar</packaging>
 
 	<properties>
 
-		<!-- Redis -->
-		<spring-data-redis.version>1.0.2.RELEASE</spring-data-redis.version>
-		<jedis.version>2.1.0</jedis.version>
+		
 
 	</properties>
 
@@ -24,21 +22,11 @@
 
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>commons</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
-		<!-- Redis -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-redis</artifactId>
-			<version>${spring-data-redis.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>${jedis.version}</version>
-		</dependency>
+		
 
 	</dependencies>
 

@@ -11,6 +11,8 @@
 	<modules>
 		<module>./commons</module>
 		<module>./core</module>
+		<module>./plugin</module>
+		<module>./plugins/redis</module>
 		<module>./tool/raml</module>
 		<module>./tool/creator</module>
 		<module>./web</module>
