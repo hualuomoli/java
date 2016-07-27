@@ -10,6 +10,7 @@ import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer.Config;
 import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlDbDealer;
 import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlFileDealer;
+import com.github.hualuomoli.tool.creator.util.CreatorUtils;
 
 public class CreatorTest {
 
@@ -39,6 +40,9 @@ public class CreatorTest {
 		creatorAdaptor.setFileDealer(fileDealer);
 		creatorAdaptor.setDbDealer(dbDealer);
 		creator = creatorAdaptor;
+
+		CreatorUtils.setPrefix("t_");
+
 	}
 
 	@Test

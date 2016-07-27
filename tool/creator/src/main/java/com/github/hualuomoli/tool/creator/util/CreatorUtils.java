@@ -33,6 +33,12 @@ public class CreatorUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(CreatorUtils.class);
 
+	private static String prefix = "";
+
+	public static void setPrefix(String prefix) {
+		CreatorUtils.prefix = prefix;
+	}
+
 	public static CreatorTable getCreatorTable(Class<?> entityCls) {
 		EntityTable annotation = entityCls.getAnnotation(EntityTable.class);
 
@@ -41,8 +47,8 @@ public class CreatorUtils {
 		}
 
 		CreatorTable creatorTable = new CreatorTable();
-
-		creatorTable.setDbName(Tool.unCamel(StringUtils.isBlank(annotation.name()) ? entityCls.getSimpleName() : annotation.name()));
+		
+		creatorTable.setDbName(Tool.unCamel(StringUtils.isBlank(annotation.name()) ? prefix + entityCls.getSimpleName() : annotation.name()));
 		creatorTable.setComments(StringUtils.isBlank(annotation.comment()) ? "表" : annotation.comment());
 		creatorTable.setColumns(getAttributes(entityCls));
 		creatorTable.setQueryColumns(getQueryAttributes(creatorTable.getColumns()));

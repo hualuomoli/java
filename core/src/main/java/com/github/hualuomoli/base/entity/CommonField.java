@@ -7,7 +7,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 // 公共属性
-public class CommonField implements Serializable {
+public class CommonField implements Serializable, com.github.hualuomoli.base.Persistent {
 
 	private static final long serialVersionUID = 4623441259087418777L;
 
