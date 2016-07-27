@@ -35,6 +35,7 @@ public class DefController {
 	private DefService defService;
 	
 	/**
+	 * 获取值
 	 * @param id ID
 	 * @param photo 头像
 	 */
@@ -57,6 +58,7 @@ public class DefController {
 		
 	}
 	/**
+	 * post
 	 * @param id ID
 	 */
 	@RequestMapping(value = "/postjson/{id}", method = RequestMethod.POST, consumes = { "application/json" }, produces = { "application/json" })

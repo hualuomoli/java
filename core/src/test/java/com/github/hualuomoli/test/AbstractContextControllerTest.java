@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,8 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.github.hualuomoli.LoginUserServiceAdaptor;
 import com.github.hualuomoli.base.config.BaseConfig;
 import com.github.hualuomoli.commons.util.JsonUtils;
+import com.github.hualuomoli.commons.util.ServletUtils;
 import com.github.hualuomoli.mvc.config.MvcConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,6 +60,8 @@ public class AbstractContextControllerTest {
 				return;
 			}
 			mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+			MockHttpServletRequest req = (MockHttpServletRequest) ServletUtils.getRequest();
+			req.addHeader("token", LoginUserServiceAdaptor.NULL_TOKEN);
 		}
 	}
 

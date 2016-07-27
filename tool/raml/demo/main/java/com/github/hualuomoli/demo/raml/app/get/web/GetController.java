@@ -39,6 +39,7 @@ public class GetController {
 	private GetService getService;
 	
 	/**
+	 * 
 	 * @param id ID
 	 */
 	@RequestMapping(value = "/uriparam/{id}", method = RequestMethod.GET, produces = { "application/json" })
@@ -57,6 +58,7 @@ public class GetController {
 		
 	}
 	/**
+	 * 
 	 */
 	@RequestMapping(value = "/queryparam", method = RequestMethod.GET, produces = { "application/json" })
 	public String getQueryparam(
@@ -71,6 +73,7 @@ public class GetController {
 		
 	}
 	/**
+	 * 
 	 * @param pageSize 每页数据个数
 	 * @param pageNumber 当前页码
 	 */
@@ -93,6 +96,7 @@ public class GetController {
 		
 	}
 	/**
+	 * 
 	 */
 	@RequestMapping(value = "/noparam", method = RequestMethod.GET, produces = { "application/json" })
 	public String getNoparam(

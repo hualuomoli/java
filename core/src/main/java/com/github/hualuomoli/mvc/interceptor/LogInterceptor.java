@@ -21,7 +21,9 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		this.showRequestInformation(request);
+		if (logger.isDebugEnabled()) {
+			this.showRequestInformation(request);
+		}
 		return true;
 	}
 

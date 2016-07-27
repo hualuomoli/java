@@ -33,6 +33,7 @@ public class MultipartController {
 	private MultipartService multipartService;
 	
 	/**
+	 * 文件上传
 	 * @param id ID
 	 * @param photo 头像
 	 */

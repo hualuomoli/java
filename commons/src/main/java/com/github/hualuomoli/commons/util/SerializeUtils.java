@@ -2,6 +2,7 @@ package com.github.hualuomoli.commons.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -22,6 +23,9 @@ public class SerializeUtils {
 
 	// 序列化
 	public static byte[] serialize(Object object) {
+		if (object == null) {
+			return null;
+		}
 		ObjectOutputStream oos = null;
 		ByteArrayOutputStream baos = null;
 		try {
@@ -32,6 +36,19 @@ public class SerializeUtils {
 			return bytes;
 		} catch (Exception e) {
 			logger.warn("serialize object error. {}", e);
+		} finally {
+			if (oos != null) {
+				try {
+					oos.close();
+				} catch (IOException e) {
+				}
+			}
+			if (baos != null) {
+				try {
+					baos.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 		return null;
 	}
@@ -42,13 +59,27 @@ public class SerializeUtils {
 		if (bytes == null)
 			return null;
 		ByteArrayInputStream bais = null;
+		ObjectInputStream ois = null;
 		try {
 			// 反序列化
 			bais = new ByteArrayInputStream(bytes);
-			ObjectInputStream ois = new ObjectInputStream(bais);
+			ois = new ObjectInputStream(bais);
 			return (T) ois.readObject();
 		} catch (Exception e) {
-			logger.warn("serialize object error. {}", e);
+			logger.warn("unserialize object error. {}", e);
+		} finally {
+			if (ois != null) {
+				try {
+					ois.close();
+				} catch (IOException e) {
+				}
+			}
+			if (bais != null) {
+				try {
+					bais.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 		return null;
 	}

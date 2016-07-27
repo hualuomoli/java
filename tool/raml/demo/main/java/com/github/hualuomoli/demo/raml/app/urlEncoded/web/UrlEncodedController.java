@@ -39,6 +39,7 @@ public class UrlEncodedController {
 	private UrlEncodedService urlEncodedService;
 	
 	/**
+	 * 提交
 	 */
 	@RequestMapping(value = "/noparam", method = RequestMethod.POST, produces = { "application/json" })
 	public String postNoparam(
@@ -53,6 +54,7 @@ public class UrlEncodedController {
 		
 	}
 	/**
+	 * URI提交
 	 * @param id ID
 	 */
 	@RequestMapping(value = "/uriparam/{id}", method = RequestMethod.POST, produces = { "application/json" })
@@ -71,6 +73,7 @@ public class UrlEncodedController {
 		
 	}
 	/**
+	 * 
 	 * @param pageSize 每页显示数据个数
 	 * @param pageNumber 分页编码
 	 */
@@ -93,6 +96,7 @@ public class UrlEncodedController {
 		
 	}
 	/**
+	 * 
 	 */
 	@RequestMapping(value = "/formparam", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String postFormparam(

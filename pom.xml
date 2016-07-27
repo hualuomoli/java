@@ -13,6 +13,7 @@
 		<module>./core</module>
 		<module>./plugin</module>
 		<module>./plugins/redis</module>
+		<module>./plugins/activemq</module>
 		<module>./tool/raml</module>
 		<module>./tool/creator</module>
 		<module>./web</module>

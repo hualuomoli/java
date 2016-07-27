@@ -58,19 +58,21 @@ public class ExceptionConfig {
 	@ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
 	@ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
 	public void unsupportedMediaType(HttpServletResponse response, HttpMediaTypeNotSupportedException e) {
-		this.flushJson(response, Code.METHOD_NOT_ALLOWED, e.getMessage());
+		this.flushJson(response, Code.UNSUPPORTED_MEDIA_TYPE, e.getMessage());
 	}
 
 	// 运行时异常
 	@ExceptionHandler(value = RuntimeException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseStatus(HttpStatus.OK)
 	public void runtimeException(HttpServletResponse response, RuntimeException e) {
 
 		if (logger.isDebugEnabled()) {
 			this.flushHtml(response, e);
-		} else if (logger.isInfoEnabled()) {
+		} else if (logger.isWarnEnabled()) {
+			logger.warn("{}", e);
 			this.flushJson(response, Code.Exception, e.getMessage());
 		} else {
+			logger.error("{}", e);
 			this.flushJson(response, Code.Exception, "系统错误");
 		}
 
@@ -86,15 +88,15 @@ public class ExceptionConfig {
 	// 输出html
 	private void flushHtml(HttpServletResponse response, Exception e) {
 
+		logger.error("{}", e);
+
 		// 设置响应头
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=utf-8");
 
-		logger.warn("{}", e);
 		try {
 			e.printStackTrace(response.getWriter());
 		} catch (IOException e1) {
-			e1.printStackTrace();
 		}
 
 	}
@@ -115,7 +117,6 @@ public class ExceptionConfig {
 		try {
 			response.getOutputStream().write(data.getBytes());
 		} catch (IOException e1) {
-			e1.printStackTrace();
 		}
 	}
 

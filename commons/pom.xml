@@ -21,6 +21,7 @@
 		<commons-net.version>3.4</commons-net.version>
 		<commons-codec.version>1.9</commons-codec.version>
 		<commons-beanutils.version>1.9.1</commons-beanutils.version>
+		<commons-pool.version>1.6</commons-pool.version>
 
 		<!-- 谷歌 -->
 		<guava.version>17.0</guava.version>
@@ -74,6 +75,11 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>${commons-pool.version}</version>
 		</dependency>
 		<!-- google java lib -->
 		<dependency>
