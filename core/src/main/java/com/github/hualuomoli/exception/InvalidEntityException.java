@@ -1,4 +1,4 @@
-package com.github.hualuomoli.mvc.validator;
+package com.github.hualuomoli.exception;
 
 import java.util.List;
 

@@ -12,7 +12,6 @@ import com.github.hualuomoli.base.annotation.persistent.PreDelete;
 import com.github.hualuomoli.base.annotation.persistent.PreInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
@@ -21,7 +20,7 @@ import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.base.entity.BaseUser;
 import com.github.hualuomoli.demo.base.mapper.BaseUserMapper;
 import com.github.hualuomoli.demo.base.service.BaseUserService;
-
+import com.github.hualuomoli.exception.MoreDataFoundException;
 
 // #BaseUser
 @Service(value = "com.github.hualuomoli.demo.base.service.BaseUserServiceImpl")

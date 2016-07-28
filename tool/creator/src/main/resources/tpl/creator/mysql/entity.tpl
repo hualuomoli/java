@@ -14,6 +14,12 @@ public class Base${javaName} extends ${entityPackageName}.${javaName} implements
 	public Base${javaName}(){
 	}
 	
+	<#if unique??>
+	public Base${javaName}(${unique.javaTypeName} ${unique.javaName}){
+		this.set${unique.javaName?cap_first}(${unique.javaName});
+	}
+	</#if>
+	
 	<#list table.queryColumns as queryColumn>
 	public ${queryColumn.javaTypeName} get${queryColumn.javaName?cap_first}() {
 		return ${queryColumn.javaName};

@@ -1,4 +1,4 @@
-package com.github.hualuomoli;
+package com.github.hualuomoli.exception;
 
 public class LoginUserSecurityException extends RuntimeException {
 

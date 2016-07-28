@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ${className} {
   
   <#list jsonParams as jsonParam>
+  <#list jsonParam.annos as anno>
+  ${anno}
+  </#list>
   private ${jsonParam.type} ${jsonParam.name};
   </#list>
   

@@ -1,4 +1,4 @@
-package com.github.hualuomoli.mvc.auth;
+package com.github.hualuomoli.exception;
 
 /**
  * 权限异常

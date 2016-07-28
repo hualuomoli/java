@@ -508,9 +508,13 @@ public abstract class JavaParser extends AbstractParser {
 		ramlJsonParam.setName(displayName);
 
 		String type = jsonObject.getString(Schema.TYPE);
-		String description = null;
+		String description = "";
 		if (jsonObject.has(Schema.DESCRIPTION)) {
 			description = jsonObject.getString(Schema.DESCRIPTION);
+		}
+		String example = "";
+		if (jsonObject.has(Schema.EXAMPLE)) {
+			example = jsonObject.getString(Schema.EXAMPLE);
 		}
 
 		// type
@@ -562,6 +566,8 @@ public abstract class JavaParser extends AbstractParser {
 				throw new RuntimeException("can not set date parameter repeat.");
 			} else {
 				ramlJsonParam.setType("Date");
+				String annos = new JsonValid(jsonObject, "", false, false)._getDateFormatPattern();
+				ramlJsonParam.setAnnos(Lists.newArrayList(annos));
 			}
 			break;
 		default:
@@ -1941,54 +1947,6 @@ public abstract class JavaParser extends AbstractParser {
 			default:
 				throw new RuntimeException("can not support json " + example);
 			}
-
-			// // 判断是否是page
-			// if (keys.contains(javaTool.javaParser.getConfig().pageName)) {
-			// this.type = TYPE_PAGE; // 设置类型
-			// // page
-			// JSONObject pageJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
-			// Set<String> pageKeys = pageJsonObject.getJSONObject(Schema.PROPERTIES).keySet();
-			//
-			// // 移除page相关信息
-			// pageKeys.remove(javaTool.javaParser.getConfig().pageTotalName);
-			// pageKeys.remove(javaTool.javaParser.getConfig().pageNumberName);
-			// pageKeys.remove(javaTool.javaParser.getConfig().pageSizeName);
-			//
-			// // 移除后只剩余一个属性
-			// if (pageKeys.size() != 1) {
-			// throw new RuntimeException("can not support json " + example);
-			// }
-			// tempList = Lists.newArrayList(pageKeys);
-			// resultName = tempList.get(0); // 返回的类名
-			// obj =
-			// pageJsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName).getJSONObject(Schema.ITEMS);
-			// // set example data
-			// exampleData = new
-			// JSONObject(example).getJSONObject(javaTool.javaParser.getConfig().pageName).getJSONArray(resultName);
-			// className = _removeArraySuffix(resultName); // 移除后缀
-			// } else {
-			// // 判断是Object还是Array
-			// JSONObject tempJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
-			// String type = tempJsonObject.getString(Schema.TYPE);
-			// switch (type) {
-			// case "object":
-			// this.type = TYPE_OBJECT; // 设置类型
-			// obj = tempJsonObject;
-			// // set example data
-			// exampleData = new JSONObject(example).getJSONObject(resultName);
-			// className = resultName;
-			// break;
-			// case "array":
-			// this.type = TYPE_ARRAY; // 设置类型
-			// obj = tempJsonObject.getJSONObject(Schema.ITEMS);
-			// // set example data
-			// exampleData = new JSONObject(example).getJSONArray(resultName);
-			// className = _removeArraySuffix(resultName); // 移除后缀
-			// break;
-			// default:
-			// throw new RuntimeException("can not support json " + example);
-			// }
-			// }
 
 			this.exampleData = exampleData.toString().replaceAll("\\\"", "\\\\\"");
 			// deal

@@ -104,4 +104,23 @@ public class CollectionUtils {
 
 	}
 
+	// 转换集合
+	public static <S, D> List<D> transfer(List<S> srcList, Parser<S, D> parser) {
+		if (srcList == null || srcList.size() == 0) {
+			return Lists.newArrayList();
+		}
+		List<D> destList = Lists.newArrayList();
+		for (S s : srcList) {
+			destList.add(parser.parse(s));
+		}
+		return destList;
+	}
+
+	// 转换器
+	public static interface Parser<S, D> {
+
+		D parse(S s);
+
+	}
+
 }

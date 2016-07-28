@@ -10,5 +10,6 @@ public class BaseUser extends com.github.hualuomoli.demo.entity.User implements 
 	public BaseUser(){
 	}
 	
+	
 
 }

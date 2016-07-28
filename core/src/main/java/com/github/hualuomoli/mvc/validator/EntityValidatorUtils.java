@@ -8,6 +8,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 
+import com.github.hualuomoli.exception.InvalidEntityException;
 import com.google.common.collect.Lists;
 
 /**

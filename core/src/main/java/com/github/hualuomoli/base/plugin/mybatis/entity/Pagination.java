@@ -23,6 +23,12 @@ public class Pagination {
 	}
 
 	public Pagination(Integer pageNo, Integer pageSize) {
+		if (pageNo == null || pageNo <= 0) {
+			pageNo = 1;
+		}
+		if (pageSize == null || pageSize <= 0) {
+			pageSize = 10;
+		}
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
 	}

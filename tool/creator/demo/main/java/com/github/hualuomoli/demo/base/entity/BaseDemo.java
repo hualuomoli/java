@@ -48,6 +48,10 @@ public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements 
 	public BaseDemo(){
 	}
 	
+	public BaseDemo(java.lang.String name){
+		this.setName(name);
+	}
+	
 	public java.lang.String getNameLeftLike() {
 		return nameLeftLike;
 	}

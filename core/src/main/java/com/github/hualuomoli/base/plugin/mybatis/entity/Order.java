@@ -7,6 +7,8 @@ package com.github.hualuomoli.base.plugin.mybatis.entity;
  */
 public class Order {
 
+	public static final Order CREATE_DATE_DESC = new Order("create_date", Direction.DESC);
+
 	private String column; // 排序的列
 	private Direction direction; // 方向
 

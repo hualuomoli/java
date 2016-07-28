@@ -31,6 +31,9 @@ public class ${serviceJavaName} {
 	protected ${mapperJavaName} ${mapperJavaName?uncap_first};
 	
 	<#list methods as method>
+	/**
+	 * ${method.description!''}
+	 */
 	<#if method.methodMimeType.method == 'POST' || method.methodMimeType.method == 'PUT' || method.methodMimeType.method == 'DELETE'>
 	@Transactional(readOnly = false)
 	</#if>

@@ -12,7 +12,6 @@ import com.github.hualuomoli.base.annotation.persistent.PreDelete;
 import com.github.hualuomoli.base.annotation.persistent.PreInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.base.exceptione.MoreDataFoundException;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
@@ -22,7 +21,6 @@ import com.github.hualuomoli.demo.base.entity.BaseUser;
 import com.github.hualuomoli.demo.base.mapper.BaseUserMapper;
 import com.github.hualuomoli.demo.base.service.BaseUserService;
 
-
 // #BaseUser
 @Service(value = "com.github.hualuomoli.demo.base.service.BaseUserServiceImpl")
 @Transactional(readOnly = true)
@@ -30,31 +28,30 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Autowired
 	private BaseUserMapper baseUserMapper;
-	
+
 	@Override
 	public BaseUser get(BaseUser baseUser) {
 		return this.get(baseUser.getId());
 	}
-	
+
 	@Override
 	public BaseUser get(String id) {
 		return baseUserMapper.get(id);
 	}
-	
 
 	@Override
 	@Transactional(readOnly = false)
 	public void insert(@PreInsert BaseUser baseUser) {
 		baseUserMapper.insert(baseUser);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(@PreBatchInsert  List<BaseUser> list) {
+	public void batchInsert(@PreBatchInsert List<BaseUser> list) {
 		if (list == null || list.size() == 0) {
 			return;
-		}	
-		
+		}
+
 		Config config = new Config(100);
 		while (true) {
 			List<BaseUser> newList = CollectionUtils.fetchDatas(list, config);
@@ -76,7 +73,7 @@ public class BaseUserServiceImpl implements BaseUserService {
 	public void logicalDelete(@PreDelete BaseUser baseUser) {
 		baseUserMapper.update(baseUser);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public void logicalDelete(String id) {
@@ -90,13 +87,13 @@ public class BaseUserServiceImpl implements BaseUserService {
 	public void delete(BaseUser baseUser) {
 		this.delete(baseUser.getId());
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		baseUserMapper.delete(id);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteByIds(String[] ids) {
@@ -105,21 +102,21 @@ public class BaseUserServiceImpl implements BaseUserService {
 		}
 		baseUserMapper.deleteByIds(ids);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteByIds(Collection<String> ids) {
 		if (ids == null || ids.size() == 0) {
 			return;
 		}
-		this.deleteByIds(ids.toArray(new String[]{}));
+		this.deleteByIds(ids.toArray(new String[] {}));
 	}
 
 	@Override
 	public List<BaseUser> findList(BaseUser baseUser) {
 		return baseUserMapper.findList(baseUser);
 	}
-	
+
 	@Override
 	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize) {
 		return this.findPage(baseUser, new Pagination(pageNo, pageSize));
@@ -139,7 +136,7 @@ public class BaseUserServiceImpl implements BaseUserService {
 	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, List<Order> orders) {
 		return this.findPage(baseUser, new Pagination(pageNo, pageSize, orders));
 	}
-	
+
 	@Override
 	public Page findPage(BaseUser baseUser, Pagination pagination) {
 
@@ -159,5 +156,5 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 		return page;
 	}
-	
+
 }

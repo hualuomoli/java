@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.github.hualuomoli.commons.util.JsonUtils;
-import com.github.hualuomoli.mvc.auth.AuthException;
-import com.github.hualuomoli.mvc.validator.InvalidEntityException;
+import com.github.hualuomoli.exception.AuthException;
+import com.github.hualuomoli.exception.InvalidEntityException;
 import com.google.common.collect.Maps;
 
 /**

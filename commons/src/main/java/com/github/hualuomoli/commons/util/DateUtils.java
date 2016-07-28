@@ -2,6 +2,7 @@ package com.github.hualuomoli.commons.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -59,6 +60,19 @@ public class DateUtils {
 			logger.warn("can not parse source " + source);
 			return null;
 		}
+	}
+
+	/**
+	 * 增加几天
+	 * @param date 日期
+	 * @param day 天数
+	 * @return 增加后的日期
+	 */
+	public static final Date addDay(Date date, Integer day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_YEAR, day);
+		return calendar.getTime();
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.hualuomoli.commons.util.ServletUtils;
+import com.github.hualuomoli.exception.LoginUserSecurityException;
 import com.github.hualuomoli.plugin.cache.DefaultSerializeCache;
 
 // token -> username -> user

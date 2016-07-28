@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.exceptione;
+package com.github.hualuomoli.exception;
 
 /**
  * 期望返回一条数据,但返回了多条数据
