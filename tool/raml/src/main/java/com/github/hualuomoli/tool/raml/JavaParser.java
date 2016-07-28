@@ -191,6 +191,7 @@ public abstract class JavaParser extends AbstractParser {
 		map.put("restResponseClassName", this.getConfig().restResponse.getSimpleName());
 
 		// 参数
+		map.put("prefix", this.getConfig().testUriPrefix);
 		map.put("methods", ramlMethodList);
 		map.put("packageName", filePackageName); // 包名
 		map.put("uri", fullUri);
@@ -2180,6 +2181,7 @@ public abstract class JavaParser extends AbstractParser {
 
 	public static class Config {
 		private String projectPackageName; // 项目包名
+		private String testUriPrefix = ""; // 测试访问路径前缀
 		private String author; // 作者
 		private String version; // 版本
 		private String date; // 日期
@@ -2198,6 +2200,10 @@ public abstract class JavaParser extends AbstractParser {
 
 		public void setProjectPackageName(String projectPackageName) {
 			this.projectPackageName = projectPackageName;
+		}
+
+		public void setTestUriPrefix(String testUriPrefix) {
+			this.testUriPrefix = testUriPrefix;
 		}
 
 		public void setAuthor(String author) {

@@ -15,6 +15,7 @@ public class JavaParserTest {
 	public static void beforeClass() {
 		config = new JavaParser.Config();
 		config.setProjectPackageName("com.github.hualuomoli.demo.raml");
+		// config.setTestUriPrefix("/test");
 		config.setAuthor("hualuomoli");
 		config.setVersion("1.0");
 		config.setDate("2016-05-19 10:25:26");

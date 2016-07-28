@@ -28,7 +28,7 @@ import ${packageName}.service.${serviceJavaName};
  * @Version ${version}
  */
 @RestController(value = "${packageName}.${controllerJavaName}")
-@RequestMapping(value = "${uri}")
+@RequestMapping(value = "${prefix}${uri}")
 public class ${controllerJavaName} {
 	
 	@Autowired
