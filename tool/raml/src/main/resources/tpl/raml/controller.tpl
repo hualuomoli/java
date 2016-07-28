@@ -22,7 +22,7 @@ import ${packageName}.entity.${method.response.className};
 import ${packageName}.service.${serviceJavaName};
 
 /**
- * @Description ${desc}
+ * @Description ${desc!''}
  * @Author ${author}
  * @Date ${date}
  * @Version ${version}
@@ -90,7 +90,7 @@ public class ${controllerJavaName} {
 		<#elseif method.response.resJson.type == 5>
 		<#-- page -->
 		Page page = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
-		return ${restResponseClassName}.getPageData("${method.response.resJson.resultName}", page);
+		return ${restResponseClassName}.getPageData("${method.response.resJson.pageName}", "${method.response.resJson.resultName}", page);
 		</#if>
 		
 	}

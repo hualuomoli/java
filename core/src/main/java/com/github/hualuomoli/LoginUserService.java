@@ -22,7 +22,13 @@ public interface LoginUserService {
 	 * 获取登录用户
 	 * @return 登录用户
 	 */
-	<T extends Serializable> LoginUser<T> getUser();
+	<T extends Serializable> LoginUser<T> getLoginUser();
+
+	/**
+	 * 获取登录用户
+	 * @return 登录用户
+	 */
+	<T extends Serializable> T getUser();
 
 	/**
 	 * 设置用户

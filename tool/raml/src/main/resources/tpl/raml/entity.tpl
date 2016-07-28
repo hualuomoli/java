@@ -8,7 +8,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
- * @Description ${desc}
+ * @Description ${desc!''}
  * @Author ${author}
  * @Date ${date}
  * @Version ${version}

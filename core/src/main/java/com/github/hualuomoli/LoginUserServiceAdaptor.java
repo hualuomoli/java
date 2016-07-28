@@ -59,7 +59,7 @@ public class LoginUserServiceAdaptor implements LoginUserService {
 	}
 
 	@Override
-	public <T extends Serializable> LoginUser<T> getUser() {
+	public <T extends Serializable> LoginUser<T> getLoginUser() {
 		String username = this.getUsername();
 		if (StringUtils.equals(username, NULL_USERNAME)) {
 			LoginUser<T> loginUser = new LoginUser<T>();
@@ -67,6 +67,12 @@ public class LoginUserServiceAdaptor implements LoginUserService {
 			return loginUser;
 		}
 		return cache.getSerializable(username);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends Serializable> T getUser() {
+		return (T) this.getLoginUser().getObj();
 	}
 
 	@Override
@@ -84,4 +90,5 @@ public class LoginUserServiceAdaptor implements LoginUserService {
 	public Date getCurrentDate() {
 		return new Date();
 	}
+
 }

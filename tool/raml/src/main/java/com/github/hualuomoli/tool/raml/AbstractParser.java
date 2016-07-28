@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
  */
 public abstract class AbstractParser implements Parser {
 
-	protected static final Logger logger = LoggerFactory.getLogger(Parser.class);
+	protected static final Logger logger = LoggerFactory.getLogger(AbstractParser.class);
 
 	@Override
 	public void execute(String[] ramlResources) {
@@ -32,6 +32,9 @@ public abstract class AbstractParser implements Parser {
 		Raml[] ramls = new Raml[ramlResources.length];
 
 		for (int i = 0; i < ramlResources.length; i++) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("build raml resource {}", ramlResources[i]);
+			}
 			ramls[i] = new RamlDocumentBuilder().build(ramlResources[i]);
 		}
 		// 执行解析

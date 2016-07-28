@@ -99,4 +99,24 @@ public class Pagination {
 		this.orders = orders;
 	}
 
+	public void setOrderByStrArray(String... orderByStrArray) {
+		if (orderByStrArray == null || orderByStrArray.length == 0) {
+			return;
+		}
+		this.orderByStrArray = Lists.newArrayList();
+		for (String orderByStr : orderByStrArray) {
+			this.orderByStrArray.add(orderByStr);
+		}
+	}
+
+	public void setOrders(Order... orders) {
+		if (orders == null || orders.length == 0) {
+			return;
+		}
+		this.orders = Lists.newArrayList();
+		for (Order order : orders) {
+			this.orders.add(order);
+		}
+	}
+
 }

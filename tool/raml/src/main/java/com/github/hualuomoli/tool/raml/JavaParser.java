@@ -105,6 +105,10 @@ public abstract class JavaParser extends AbstractParser {
 	// 创建entity
 	private void _createEntity(Entity entity) {
 
+		if (!this.getConfig().createEntity) {
+			return;
+		}
+
 		String entityPackageName = this.getConfig().projectPackageName + ".base.entity";
 		String entityJavaName = entity.getName();
 		Map<String, Object> map = Maps.newHashMap();
@@ -136,10 +140,6 @@ public abstract class JavaParser extends AbstractParser {
 	 */
 	protected void create(Resource resource) {
 		this.resource = resource;
-
-		if (StringUtils.isBlank(resource.getDescription())) {
-			throw new RuntimeException("please set description for " + Tool.getResourceFullUri(resource));
-		}
 
 		fullUri = Tool.getResourceFullUri(resource);
 		packageName = this._getPackageName();
@@ -291,7 +291,10 @@ public abstract class JavaParser extends AbstractParser {
 			dir.mkdirs();
 		}
 		// 输出
-		TemplateUtils.processByResource(TEMPLATE_PATH, "service.tpl", map, new File(dir.getAbsolutePath(), entityName + "Service.java"));
+		File file = new File(dir.getAbsolutePath(), entityName + "Service.java");
+		if (this.getConfig().forece || !file.exists()) {
+			TemplateUtils.processByResource(TEMPLATE_PATH, "service.tpl", map, file);
+		}
 	}
 
 	private void _createMapper(Map<String, Object> map) {
@@ -302,7 +305,10 @@ public abstract class JavaParser extends AbstractParser {
 			dir.mkdirs();
 		}
 		// 输出
-		TemplateUtils.processByResource(TEMPLATE_PATH, "mapper.tpl", map, new File(dir.getAbsolutePath(), entityName + "Mapper.java"));
+		File file = new File(dir.getAbsolutePath(), entityName + "Mapper.java");
+		if (this.getConfig().forece || !file.exists()) {
+			TemplateUtils.processByResource(TEMPLATE_PATH, "mapper.tpl", map, file);
+		}
 
 	}
 
@@ -315,7 +321,10 @@ public abstract class JavaParser extends AbstractParser {
 		}
 
 		// 输出
-		TemplateUtils.processByResource(TEMPLATE_PATH, "xml.tpl", map, new File(dir.getAbsolutePath(), entityName + "Mapper.xml"));
+		File file = new File(dir.getAbsolutePath(), entityName + "Mapper.xml");
+		if (this.getConfig().forece || !file.exists()) {
+			TemplateUtils.processByResource(TEMPLATE_PATH, "xml.tpl", map, file);
+		}
 
 	}
 
@@ -532,6 +541,13 @@ public abstract class JavaParser extends AbstractParser {
 				}
 			}
 			break;
+		case Schema.DATA_TYPE_DOUBLE:
+			if (repeat) {
+				ramlJsonParam.setType("Double[]");
+			} else {
+				ramlJsonParam.setType("Double");
+			}
+			break;
 		case Schema.DATA_TYPE_NUMBER:
 			if (repeat) {
 				ramlJsonParam.setType("Double[]");
@@ -549,7 +565,7 @@ public abstract class JavaParser extends AbstractParser {
 			}
 			break;
 		default:
-			throw new RuntimeException();
+			throw new RuntimeException(type);
 		}
 		ramlJsonParam.setComment(description);
 		return ramlJsonParam;
@@ -1809,6 +1825,7 @@ public abstract class JavaParser extends AbstractParser {
 		private String schema;
 		private String example;
 		private Integer type; // json的类型
+		private String pageName; // page的名称
 		private String resultName; // 返回的类名
 		private String exampleData; // 例子
 		private String className; // 类名
@@ -1825,6 +1842,10 @@ public abstract class JavaParser extends AbstractParser {
 
 		public String getExampleData() {
 			return exampleData;
+		}
+
+		public String getPageName() {
+			return pageName;
 		}
 
 		public String getResultName() {
@@ -1873,51 +1894,101 @@ public abstract class JavaParser extends AbstractParser {
 			JSONObject obj = null;
 			Object exampleData = null;
 
-			// 判断是否是page
-			if (keys.contains(javaTool.javaParser.getConfig().pageName)) {
-				this.type = TYPE_PAGE; // 设置类型
-				// page
-				JSONObject pageJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
-				Set<String> pageKeys = pageJsonObject.getJSONObject(Schema.PROPERTIES).keySet();
-
-				// 移除page相关信息
-				pageKeys.remove(javaTool.javaParser.getConfig().pageTotalName);
-				pageKeys.remove(javaTool.javaParser.getConfig().pageNumberName);
-				pageKeys.remove(javaTool.javaParser.getConfig().pageSizeName);
-
-				// 移除后只剩余一个属性
-				if (pageKeys.size() != 1) {
-					throw new RuntimeException("can not support json " + example);
-				}
-				tempList = Lists.newArrayList(pageKeys);
-				resultName = tempList.get(0); // 返回的类名
-				obj = pageJsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName).getJSONObject(Schema.ITEMS);
-				// set example data
-				exampleData = new JSONObject(example).getJSONObject(javaTool.javaParser.getConfig().pageName).getJSONArray(resultName);
-				className = _removeArraySuffix(resultName); // 移除后缀
-			} else {
-				// 判断是Object还是Array
-				JSONObject tempJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
-				String type = tempJsonObject.getString(Schema.TYPE);
-				switch (type) {
-				case "object":
+			// 判断是Object还是Array
+			JSONObject tempJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
+			String type = tempJsonObject.getString(Schema.TYPE);
+			switch (type) {
+			case "object":
+				Set<String> tempKeys = tempJsonObject.getJSONObject(Schema.PROPERTIES).keySet();
+				if (tempKeys.contains(javaTool.javaParser.getConfig().pageTotalName) //
+						&& tempKeys.contains(javaTool.javaParser.getConfig().pageNumberName) //
+						&& tempKeys.contains(javaTool.javaParser.getConfig().pageSizeName) //
+				) {
+					// page
+					this.type = TYPE_PAGE; // 设置类型
+					pageName = resultName; // 返回的page名称
+					// 移除page相关信息
+					tempKeys.remove(javaTool.javaParser.getConfig().pageTotalName);
+					tempKeys.remove(javaTool.javaParser.getConfig().pageNumberName);
+					tempKeys.remove(javaTool.javaParser.getConfig().pageSizeName);
+					// 移除后只剩余一个属性
+					if (tempKeys.size() != 1) {
+						throw new RuntimeException("can not support json " + example);
+					}
+					tempList = Lists.newArrayList(tempKeys);
+					resultName = tempList.get(0); // 返回的类名
+					obj = tempJsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName).getJSONObject(Schema.ITEMS);
+					// set example data
+					exampleData = new JSONObject(example).getJSONObject(pageName).getJSONArray(resultName);
+					className = _removeArraySuffix(resultName); // 移除后缀
+				} else {
+					// 普通Object
 					this.type = TYPE_OBJECT; // 设置类型
 					obj = tempJsonObject;
 					// set example data
 					exampleData = new JSONObject(example).getJSONObject(resultName);
 					className = resultName;
-					break;
-				case "array":
-					this.type = TYPE_ARRAY; // 设置类型
-					obj = tempJsonObject.getJSONObject(Schema.ITEMS);
-					// set example data
-					exampleData = new JSONObject(example).getJSONArray(resultName);
-					className = _removeArraySuffix(resultName); // 移除后缀
-					break;
-				default:
-					throw new RuntimeException("can not support json " + example);
 				}
+				break;
+			case "array":
+				// 集合
+				this.type = TYPE_ARRAY; // 设置类型
+				obj = tempJsonObject.getJSONObject(Schema.ITEMS);
+				// set example data
+				exampleData = new JSONObject(example).getJSONArray(resultName);
+				className = _removeArraySuffix(resultName); // 移除后缀
+				break;
+			default:
+				throw new RuntimeException("can not support json " + example);
 			}
+
+			// // 判断是否是page
+			// if (keys.contains(javaTool.javaParser.getConfig().pageName)) {
+			// this.type = TYPE_PAGE; // 设置类型
+			// // page
+			// JSONObject pageJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
+			// Set<String> pageKeys = pageJsonObject.getJSONObject(Schema.PROPERTIES).keySet();
+			//
+			// // 移除page相关信息
+			// pageKeys.remove(javaTool.javaParser.getConfig().pageTotalName);
+			// pageKeys.remove(javaTool.javaParser.getConfig().pageNumberName);
+			// pageKeys.remove(javaTool.javaParser.getConfig().pageSizeName);
+			//
+			// // 移除后只剩余一个属性
+			// if (pageKeys.size() != 1) {
+			// throw new RuntimeException("can not support json " + example);
+			// }
+			// tempList = Lists.newArrayList(pageKeys);
+			// resultName = tempList.get(0); // 返回的类名
+			// obj =
+			// pageJsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName).getJSONObject(Schema.ITEMS);
+			// // set example data
+			// exampleData = new
+			// JSONObject(example).getJSONObject(javaTool.javaParser.getConfig().pageName).getJSONArray(resultName);
+			// className = _removeArraySuffix(resultName); // 移除后缀
+			// } else {
+			// // 判断是Object还是Array
+			// JSONObject tempJsonObject = jsonObject.getJSONObject(Schema.PROPERTIES).getJSONObject(resultName);
+			// String type = tempJsonObject.getString(Schema.TYPE);
+			// switch (type) {
+			// case "object":
+			// this.type = TYPE_OBJECT; // 设置类型
+			// obj = tempJsonObject;
+			// // set example data
+			// exampleData = new JSONObject(example).getJSONObject(resultName);
+			// className = resultName;
+			// break;
+			// case "array":
+			// this.type = TYPE_ARRAY; // 设置类型
+			// obj = tempJsonObject.getJSONObject(Schema.ITEMS);
+			// // set example data
+			// exampleData = new JSONObject(example).getJSONArray(resultName);
+			// className = _removeArraySuffix(resultName); // 移除后缀
+			// break;
+			// default:
+			// throw new RuntimeException("can not support json " + example);
+			// }
+			// }
 
 			this.exampleData = exampleData.toString().replaceAll("\\\"", "\\\\\"");
 			// deal
@@ -2003,6 +2074,7 @@ public abstract class JavaParser extends AbstractParser {
 
 		public static final String DATA_TYPE_STRING = "string";
 		public static final String DATA_TYPE_INTEGER = "integer";
+		public static final String DATA_TYPE_DOUBLE = "double";
 		public static final String DATA_TYPE_NUMBER = "number";
 		public static final String DATA_TYPE_DATE = "date";
 		public static final String DATA_TYPE_BOOLEAN = "boolean";
@@ -2180,15 +2252,18 @@ public abstract class JavaParser extends AbstractParser {
 	}
 
 	public static class Config {
-		private String projectPackageName; // 项目包名
 		private String testUriPrefix = ""; // 测试访问路径前缀
+		private boolean createEntity = true; // 是否生成entity
+		private boolean forece = false; // 是否强制生成(service、mapper、xml)
+
+		private String projectPackageName; // 项目包名
 		private String author; // 作者
 		private String version; // 版本
 		private String date; // 日期
 
 		private String codeName; // 返回编码的名称
 		private String msgName; // 返回错误信息的名称
-		private String pageName; // 返回分页信息的名称
+		// private String pageName; // 返回分页信息的名称
 		private String pageTotalName; // 返回分页总数的名称
 		private String pageNumberName; // 返回当前页码的名称
 		private String pageSizeName; // 返回每页数据个数的名称
@@ -2198,12 +2273,20 @@ public abstract class JavaParser extends AbstractParser {
 
 		private Class<?> restResponse; // rest风格的响应类
 
-		public void setProjectPackageName(String projectPackageName) {
-			this.projectPackageName = projectPackageName;
-		}
-
 		public void setTestUriPrefix(String testUriPrefix) {
 			this.testUriPrefix = testUriPrefix;
+		}
+
+		public void setCreateEntity(boolean createEntity) {
+			this.createEntity = createEntity;
+		}
+
+		public void setForece(boolean forece) {
+			this.forece = forece;
+		}
+
+		public void setProjectPackageName(String projectPackageName) {
+			this.projectPackageName = projectPackageName;
 		}
 
 		public void setAuthor(String author) {
@@ -2224,10 +2307,6 @@ public abstract class JavaParser extends AbstractParser {
 
 		public void setMsgName(String msgName) {
 			this.msgName = msgName;
-		}
-
-		public void setPageName(String pageName) {
-			this.pageName = pageName;
 		}
 
 		public void setPageTotalName(String pageTotalName) {

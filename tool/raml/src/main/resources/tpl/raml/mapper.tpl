@@ -9,7 +9,7 @@ import ${packageName}.entity.${method.response.className};
 </#list>
 
 /**
- * @Description ${desc}
+ * @Description ${desc!''}
  * @Author ${author}
  * @Date ${date}
  * @Version ${version}

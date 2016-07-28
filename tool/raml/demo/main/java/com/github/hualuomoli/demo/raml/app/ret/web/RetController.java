@@ -80,7 +80,7 @@ public class RetController {
 		// 设置属性
 		
 		Page page = retService.getPagedata(getPagedataEntity);
-		return AppRestResponse.getPageData("users", page);
+		return AppRestResponse.getPageData("page", "users", page);
 		
 	}
 	/**

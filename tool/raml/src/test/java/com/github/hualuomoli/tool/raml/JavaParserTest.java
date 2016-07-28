@@ -22,7 +22,7 @@ public class JavaParserTest {
 		// config.setDate(new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
 		config.setCodeName("code");
 		config.setMsgName("msg");
-		config.setPageName("page");
+		// config.setPageName("page");
 		config.setPageTotalName("total");
 		config.setPageNumberName("pageNumber");
 		config.setPageSizeName("pageSize");

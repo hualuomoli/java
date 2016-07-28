@@ -16,7 +16,7 @@ import ${packageName}.mapper.${mapperJavaName};
 
 
 /**
- * @Description ${desc}
+ * @Description ${desc!''}
  * @Author ${author}
  * @Date ${date}
  * @Version ${version}

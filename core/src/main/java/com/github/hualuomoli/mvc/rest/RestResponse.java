@@ -117,11 +117,11 @@ public abstract class RestResponse {
 		return JsonUtils.toJson(map);
 	}
 
-	String getPageData(String pageDataName, Page page) {
+	String getPageData(String pageName, String pageDataName, Page page) {
 		if (force()) {
-			return this._getPageData(getConfig().pageDataName, page);
+			return this._getPageData(pageName, getConfig().pageDataName, page);
 		} else {
-			return this._getPageData(pageDataName, page);
+			return this._getPageData(pageName, pageDataName, page);
 		}
 	}
 
@@ -146,9 +146,9 @@ public abstract class RestResponse {
 	 *   }
 	 * }
 	 */
-	// getPageData("addresses", page)
+	// getPageData("page", "addresses", page)
 	// 返回分页数据对应JSON字符串
-	private String _getPageData(String pageDataName, Page page) {
+	private String _getPageData(String pageName, String pageDataName, Page page) {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 
@@ -158,7 +158,7 @@ public abstract class RestResponse {
 		pageMap.put(getConfig().pageSizeName, page.getPageSize());
 		pageMap.put(pageDataName, page.getDataList());
 
-		map.put(getConfig().pageName, pageMap);
+		map.put(pageName, pageMap);
 
 		return JsonUtils.toJson(map);
 	}
@@ -177,20 +177,18 @@ public abstract class RestResponse {
 		private String msgName;
 		private String objectName;
 		private String listName;
-		private String pageName;
 		private String pageTotalName;
 		private String pageNumberName;
 		private String pageSizeName;
 		private String pageDataName;
 
-		public Config(String successs, String codeName, String msgName, String objectName, String listName, String pageName, String pageTotalName,
-				String pageNumberName, String pageSizeName, String pageDataName) {
+		public Config(String successs, String codeName, String msgName, String objectName, String listName, String pageTotalName, String pageNumberName,
+				String pageSizeName, String pageDataName) {
 			this.successs = successs;
 			this.codeName = codeName;
 			this.msgName = msgName;
 			this.objectName = objectName;
 			this.listName = listName;
-			this.pageName = pageName;
 			this.pageTotalName = pageTotalName;
 			this.pageNumberName = pageNumberName;
 			this.pageSizeName = pageSizeName;
