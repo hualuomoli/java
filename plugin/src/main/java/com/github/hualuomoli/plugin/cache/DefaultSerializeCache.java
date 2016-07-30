@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-public class DefaultSerializeCache extends SerializeCacheAbstract {
+public class DefaultSerializeCache extends SerializeCacheAdaptor {
 
 	private Map<String, Object> dataMap = Maps.newHashMap();
 	private Map<String, Long> expireMap = Maps.newHashMap();

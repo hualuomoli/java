@@ -11,7 +11,7 @@ import com.github.hualuomoli.commons.util.SerializeUtils;
  * @author hualuomoli
  *
  */
-public abstract class SerializeCacheAbstract implements SerializeCache {
+public abstract class SerializeCacheAdaptor implements SerializeCache {
 
 	private static final Integer DEFAULT_EXPIRE = 30 * 60; // 30 minute
 	private static final Integer MAX_EXPIRE = 30 * 24 * 60 * 60; // 30 day

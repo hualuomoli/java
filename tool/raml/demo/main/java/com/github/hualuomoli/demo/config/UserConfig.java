@@ -24,16 +24,7 @@ public class UserConfig {
 			}
 
 			@Override
-			public <T> T getObject() {
-				return null;
-			}
-
-			@Override
-			public <T> void setObject(String username, T t) {
-			}
-
-			@Override
-			public void refresh() {
+			public void refreshUsername() {
 			}
 
 			@Override
