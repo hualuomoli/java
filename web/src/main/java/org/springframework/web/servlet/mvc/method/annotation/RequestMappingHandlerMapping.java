@@ -46,20 +46,10 @@ import com.github.hualuomoli.mvc.version.VersionRequestCondition;
  * Creates {@link RequestMappingInfo} instances from type and method-level
  * {@link RequestMapping @RequestMapping} annotations in
  * {@link Controller @Controller} classes.
- * 
- * update method {@link #createRequestMappingInfo(RequestMapping, RequestCondition, RequestVersion)}
- * add parameter @RequestVersion
- * 
- * update method {@link #getMappingForMethod(Method, Class)}
- * get method or class annotation @RequestVersion
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @since 3.1
- * @see
- * <ol>
- * 	<li>update method {@link #getMappingForMethod(Method, Class)}</li>
- * </ol>
  */
 public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping
 		implements EmbeddedValueResolverAware {
@@ -199,17 +189,13 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	protected RequestMappingInfo getMappingForMethod(Method method, Class<?> handlerType) {
 		RequestMappingInfo info = null;
 		RequestMapping methodAnnotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
-		RequestVersion versionAnnotation = AnnotationUtils.findAnnotation(method, RequestVersion.class);
-		if (versionAnnotation == null) {
-			versionAnnotation = AnnotationUtils.findAnnotation(method.getDeclaringClass(), RequestVersion.class);
-		}
 		if (methodAnnotation != null) {
 			RequestCondition<?> methodCondition = getCustomMethodCondition(method);
-			info = createRequestMappingInfo(methodAnnotation, methodCondition, versionAnnotation);
+			info = createRequestMappingInfo(methodAnnotation, methodCondition);
 			RequestMapping typeAnnotation = AnnotationUtils.findAnnotation(handlerType, RequestMapping.class);
 			if (typeAnnotation != null) {
 				RequestCondition<?> typeCondition = getCustomTypeCondition(handlerType);
-				info = createRequestMappingInfo(typeAnnotation, typeCondition, versionAnnotation).combine(info);
+				info = createRequestMappingInfo(typeAnnotation, typeCondition).combine(info);
 			}
 		}
 		return info;
@@ -227,7 +213,11 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * @return the condition, or {@code null}
 	 */
 	protected RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
-		return null;
+		RequestVersion requestVersion = AnnotationUtils.findAnnotation(handlerType, RequestVersion.class);
+		if (requestVersion == null) {
+			return new VersionRequestCondition();
+		}
+		return new VersionRequestCondition(requestVersion.value());
 	}
 
 	/**
@@ -242,14 +232,17 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * @return the condition, or {@code null}
 	 */
 	protected RequestCondition<?> getCustomMethodCondition(Method method) {
-		return null;
+		RequestVersion requestVersion = AnnotationUtils.findAnnotation(method, RequestVersion.class);
+		if (requestVersion == null) {
+			return new VersionRequestCondition();
+		}
+		return new VersionRequestCondition(requestVersion.value());
 	}
 
 	/**
 	 * Created a RequestMappingInfo from a RequestMapping annotation.
-	 * @param versionAnnotation 
 	 */
-	protected RequestMappingInfo createRequestMappingInfo(RequestMapping annotation, RequestCondition<?> customCondition, RequestVersion versionAnnotation) {
+	protected RequestMappingInfo createRequestMappingInfo(RequestMapping annotation, RequestCondition<?> customCondition) {
 		String[] patterns = resolveEmbeddedValuesInPatterns(annotation.value());
 		return new RequestMappingInfo(
 				new PatternsRequestCondition(patterns, getUrlPathHelper(), getPathMatcher(),
@@ -259,7 +252,6 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 				new HeadersRequestCondition(annotation.headers()),
 				new ConsumesRequestCondition(annotation.consumes(), annotation.headers()),
 				new ProducesRequestCondition(annotation.produces(), annotation.headers(), this.contentNegotiationManager),
-				new VersionRequestCondition(versionAnnotation == null?"":versionAnnotation.value()),
 				customCondition);
 	}
 

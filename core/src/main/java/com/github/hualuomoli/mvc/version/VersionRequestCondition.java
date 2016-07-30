@@ -51,7 +51,7 @@ public class VersionRequestCondition implements RequestCondition<VersionRequestC
 	 */
 	@Override
 	public VersionRequestCondition combine(VersionRequestCondition other) {
-		return this;
+		return new VersionRequestCondition(other.getVersion());
 	}
 
 	// 获取符合的条件

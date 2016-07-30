@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.Mapping;
 @Mapping
 public @interface RequestVersion {
 
-	/**
-	 * 版本号,默认为1.0.0
-	 * @return 版本号
-	 */
+	// 版本号
 	String value() default "";
 
 }
