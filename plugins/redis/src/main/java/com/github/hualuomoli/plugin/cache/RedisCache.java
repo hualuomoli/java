@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
  * @author hualuomoli
  *
  */
-public class RedisCache extends SerializeCacheAbstract {
+public class RedisCache extends SerializeCacheAdaptor {
 
 	private static final String OK = "OK";
 	private static Boolean success = null;
