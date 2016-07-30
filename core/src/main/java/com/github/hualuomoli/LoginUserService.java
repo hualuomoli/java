@@ -11,18 +11,17 @@ public interface LoginUserService {
 
 	public static final String TOKEN_NAME = "token";
 
-	/**
-	 * 获取登录用户名
-	 * @return 登录用户名
-	 */
+	// 获取登录用户名
 	String getUsername();
 
-	/**
-	 * 设置用户
-	 * @param key 键
-	 * @param username 用户名
-	 */
-	void setUsername(String key, String username);
+	// 获取登录用户信息Object
+	<T> T getObject();
+
+	// 设置用户
+	void setUsername(String union, String username);
+
+	// 设置用户
+	<T> void setObject(String username, T t);
 
 	/**
 	 * 刷新
