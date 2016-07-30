@@ -24,6 +24,7 @@ import com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataResultJsonEntit
 import com.github.hualuomoli.demo.raml.app.ret.entity.GetListdataEntity;
 import com.github.hualuomoli.demo.raml.app.ret.entity.GetListdataResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.ret.service.RetService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 响应
@@ -31,8 +32,9 @@ import com.github.hualuomoli.demo.raml.app.ret.service.RetService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.ret.RetController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/ret")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.ret.RetController")
 public class RetController {
 	
 	@Autowired

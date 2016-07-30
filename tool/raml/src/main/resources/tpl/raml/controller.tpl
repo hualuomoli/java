@@ -20,6 +20,7 @@ import ${packageName}.entity.${method.request.className};
 import ${packageName}.entity.${method.response.className};
 </#list>
 import ${packageName}.service.${serviceJavaName};
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description ${desc!''}
@@ -27,8 +28,9 @@ import ${packageName}.service.${serviceJavaName};
  * @Date ${date}
  * @Version ${version}
  */
-@RestController(value = "${packageName}.${controllerJavaName}")
+@RequestVersion(value = "${version}")
 @RequestMapping(value = "${prefix}${uri}")
+@RestController(value = "${packageName}.${controllerJavaName}")
 public class ${controllerJavaName} {
 	
 	@Autowired

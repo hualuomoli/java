@@ -18,6 +18,7 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdFileEntity;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.multipart.service.MultipartService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 文件上传
@@ -25,8 +26,9 @@ import com.github.hualuomoli.demo.raml.app.multipart.service.MultipartService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.multipart.MultipartController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/multipart")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.multipart.MultipartController")
 public class MultipartController {
 	
 	@Autowired

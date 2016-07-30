@@ -24,6 +24,7 @@ import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostUriformparamByP
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostFormparamUrlEncodedEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostFormparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.service.UrlEncodedService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 表单提交
@@ -31,8 +32,9 @@ import com.github.hualuomoli.demo.raml.app.urlEncoded.service.UrlEncodedService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.urlEncoded.UrlEncodedController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/urlEncoded")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.urlEncoded.UrlEncodedController")
 public class UrlEncodedController {
 	
 	@Autowired

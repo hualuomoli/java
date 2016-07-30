@@ -20,6 +20,7 @@ import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteNoparamResultJson
 import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteUriparamByIdEntity;
 import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteUriparamByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.delete.service.DeleteService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 删除
@@ -27,8 +28,9 @@ import com.github.hualuomoli.demo.raml.app.delete.service.DeleteService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.delete.DeleteController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/delete")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.delete.DeleteController")
 public class DeleteController {
 	
 	@Autowired

@@ -20,6 +20,7 @@ import com.github.hualuomoli.demo.raml.app.def.entity.PostPostByIdResultJsonEnti
 import com.github.hualuomoli.demo.raml.app.def.entity.PostPostjsonByIdJsonEntity;
 import com.github.hualuomoli.demo.raml.app.def.entity.PostPostjsonByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.def.service.DefService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 默认值
@@ -27,8 +28,9 @@ import com.github.hualuomoli.demo.raml.app.def.service.DefService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.def.DefController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/def")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.def.DefController")
 public class DefController {
 	
 	@Autowired

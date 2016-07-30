@@ -18,6 +18,7 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.complex.entity.PostUriformByIdJsonEntity;
 import com.github.hualuomoli.demo.raml.app.complex.entity.PostUriformByIdResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.complex.service.ComplexService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 复杂json参数
@@ -25,8 +26,9 @@ import com.github.hualuomoli.demo.raml.app.complex.service.ComplexService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.complex.ComplexController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/complex")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.complex.ComplexController")
 public class ComplexController {
 	
 	@Autowired

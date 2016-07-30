@@ -512,10 +512,6 @@ public abstract class JavaParser extends AbstractParser {
 		if (jsonObject.has(Schema.DESCRIPTION)) {
 			description = jsonObject.getString(Schema.DESCRIPTION);
 		}
-		String example = "";
-		if (jsonObject.has(Schema.EXAMPLE)) {
-			example = jsonObject.getString(Schema.EXAMPLE);
-		}
 
 		// type
 		switch (type) {

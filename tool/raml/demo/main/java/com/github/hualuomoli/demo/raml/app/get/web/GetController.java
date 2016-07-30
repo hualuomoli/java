@@ -24,6 +24,7 @@ import com.github.hualuomoli.demo.raml.app.get.entity.GetUriqueryparamByPageNumb
 import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamEntity;
 import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.get.service.GetService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description get方式请求
@@ -31,8 +32,9 @@ import com.github.hualuomoli.demo.raml.app.get.service.GetService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.get.GetController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/get")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.get.GetController")
 public class GetController {
 	
 	@Autowired

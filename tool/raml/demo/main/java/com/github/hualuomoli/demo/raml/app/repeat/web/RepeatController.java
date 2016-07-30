@@ -22,6 +22,7 @@ import com.github.hualuomoli.demo.raml.app.repeat.entity.PostUrlencodedResultJso
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostFileFileEntity;
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostFileResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.repeat.service.RepeatService;
+import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
  * @Description 重复值
@@ -29,8 +30,9 @@ import com.github.hualuomoli.demo.raml.app.repeat.service.RepeatService;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@RestController(value = "com.github.hualuomoli.demo.raml.app.repeat.RepeatController")
+@RequestVersion(value = "1.0")
 @RequestMapping(value = "/app/repeat")
+@RestController(value = "com.github.hualuomoli.demo.raml.app.repeat.RepeatController")
 public class RepeatController {
 	
 	@Autowired

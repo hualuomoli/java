@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostJsonResultJsonEntityOrder {
   
   private String id;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date date;
   private java.util.List<PostJsonResultJsonEntityProduct> products;
   
