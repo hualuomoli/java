@@ -5,7 +5,7 @@
 
 	<groupId>com.github.hualuomoli</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.2.1</version>
+	<version>0.0.3</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -240,25 +240,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- 打包 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<!-- 保留空目录 -->
-					<includeEmptyDirectories>true</includeEmptyDirectories>
-					<!-- 没有web.xml不报错 -->
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<!-- 打包忽略demo目录 -->
-					<packagingExcludes>
-						WEB-INF/classes/com/github/hualuomoli/demo/**,
-						WEB-INF/classes/demo/**,
-						WEB-INF/classes/mappers/demo/**,
-						WEB-INF/lib/**
-					</packagingExcludes>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
 

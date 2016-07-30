@@ -49,20 +49,13 @@ public class AbstractContextControllerTest {
 	@Autowired
 	private WebApplicationContext wac;
 	protected MockMvc mockMvc;
+	protected MockHttpServletRequest req;
 
 	@Before
 	public void setUp() {
-		if (mockMvc != null) {
-			return;
-		}
-		synchronized (wac) {
-			if (mockMvc != null) {
-				return;
-			}
-			mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-			MockHttpServletRequest req = (MockHttpServletRequest) ServletUtils.getRequest();
-			req.addHeader("token", LoginUserServiceAdaptor.NULL_TOKEN);
-		}
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+		req = (MockHttpServletRequest) ServletUtils.getRequest();
+		req.addHeader("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 
 	// server访问URL
@@ -78,7 +71,8 @@ public class AbstractContextControllerTest {
 	// get请求
 	public final MockHttpServletRequestBuilder get(String relativeUrl, Object... urlParams) {
 		return MockMvcRequestBuilders.get(this.getUrl(relativeUrl), urlParams)//
-				.characterEncoding(characterEncoding);
+				.characterEncoding(characterEncoding) //
+				.header("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 
 	// delete
@@ -89,19 +83,22 @@ public class AbstractContextControllerTest {
 	// post
 	public final MockHttpServletRequestBuilder post(String relativeUrl, Object... urlParams) {
 		return MockMvcRequestBuilders.post(this.getUrl(relativeUrl), urlParams)//
-				.characterEncoding(characterEncoding);
+				.characterEncoding(characterEncoding)//
+				.header("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 
 	// urlEncoded
 	public final MockHttpServletRequestBuilder urlEncoded(String relativeUrl, Object... urlParams) {
 		return this.post(relativeUrl, urlParams) //
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED);
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)//
+				.header("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 
 	// json
 	public final MockHttpServletRequestBuilder json(String relativeUrl, Object... urlParams) {
 		return this.post(relativeUrl, urlParams) //
-				.contentType(MediaType.APPLICATION_JSON);
+				.contentType(MediaType.APPLICATION_JSON)//
+				.header("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 
 	// fileUpload
@@ -153,6 +150,19 @@ public class AbstractContextControllerTest {
 				System.out.println(new String(bytes, characterEncoding));
 			}
 		};
+	}
+
+	public final ResultHandler checkContent(final String content) {
+		return new ResultHandler() {
+
+			@Override
+			public void handle(MvcResult result) throws Exception {
+				byte[] bytes = result.getResponse().getContentAsByteArray();
+				String data = new String(bytes, characterEncoding);
+				Assert.assertEquals("success", content, data);
+			}
+		};
+
 	}
 
 }

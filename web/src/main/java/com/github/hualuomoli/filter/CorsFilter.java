@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.hualuomoli.mvc.YamlMvcConfig;
+import com.github.hualuomoli.YamlWebConfig;
 
 /**
  * 跨域过滤器
@@ -20,7 +20,7 @@ public class CorsFilter extends MvcFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
-	private List<Cors> corses = YamlMvcConfig.getInstance().getConfig("filters").getList("corses", Cors.class);
+	private List<Cors> corses = YamlWebConfig.getInstance().getConfig("filters").getList("corses", Cors.class);
 	private static final String DEFAULT_MAX_AGE = "3600"; // Access-Control-Max-Age
 	private static final String DEFAULT_ALLOW_CREDENTIALS = "true"; // Access-Control-Allow-Credentials
 	private static final String DEFAULT_ALLOW_METHODS = "PUT,POST,GET,DELETE,OPTIONS"; // Access-Control-Allow-Methods

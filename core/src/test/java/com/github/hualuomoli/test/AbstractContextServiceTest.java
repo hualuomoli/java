@@ -20,10 +20,17 @@ public class AbstractContextServiceTest {
 
 	@Autowired
 	protected WebApplicationContext wac;
+	protected MockHttpServletRequest req;
 
 	@Before
 	public void before() {
-		MockHttpServletRequest req = (MockHttpServletRequest) ServletUtils.getRequest();
+		if (req == null) {
+			synchronized (wac) {
+				if (req == null) {
+					req = (MockHttpServletRequest) ServletUtils.getRequest();
+				}
+			}
+		}
 		req.addHeader("token", LoginUserServiceAdaptor.NULL_TOKEN);
 	}
 

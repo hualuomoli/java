@@ -12,17 +12,3 @@ mvc:
     resources: /static/**,/static/,31556926
     cachePeriod: 31556926
     
-  filters:
-    corses:
-      - cors:
-        allowOrigin: file://
-        maxAge: 3600
-        allowCredentials: true
-        allowMethods: PUT,POST,GET,DELETE,OPTIONS
-        allowHeaders: x-requested-with,Content-Type,*
-      - cors:
-        allowOrigin: "null"
-      - cors:
-        allowOrigin: http://localhost:3000
-      - cors:
-        allowOrigin: http://127.0.0.1:3000
