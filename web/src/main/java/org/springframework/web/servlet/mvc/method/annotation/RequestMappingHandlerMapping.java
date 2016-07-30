@@ -46,10 +46,20 @@ import com.github.hualuomoli.mvc.version.VersionRequestCondition;
  * Creates {@link RequestMappingInfo} instances from type and method-level
  * {@link RequestMapping @RequestMapping} annotations in
  * {@link Controller @Controller} classes.
+ * 
+ * update method {@link #createRequestMappingInfo(RequestMapping, RequestCondition, RequestVersion)}
+ * add parameter @RequestVersion
+ * 
+ * update method {@link #getMappingForMethod(Method, Class)}
+ * get method or class annotation @RequestVersion
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @since 3.1
+ * @see
+ * <ol>
+ * 	<li>update method {@link #getMappingForMethod(Method, Class)}</li>
+ * </ol>
  */
 public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping
 		implements EmbeddedValueResolverAware {

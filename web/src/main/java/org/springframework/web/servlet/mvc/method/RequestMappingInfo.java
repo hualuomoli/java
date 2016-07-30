@@ -41,6 +41,18 @@ import com.github.hualuomoli.mvc.version.VersionRequestCondition;
  * 	<li>{@link VersionRequestCondition}
  * 	<li>{@code RequestCondition} (optional, custom request condition)
  * </ol>
+ * 
+ * update constructor add parameter @RequestVersion
+ * 
+ * update method to deal @RequestVersion
+ * 	{@link #combine(RequestMappingInfo)}
+ * 	{@link #getMatchingCondition(HttpServletRequest)}
+ *  {@link #compareTo(RequestMappingInfo, HttpServletRequest)}
+ *  {@link #hashCode()}
+ *  {@link #equals(Object)}
+ *  {@link #toString()}
+ * 
+ * update constructor {@link #RequestMappingInfo(RequestMappingInfo, RequestCondition)}
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
