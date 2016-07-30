@@ -25,13 +25,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.github.hualuomoli.base.config.BaseConfig;
 import com.github.hualuomoli.commons.util.JsonUtils;
+import com.github.hualuomoli.demo.config.UserConfig;
 import com.github.hualuomoli.mvc.config.MvcConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextHierarchy({ //
 		@ContextConfiguration(name = "parent", classes = BaseConfig.class), //
-		@ContextConfiguration(name = "child", classes = MvcConfig.class) //
+		@ContextConfiguration(name = "child", classes = { MvcConfig.class, UserConfig.class }) //
 })
 public class AbstractContextControllerTest {
 

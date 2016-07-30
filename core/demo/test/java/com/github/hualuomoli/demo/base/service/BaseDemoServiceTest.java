@@ -111,7 +111,7 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			BaseDemo baseDemo = new BaseDemo();
 			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName(RandomUtils.getString());
+			baseDemo.setName(RandomUtils.getUUID());
 			list.add(baseDemo);
 		}
 		demoService.batchInsert(list);
@@ -138,7 +138,7 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			BaseDemo baseDemo = new BaseDemo();
 			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName(RandomUtils.getString());
+			baseDemo.setName(RandomUtils.getUUID());
 			list.add(baseDemo);
 		}
 		demoService.batchInsert(list);
