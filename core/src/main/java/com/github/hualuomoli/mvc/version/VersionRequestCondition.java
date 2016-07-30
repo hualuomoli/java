@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 
+import com.github.hualuomoli.mvc.YamlMvcConfig;
+
 /**
  * 根据版本号请求
  * @author hualuomoli
@@ -14,9 +16,8 @@ public class VersionRequestCondition implements RequestCondition<VersionRequestC
 
 	// 路径中版本的前缀,如v1.0.0.1
 	private static final String VERSION_PATTERN = "^[vV]?(\\d+\\.)*\\d+$";
-	private static final String VERSION_NAME = "apt-version";
-	private static final String VERSION_DEFAULT = ""; // 默认版本号
-	// private static final Long MAX = 10000000000L;
+	private static final String VERSION_NAME = YamlMvcConfig.getInstance().getValue("version.name"); // version的名称
+	private static final String VERSION_DEFAULT = YamlMvcConfig.getInstance().getValue("version.default"); // 默认版本号
 
 	private String version; // 版本
 	private String[] array; // 版本值
@@ -192,25 +193,5 @@ public class VersionRequestCondition implements RequestCondition<VersionRequestC
 	public String toString() {
 		return version;
 	}
-
-	// public static void main(String[] args) {
-	// System.out.println("v1".matches(VERSION_PATTERN));
-	// System.out.println("V1".matches(VERSION_PATTERN));
-	// System.out.println("1".matches(VERSION_PATTERN));
-	// System.out.println("v1.".matches(VERSION_PATTERN));
-	// System.out.println("v1.0".matches(VERSION_PATTERN));
-	// System.out.println("v1.12".matches(VERSION_PATTERN));
-	// System.out.println("v1.123".matches(VERSION_PATTERN));
-	// System.out.println("v1.0.1".matches(VERSION_PATTERN));
-	// System.out.println("v1.12.1".matches(VERSION_PATTERN));
-	// System.out.println("v1.123.1".matches(VERSION_PATTERN));
-	// System.out.println("v1.0.0.0.1".matches(VERSION_PATTERN));
-	// System.out.println("v1.0.0.0.0.1".matches(VERSION_PATTERN));
-	//
-	//
-	// System.out.println(Integer.MAX_VALUE);
-	// System.out.println(Integer.MAX_VALUE - MAX);
-	//
-	// }
 
 }

@@ -12,3 +12,8 @@ mvc:
     resources: /static/**,/static/,31556926
     cachePeriod: 31556926
     
+  # spring mvc request version
+  version:
+    name: content-version
+    default: ""
+    
