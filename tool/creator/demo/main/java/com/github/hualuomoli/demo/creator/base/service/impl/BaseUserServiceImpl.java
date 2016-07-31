@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.base.service.impl;
+package com.github.hualuomoli.demo.creator.base.service.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,16 +14,17 @@ import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
+import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
-import com.github.hualuomoli.demo.base.entity.BaseUser;
-import com.github.hualuomoli.demo.base.mapper.BaseUserMapper;
-import com.github.hualuomoli.demo.base.service.BaseUserService;
+import com.github.hualuomoli.demo.creator.base.entity.BaseUser;
+import com.github.hualuomoli.demo.creator.base.mapper.BaseUserMapper;
+import com.github.hualuomoli.demo.creator.base.service.BaseUserService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
 
 // #BaseUser
-@Service(value = "com.github.hualuomoli.demo.base.service.BaseUserServiceImpl")
+@Service(value = "com.github.hualuomoli.demo.creator.base.service.BaseUserServiceImpl")
 @Transactional(readOnly = true)
 public class BaseUserServiceImpl implements BaseUserService {
 
@@ -117,6 +118,27 @@ public class BaseUserServiceImpl implements BaseUserService {
 	@Override
 	public List<BaseUser> findList(BaseUser baseUser) {
 		return baseUserMapper.findList(baseUser);
+	}
+	
+	@Override
+	public List<BaseUser> findList(BaseUser baseUser, String... orderByStrArray) {
+		return this.findList(baseUser, new Pagination(orderByStrArray));
+	}
+
+	@Override
+	public List<BaseUser> findList(BaseUser baseUser, Order... orders) {
+		return this.findList(baseUser, new Pagination(orders));
+	}
+
+	@Override
+	public List<BaseUser> findList(BaseUser baseUser, List<Order> orders) {
+		return this.findList(baseUser, new Pagination(orders));
+	}
+	
+	private List<BaseUser> findList(BaseUser baseUser, Pagination pagination) {
+		pagination.setQueryType(QueryType.ONLY_DATA);
+		Page page = this.findPage(baseUser, pagination);
+		return page.getDataList();
 	}
 	
 	@Override

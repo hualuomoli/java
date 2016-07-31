@@ -146,7 +146,7 @@ public class MysqlDbDealer implements DbDealer {
 		case "java.lang.Integer":
 		case "int":
 			dBColumn.setType("integer");
-			dBColumn.setLength("(" + (length == -1 ? precision == -1 ? DEFAULT_LENGTH_INTEGER : precision : length) + ")");
+			dBColumn.setLength("(" + (length == 0 ? precision == 0 ? DEFAULT_LENGTH_INTEGER : precision : length) + ")");
 			if (StringUtils.isNotBlank(defaultValue)) {
 				dBColumn.setDefaultValue(defaultValue);
 			}
@@ -154,7 +154,7 @@ public class MysqlDbDealer implements DbDealer {
 		case "java.lang.Long":
 		case "long":
 			dBColumn.setType("integer");
-			dBColumn.setLength("(" + (length == -1 ? precision == -1 ? DEFAULT_LENGTH_LONG : precision : length) + ")");
+			dBColumn.setLength("(" + (length == 0 ? precision == 0 ? DEFAULT_LENGTH_LONG : precision : length) + ")");
 			if (StringUtils.isNotBlank(defaultValue)) {
 				dBColumn.setDefaultValue(defaultValue);
 			}
@@ -163,7 +163,7 @@ public class MysqlDbDealer implements DbDealer {
 		case "double":
 			dBColumn.setType("double");
 			dBColumn.setLength(
-					"(" + (precision == -1 ? DEFAULT_LENGTH_DOUBLE_PRECISION : precision) + "," + (scale == -1 ? DEFAULT_LENGTH_DOUBLE_SCALE : scale) + ")");
+					"(" + (precision == 0 ? DEFAULT_LENGTH_DOUBLE_PRECISION : precision) + "," + (scale == 0 ? DEFAULT_LENGTH_DOUBLE_SCALE : scale) + ")");
 			if (StringUtils.isNotBlank(defaultValue)) {
 				dBColumn.setDefaultValue(defaultValue);
 			}
@@ -196,6 +196,14 @@ public class MysqlDbDealer implements DbDealer {
 				dBColumn.setLength("(1)");
 				break;
 			case CLOB:
+				dBColumn.setType("longtext");
+				dBColumn.setLength("");
+				break;
+			case TEXT:
+				dBColumn.setType("text");
+				dBColumn.setLength("");
+				break;
+			case LONG_TEXT:
 				dBColumn.setType("longtext");
 				dBColumn.setLength("");
 				break;

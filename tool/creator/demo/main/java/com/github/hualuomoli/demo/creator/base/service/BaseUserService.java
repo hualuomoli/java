@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.base.service;
+package com.github.hualuomoli.demo.creator.base.service;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
-import com.github.hualuomoli.demo.base.entity.BaseUser;
+import com.github.hualuomoli.demo.creator.base.entity.BaseUser;
 
 // #BaseUser
 public interface BaseUserService {
@@ -35,6 +35,12 @@ public interface BaseUserService {
 	void deleteByIds(Collection<String> ids);
 
 	List<BaseUser> findList(BaseUser baseUser);
+	
+	List<BaseUser> findList(BaseUser baseUser, String... orderByStrArray);
+
+	List<BaseUser> findList(BaseUser baseUser, Order... orders);
+
+	List<BaseUser> findList(BaseUser baseUser, List<Order> orders);
 	
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize);
 

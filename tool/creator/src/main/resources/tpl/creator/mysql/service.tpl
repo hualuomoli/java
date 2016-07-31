@@ -39,6 +39,12 @@ public interface Base${javaName}Service {
 
 	List<Base${javaName}> findList(Base${javaName} base${javaName});
 	
+	List<Base${javaName}> findList(Base${javaName} base${javaName}, String... orderByStrArray);
+
+	List<Base${javaName}> findList(Base${javaName} base${javaName}, Order... orders);
+
+	List<Base${javaName}> findList(Base${javaName} base${javaName}, List<Order> orders);
+	
 	Page findPage(Base${javaName} base${javaName}, Integer pageNo, Integer pageSize);
 
 	Page findPage(Base${javaName} base${javaName}, Integer pageNo, Integer pageSize, String... orderByStrArray);

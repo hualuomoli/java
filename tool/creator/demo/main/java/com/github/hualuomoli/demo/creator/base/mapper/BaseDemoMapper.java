@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.base.mapper;
+package com.github.hualuomoli.demo.creator.base.mapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.demo.creator.base.entity.BaseDemo;
 
 // #BaseDemo
-@Repository(value = "com.github.hualuomoli.demo.base.mapper.BaseDemoMapper")
+@Repository(value = "com.github.hualuomoli.demo.creator.base.mapper.BaseDemoMapper")
 public interface BaseDemoMapper {
 
 	

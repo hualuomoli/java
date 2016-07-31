@@ -27,7 +27,7 @@ public class CreatorTest {
 		creatorConfig.output = output;
 		creatorConfig.javaPath = "demo/main/java/";
 		creatorConfig.resourcePath = "demo/main/resources/";
-		creatorConfig.projectPackageName = "com.github.hualuomoli.demo";
+		creatorConfig.projectPackageName = "com.github.hualuomoli.demo.creator";
 		MysqlFileDealer fileDealer = new MysqlFileDealer();
 		fileDealer.setConfig(creatorConfig);
 
