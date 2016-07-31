@@ -14,6 +14,7 @@ import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
+import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
@@ -130,6 +131,27 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 	@Override
 	public List<BaseDemo> findList(BaseDemo baseDemo) {
 		return baseDemoMapper.findList(baseDemo);
+	}
+
+	@Override
+	public List<BaseDemo> findList(BaseDemo baseDemo, String... orderByStrArray) {
+		return this.findList(baseDemo, new Pagination(orderByStrArray));
+	}
+
+	@Override
+	public List<BaseDemo> findList(BaseDemo baseDemo, Order... orders) {
+		return this.findList(baseDemo, new Pagination(orders));
+	}
+
+	@Override
+	public List<BaseDemo> findList(BaseDemo baseDemo, List<Order> orders) {
+		return this.findList(baseDemo, new Pagination(orders));
+	}
+
+	private List<BaseDemo> findList(BaseDemo baseDemo, Pagination pagination) {
+		pagination.setQueryType(QueryType.ONLY_DATA);
+		Page page = this.findPage(baseDemo, pagination);
+		return page.getDataList();
 	}
 
 	@Override

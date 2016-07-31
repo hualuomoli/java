@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.base.service;
+package com.github.hualuomoli.demo.creator.base.service;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.commons.util.RandomUtils;
-import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.demo.creator.base.entity.BaseDemo;
 import com.github.hualuomoli.test.AbstractContextServiceTest;
 import com.google.common.collect.Lists;
 

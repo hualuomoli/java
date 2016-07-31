@@ -43,7 +43,8 @@ public class Page {
 		this.count = count;
 	}
 
-	public List getDataList() {
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getDataList() {
 		return dataList;
 	}
 

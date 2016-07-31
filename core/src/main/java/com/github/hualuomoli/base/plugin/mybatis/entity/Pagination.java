@@ -16,8 +16,11 @@ public class Pagination {
 	private Integer count; // 总数量
 	private Integer pageNo; // 当前页码，默认为1
 	private Integer pageSize; // 每页数据，默认为10
+
 	private List<String> orderByStrArray; // 排序字符串
 	private List<Order> orders; // 排序,如果排序字符串未设置,使用该集合排序
+
+	private QueryType queryType = QueryType.ALL; // 查询类型
 
 	public Pagination() {
 	}
@@ -31,6 +34,18 @@ public class Pagination {
 		}
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
+	}
+
+	public Pagination(String... orderByStrArray) {
+		this(null, null, orderByStrArray);
+	}
+
+	public Pagination(List<Order> orders) {
+		this(null, null, orders);
+	}
+
+	public Pagination(Order... orders) {
+		this(null, null, orders);
 	}
 
 	public Pagination(Integer pageNo, Integer pageSize, String... orderByStrArray) {
@@ -123,6 +138,27 @@ public class Pagination {
 		for (Order order : orders) {
 			this.orders.add(order);
 		}
+	}
+
+	public QueryType getQueryType() {
+		return queryType;
+	}
+
+	public void setQueryType(QueryType queryType) {
+		this.queryType = queryType;
+	}
+
+	// 查询类型
+	public static enum QueryType {
+
+		ONLY_COUNT(), // 只查询数量
+		ONLY_DATA(), // 只查询数据,包含排序
+		ALL(), // 查询数量和数据
+		;
+
+		private QueryType() {
+		}
+
 	}
 
 }

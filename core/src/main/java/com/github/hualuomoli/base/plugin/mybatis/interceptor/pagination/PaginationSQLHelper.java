@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import com.github.hualuomoli.base.plugin.mybatis.dialect.Dialect;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
+import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.commons.util.ReflectionUtils;
 
 /**
@@ -146,8 +147,6 @@ public class PaginationSQLHelper {
 	 */
 	public static String generatePageSql(String sql, Pagination pagination, Dialect dialect) {
 		if (dialect.supportsLimit()) {
-			int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
-			int limit = pagination.getPageSize();
 			// add order by
 			if (pagination.getOrderByStrArray() != null && pagination.getOrderByStrArray().size() > 0) {
 				sql = removeOrders(sql) + " order by ";
@@ -162,7 +161,13 @@ public class PaginationSQLHelper {
 				}
 				sql = sql.substring(0, sql.length() - 1);
 			}
-			return dialect.getLimitString(sql, offset, limit);
+			if (pagination.getQueryType() == QueryType.ONLY_DATA) {
+				return sql;
+			} else {
+				int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
+				int limit = pagination.getPageSize();
+				return dialect.getLimitString(sql, offset, limit);
+			}
 		} else {
 			return sql;
 		}

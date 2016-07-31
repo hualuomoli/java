@@ -1,6 +1,7 @@
 package com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -13,6 +14,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
+import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.BaseInterceptor;
 import com.github.hualuomoli.commons.util.ReflectionUtils;
 
@@ -39,32 +41,50 @@ public class PaginationInterceptor extends BaseInterceptor {
 		// 获取分页参数对象
 		Pagination pagination = getPagination();
 
+		if (logger.isDebugEnabled() && pagination != null) {
+			logger.debug("query type {}", pagination.getQueryType());
+		}
+
 		// 如果设置了分页对象，则进行分页
 		if (pagination != null) {
 
 			String originalSql = boundSql.getSql().trim();
 
-			// 得到总记录数
-			Executor exec = (Executor) invocation.getTarget();
-			Connection conn = exec.getTransaction().getConnection();
-			pagination.setCount(PaginationSQLHelper.getCount(originalSql, conn, mappedStatement, parameter, boundSql, logger));
-
-			// 分页查询 本地化对象 修改数据库注意修改实现
-			String pageSql = PaginationSQLHelper.generatePageSql(originalSql, pagination, dialect);
-			invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-			BoundSql newBoundSql = new BoundSql(mappedStatement.getConfiguration(), pageSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
-			// 解决MyBatis 分页foreach 参数失效 start
-			if (ReflectionUtils.getFieldValue(boundSql, "metaParameters") != null) {
-				MetaObject mo = (MetaObject) ReflectionUtils.getFieldValue(boundSql, "metaParameters");
-				ReflectionUtils.setFieldValue(newBoundSql, "metaParameters", mo);
+			// 需要查询数量
+			if (pagination.getQueryType() == QueryType.ONLY_COUNT || pagination.getQueryType() == QueryType.ALL) {
+				// 得到总记录数
+				Executor exec = (Executor) invocation.getTarget();
+				Connection conn = exec.getTransaction().getConnection();
+				pagination.setCount(PaginationSQLHelper.getCount(originalSql, conn, mappedStatement, parameter, boundSql, logger));
+			} else {
+				pagination.setCount(0);
 			}
-			// 解决MyBatis 分页foreach 参数失效 end
-			MappedStatement newMs = PaginationSQLHelper.createStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));
 
-			invocation.getArgs()[0] = newMs;
+			// 需要查询数据
+			if (pagination.getQueryType() == QueryType.ONLY_DATA || pagination.getQueryType() == QueryType.ALL) {
+				// 分页查询 本地化对象 修改数据库注意修改实现
+				String pageSql = PaginationSQLHelper.generatePageSql(originalSql, pagination, dialect);
+				invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+				BoundSql newBoundSql = new BoundSql(mappedStatement.getConfiguration(), pageSql, boundSql.getParameterMappings(),
+						boundSql.getParameterObject());
+				// 解决MyBatis 分页foreach 参数失效 start
+				if (ReflectionUtils.getFieldValue(boundSql, "metaParameters") != null) {
+					MetaObject mo = (MetaObject) ReflectionUtils.getFieldValue(boundSql, "metaParameters");
+					ReflectionUtils.setFieldValue(newBoundSql, "metaParameters", mo);
+				}
+				// 解决MyBatis 分页foreach 参数失效 end
+				MappedStatement newMs = PaginationSQLHelper.createStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));
+
+				invocation.getArgs()[0] = newMs;
+			}
+			// end
 		}
 
 		// execute
+		// 如果只查询数量,返回空集合
+		if (pagination != null && pagination.getQueryType() == QueryType.ONLY_COUNT) {
+			return new ArrayList<>();
+		}
 		return invocation.proceed();
 	}
 

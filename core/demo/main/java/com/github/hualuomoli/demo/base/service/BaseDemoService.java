@@ -12,31 +12,37 @@ import com.github.hualuomoli.demo.base.entity.BaseDemo;
 public interface BaseDemoService {
 
 	BaseDemo get(BaseDemo baseDemo);
-	
+
 	BaseDemo get(String id);
-	
+
 	BaseDemo getByName(java.lang.String name);
 
 	void insert(BaseDemo baseDemo);
-	
+
 	void batchInsert(List<BaseDemo> list);
 
 	void update(BaseDemo baseDemo);
-	
+
 	void logicalDelete(BaseDemo baseDemo);
 
 	void logicalDelete(String id);
 
 	void delete(BaseDemo baseDemo);
-	
+
 	void delete(String id);
-	
+
 	void deleteByIds(String[] ids);
-	
+
 	void deleteByIds(Collection<String> ids);
 
 	List<BaseDemo> findList(BaseDemo baseDemo);
-	
+
+	List<BaseDemo> findList(BaseDemo baseDemo, String... orderByStrArray);
+
+	List<BaseDemo> findList(BaseDemo baseDemo, Order... orders);
+
+	List<BaseDemo> findList(BaseDemo baseDemo, List<Order> orders);
+
 	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize);
 
 	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, String... orderByStrArray);
@@ -46,5 +52,5 @@ public interface BaseDemoService {
 	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, List<Order> orders);
 
 	Page findPage(BaseDemo baseDemo, Pagination pagination);
-	
+
 }

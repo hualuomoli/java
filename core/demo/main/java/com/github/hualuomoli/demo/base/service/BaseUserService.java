@@ -12,30 +12,35 @@ import com.github.hualuomoli.demo.base.entity.BaseUser;
 public interface BaseUserService {
 
 	BaseUser get(BaseUser baseUser);
-	
+
 	BaseUser get(String id);
-	
 
 	void insert(BaseUser baseUser);
-	
+
 	void batchInsert(List<BaseUser> list);
 
 	void update(BaseUser baseUser);
-	
+
 	void logicalDelete(BaseUser baseUser);
 
 	void logicalDelete(String id);
 
 	void delete(BaseUser baseUser);
-	
+
 	void delete(String id);
-	
+
 	void deleteByIds(String[] ids);
-	
+
 	void deleteByIds(Collection<String> ids);
 
 	List<BaseUser> findList(BaseUser baseUser);
-	
+
+	List<BaseUser> findList(BaseUser baseUser, String... orderByStrArray);
+
+	List<BaseUser> findList(BaseUser baseUser, Order... orders);
+
+	List<BaseUser> findList(BaseUser baseUser, List<Order> orders);
+
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize);
 
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, String... orderByStrArray);
@@ -45,5 +50,5 @@ public interface BaseUserService {
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, List<Order> orders);
 
 	Page findPage(BaseUser baseUser, Pagination pagination);
-	
+
 }

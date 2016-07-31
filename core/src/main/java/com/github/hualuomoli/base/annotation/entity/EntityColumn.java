@@ -30,13 +30,13 @@ public @interface EntityColumn {
 	boolean nullable() default true;
 
 	// 字符串长度
-	int length() default -1;
+	int length() default 0;
 
 	// 精度(该值的总共长度)
-	int precision() default -1;
+	int precision() default 0;
 
 	// 标度(小数点后面的长度)
-	int scale() default -1;
+	int scale() default 0;
 
 	// 默认值
 	String defaultValue() default "";
