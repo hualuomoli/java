@@ -42,6 +42,8 @@ public interface BaseUserService {
 
 	List<BaseUser> findList(BaseUser baseUser, List<Order> orders);
 	
+	Integer getTotal(BaseUser baseUser);
+	
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize);
 
 	Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize, String... orderByStrArray);

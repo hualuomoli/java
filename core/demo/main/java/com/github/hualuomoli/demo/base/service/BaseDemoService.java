@@ -43,6 +43,8 @@ public interface BaseDemoService {
 
 	List<BaseDemo> findList(BaseDemo baseDemo, List<Order> orders);
 
+	Integer getTotal(BaseDemo baseDemo);
+
 	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize);
 
 	Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize, String... orderByStrArray);

@@ -155,6 +155,13 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 	}
 	
 	@Override
+	public Integer getTotal(BaseDemo baseDemo) {
+		Pagination pagination = new Pagination(QueryType.ONLY_COUNT);
+		Page page = this.findPage(baseDemo, pagination);
+		return page.getCount();
+	}
+	
+	@Override
 	public Page findPage(BaseDemo baseDemo, Integer pageNo, Integer pageSize) {
 		return this.findPage(baseDemo, new Pagination(pageNo, pageSize));
 	}

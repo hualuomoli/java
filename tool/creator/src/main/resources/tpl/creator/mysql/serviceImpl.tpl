@@ -157,6 +157,13 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 	}
 	
 	@Override
+	public Integer getTotal(Base${javaName} base${javaName}) {
+		Pagination pagination = new Pagination(QueryType.ONLY_COUNT);
+		Page page = this.findPage(base${javaName}, pagination);
+		return page.getCount();
+	}
+	
+	@Override
 	public Page findPage(Base${javaName} base${javaName}, Integer pageNo, Integer pageSize) {
 		return this.findPage(base${javaName}, new Pagination(pageNo, pageSize));
 	}

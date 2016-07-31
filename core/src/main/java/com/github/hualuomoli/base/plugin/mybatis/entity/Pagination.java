@@ -36,16 +36,12 @@ public class Pagination {
 		this.pageSize = pageSize;
 	}
 
+	public Pagination(QueryType queryType) {
+		this.queryType = queryType;
+	}
+
 	public Pagination(String... orderByStrArray) {
 		this(null, null, orderByStrArray);
-	}
-
-	public Pagination(List<Order> orders) {
-		this(null, null, orders);
-	}
-
-	public Pagination(Order... orders) {
-		this(null, null, orders);
 	}
 
 	public Pagination(Integer pageNo, Integer pageSize, String... orderByStrArray) {
@@ -61,10 +57,18 @@ public class Pagination {
 		}
 	}
 
+	public Pagination(List<Order> orders) {
+		this(null, null, orders);
+	}
+
 	public Pagination(Integer pageNo, Integer pageSize, List<Order> orders) {
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
 		this.orders = orders;
+	}
+
+	public Pagination(Order... orders) {
+		this(null, null, orders);
 	}
 
 	public Pagination(Integer pageNo, Integer pageSize, Order... orders) {

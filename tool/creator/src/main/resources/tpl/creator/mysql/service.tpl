@@ -45,6 +45,8 @@ public interface Base${javaName}Service {
 
 	List<Base${javaName}> findList(Base${javaName} base${javaName}, List<Order> orders);
 	
+	Integer getTotal(Base${javaName} base${javaName});
+	
 	Page findPage(Base${javaName} base${javaName}, Integer pageNo, Integer pageSize);
 
 	Page findPage(Base${javaName} base${javaName}, Integer pageNo, Integer pageSize, String... orderByStrArray);

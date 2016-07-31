@@ -13,7 +13,6 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Direction;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
-import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination.QueryType;
 import com.github.hualuomoli.commons.util.RandomUtils;
 import com.github.hualuomoli.demo.creator.base.entity.BaseDemo;
 import com.github.hualuomoli.test.AbstractContextServiceTest;
@@ -330,24 +329,13 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 	}
 
 	@Test
-	public void test17FindPage() {
+	public void test17GetTotal() {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setName("jack");
 		baseDemo.setAge(20);
 
-		// only count
-		Pagination countPagination = new Pagination();
-		countPagination.setQueryType(QueryType.ONLY_COUNT);
-		Page countPage = demoService.findPage(baseDemo, countPagination);
-		Assert.assertSame(17, countPage.getCount());
-		Assert.assertSame(0, countPage.getDataList().size());
-
-		// only data
-		Pagination dataPagination = new Pagination();
-		dataPagination.setQueryType(QueryType.ONLY_DATA);
-		Page dataPage = demoService.findPage(baseDemo, dataPagination);
-		Assert.assertSame(0, dataPage.getCount());
-		Assert.assertSame(17, dataPage.getDataList().size());
+		Integer count = demoService.getTotal(baseDemo);
+		Assert.assertSame(17, count);
 
 	}
 

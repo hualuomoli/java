@@ -140,6 +140,13 @@ public class BaseUserServiceImpl implements BaseUserService {
 	}
 
 	@Override
+	public Integer getTotal(BaseUser baseUser) {
+		Pagination pagination = new Pagination(QueryType.ONLY_COUNT);
+		Page page = this.findPage(baseUser, pagination);
+		return page.getCount();
+	}
+
+	@Override
 	public Page findPage(BaseUser baseUser, Integer pageNo, Integer pageSize) {
 		return this.findPage(baseUser, new Pagination(pageNo, pageSize));
 	}
