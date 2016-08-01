@@ -3,6 +3,8 @@ package com.github.hualuomoli.plugin.cache;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.util.SerializeUtils;
 
@@ -12,6 +14,8 @@ import com.github.hualuomoli.commons.util.SerializeUtils;
  *
  */
 public abstract class SerializeCacheAdaptor implements SerializeCache {
+
+	protected static final Logger logger = LoggerFactory.getLogger(SerializeCacheAdaptor.class);
 
 	private static final Integer DEFAULT_EXPIRE = 30 * 60; // 30 minute
 	private static final Integer MAX_EXPIRE = 30 * 24 * 60 * 60; // 30 day
@@ -30,91 +34,126 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 		return MAX_EXPIRE;
 	}
 
-	private void validCache() {
-		if (!this.success()) {
-			throw new CacheException("cache is invalid.");
-		}
+	private boolean validCache() {
+		return this.success();
 	}
 
 	// 有效时间
-	protected void validExpire(Integer expire) {
+	protected boolean validExpire(Integer expire) {
+		// 没有设置时间
 		if (expire == null) {
-			throw new CacheException("expire must be not null.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("expire must be not null.");
+			}
+			return false;
 		}
+		// 时间设置太小
 		if (expire <= 0) {
-			throw new CacheException("expire must greater than zero.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("expire must greater than zero.");
+			}
+			return false;
 		}
+		// 时间太大
 		if (expire > this.getMaxExpire()) {
-			throw new CacheException("expire must less than " + this.getMaxExpire() + ".");
+			if (logger.isWarnEnabled()) {
+				logger.warn("expire must less than " + this.getMaxExpire() + ".");
+			}
+			return false;
 		}
+		return true;
 	}
 
 	// key是否有效
-	protected void validKey(String key) {
+	protected boolean validKey(String key) {
 		if (StringUtils.isBlank(key)) {
-			throw new CacheException("key must be not null.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("key must be not null.");
+			}
+			return false;
 		}
+		return true;
 	}
 
 	// data是否有效
-	protected void validData(byte[] data) {
+	protected boolean validData(byte[] data) {
 		if (data == null || data.length == 0) {
-			throw new CacheException("data must be not empty.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("data must be not empty.");
+			}
+			return false;
 		}
+		return true;
 	}
 
 	// data是否有效
-	protected void validData(Serializable serializable) {
+	protected boolean validData(Serializable serializable) {
 		if (serializable == null) {
-			throw new CacheException("data must be not null.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("data must be not null.");
+			}
+			return false;
 		}
+		return true;
 	}
 
 	// number是否有效
-	protected void validNumber(Long number) {
+	protected boolean validNumber(Long number) {
 		if (number == null) {
-			throw new CacheException("number must be not null.");
+			if (logger.isWarnEnabled()) {
+				logger.warn("number must be not null.");
+			}
+			return false;
 		}
+		return true;
 	}
 
+	// 设置数据,使用默认值
 	public boolean set(String key, byte[] data) {
 		return this.set(key, data, this.getDefaultExpire());
 	}
 
 	@Override
 	public boolean set(String key, byte[] data, int expire) {
-		this.validCache();
-		this.validKey(key);
-		this.validData(data);
-		this.validExpire(expire);
-		return this.setValue(this.prefix + key, data, expire);
+		if (this.validCache() //
+				&& this.validExpire(expire) //
+				&& this.validKey(key) //
+				&& this.validData(data)) {
+			return this.setValue(this.prefix + key, data, expire);
+		}
+		return false;
 	}
 
+	// 设置序列化数据,使用默认值
 	public boolean set(String key, Serializable serializable) {
 		return this.set(key, serializable, this.getDefaultExpire());
 	}
 
 	@Override
 	public boolean set(String key, Serializable serializable, int expire) {
-		this.validCache();
-		this.validKey(key);
-		this.validData(serializable);
-		this.validExpire(expire);
-		return this.setValue(this.prefix + key, serializable, expire);
+		if (this.validCache() //
+				&& this.validExpire(expire) //
+				&& this.validKey(key) //
+				&& this.validData(serializable)) {
+			return this.setValue(this.prefix + key, serializable, expire);
+		}
+		return false;
 	}
 
 	@Override
 	public byte[] get(String key) {
-		this.validCache();
-		this.validKey(key);
-		return this.getValue(this.prefix + key);
+		if (this.validCache() && this.validKey(key)) {
+			return this.getValue(this.prefix + key);
+		}
+		return null;
 	}
 
 	@Override
 	public <T extends Serializable> T getSerializable(String key) {
-		this.validCache();
-		this.validKey(key);
-		return this.getSerializableValue(this.prefix + key);
+		if (this.validCache() && this.validKey(key)) {
+			return this.getSerializableValue(this.prefix + key);
+		}
+		return null;
 	}
 
 	@Override
@@ -137,24 +176,28 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 
 	@Override
 	public boolean remove(String key) {
-		this.validCache();
-		this.validKey(key);
-		return this.removeKey(this.prefix + key);
+		if (this.validCache() && this.validKey(key)) {
+			return this.removeKey(this.prefix + key);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean exists(String key) {
-		this.validCache();
-		this.validKey(key);
-		return this.keyExists(this.prefix + key);
+		if (this.validCache() && this.validKey(key)) {
+			return this.keyExists(this.prefix + key);
+		}
+		return false;
 	}
 
 	@Override
 	public Long plus(String key, Long number) {
-		this.validCache();
-		this.validKey(key);
-		this.validNumber(number);
-		return this.plusNumber(this.prefix + key, number);
+		if (this.validCache() //
+				&& this.validKey(key) //
+				&& this.validNumber(number)) {
+			return this.plusNumber(this.prefix + key, number);
+		}
+		return 0L;
 	}
 
 	@Override
@@ -163,32 +206,42 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 		this.clear();
 	}
 
+	// 设置值
 	public boolean setValue(String key, byte[] data) {
 		return this.setValue(key, data, this.getDefaultExpire());
 	}
 
+	// 设置值
 	public abstract boolean setValue(String key, byte[] data, int expire);
 
+	// 设置序列化值
 	public boolean setValue(String key, Serializable serializable) {
 		return this.setValue(key, serializable, this.getDefaultExpire());
 	}
 
+	// 设置序列化值
 	public boolean setValue(String key, Serializable serializable, int expire) {
 		return this.setValue(key, SerializeUtils.serialize(serializable), expire);
 	}
 
+	// 获取值
 	public abstract byte[] getValue(String key);
 
+	// 获取序列化值
 	public <T extends Serializable> T getSerializableValue(String key) {
 		return SerializeUtils.unserialize(this.getValue(key));
 	}
 
+	// 删除
 	public abstract boolean removeKey(String key);
 
+	// 是否存在
 	public abstract boolean keyExists(String key);
 
+	// 数值叠加
 	public abstract Long plusNumber(String key, Long number);
 
+	// 清空
 	public abstract void clear();
 
 }

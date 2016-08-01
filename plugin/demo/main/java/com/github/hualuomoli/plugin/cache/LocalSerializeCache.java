@@ -5,7 +5,12 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-public class DefaultSerializeCache extends SerializeCacheAdaptor {
+/**
+ * 本地序列化缓存
+ * @author hualuomoli
+ *
+ */
+public class LocalSerializeCache extends SerializeCacheAdaptor {
 
 	private Map<String, Object> dataMap = Maps.newHashMap();
 	private Map<String, Long> expireMap = Maps.newHashMap();
