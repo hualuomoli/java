@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.hualuomoli.demo.base.mapper.BaseDemoMapper">
+<mapper namespace="com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorDemoMapper">
 
   <sql id="columns">
     `id`            as "id"           ,
@@ -138,15 +138,15 @@
     </if>
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
+  <select id="get" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo">
     select 
       <include refid="columns" />
-    from `t_demo`
+    from `t_creator_demo`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `t_demo` (
+    insert into `t_creator_demo` (
       `id`           ,
       `version`      ,
       `name`         ,
@@ -182,7 +182,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `t_demo` (
+    insert into `t_creator_demo` (
       `id`           ,
       `version`      ,
       `name`         ,
@@ -220,7 +220,7 @@
   </insert>
   
   <update id="update">
-    update `t_demo`
+    update `t_creator_demo`
     <set>
       <if test="version != null"> 
         `version`       = #{version}      ,
@@ -269,11 +269,11 @@
   </update>
   
   <delete id="delete">
-    delete from `t_demo` where id =  #{id}
+    delete from `t_creator_demo` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `t_demo`
+    delete from `t_creator_demo`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -281,10 +281,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
+  <select id="findList" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo">
     select
       <include refid="columns" />
-    from `t_demo`
+    from `t_creator_demo`
     <where>
       <include refid="querys" />
     </where>

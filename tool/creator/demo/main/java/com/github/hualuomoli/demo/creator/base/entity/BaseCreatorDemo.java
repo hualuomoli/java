@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Persistent;
 
-public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements Persistent {
+public class BaseCreatorDemo extends com.github.hualuomoli.demo.creator.entity.CreatorDemo implements Persistent {
 
 	/**  - 左like */
 	private java.lang.String nameLeftLike;
@@ -45,10 +45,10 @@ public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements 
 	/** 用户 - 查询数组 */
 	private java.lang.String[] userUsernameArray;
 	
-	public BaseDemo(){
+	public BaseCreatorDemo(){
 	}
 	
-	public BaseDemo(
+	public BaseCreatorDemo(
 		java.lang.String name
 	){
 		this.setName(name);

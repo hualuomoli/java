@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Persistent;
 
-public class BaseRegion extends com.github.hualuomoli.demo.creator.entity.Region implements Persistent {
+public class BaseCreatorRegion extends com.github.hualuomoli.demo.creator.entity.CreatorRegion implements Persistent {
 
 	
-	public BaseRegion(){
+	public BaseCreatorRegion(){
 	}
 	
-	public BaseRegion(
+	public BaseCreatorRegion(
 		java.lang.String code,
 		java.lang.Integer type
 	){

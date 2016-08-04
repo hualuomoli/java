@@ -4,10 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Persistent;
 
-public class BaseUser extends com.github.hualuomoli.demo.creator.entity.User implements Persistent {
+public class BaseCreatorUser extends com.github.hualuomoli.demo.creator.entity.CreatorUser implements Persistent {
 
 	
-	public BaseUser(){
+	public BaseCreatorUser(){
 	}
 	
 	

@@ -11,9 +11,9 @@ import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-@EntityTable(name = "t_demo", comment = "测试demo", pre = true)
+@EntityTable(name = "t_creator_demo", comment = "测试demo", pre = true)
 @EntityUnique(columnNmaes = { "name" })
-public class Demo extends CommonField {
+public class CreatorDemo extends CommonField {
 
 	@EntityQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)
 	private String name;
@@ -32,12 +32,12 @@ public class Demo extends CommonField {
 	private String remarks;
 	@EntityColumn(comment = "用户", relation = "username")
 	@EntityQuery(inArray = true)
-	private User user;
-	private Region region;
+	private CreatorUser user;
+	private CreatorRegion region;
 	// 不会使用
-	private List<Address> address;
+	private List<CreatorAddress> address;
 
-	public Demo() {
+	public CreatorDemo() {
 	}
 
 	public String getName() {
@@ -88,28 +88,28 @@ public class Demo extends CommonField {
 		this.remarks = remarks;
 	}
 
-	public User getUser() {
+	public CreatorUser getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(CreatorUser user) {
 		this.user = user;
 	}
 
-	public List<Address> getAddress() {
-		return address;
-	}
-
-	public void setAddress(List<Address> address) {
-		this.address = address;
-	}
-
-	public Region getRegion() {
+	public CreatorRegion getRegion() {
 		return region;
 	}
 
-	public void setRegion(Region region) {
+	public void setRegion(CreatorRegion region) {
 		this.region = region;
+	}
+
+	public List<CreatorAddress> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<CreatorAddress> address) {
+		this.address = address;
 	}
 
 }

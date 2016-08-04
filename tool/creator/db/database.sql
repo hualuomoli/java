@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `t_demo`;
-CREATE TABLE `t_demo` (
+DROP TABLE IF EXISTS `t_creator_demo`;
+CREATE TABLE `t_creator_demo` (
 	`id` varchar(32) COMMENT '主键',
 	`version` integer(11) COMMENT '数据版本号',
 	`name` varchar(32),
@@ -18,8 +18,8 @@ CREATE TABLE `t_demo` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试demo';
 
-DROP TABLE IF EXISTS `t_user`;
-CREATE TABLE `t_user` (
+DROP TABLE IF EXISTS `t_creator_user`;
+CREATE TABLE `t_creator_user` (
 	`id` varchar(32),
 	`version` integer(11) COMMENT '数据版本号',
 	`username` varchar(20),
@@ -33,8 +33,8 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表';
 
-DROP TABLE IF EXISTS `t_region`;
-CREATE TABLE `t_region` (
+DROP TABLE IF EXISTS `t_creator_region`;
+CREATE TABLE `t_creator_region` (
 	`id` varchar(32) COMMENT '主键',
 	`version` integer(11) COMMENT '数据版本号',
 	`code` varchar(32),

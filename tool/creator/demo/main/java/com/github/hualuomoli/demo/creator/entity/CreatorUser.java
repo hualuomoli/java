@@ -5,8 +5,8 @@ import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-@EntityTable(name = "t_user")
-public class User extends CommonField {
+@EntityTable(name = "t_creator_user")
+public class CreatorUser extends CommonField {
 
 	private String id;
 	@EntityColumn(length = 20)
@@ -14,7 +14,7 @@ public class User extends CommonField {
 	private String nickname;
 	private Integer number;
 
-	public User() {
+	public CreatorUser() {
 	}
 
 	public String getId() {

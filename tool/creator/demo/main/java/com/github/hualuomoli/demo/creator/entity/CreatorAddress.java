@@ -3,6 +3,6 @@ package com.github.hualuomoli.demo.creator.entity;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-public class Address extends CommonField {
+public class CreatorAddress extends CommonField {
 
 }

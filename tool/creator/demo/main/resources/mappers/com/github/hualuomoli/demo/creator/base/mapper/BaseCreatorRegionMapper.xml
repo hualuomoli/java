@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.hualuomoli.demo.creator.base.mapper.BaseRegionMapper">
+<mapper namespace="com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorRegionMapper">
 
   <sql id="columns">
     `id`          as "id"        ,
@@ -49,15 +49,15 @@
 	<!-- 比较查询 -->
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseRegion">
+  <select id="get" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion">
     select 
       <include refid="columns" />
-    from `t_region`
+    from `t_creator_region`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `t_region` (
+    insert into `t_creator_region` (
       `id`         ,
       `version`    ,
       `code`       ,
@@ -83,7 +83,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `t_region` (
+    insert into `t_creator_region` (
       `id`         ,
       `version`    ,
       `code`       ,
@@ -111,7 +111,7 @@
   </insert>
   
   <update id="update">
-    update `t_region`
+    update `t_creator_region`
     <set>
       <if test="version != null"> 
         `version`     = #{version}   ,
@@ -145,11 +145,11 @@
   </update>
   
   <delete id="delete">
-    delete from `t_region` where id =  #{id}
+    delete from `t_creator_region` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `t_region`
+    delete from `t_creator_region`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -157,10 +157,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseRegion">
+  <select id="findList" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion">
     select
       <include refid="columns" />
-    from `t_region`
+    from `t_creator_region`
     <where>
       <include refid="querys" />
     </where>

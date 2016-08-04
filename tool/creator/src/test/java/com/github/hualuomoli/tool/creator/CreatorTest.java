@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.hualuomoli.commons.util.ProjectUtils;
-import com.github.hualuomoli.demo.creator.entity.Region;
-import com.github.hualuomoli.demo.creator.entity.User;
-import com.github.hualuomoli.demo.entity.Demo;
+import com.github.hualuomoli.demo.creator.entity.CreatorDemo;
+import com.github.hualuomoli.demo.creator.entity.CreatorRegion;
+import com.github.hualuomoli.demo.creator.entity.CreatorUser;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer.Config;
 import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlDbDealer;
@@ -48,7 +48,7 @@ public class CreatorTest {
 
 	@Test
 	public void testExecute() {
-		creator.execute(Demo.class, User.class, Region.class);
+		creator.execute(CreatorDemo.class, CreatorUser.class, CreatorRegion.class);
 	}
 
 }

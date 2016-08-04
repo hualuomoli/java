@@ -12,13 +12,13 @@ import com.github.hualuomoli.base.entity.CommonField;
 @SuppressWarnings("serial")
 @EntityTable
 @EntityUnique(union = true, columnNmaes = { "code", "type" })
-public class Region extends CommonField {
+public class CreatorRegion extends CommonField {
 
 	private String code; // 编码
 	private String name; // 名称
 	private Integer type; // 类型
 
-	public Region() {
+	public CreatorRegion() {
 	}
 
 	public String getCode() {
