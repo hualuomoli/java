@@ -12,6 +12,7 @@
     `birth_day`     as "birthDay"     ,
     `remarks`       as "remarks"      ,
     `user_username` as "user.username"         ,
+    `region_id`     as "region.id"       ,
     `create_by`     as "createBy"     ,
     `create_date`   as "createDate"   ,
     `update_by`     as "updateBy"     ,
@@ -46,6 +47,9 @@
     </if>
     <if test="user != null and user.username != null and user.username != ''"> 
       and `user_username` = #{user.username}         
+    </if>
+    <if test="region != null and region.id != null and region.id != ''"> 
+      and `region_id`     = #{region.id}       
     </if>
     <if test="createBy != null and createBy != ''"> 
       and `create_by`     = #{createBy}     
@@ -152,6 +156,7 @@
       `birth_day`    ,
       `remarks`      ,
       `user_username`,
+      `region_id`    ,
       `create_by`    ,
       `create_date`  ,
       `update_by`    ,
@@ -167,6 +172,7 @@
       #{birthDay}     ,
       #{remarks}      ,
       #{user.username}         ,
+      #{region.id}       ,
       #{createBy}     ,
       #{createDate}   ,
       #{updateBy}     ,
@@ -186,6 +192,7 @@
       `birth_day`    ,
       `remarks`      ,
       `user_username`,
+      `region_id`    ,
       `create_by`    ,
       `create_date`  ,
       `update_by`    ,
@@ -203,6 +210,7 @@
         #{obj.birthDay}     ,
         #{obj.remarks}      ,
         #{obj.user.username}         ,
+        #{obj.region.id}       ,
         #{obj.createBy}     ,
         #{obj.createDate}   ,
         #{obj.updateBy}     ,
@@ -237,6 +245,9 @@
       </if>
       <if test="user != null and user.username != null and user.username != ''"> 
         `user_username` = #{user.username}         ,
+      </if>
+      <if test="region != null and region.id != null and region.id != ''"> 
+        `region_id`     = #{region.id}       ,
       </if>
       <if test="createBy != null"> 
         `create_by`     = #{createBy}     ,

@@ -14,9 +14,15 @@ public class Base${javaName} extends ${entityPackageName}.${javaName} implements
 	public Base${javaName}(){
 	}
 	
-	<#if unique??>
-	public Base${javaName}(${unique.javaTypeName} ${unique.javaName}){
+	<#if uniques?? && uniques?size gt 0>
+	public Base${javaName}(
+	<#list uniques as unique>
+		${unique.javaTypeName} ${unique.javaName}<#if uniques?size - unique_index gt 1>,</#if>
+	</#list>
+	){
+		<#list uniques as unique>
 		this.set${unique.javaName?cap_first}(${unique.javaName});
+		</#list>
 	}
 	</#if>
 	

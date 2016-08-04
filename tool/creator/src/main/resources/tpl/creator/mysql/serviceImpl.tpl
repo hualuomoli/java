@@ -41,11 +41,17 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 		return base${javaName}Mapper.get(id);
 	}
 	
-	<#if unique??>
+	<#if uniques?? && uniques?size gt 0>
 	@Override
-	public Base${javaName} getBy${unique.javaName?cap_first}(${unique.javaTypeName} ${unique.javaName}) {
+	public Base${javaName} getUnique(
+	<#list uniques as unique>
+		${unique.javaTypeName} ${unique.javaName}<#if uniques?size - unique_index gt 1>,</#if>
+	</#list>
+	) {
 		Base${javaName} base${javaName} = new Base${javaName}();
+		<#list uniques as unique>
 		base${javaName}.set${unique.javaName?cap_first}(${unique.javaName});
+		</#list>
 		List<Base${javaName}> list = this.findList(base${javaName});
 		if (list == null || list.size() == 0) {
 			return null;

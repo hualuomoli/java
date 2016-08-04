@@ -1,15 +1,17 @@
 package com.github.hualuomoli.tool.creator.dealer.mysql;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
 import com.github.hualuomoli.tool.creator.entity.CreatorTable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class MysqlFileDealer implements FileDealer {
@@ -37,7 +39,7 @@ public class MysqlFileDealer implements FileDealer {
 
 		map.put("dbName", dbName);
 		map.put("table", creatorTable);
-		map.put("unique", this.getUnique(creatorTable));
+		map.put("uniques", this.getUnique(cls, creatorTable));
 
 		this.createEntity(map);
 		this.createMapper(map);
@@ -47,20 +49,55 @@ public class MysqlFileDealer implements FileDealer {
 
 	}
 
-	private CreatorColumn getUnique(CreatorTable creatorTable) {
+	// 唯一键
+	private List<CreatorColumn> getUnique(Class<?> cls, CreatorTable creatorTable) {
 
-		List<CreatorColumn> columns = creatorTable.getColumns();
-		for (CreatorColumn creatorColumn : columns) {
-			// 查找具有该注解的属性
-			Field field = creatorColumn.getField();
-			EntityUnique entityUnique = field.getAnnotation(EntityUnique.class);
-			if (entityUnique != null) {
-				// 找到
-				return creatorColumn;
+		List<CreatorColumn> unionUniqueList = Lists.newArrayList();
+
+		EntityUnique entityUnique = cls.getAnnotation(EntityUnique.class);
+		if (entityUnique == null) {
+			return unionUniqueList;
+		}
+		boolean union = entityUnique.union();
+		String[] columnNames = entityUnique.columnNmaes();
+		if (columnNames == null || columnNames.length == 0) {
+			return unionUniqueList;
+		}
+
+		if (union) {
+			// 联合唯一
+			List<CreatorColumn> columns = creatorTable.getColumns();
+			for (String columnName : columnNames) {
+				boolean success = false;
+				for (CreatorColumn creatorColumn : columns) {
+					String name = creatorColumn.getField().getName();
+					if (StringUtils.equals(name, columnName)) {
+						unionUniqueList.add(creatorColumn);
+						success = true;
+						break;
+					}
+				}
+				if (!success) {
+					throw new RuntimeException("can not find field " + columnName);
+				}
+			}
+		} else {
+			// 唯一
+			if (columnNames.length != 1) {
+				throw new RuntimeException("唯一键只能有一个,如果是关联唯一,请设置 union = true");
+			}
+			String columnName = columnNames[0];
+			List<CreatorColumn> columns = creatorTable.getColumns();
+			for (CreatorColumn creatorColumn : columns) {
+				String name = creatorColumn.getField().getName();
+				if (StringUtils.equals(name, columnName)) {
+					unionUniqueList.add(creatorColumn);
+					break;
+				}
 			}
 		}
 
-		return null;
+		return unionUniqueList;
 
 	}
 

@@ -5,18 +5,16 @@ import java.util.List;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
-import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
 import com.github.hualuomoli.base.annotation.entity.EntityQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.base.entity.CommonField;
 
+@SuppressWarnings("serial")
 @EntityTable(name = "t_demo", comment = "测试demo", pre = true)
+@EntityUnique(columnNmaes = { "name" })
 public class Demo extends CommonField {
 
-	private static final long serialVersionUID = -4883650844038266045L;
-
-	@EntityUnique
 	@EntityQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)
 	private String name;
 	@EntityColumn(type = EntityColumnType.CHAR, length = 1)
@@ -32,11 +30,10 @@ public class Demo extends CommonField {
 	private Date birthDay;
 	@EntityColumn(type = EntityColumnType.CLOB)
 	private String remarks;
-	@EntityIgnore // 忽略
-	private String orderByStr; // 排序
 	@EntityColumn(comment = "用户", relation = "username")
 	@EntityQuery(inArray = true)
 	private User user;
+	private Region region;
 	// 不会使用
 	private List<Address> address;
 
@@ -91,14 +88,6 @@ public class Demo extends CommonField {
 		this.remarks = remarks;
 	}
 
-	public String getOrderByStr() {
-		return orderByStr;
-	}
-
-	public void setOrderByStr(String orderByStr) {
-		this.orderByStr = orderByStr;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -113,6 +102,14 @@ public class Demo extends CommonField {
 
 	public void setAddress(List<Address> address) {
 		this.address = address;
+	}
+
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
+		this.region = region;
 	}
 
 }

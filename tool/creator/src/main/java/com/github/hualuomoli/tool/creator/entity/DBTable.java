@@ -12,6 +12,7 @@ public class DBTable {
 	private String name;
 	private String comment;
 	private DBColumn unique; // 唯一列
+	private List<DBColumn> unionUnique; // 联合唯一列
 	private List<DBColumn> columnList;
 
 	public DBTable() {
@@ -47,6 +48,14 @@ public class DBTable {
 
 	public void setUnique(DBColumn unique) {
 		this.unique = unique;
+	}
+
+	public List<DBColumn> getUnionUnique() {
+		return unionUnique;
+	}
+
+	public void setUnionUnique(List<DBColumn> unionUnique) {
+		this.unionUnique = unionUnique;
 	}
 
 }

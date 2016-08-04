@@ -4,10 +4,9 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.CommonField;
 
+@SuppressWarnings("serial")
 @EntityTable(name = "t_user")
 public class User extends CommonField {
-
-	private static final long serialVersionUID = -490262089876684468L;
 
 	private String id;
 	@EntityColumn(length = 20)

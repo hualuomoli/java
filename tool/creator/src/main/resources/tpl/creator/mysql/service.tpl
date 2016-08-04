@@ -15,10 +15,14 @@ public interface Base${javaName}Service {
 	
 	Base${javaName} get(String id);
 	
-	<#if unique??>
-	Base${javaName} getBy${unique.javaName?cap_first}(${unique.javaTypeName} ${unique.javaName});
+	<#if uniques?? && uniques?size gt 0>
+	Base${javaName} getUnique(
+	<#list uniques as unique>
+		${unique.javaTypeName} ${unique.javaName}<#if uniques?size - unique_index gt 1>,</#if>
+	</#list>
+	);
 	</#if>
-
+	
 	void insert(Base${javaName} base${javaName});
 	
 	void batchInsert(List<Base${javaName}> list);
