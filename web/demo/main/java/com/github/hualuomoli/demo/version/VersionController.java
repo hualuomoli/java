@@ -20,7 +20,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String init() {
 		logger.debug("default version");
-		return AppRestResponse.getErrorData(new ErrorData("0", "this is default version"));
+		return AppRestResponse.getErrorData(new ErrorData(0, "this is default version"));
 	}
 
 	// version 1.0
@@ -28,7 +28,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String v1() {
 		logger.debug("version 1.0.0");
-		return AppRestResponse.getErrorData(new ErrorData("1.0.0", "this is v1.0.0"));
+		return AppRestResponse.getErrorData(new ErrorData(1, "this is v1.0.0"));
 	}
 
 	// version 3.2.1
@@ -36,7 +36,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String v3_2_1() {
 		logger.debug("version 3.2.1");
-		return AppRestResponse.getErrorData(new ErrorData("3.2.1", "this is v3.2.1"));
+		return AppRestResponse.getErrorData(new ErrorData(3, "this is v3.2.1"));
 	}
 
 }
