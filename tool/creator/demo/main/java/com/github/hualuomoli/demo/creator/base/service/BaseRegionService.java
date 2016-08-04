@@ -20,23 +20,23 @@ public interface BaseRegionService {
 		java.lang.Integer type
 	);
 	
-	void insert(BaseRegion baseRegion);
+	int insert(BaseRegion baseRegion);
 	
-	void batchInsert(List<BaseRegion> list);
+	int batchInsert(List<BaseRegion> list);
 
-	void update(BaseRegion baseRegion);
+	int update(BaseRegion baseRegion);
 	
-	void logicalDelete(BaseRegion baseRegion);
+	int logicalDelete(BaseRegion baseRegion);
 
-	void logicalDelete(String id);
+	int logicalDelete(String id);
 
-	void delete(BaseRegion baseRegion);
+	int delete(BaseRegion baseRegion);
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<BaseRegion> findList(BaseRegion baseRegion);
 	

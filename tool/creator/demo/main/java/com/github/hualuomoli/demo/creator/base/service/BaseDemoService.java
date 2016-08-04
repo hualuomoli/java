@@ -19,23 +19,23 @@ public interface BaseDemoService {
 		java.lang.String name
 	);
 	
-	void insert(BaseDemo baseDemo);
+	int insert(BaseDemo baseDemo);
 	
-	void batchInsert(List<BaseDemo> list);
+	int batchInsert(List<BaseDemo> list);
 
-	void update(BaseDemo baseDemo);
+	int update(BaseDemo baseDemo);
 	
-	void logicalDelete(BaseDemo baseDemo);
+	int logicalDelete(BaseDemo baseDemo);
 
-	void logicalDelete(String id);
+	int logicalDelete(String id);
 
-	void delete(BaseDemo baseDemo);
+	int delete(BaseDemo baseDemo);
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<BaseDemo> findList(BaseDemo baseDemo);
 	

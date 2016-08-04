@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.entity;
+package com.github.hualuomoli.demo.creator.entity;
 
 import java.util.Date;
 import java.util.List;

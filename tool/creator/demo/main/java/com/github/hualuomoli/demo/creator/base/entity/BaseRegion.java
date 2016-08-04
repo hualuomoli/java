@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.Persistent;
 
-public class BaseRegion extends com.github.hualuomoli.demo.entity.Region implements Persistent {
+public class BaseRegion extends com.github.hualuomoli.demo.creator.entity.Region implements Persistent {
 
 	
 	public BaseRegion(){

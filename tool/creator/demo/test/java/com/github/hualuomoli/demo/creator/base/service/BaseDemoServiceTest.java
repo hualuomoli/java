@@ -41,7 +41,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setId(id);
 		baseDemo.setName("花落莫离");
-		demoService.insert(baseDemo);
+		Integer count = demoService.insert(baseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
@@ -59,7 +60,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		baseDemo.setId(id);
 		baseDemo.setName("修改名称");
 		baseDemo.setAge(20);
-		demoService.update(baseDemo);
+		Integer count = demoService.update(baseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
@@ -75,7 +77,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setId(id);
 		baseDemo.setName("hualuomoli");
-		demoService.logicalDelete(baseDemo);
+		Integer count = demoService.logicalDelete(baseDemo);
+		Assert.assertSame(1, count);
 		baseDemo = demoService.get(id);
 		Assert.assertNotNull(baseDemo);
 		Assert.assertEquals(Status.DELETED.getValue(), baseDemo.getStatus());
@@ -85,7 +88,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 	public void test05DeleteBaseDemo() {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setId(id);
-		demoService.delete(baseDemo);
+		Integer count = demoService.delete(baseDemo);
+		Assert.assertSame(1, count);
 		baseDemo = demoService.get(id);
 		Assert.assertNull(baseDemo);
 	}
@@ -95,12 +99,14 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		BaseDemo baseDemo = new BaseDemo();
 		baseDemo.setId(id);
 		baseDemo.setName("花落莫离");
-		demoService.insert(baseDemo);
+		Integer count = demoService.insert(baseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
 	public void test07DeleteString() {
-		demoService.delete(id);
+		Integer count = demoService.delete(id);
+		Assert.assertSame(1, count);
 		BaseDemo baseDemo = demoService.get(id);
 		Assert.assertNull(baseDemo);
 	}
@@ -114,7 +120,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 			baseDemo.setName(RandomUtils.getUUID());
 			list.add(baseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(20, count);
 
 		list = demoService.findList(new BaseDemo());
 		Assert.assertSame(20, list.size());
@@ -126,7 +133,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			ids[i] = String.valueOf(i);
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(20, count);
 
 		List<BaseDemo> list = demoService.findList(new BaseDemo());
 		Assert.assertSame(0, list.size());
@@ -141,7 +149,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 			baseDemo.setName(RandomUtils.getUUID());
 			list.add(baseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(20, count);
 	}
 
 	@Test
@@ -150,7 +159,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			ids.add(String.valueOf(i));
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(20, count);
 
 		List<BaseDemo> list = demoService.findList(new BaseDemo());
 		Assert.assertSame(0, list.size());
@@ -166,7 +176,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 			baseDemo.setAge(20 + (i % 4));
 			list.add(baseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
@@ -248,7 +259,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (BaseDemo demo : list) {
 			ids.add(demo.getId());
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
@@ -263,7 +275,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 			baseDemo.setAge(20 + (i % 3));
 			list.add(baseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
@@ -347,7 +360,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (BaseDemo demo : list) {
 			ids.add(demo.getId());
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(100, count);
 	}
 
 }

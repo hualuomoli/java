@@ -44,75 +44,76 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(@PreInsert BaseUser baseUser) {
-		baseUserMapper.insert(baseUser);
+	public int insert(@PreInsert BaseUser baseUser) {
+		return baseUserMapper.insert(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(@PreBatchInsert  List<BaseUser> list) {
+	public int batchInsert(@PreBatchInsert  List<BaseUser> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}	
-		
+		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
 			List<BaseUser> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
-			baseUserMapper.batchInsert(newList);
+			count += baseUserMapper.batchInsert(newList);
 		}
+		return count;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(@PreUpdate BaseUser baseUser) {
-		baseUserMapper.update(baseUser);
+	public int update(@PreUpdate BaseUser baseUser) {
+		return baseUserMapper.update(baseUser);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(@PreDelete BaseUser baseUser) {
-		baseUserMapper.update(baseUser);
+	public int logicalDelete(@PreDelete BaseUser baseUser) {
+		return baseUserMapper.update(baseUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(String id) {
+	public int logicalDelete(String id) {
 		BaseUser temp = new BaseUser();
 		temp.setId(id);
-		this.logicalDelete(temp);
+		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(BaseUser baseUser) {
-		this.delete(baseUser.getId());
+	public int delete(BaseUser baseUser) {
+		return this.delete(baseUser.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		baseUserMapper.delete(id);
+	public int delete(String id) {
+		return baseUserMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
+	public int deleteByIds(String[] ids) {
 		if (ids == null || ids.length == 0) {
-			return;
+			return 0;
 		}
-		baseUserMapper.deleteByIds(ids);
+		return baseUserMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
+	public int deleteByIds(Collection<String> ids) {
 		if (ids == null || ids.size() == 0) {
-			return;
+			return 0;
 		}
-		this.deleteByIds(ids.toArray(new String[]{}));
+		return this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

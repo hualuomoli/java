@@ -23,23 +23,23 @@ public interface Base${javaName}Service {
 	);
 	</#if>
 	
-	void insert(Base${javaName} base${javaName});
+	int insert(Base${javaName} base${javaName});
 	
-	void batchInsert(List<Base${javaName}> list);
+	int batchInsert(List<Base${javaName}> list);
 
-	void update(Base${javaName} base${javaName});
+	int update(Base${javaName} base${javaName});
 	
-	void logicalDelete(Base${javaName} base${javaName});
+	int logicalDelete(Base${javaName} base${javaName});
 
-	void logicalDelete(String id);
+	int logicalDelete(String id);
 
-	void delete(Base${javaName} base${javaName});
+	int delete(Base${javaName} base${javaName});
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<Base${javaName}> findList(Base${javaName} base${javaName});
 	

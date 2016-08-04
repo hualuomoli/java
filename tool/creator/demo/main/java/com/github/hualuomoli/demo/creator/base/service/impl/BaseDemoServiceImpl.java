@@ -59,75 +59,76 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(@PreInsert BaseDemo baseDemo) {
-		baseDemoMapper.insert(baseDemo);
+	public int insert(@PreInsert BaseDemo baseDemo) {
+		return baseDemoMapper.insert(baseDemo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(@PreBatchInsert  List<BaseDemo> list) {
+	public int batchInsert(@PreBatchInsert  List<BaseDemo> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}	
-		
+		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
 			List<BaseDemo> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
-			baseDemoMapper.batchInsert(newList);
+			count += baseDemoMapper.batchInsert(newList);
 		}
+		return count;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(@PreUpdate BaseDemo baseDemo) {
-		baseDemoMapper.update(baseDemo);
+	public int update(@PreUpdate BaseDemo baseDemo) {
+		return baseDemoMapper.update(baseDemo);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(@PreDelete BaseDemo baseDemo) {
-		baseDemoMapper.update(baseDemo);
+	public int logicalDelete(@PreDelete BaseDemo baseDemo) {
+		return baseDemoMapper.update(baseDemo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(String id) {
+	public int logicalDelete(String id) {
 		BaseDemo temp = new BaseDemo();
 		temp.setId(id);
-		this.logicalDelete(temp);
+		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(BaseDemo baseDemo) {
-		this.delete(baseDemo.getId());
+	public int delete(BaseDemo baseDemo) {
+		return this.delete(baseDemo.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		baseDemoMapper.delete(id);
+	public int delete(String id) {
+		return baseDemoMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
+	public int deleteByIds(String[] ids) {
 		if (ids == null || ids.length == 0) {
-			return;
+			return 0;
 		}
-		baseDemoMapper.deleteByIds(ids);
+		return baseDemoMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
+	public int deleteByIds(Collection<String> ids) {
 		if (ids == null || ids.size() == 0) {
-			return;
+			return 0;
 		}
-		this.deleteByIds(ids.toArray(new String[]{}));
+		return this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

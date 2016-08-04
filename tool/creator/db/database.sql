@@ -33,8 +33,8 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表';
 
-DROP TABLE IF EXISTS `t__region`;
-CREATE TABLE `t__region` (
+DROP TABLE IF EXISTS `t_region`;
+CREATE TABLE `t_region` (
 	`id` varchar(32) COMMENT '主键',
 	`version` integer(11) COMMENT '数据版本号',
 	`code` varchar(32),

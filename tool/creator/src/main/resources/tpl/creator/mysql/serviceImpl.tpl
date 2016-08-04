@@ -65,75 +65,76 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(@PreInsert Base${javaName} base${javaName}) {
-		base${javaName}Mapper.insert(base${javaName});
+	public int insert(@PreInsert Base${javaName} base${javaName}) {
+		return base${javaName}Mapper.insert(base${javaName});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(@PreBatchInsert  List<Base${javaName}> list) {
+	public int batchInsert(@PreBatchInsert  List<Base${javaName}> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}	
-		
+		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
 			List<Base${javaName}> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
-			base${javaName}Mapper.batchInsert(newList);
+			count += base${javaName}Mapper.batchInsert(newList);
 		}
+		return count;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(@PreUpdate Base${javaName} base${javaName}) {
-		base${javaName}Mapper.update(base${javaName});
+	public int update(@PreUpdate Base${javaName} base${javaName}) {
+		return base${javaName}Mapper.update(base${javaName});
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(@PreDelete Base${javaName} base${javaName}) {
-		base${javaName}Mapper.update(base${javaName});
+	public int logicalDelete(@PreDelete Base${javaName} base${javaName}) {
+		return base${javaName}Mapper.update(base${javaName});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(String id) {
+	public int logicalDelete(String id) {
 		Base${javaName} temp = new Base${javaName}();
 		temp.setId(id);
-		this.logicalDelete(temp);
+		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(Base${javaName} base${javaName}) {
-		this.delete(base${javaName}.getId());
+	public int delete(Base${javaName} base${javaName}) {
+		return this.delete(base${javaName}.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		base${javaName}Mapper.delete(id);
+	public int delete(String id) {
+		return base${javaName}Mapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
+	public int deleteByIds(String[] ids) {
 		if (ids == null || ids.length == 0) {
-			return;
+			return 0;
 		}
-		base${javaName}Mapper.deleteByIds(ids);
+		return base${javaName}Mapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
+	public int deleteByIds(Collection<String> ids) {
 		if (ids == null || ids.size() == 0) {
-			return;
+			return 0;
 		}
-		this.deleteByIds(ids.toArray(new String[]{}));
+		return this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

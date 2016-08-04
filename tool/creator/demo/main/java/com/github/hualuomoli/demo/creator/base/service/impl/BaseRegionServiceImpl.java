@@ -61,75 +61,76 @@ public class BaseRegionServiceImpl implements BaseRegionService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void insert(@PreInsert BaseRegion baseRegion) {
-		baseRegionMapper.insert(baseRegion);
+	public int insert(@PreInsert BaseRegion baseRegion) {
+		return baseRegionMapper.insert(baseRegion);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void batchInsert(@PreBatchInsert  List<BaseRegion> list) {
+	public int batchInsert(@PreBatchInsert  List<BaseRegion> list) {
 		if (list == null || list.size() == 0) {
-			return;
+			return 0;
 		}	
-		
+		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
 			List<BaseRegion> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
-			baseRegionMapper.batchInsert(newList);
+			count += baseRegionMapper.batchInsert(newList);
 		}
+		return count;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(@PreUpdate BaseRegion baseRegion) {
-		baseRegionMapper.update(baseRegion);
+	public int update(@PreUpdate BaseRegion baseRegion) {
+		return baseRegionMapper.update(baseRegion);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(@PreDelete BaseRegion baseRegion) {
-		baseRegionMapper.update(baseRegion);
+	public int logicalDelete(@PreDelete BaseRegion baseRegion) {
+		return baseRegionMapper.update(baseRegion);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void logicalDelete(String id) {
+	public int logicalDelete(String id) {
 		BaseRegion temp = new BaseRegion();
 		temp.setId(id);
-		this.logicalDelete(temp);
+		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(BaseRegion baseRegion) {
-		this.delete(baseRegion.getId());
+	public int delete(BaseRegion baseRegion) {
+		return this.delete(baseRegion.getId());
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(String id) {
-		baseRegionMapper.delete(id);
+	public int delete(String id) {
+		return baseRegionMapper.delete(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(String[] ids) {
+	public int deleteByIds(String[] ids) {
 		if (ids == null || ids.length == 0) {
-			return;
+			return 0;
 		}
-		baseRegionMapper.deleteByIds(ids);
+		return baseRegionMapper.deleteByIds(ids);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteByIds(Collection<String> ids) {
+	public int deleteByIds(Collection<String> ids) {
 		if (ids == null || ids.size() == 0) {
-			return;
+			return 0;
 		}
-		this.deleteByIds(ids.toArray(new String[]{}));
+		return this.deleteByIds(ids.toArray(new String[]{}));
 	}
 
 	@Override

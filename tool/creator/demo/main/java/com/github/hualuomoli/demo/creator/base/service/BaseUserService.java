@@ -16,23 +16,23 @@ public interface BaseUserService {
 	BaseUser get(String id);
 	
 	
-	void insert(BaseUser baseUser);
+	int insert(BaseUser baseUser);
 	
-	void batchInsert(List<BaseUser> list);
+	int batchInsert(List<BaseUser> list);
 
-	void update(BaseUser baseUser);
+	int update(BaseUser baseUser);
 	
-	void logicalDelete(BaseUser baseUser);
+	int logicalDelete(BaseUser baseUser);
 
-	void logicalDelete(String id);
+	int logicalDelete(String id);
 
-	void delete(BaseUser baseUser);
+	int delete(BaseUser baseUser);
 	
-	void delete(String id);
+	int delete(String id);
 	
-	void deleteByIds(String[] ids);
+	int deleteByIds(String[] ids);
 	
-	void deleteByIds(Collection<String> ids);
+	int deleteByIds(Collection<String> ids);
 
 	List<BaseUser> findList(BaseUser baseUser);
 	
