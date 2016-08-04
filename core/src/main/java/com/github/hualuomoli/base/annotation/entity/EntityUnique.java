@@ -10,8 +10,14 @@ import java.lang.annotation.Target;
  * @author hualuomoli
  *
  */
-@Target({ ElementType.FIELD })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EntityUnique {
+
+	// 是否是联合索引
+	boolean union() default false;
+
+	// 属性列的名称
+	String[] columnNmaes();
 
 }
