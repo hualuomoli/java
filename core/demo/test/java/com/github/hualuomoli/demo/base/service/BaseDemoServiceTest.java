@@ -27,8 +27,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 
 	@Test
 	public void test00Clear() {
-		BaseDemo baseDemo = new BaseDemo();
-		List<BaseDemo> list = demoService.findList(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		List<BaseDemo> list = demoService.findList(BaseDemo);
 		List<String> ids = Lists.newArrayList();
 		for (BaseDemo demo : list) {
 			ids.add(demo.getId());
@@ -38,83 +38,90 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 
 	@Test
 	public void test01Insert() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		baseDemo.setName("花落莫离");
-		demoService.insert(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		BaseDemo.setName("花落莫离");
+		Integer count = demoService.insert(BaseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
 	public void test02GetBaseDemo() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		baseDemo = demoService.get(baseDemo);
-		Assert.assertNotNull(baseDemo);
-		Assert.assertEquals("花落莫离", baseDemo.getName());
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		BaseDemo = demoService.get(BaseDemo);
+		Assert.assertNotNull(BaseDemo);
+		Assert.assertEquals("花落莫离", BaseDemo.getName());
 	}
 
 	@Test
 	public void test03Update() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		baseDemo.setName("修改名称");
-		baseDemo.setAge(20);
-		demoService.update(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		BaseDemo.setName("修改名称");
+		BaseDemo.setAge(20);
+		Integer count = demoService.update(BaseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
 	public void test04GetString() {
-		BaseDemo baseDemo = demoService.get(id);
-		Assert.assertNotNull(baseDemo);
-		Assert.assertEquals("修改名称", baseDemo.getName());
-		Assert.assertSame(20, baseDemo.getAge());
+		BaseDemo BaseDemo = demoService.get(id);
+		Assert.assertNotNull(BaseDemo);
+		Assert.assertEquals("修改名称", BaseDemo.getName());
+		Assert.assertSame(20, BaseDemo.getAge());
 	}
 
 	@Test
 	public void test050LogicDeleteBaseDemo() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		baseDemo.setName("hualuomoli");
-		demoService.logicalDelete(baseDemo);
-		baseDemo = demoService.get(id);
-		Assert.assertNotNull(baseDemo);
-		Assert.assertEquals(Status.DELETED.getValue(), baseDemo.getStatus());
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		BaseDemo.setName("hualuomoli");
+		Integer count = demoService.logicalDelete(BaseDemo);
+		Assert.assertSame(1, count);
+		BaseDemo = demoService.get(id);
+		Assert.assertNotNull(BaseDemo);
+		Assert.assertEquals(Status.DELETED.getValue(), BaseDemo.getStatus());
 	}
 
 	@Test
 	public void test05DeleteBaseDemo() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		demoService.delete(baseDemo);
-		baseDemo = demoService.get(id);
-		Assert.assertNull(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		Integer count = demoService.delete(BaseDemo);
+		Assert.assertSame(1, count);
+		BaseDemo = demoService.get(id);
+		Assert.assertNull(BaseDemo);
 	}
 
 	@Test
 	public void test06Insert() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setId(id);
-		baseDemo.setName("花落莫离");
-		demoService.insert(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setId(id);
+		BaseDemo.setName("花落莫离");
+		Integer count = demoService.insert(BaseDemo);
+		Assert.assertSame(1, count);
 	}
 
 	@Test
 	public void test07DeleteString() {
-		demoService.delete(id);
-		BaseDemo baseDemo = demoService.get(id);
-		Assert.assertNull(baseDemo);
+		Integer count = demoService.delete(id);
+		Assert.assertSame(1, count);
+		BaseDemo BaseDemo = demoService.get(id);
+		Assert.assertNull(BaseDemo);
 	}
 
 	@Test
 	public void test08BatchInsert() {
 		List<BaseDemo> list = Lists.newArrayList();
 		for (int i = 0; i < 20; i++) {
-			BaseDemo baseDemo = new BaseDemo();
-			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName(RandomUtils.getUUID());
-			list.add(baseDemo);
+			BaseDemo BaseDemo = new BaseDemo();
+			BaseDemo.setId(String.valueOf(i));
+			BaseDemo.setName(RandomUtils.getUUID());
+			list.add(BaseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(20, count);
 
 		list = demoService.findList(new BaseDemo());
 		Assert.assertSame(20, list.size());
@@ -126,7 +133,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			ids[i] = String.valueOf(i);
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(20, count);
 
 		List<BaseDemo> list = demoService.findList(new BaseDemo());
 		Assert.assertSame(0, list.size());
@@ -136,12 +144,13 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 	public void test10BatchInsert() {
 		List<BaseDemo> list = Lists.newArrayList();
 		for (int i = 0; i < 20; i++) {
-			BaseDemo baseDemo = new BaseDemo();
-			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName(RandomUtils.getUUID());
-			list.add(baseDemo);
+			BaseDemo BaseDemo = new BaseDemo();
+			BaseDemo.setId(String.valueOf(i));
+			BaseDemo.setName(RandomUtils.getUUID());
+			list.add(BaseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(20, count);
 	}
 
 	@Test
@@ -150,7 +159,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (int i = 0; i < 20; i++) {
 			ids.add(String.valueOf(i));
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(20, count);
 
 		List<BaseDemo> list = demoService.findList(new BaseDemo());
 		Assert.assertSame(0, list.size());
@@ -160,70 +170,71 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 	public void test12BatchInsert() {
 		List<BaseDemo> list = Lists.newArrayList();
 		for (int i = 0; i < 100; i++) {
-			BaseDemo baseDemo = new BaseDemo();
-			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName("name" + (i % 3));
-			baseDemo.setAge(20 + (i % 4));
-			list.add(baseDemo);
+			BaseDemo BaseDemo = new BaseDemo();
+			BaseDemo.setId(String.valueOf(i));
+			BaseDemo.setName("name" + (i % 3));
+			BaseDemo.setAge(20 + (i % 4));
+			list.add(BaseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
 	public void test13FindList() {
 		List<BaseDemo> list = null;
-		BaseDemo baseDemo = null;
+		BaseDemo BaseDemo = null;
 
 		// 1
-		baseDemo = new BaseDemo();
-		baseDemo.setName("name0");
-		list = demoService.findList(baseDemo);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setName("name0");
+		list = demoService.findList(BaseDemo);
 		Assert.assertSame(34, list.size());
 
 		//
-		baseDemo = new BaseDemo();
-		baseDemo.setName("name1");
-		list = demoService.findList(baseDemo);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setName("name1");
+		list = demoService.findList(BaseDemo);
 		Assert.assertSame(33, list.size());
 
 		//
-		baseDemo = new BaseDemo();
-		baseDemo.setAge(20);
-		list = demoService.findList(baseDemo);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setAge(20);
+		list = demoService.findList(BaseDemo);
 		Assert.assertSame(25, list.size());
 
 		// 3*4*8=96
-		baseDemo = new BaseDemo();
-		baseDemo.setName("name0");
-		baseDemo.setAge(20);
-		list = demoService.findList(baseDemo);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setName("name0");
+		BaseDemo.setAge(20);
+		list = demoService.findList(BaseDemo);
 		Assert.assertSame(9, list.size());
 
-		baseDemo = new BaseDemo();
-		baseDemo.setName("name2");
-		baseDemo.setAge(23);
-		list = demoService.findList(baseDemo);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setName("name2");
+		BaseDemo.setAge(23);
+		list = demoService.findList(BaseDemo);
 		Assert.assertSame(8, list.size());
 
 		// order
-		baseDemo = new BaseDemo();
-		baseDemo.setName("name0");
-		baseDemo.setAge(20);
+		BaseDemo = new BaseDemo();
+		BaseDemo.setName("name0");
+		BaseDemo.setAge(20);
 
 		// order by str array
 		// 1
-		list = demoService.findList(baseDemo, "name desc,id asc");
+		list = demoService.findList(BaseDemo, "name desc,id asc");
 		Assert.assertSame(9, list.size());
 		// 2
-		list = demoService.findList(baseDemo, "name desc", "id asc");
+		list = demoService.findList(BaseDemo, "name desc", "id asc");
 		Assert.assertSame(9, list.size());
 
 		// order by Ojbect array
 		// 1
-		list = demoService.findList(baseDemo, new Order("salary", Direction.DESC), new Order("sex"));
+		list = demoService.findList(BaseDemo, new Order("salary", Direction.DESC), new Order("sex"));
 		Assert.assertSame(9, list.size());
 		// 2
-		list = demoService.findList(baseDemo, new Order("salary", Direction.DESC));
+		list = demoService.findList(BaseDemo, new Order("salary", Direction.DESC));
 		Assert.assertSame(9, list.size());
 
 		// order by Object list
@@ -231,24 +242,25 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		List<Order> list1 = Lists.newArrayList();
 		list1.add(new Order("birth_day", Direction.DESC));
 		list1.add(new Order("age"));
-		list = demoService.findList(baseDemo, list1);
+		list = demoService.findList(BaseDemo, list1);
 		Assert.assertSame(9, list.size());
 		// 2
 		List<Order> list2 = Lists.newArrayList();
 		list2.add(new Order("birth_day", Direction.DESC));
-		list = demoService.findList(baseDemo, list2);
+		list = demoService.findList(BaseDemo, list2);
 		Assert.assertSame(9, list.size());
 	}
 
 	@Test
 	public void test14Clear() {
-		BaseDemo baseDemo = new BaseDemo();
-		List<BaseDemo> list = demoService.findList(baseDemo);
+		BaseDemo BaseDemo = new BaseDemo();
+		List<BaseDemo> list = demoService.findList(BaseDemo);
 		List<String> ids = Lists.newArrayList();
 		for (BaseDemo demo : list) {
 			ids.add(demo.getId());
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
@@ -257,58 +269,59 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		boolean b = false;
 		for (int i = 0; i < 100; i++) {
 			b = !b;
-			BaseDemo baseDemo = new BaseDemo();
-			baseDemo.setId(String.valueOf(i));
-			baseDemo.setName(b ? "jack" : "tony");
-			baseDemo.setAge(20 + (i % 3));
-			list.add(baseDemo);
+			BaseDemo BaseDemo = new BaseDemo();
+			BaseDemo.setId(String.valueOf(i));
+			BaseDemo.setName(b ? "jack" : "tony");
+			BaseDemo.setAge(20 + (i % 3));
+			list.add(BaseDemo);
 		}
-		demoService.batchInsert(list);
+		Integer count = demoService.batchInsert(list);
+		Assert.assertSame(100, count);
 	}
 
 	@Test
 	public void test16FindPage() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setName("jack");
-		baseDemo.setAge(20);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setName("jack");
+		BaseDemo.setAge(20);
 
 		// total = 6 * 16 = 96
-		Page page = demoService.findPage(baseDemo, new Pagination(3, 5));
+		Page page = demoService.findPage(BaseDemo, new Pagination(3, 5));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
-		page = demoService.findPage(baseDemo, new Pagination(4, 5));
+		page = demoService.findPage(BaseDemo, new Pagination(4, 5));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(2, page.getDataList().size());
 
 		// order
 
 		// no order
-		page = demoService.findPage(baseDemo, 3, 5);
+		page = demoService.findPage(BaseDemo, 3, 5);
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
 		// order by str array
 		// 1
-		page = demoService.findPage(baseDemo, 3, 5, "name desc,id asc");
+		page = demoService.findPage(BaseDemo, 3, 5, "name desc,id asc");
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 		// 2
-		page = demoService.findPage(baseDemo, 3, 5, "name desc", "id asc");
+		page = demoService.findPage(BaseDemo, 3, 5, "name desc", "id asc");
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 		// 3
-		page = demoService.findPage(baseDemo, new Pagination(3, 5, "name desc"));
+		page = demoService.findPage(BaseDemo, new Pagination(3, 5, "name desc"));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
 		// order by Ojbect array
 		// 1
-		page = demoService.findPage(baseDemo, 3, 5, new Order("salary", Direction.DESC), new Order("sex"));
+		page = demoService.findPage(BaseDemo, 3, 5, new Order("salary", Direction.DESC), new Order("sex"));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 		// 2
-		page = demoService.findPage(baseDemo, new Pagination(3, 5, new Order("salary", Direction.DESC)));
+		page = demoService.findPage(BaseDemo, new Pagination(3, 5, new Order("salary", Direction.DESC)));
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 
@@ -317,24 +330,24 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		List<Order> list1 = Lists.newArrayList();
 		list1.add(new Order("birth_day", Direction.DESC));
 		list1.add(new Order("age"));
-		page = demoService.findPage(baseDemo, 3, 5, list1);
+		page = demoService.findPage(BaseDemo, 3, 5, list1);
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 		// 2
 		List<Order> list2 = Lists.newArrayList();
 		list2.add(new Order("birth_day", Direction.DESC));
-		page = demoService.findPage(baseDemo, 3, 5, list2);
+		page = demoService.findPage(BaseDemo, 3, 5, list2);
 		Assert.assertSame(17, page.getCount());
 		Assert.assertSame(5, page.getDataList().size());
 	}
 
 	@Test
 	public void test17GetTotal() {
-		BaseDemo baseDemo = new BaseDemo();
-		baseDemo.setName("jack");
-		baseDemo.setAge(20);
+		BaseDemo BaseDemo = new BaseDemo();
+		BaseDemo.setName("jack");
+		BaseDemo.setAge(20);
 
-		Integer count = demoService.getTotal(baseDemo);
+		Integer count = demoService.getTotal(BaseDemo);
 		Assert.assertSame(17, count);
 
 	}
@@ -347,7 +360,8 @@ public class BaseDemoServiceTest extends AbstractContextServiceTest {
 		for (BaseDemo demo : list) {
 			ids.add(demo.getId());
 		}
-		demoService.deleteByIds(ids);
+		Integer count = demoService.deleteByIds(ids);
+		Assert.assertSame(100, count);
 	}
 
 }
