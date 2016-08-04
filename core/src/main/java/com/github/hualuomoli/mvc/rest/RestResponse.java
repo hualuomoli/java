@@ -172,7 +172,7 @@ public abstract class RestResponse {
 
 	// 配置信息
 	static class Config {
-		private String successs;
+		private Integer successs;
 		private String codeName;
 		private String msgName;
 		private String objectName;
@@ -182,7 +182,7 @@ public abstract class RestResponse {
 		private String pageSizeName;
 		private String pageDataName;
 
-		public Config(String successs, String codeName, String msgName, String objectName, String listName, String pageTotalName, String pageNumberName,
+		public Config(Integer successs, String codeName, String msgName, String objectName, String listName, String pageTotalName, String pageNumberName,
 				String pageSizeName, String pageDataName) {
 			this.successs = successs;
 			this.codeName = codeName;
@@ -199,10 +199,10 @@ public abstract class RestResponse {
 
 	// 错误信息
 	public static class ErrorData {
-		private String code;
+		private Integer code;
 		private String msg;
 
-		public ErrorData(String code, String msg) {
+		public ErrorData(Integer code, String msg) {
 			this.code = code;
 			this.msg = msg;
 		}

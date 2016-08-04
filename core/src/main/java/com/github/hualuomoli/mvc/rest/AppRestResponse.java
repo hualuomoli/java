@@ -14,7 +14,7 @@ import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
  */
 public abstract class AppRestResponse {
 
-	private static Config config = new RestResponse.Config("0", "code", "msg", "data", "datas", "total", "pageNumber", "pageSize", "dataList");
+	private static Config config = new RestResponse.Config(0, "code", "msg", "data", "datas", "total", "pageNumber", "pageSize", "dataList");
 
 	private static RestResponse rest = new RestResponse() {
 
