@@ -236,7 +236,8 @@
 						<!-- 忽略demo目录 -->
 						<exclude>com/github/hualuomoli/demo/**</exclude>
 						<exclude>demo/**</exclude>
-						<exclude>mappers/demo/**</exclude>
+						<exclude>mappers/com/github/hualuomoli/demo/**</exclude>
+						<exclude>mapper/demo/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
