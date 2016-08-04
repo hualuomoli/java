@@ -10,6 +10,7 @@ public enum Status {
 	NOMAL(1), // 正常
 	DELETED(2), // 已删除
 	DISABLE(3), // 禁用
+	ABANDON(4), // 废弃
 	;
 
 	private Integer value;
