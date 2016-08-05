@@ -67,7 +67,7 @@ public class ServicePersistentAspect {
 
 		if (logger.isDebugEnabled()) {
 			if (ret != null) {
-				logger.debug("return value {}", JsonUtils.getInstance().toJson(ret));
+				logger.debug("return value {}", JsonUtils.toJson(ret));
 			}
 			logger.debug("arounded...");
 		}

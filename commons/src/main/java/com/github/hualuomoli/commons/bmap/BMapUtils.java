@@ -35,7 +35,7 @@ public class BMapUtils {
 		dataMap.put("city", param.getCity());
 
 		String output = HttpURLUtils.get(URL, dataMap);
-		return JsonUtils.getInstance().parseObject(output, EncodeResult.class);
+		return JsonUtils.parseObject(output, EncodeResult.class);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class BMapUtils {
 		dataMap.put("coordtype", param.getCoordtype().getType());
 
 		String output = HttpURLUtils.get(URL, dataMap);
-		return JsonUtils.getInstance().parseObject(output, DecodeResult.class);
+		return JsonUtils.parseObject(output, DecodeResult.class);
 	}
 
 }

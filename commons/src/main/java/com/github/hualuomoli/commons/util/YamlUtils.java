@@ -296,7 +296,7 @@ public class YamlUtils {
 		 * @return module
 		 */
 		private <T> T _parseMap2Object(Map<String, Object> tempMap, Class<T> cls) {
-			return JsonUtils.getInstance().parseObject(JsonUtils.getInstance().toJson(tempMap), cls);
+			return JsonUtils.parseObject(JsonUtils.toJson(tempMap), cls);
 		}
 
 		/**
@@ -306,7 +306,7 @@ public class YamlUtils {
 		* @return module
 		*/
 		private <T> List<T> _parseMap2List(List<Map<String, Object>> tempList, Class<T> cls) {
-			return JsonUtils.getInstance().parseList(JsonUtils.getInstance().toJson(tempList), cls);
+			return JsonUtils.parseList(JsonUtils.toJson(tempList), cls);
 		}
 
 	}

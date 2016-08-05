@@ -5,7 +5,6 @@ import java.util.List;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.mvc.rest.RestResponse.Config;
 import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
-import com.github.hualuomoli.util.JackJsonUtils;
 
 /**
  * APP的REST风格返回
@@ -31,7 +30,6 @@ public abstract class AppRestResponse {
 						}
 
 					};
-					rest.setParser(JackJsonUtils.getInstance());
 				}
 			}
 		}

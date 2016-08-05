@@ -123,7 +123,7 @@ public class ExceptionConfig {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("code", codeError.getCode());
 		map.put("msg", codeError.getMessage());
-		String data = JsonUtils.getInstance().toJson(map);
+		String data = JsonUtils.toJson(map);
 		// 输出
 		try {
 			response.getOutputStream().write(data.getBytes());
@@ -142,7 +142,7 @@ public class ExceptionConfig {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("code", code);
 		map.put("msg", message);
-		String data = JsonUtils.getInstance().toJson(map);
+		String data = JsonUtils.toJson(map);
 		// 输出
 		try {
 			response.getOutputStream().write(data.getBytes());

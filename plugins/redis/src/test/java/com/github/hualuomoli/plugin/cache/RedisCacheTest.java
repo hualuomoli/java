@@ -119,7 +119,7 @@ public class RedisCacheTest {
 		success = cache.set(key, map);
 		Assert.assertTrue(success);
 		HashMap<String, String> _map = cache.getSerializable(key);
-		Assert.assertTrue(StringUtils.equals(JsonUtils.getInstance().toJson(map), JsonUtils.getInstance().toJson(_map)));
+		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(map), JsonUtils.toJson(_map)));
 
 		// list
 		ArrayList<String> list = Lists.newArrayList();
@@ -130,14 +130,14 @@ public class RedisCacheTest {
 		success = cache.set(key, list);
 		Assert.assertTrue(success);
 		ArrayList<String> _list = cache.getSerializable(key);
-		Assert.assertTrue(StringUtils.equals(JsonUtils.getInstance().toJson(list), JsonUtils.getInstance().toJson(_list)));
+		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(list), JsonUtils.toJson(_list)));
 		//
 		// Serializable Object
 		User user = new User("hualuomoli", "花落莫离", "山东省青岛市");
 		success = cache.set(key, user);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
-		Assert.assertTrue(StringUtils.equals(JsonUtils.getInstance().toJson(user), JsonUtils.getInstance().toJson(_user)));
+		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
 	}
 
 	@Test
@@ -149,7 +149,7 @@ public class RedisCacheTest {
 		success = cache.set(key, user, expire);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
-		Assert.assertTrue(StringUtils.equals(JsonUtils.getInstance().toJson(user), JsonUtils.getInstance().toJson(_user)));
+		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
 
 		Thread.sleep(expire * 1000);
 		User __user = cache.getSerializable(key);
@@ -171,7 +171,7 @@ public class RedisCacheTest {
 		boolean success = cache.set(key, user);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
-		Assert.assertTrue(StringUtils.equals(JsonUtils.getInstance().toJson(user), JsonUtils.getInstance().toJson(_user)));
+		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
 	}
 
 	@Test

@@ -36,7 +36,7 @@ public class ActiveMqMessageSender implements MessageSender {
 	@Override
 	public void send(String destinationName, final Serializable data) throws MessageException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("send data {}" + JsonUtils.getInstance().toJson(data));
+			logger.debug("send data {}" + JsonUtils.toJson(data));
 		}
 
 		if (!success()) {

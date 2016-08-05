@@ -22,7 +22,7 @@ public class BMapUtilsTest {
 		param.setAddress("四季景园");
 		param.setCity("青岛市");
 		EncodeResult result = BMapUtils.encodeLocation(param);
-		logger.debug("location {}", JsonUtils.getInstance().toJson(result));
+		logger.debug("location {}", JsonUtils.toJson(result));
 
 	}
 
@@ -34,7 +34,7 @@ public class BMapUtilsTest {
 		param.setPois(Pois.show);
 
 		DecodeResult result = BMapUtils.decodeLocation(param);
-		logger.debug("location {}", JsonUtils.getInstance().toJson(result));
+		logger.debug("location {}", JsonUtils.toJson(result));
 	}
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.github.hualuomoli.commons.constant.Charset;
-import com.github.hualuomoli.commons.jackjson.JackJsonMapper;
 
 /**
  * 消息转换
@@ -40,7 +39,7 @@ public class ConvertConfig extends WebMvcConfigurerAdapter {
 	public MappingJackson2HttpMessageConverter jsonConvert() {
 
 		MappingJackson2HttpMessageConverter convert = new MappingJackson2HttpMessageConverter();
-		convert.setObjectMapper(new JackJsonMapper());
+		// convert.setObjectMapper(new JackJsonMapper());
 		convert.setPrettyPrint(true);
 
 		return convert;
