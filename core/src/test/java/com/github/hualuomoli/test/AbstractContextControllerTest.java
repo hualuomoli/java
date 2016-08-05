@@ -119,7 +119,7 @@ public class AbstractContextControllerTest {
 			@Override
 			public void match(MvcResult result) throws Exception {
 				String content = result.getResponse().getContentAsString();
-				Map<String, Object> map = JsonUtils.parseObject(content, Map.class);
+				Map<String, Object> map = JsonUtils.getInstance().parseObject(content, Map.class);
 				Assert.assertEquals("success", "0", String.valueOf(map.get("code")));
 			}
 		};

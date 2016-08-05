@@ -67,7 +67,7 @@ public class ServicePersistentAspect {
 
 		if (logger.isDebugEnabled()) {
 			if (ret != null) {
-				logger.debug("return value {}", JsonUtils.toJson(ret));
+				logger.debug("return value {}", JsonUtils.getInstance().toJson(ret));
 			}
 			logger.debug("arounded...");
 		}
@@ -141,7 +141,7 @@ public class ServicePersistentAspect {
 		String username = loginUserService.getUsername();
 		Date currentDate = loginUserService.getCurrentDate();
 
-		persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getString() : persistent.getId());
+		persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getUUID() : persistent.getId());
 		persistent.setCreateBy(username);
 		persistent.setCreateDate(currentDate);
 		persistent.setUpdateBy(username);
@@ -209,7 +209,7 @@ public class ServicePersistentAspect {
 		Date currentDate = loginUserService.getCurrentDate();
 
 		for (Persistent persistent : persistents) {
-			persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getString() : persistent.getId());
+			persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getUUID() : persistent.getId());
 			persistent.setCreateBy(username);
 			persistent.setCreateDate(currentDate);
 			persistent.setUpdateBy(username);

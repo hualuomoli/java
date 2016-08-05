@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.commons.util.JsonUtils;
+import com.github.hualuomoli.commons.parser.JSONParser;
 import com.github.hualuomoli.commons.util.ServletUtils;
 import com.google.common.collect.Maps;
 
@@ -27,6 +27,12 @@ import com.google.common.collect.Maps;
  *
  */
 public abstract class RestResponse {
+
+	private JSONParser parser;
+
+	public void setParser(JSONParser parser) {
+		this.parser = parser;
+	}
 
 	// 获取配置信息
 	public abstract Config getConfig();
@@ -170,7 +176,7 @@ public abstract class RestResponse {
 
 	// 转换成json输出
 	protected String toJson(Object obj) {
-		return JsonUtils.toJson(obj);
+		return parser.toJson(obj);
 	}
 
 	// 是否强制转换
