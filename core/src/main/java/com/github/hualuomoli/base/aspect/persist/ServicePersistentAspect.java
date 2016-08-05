@@ -142,6 +142,7 @@ public class ServicePersistentAspect {
 		Date currentDate = loginUserService.getCurrentDate();
 
 		persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getUUID() : persistent.getId());
+		persistent.setVersion(1);
 		persistent.setCreateBy(username);
 		persistent.setCreateDate(currentDate);
 		persistent.setUpdateBy(username);

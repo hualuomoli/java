@@ -16,6 +16,9 @@ public interface Persistent {
 	// 主键
 	void setId(String id);
 
+	// 设置版本号
+	void setVersion(Integer version);
+
 	// 创建人
 	void setCreateBy(String createBy);
 
