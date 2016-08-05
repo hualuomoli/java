@@ -150,7 +150,7 @@ public abstract class JavaParser extends AbstractParser {
 		// 当前资源下的请求
 		Map<ActionType, Action> actions = resource.getActions();
 		for (Action action : actions.values()) {
-			JavaTool tool = new JavaTool(this, action, action.getResource().getRelativeUri());
+			JavaTool tool = new JavaTool(this, action, "");
 			List<RamlMethod> list = tool.parse();
 			ramlMethodList.addAll(list);
 		}
