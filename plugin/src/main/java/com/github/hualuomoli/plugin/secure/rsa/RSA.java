@@ -12,6 +12,7 @@ import java.security.SignatureException;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ public abstract class RSA implements Signature, Encryption {
 		if (array == null) {
 			return null;
 		}
-		return Base64Utils.encodeBase64String(array);
+		return encodeToString(array);
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public abstract class RSA implements Signature, Encryption {
 
 	// 验签
 	public boolean valid(String origin, String sign) {
-		return this.valid(origin.getBytes(this.charset), Base64Utils.decodeBase64(sign));
+		return this.valid(origin.getBytes(this.charset), decode(sign));
 	}
 
 	@Override
@@ -214,6 +215,16 @@ public abstract class RSA implements Signature, Encryption {
 		out.close();
 
 		return output;
+	}
+
+	/** 编码 */
+	public static String encodeToString(byte[] binaryData) {
+		return new Base64().encodeToString(binaryData);
+	}
+
+	/** 解码 */
+	public static byte[] decode(String base64String) {
+		return new Base64().decode(base64String);
 	}
 
 }

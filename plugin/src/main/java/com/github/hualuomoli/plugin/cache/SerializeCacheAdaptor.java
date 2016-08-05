@@ -108,7 +108,7 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 		return true;
 	}
 
-	// 设置数据,使用默认值
+	@Override
 	public boolean set(String key, byte[] data) {
 		return this.set(key, data, this.getDefaultExpire());
 	}
@@ -124,18 +124,18 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 		return false;
 	}
 
-	// 设置序列化数据,使用默认值
-	public boolean set(String key, Serializable serializable) {
-		return this.set(key, serializable, this.getDefaultExpire());
+	@Override
+	public boolean setSerializable(String key, Serializable serializable) {
+		return this.setSerializable(key, serializable, this.getDefaultExpire());
 	}
 
 	@Override
-	public boolean set(String key, Serializable serializable, int expire) {
+	public boolean setSerializable(String key, Serializable serializable, int expire) {
 		if (this.validCache() //
 				&& this.validExpire(expire) //
 				&& this.validKey(key) //
 				&& this.validData(serializable)) {
-			return this.setValue(this.prefix + key, serializable, expire);
+			return this.setSerializableValue(this.prefix + key, serializable, expire);
 		}
 		return false;
 	}
@@ -167,9 +167,9 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 
 	@Override
 	public <T extends Serializable> T getSerializableAndRefresh(String key) {
-		T t = this.getSerializableAndRefresh(key);
+		T t = this.getSerializable(key);
 		if (t != null) {
-			this.set(key, t);
+			this.setSerializableValue(key, t, this.getDefaultExpire());
 		}
 		return t;
 	}
@@ -207,20 +207,10 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 	}
 
 	// 设置值
-	public boolean setValue(String key, byte[] data) {
-		return this.setValue(key, data, this.getDefaultExpire());
-	}
-
-	// 设置值
 	public abstract boolean setValue(String key, byte[] data, int expire);
 
 	// 设置序列化值
-	public boolean setValue(String key, Serializable serializable) {
-		return this.setValue(key, serializable, this.getDefaultExpire());
-	}
-
-	// 设置序列化值
-	public boolean setValue(String key, Serializable serializable, int expire) {
+	public boolean setSerializableValue(String key, Serializable serializable, int expire) {
 		return this.setValue(key, SerializeUtils.serialize(serializable), expire);
 	}
 

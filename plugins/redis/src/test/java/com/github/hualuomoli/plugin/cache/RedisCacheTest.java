@@ -89,25 +89,25 @@ public class RedisCacheTest {
 		boolean success = false;
 		// string
 		String str = "this is cache message,这是一段缓存信息";
-		success = cache.set(key, str);
+		success = cache.setSerializable(key, str);
 		Assert.assertTrue(success);
 		String _str = cache.getSerializable(key);
 		Assert.assertEquals(str, _str);
 		// Integer
 		Integer i = (int) (Math.random() * 1000);
-		success = cache.set(key, i);
+		success = cache.setSerializable(key, i);
 		Assert.assertTrue(success);
 		Integer _i = cache.getSerializable(key);
 		Assert.assertEquals(i, _i);
 		// Long
 		Long l = (long) (Math.random() * 100000000000L);
-		success = cache.set(key, l);
+		success = cache.setSerializable(key, l);
 		Assert.assertTrue(success);
 		Long _l = cache.getSerializable(key);
 		Assert.assertEquals(l, _l);
 		// Double
 		Double d = Math.random();
-		success = cache.set(key, d);
+		success = cache.setSerializable(key, d);
 		Assert.assertTrue(success);
 		Double _d = cache.getSerializable(key);
 		Assert.assertEquals(d, _d);
@@ -116,7 +116,7 @@ public class RedisCacheTest {
 		HashMap<String, String> map = Maps.newHashMap();
 		map.put("username", "hualuomoli");
 		map.put("nickname", "花落莫离");
-		success = cache.set(key, map);
+		success = cache.setSerializable(key, map);
 		Assert.assertTrue(success);
 		HashMap<String, String> _map = cache.getSerializable(key);
 		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(map), JsonUtils.toJson(_map)));
@@ -127,14 +127,14 @@ public class RedisCacheTest {
 		list.add("java");
 		list.add("php");
 		list.add(".net");
-		success = cache.set(key, list);
+		success = cache.setSerializable(key, list);
 		Assert.assertTrue(success);
 		ArrayList<String> _list = cache.getSerializable(key);
 		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(list), JsonUtils.toJson(_list)));
 		//
 		// Serializable Object
 		User user = new User("hualuomoli", "花落莫离", "山东省青岛市");
-		success = cache.set(key, user);
+		success = cache.setSerializable(key, user);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
 		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
@@ -146,7 +146,7 @@ public class RedisCacheTest {
 
 		boolean success = false;
 		User user = new User("hualuomoli", "花落莫离", "山东省青岛市");
-		success = cache.set(key, user, expire);
+		success = cache.setSerializable(key, user, expire);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
 		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
@@ -159,7 +159,7 @@ public class RedisCacheTest {
 	@Test
 	public void test08Get() {
 		String value = "this is cache message,这是一段缓存信息";
-		boolean success = cache.set(key, value);
+		boolean success = cache.setSerializable(key, value);
 		Assert.assertTrue(success);
 		String _value = cache.getSerializable(key);
 		Assert.assertEquals(value, _value);
@@ -168,7 +168,7 @@ public class RedisCacheTest {
 	@Test
 	public void test09GetSerializable() throws InterruptedException {
 		User user = new User("hualuomoli", "花落莫离", "山东省青岛市");
-		boolean success = cache.set(key, user);
+		boolean success = cache.setSerializable(key, user);
 		Assert.assertTrue(success);
 		User _user = cache.getSerializable(key);
 		Assert.assertTrue(StringUtils.equals(JsonUtils.toJson(user), JsonUtils.toJson(_user)));
@@ -178,7 +178,7 @@ public class RedisCacheTest {
 	public void test10Remove() {
 		String value = "this is cache message,这是一段缓存信息";
 		boolean success = false;
-		success = cache.set(key, value);
+		success = cache.setSerializable(key, value);
 		Assert.assertTrue(success);
 		success = cache.remove(key);
 		Assert.assertTrue(success);
@@ -190,7 +190,7 @@ public class RedisCacheTest {
 	public void test11Exists() {
 		String value = "this is cache message,这是一段缓存信息";
 		boolean success = false;
-		success = cache.set(key, value);
+		success = cache.setSerializable(key, value);
 		Assert.assertTrue(success);
 		success = cache.exists(key);
 		Assert.assertTrue(success);

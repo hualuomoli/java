@@ -14,6 +14,14 @@ public interface Cache {
 	 * 设置值
 	 * @param key key
 	 * @param data 值
+	 * @return 是否设置成功
+	 */
+	boolean set(String key, byte[] data);
+
+	/**
+	 * 设置值
+	 * @param key key
+	 * @param data 值
 	 * @param expire 有效时长,单位为秒
 	 * @return 是否设置成功
 	 */

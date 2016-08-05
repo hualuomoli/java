@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.constant.Charset;
+import com.github.hualuomoli.commons.util.Base64Utils;
 import com.github.hualuomoli.commons.util.ResourceUtils;
 
 public class RSATest {
@@ -24,20 +25,30 @@ public class RSATest {
 	private static final Logger logger = LoggerFactory.getLogger(RSA.class);
 
 	private static RSA rsa = null;
+	private static String password = null;
 	private static String origin = null;
 	private static String content = null;
 
 	@BeforeClass
 	public static void beforeClass() throws NoSuchAlgorithmException, IOException {
 		rsa = new RSAAdaptor();
+		password = "shandong2016";
 		origin = "这是一段没有用的代码,你现在正在看，不觉得浪费你的时间吗？";
 		content = ResourceUtils.getResourceContent("content.txt", Charset.UTF8);
 	}
 
 	@Test
+	public void testSignPassword() {
+		String sign = rsa.sign(password);
+		logger.debug("password {}", sign);
+		boolean success = rsa.valid(password, sign);
+		Assert.assertTrue(success);
+	}
+
+	@Test
 	public void testSign() {
 		String sign = rsa.sign(origin);
-		logger.debug(sign);
+		logger.debug("sign {}", sign);
 		boolean success = rsa.valid(origin, sign);
 		Assert.assertTrue(success);
 	}
@@ -45,7 +56,7 @@ public class RSATest {
 	@Test
 	public void testSignLongContent() {
 		String sign = rsa.sign(content);
-		logger.debug(sign);
+		logger.debug("sign {}", sign);
 		boolean success = rsa.valid(content, sign);
 		Assert.assertTrue(success);
 	}
@@ -53,7 +64,7 @@ public class RSATest {
 	@Test
 	public void testEncrypt() {
 		String cipherData = rsa.encrypt(origin);
-		logger.debug(cipherData);
+		logger.debug("cipher {}", cipherData);
 		String check = rsa.decrypt(cipherData);
 		Assert.assertEquals(origin, check);
 	}
@@ -61,7 +72,7 @@ public class RSATest {
 	@Test
 	public void testEncryptLongContent() {
 		String cipherData = rsa.encrypt(content);
-		logger.debug(cipherData);
+		logger.debug("cipher {}", cipherData);
 		String check = rsa.decrypt(cipherData);
 		Assert.assertEquals(content, check);
 	}
@@ -78,6 +89,12 @@ public class RSATest {
 
 			this.publicKey = (RSAPublicKey) keyPair.getPublic();
 			this.privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+			this.publicKey.getEncoded();
+
+			logger.info("public key:  " + Base64Utils.encodeBase64String(this.publicKey.getEncoded()));
+			logger.info("private key:  " + Base64Utils.encodeBase64String(this.privateKey.getEncoded()));
+
 		}
 
 		@Override
