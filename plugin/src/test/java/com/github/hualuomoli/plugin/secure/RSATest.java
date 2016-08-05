@@ -1,4 +1,4 @@
-package com.github.hualuomoli.plugin.secure.rsa;
+package com.github.hualuomoli.plugin.secure;
 
 import java.io.IOException;
 import java.security.Key;

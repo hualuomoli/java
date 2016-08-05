@@ -1,31 +1,24 @@
-package com.github.hualuomoli.plugin.secure.rsa;
+package com.github.hualuomoli.plugin.secure;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.util.Base64Utils;
-import com.github.hualuomoli.plugin.secure.Encryption;
-import com.github.hualuomoli.plugin.secure.Signature;
 
 /**
  * RSA
  * @author hualuomoli
  *
  */
-public abstract class RSA implements Signature, Encryption {
+public abstract class RSA implements Security {
 
 	private static final Logger logger = LoggerFactory.getLogger(RSA.class);
 
@@ -57,14 +50,11 @@ public abstract class RSA implements Signature, Encryption {
 	// 获取公钥
 	protected abstract PublicKey getPublicKey();
 
-	// 签名
-	public String sign(String origin) {
-		byte[] array = this.sign(origin.getBytes(this.charset));
-		if (array == null) {
-			return null;
-		}
-		return encodeToString(array);
-	}
+	// 获取加密的key
+	protected abstract Key getEncryptKey();
+
+	// 获取解密的key
+	protected abstract Key getDecryptKey();
 
 	@Override
 	public byte[] sign(byte[] origin) {
@@ -73,15 +63,7 @@ public abstract class RSA implements Signature, Encryption {
 			signature.initSign(this.getPrivateKey());
 			signature.update(origin);
 			return signature.sign();
-		} catch (NoSuchAlgorithmException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (InvalidKeyException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (SignatureException e) {
+		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
 			}
@@ -89,27 +71,23 @@ public abstract class RSA implements Signature, Encryption {
 		return null;
 	}
 
-	// 验签
-	public boolean valid(String origin, String sign) {
-		return this.valid(origin.getBytes(this.charset), decode(sign));
+	@Override
+	public String sign(String origin) {
+		byte[] array = this.sign(origin.getBytes(this.charset));
+		if (array == null) {
+			return null;
+		}
+		return Base64Utils.encodeBase64String(array);
 	}
 
 	@Override
-	public boolean valid(byte[] origin, byte[] sign) {
+	public boolean valid(byte[] origin, byte[] cipherData) {
 		try {
 			java.security.Signature signature = java.security.Signature.getInstance(this.algorithm);
 			signature.initVerify(this.getPublicKey());
 			signature.update(origin);
-			return signature.verify(sign);
-		} catch (NoSuchAlgorithmException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (InvalidKeyException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (SignatureException e) {
+			return signature.verify(cipherData);
+		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
 			}
@@ -117,13 +95,26 @@ public abstract class RSA implements Signature, Encryption {
 		return false;
 	}
 
-	// 获取加密的key
-	protected abstract Key getEncryptKey();
+	@Override
+	public boolean valid(String origin, String cipherData) {
+		return this.valid(origin.getBytes(this.charset), Base64Utils.decodeBase64(cipherData));
+	}
 
-	// 获取解密的key
-	protected abstract Key getDecryptKey();
+	@Override
+	public byte[] encrypt(byte[] origin) {
+		try {
+			Cipher cipher = Cipher.getInstance(this.transformation);
+			cipher.init(Cipher.ENCRYPT_MODE, this.getEncryptKey());
+			return this.doFinal(cipher, origin, this.inputLen / 8 - 11);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error("{}", e);
+			}
+		}
+		return null;
+	}
 
-	// 加密
+	@Override
 	public String encrypt(String origin) {
 		byte[] array = this.encrypt(origin.getBytes(this.charset));
 		if (array == null) {
@@ -133,23 +124,11 @@ public abstract class RSA implements Signature, Encryption {
 	}
 
 	@Override
-	public byte[] encrypt(byte[] origin) {
+	public byte[] decrypt(byte[] cipherData) {
 		try {
 			Cipher cipher = Cipher.getInstance(this.transformation);
-			cipher.init(Cipher.ENCRYPT_MODE, this.getEncryptKey());
-			return this.doFinal(cipher, origin, this.inputLen / 8 - 11);
-		} catch (NoSuchAlgorithmException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (NoSuchPaddingException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (InvalidKeyException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
+			cipher.init(Cipher.DECRYPT_MODE, this.getDecryptKey());
+			return this.doFinal(cipher, cipherData, this.inputLen / 8);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
@@ -158,39 +137,13 @@ public abstract class RSA implements Signature, Encryption {
 		return null;
 	}
 
-	// 解密
+	@Override
 	public String decrypt(String cipherData) {
 		byte[] array = this.decrypt(Base64Utils.decodeBase64(cipherData));
 		if (array == null) {
 			return null;
 		}
 		return new String(array, this.charset);
-	}
-
-	@Override
-	public byte[] decrypt(byte[] cipherData) {
-		try {
-			Cipher cipher = Cipher.getInstance(this.transformation);
-			cipher.init(Cipher.DECRYPT_MODE, this.getDecryptKey());
-			return this.doFinal(cipher, cipherData, this.inputLen / 8);
-		} catch (NoSuchAlgorithmException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (NoSuchPaddingException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (InvalidKeyException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("{}", e);
-			}
-		}
-		return null;
 	}
 
 	/** 执行加解密 */
@@ -215,16 +168,6 @@ public abstract class RSA implements Signature, Encryption {
 		out.close();
 
 		return output;
-	}
-
-	/** 编码 */
-	public static String encodeToString(byte[] binaryData) {
-		return new Base64().encodeToString(binaryData);
-	}
-
-	/** 解码 */
-	public static byte[] decode(String base64String) {
-		return new Base64().decode(base64String);
 	}
 
 }
