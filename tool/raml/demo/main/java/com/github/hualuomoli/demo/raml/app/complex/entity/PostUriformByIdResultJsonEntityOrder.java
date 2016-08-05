@@ -13,10 +13,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class PostUriformByIdResultJsonEntityOrder {
   
   private String id;
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @JSONField(format = "yyyy-MM-dd")
   private Date date;
   private java.util.List<PostUriformByIdResultJsonEntityProduct> products;
   

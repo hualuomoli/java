@@ -561,7 +561,7 @@ public abstract class JavaParser extends AbstractParser {
 				throw new RuntimeException("can not set date parameter repeat.");
 			} else {
 				ramlJsonParam.setType("Date");
-				String annos = new JsonValid(jsonObject, "", false, false)._getDateFormatPattern();
+				String annos = getResponseDateFormatPattern(jsonObject);
 				ramlJsonParam.setAnnos(Lists.newArrayList(annos));
 			}
 			break;
@@ -571,6 +571,41 @@ public abstract class JavaParser extends AbstractParser {
 		ramlJsonParam.setComment(description);
 		return ramlJsonParam;
 
+	}
+
+	// 日期格式化
+	// @JSONField(format = "")
+	private static String getResponseDateFormatPattern(JSONObject jsonObject) {
+		String example = null;
+		if (jsonObject.has(Schema.EXAMPLE)) {
+			example = String.valueOf(jsonObject.get(Schema.EXAMPLE));
+		} else {
+			throw new RuntimeException("please set example for date.");
+		}
+
+		if (StringUtils.isBlank(example)) {
+			throw new RuntimeException("please set example first.");
+		}
+
+		String pattern;
+		if (example.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+			pattern = "yyyy-MM-dd kk:mm:ss";
+		} else if (example.matches("\\d{4}-\\d{2}-\\d{2}")) {
+			pattern = "yyyy-MM-dd";
+		} else if (example.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+			pattern = "yyyy/MM/dd kk:mm:ss";
+		} else if (example.matches("\\d{4}/\\d{2}/\\d{2}")) {
+			pattern = "yyyy/MM/dd";
+		} else if (example.matches("\\d{14}")) {
+			pattern = "yyyyMMddkkmmss";
+		} else if (example.matches("\\d{8}")) {
+			pattern = "yyyyMMdd";
+		} else if (example.matches("\\d{2}:\\d{2}:\\d{2}")) {
+			pattern = "kkmmss";
+		} else {
+			throw new RuntimeException("can not support patter " + example);
+		}
+		return "@JSONField(format = \"" + pattern + "\")";
 	}
 
 	// 移除array的后缀,如s, es, list
@@ -1873,14 +1908,14 @@ public abstract class JavaParser extends AbstractParser {
 		// 响应内容
 		List<RamlJsonParam> getParams() {
 			if (this.javaTool.javaParser.getConfig().responseTrim) {
-				return this.getTimeParams();
+				return this.getTrimParams();
 			} else {
 				return this.getOriginParams();
 			}
 		}
 
 		// 响应内容,去除公用的信息
-		List<RamlJsonParam> getTimeParams() {
+		List<RamlJsonParam> getTrimParams() {
 			JSONObject jsonObject = new JSONObject(schema);
 
 			Set<String> keys = jsonObject.getJSONObject(Schema.PROPERTIES).keySet();

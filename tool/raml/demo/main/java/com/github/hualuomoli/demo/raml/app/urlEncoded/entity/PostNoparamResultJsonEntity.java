@@ -13,6 +13,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class PostNoparamResultJsonEntity {
   
   
