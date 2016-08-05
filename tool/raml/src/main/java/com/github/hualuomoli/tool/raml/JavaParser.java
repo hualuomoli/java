@@ -191,7 +191,6 @@ public abstract class JavaParser extends AbstractParser {
 		map.put("restResponseClassName", this.getConfig().restResponse.getSimpleName());
 
 		// 参数
-		map.put("prefix", this.getConfig().testUriPrefix);
 		map.put("methods", ramlMethodList);
 		map.put("packageName", filePackageName); // 包名
 		map.put("uri", fullUri);
@@ -1837,6 +1836,8 @@ public abstract class JavaParser extends AbstractParser {
 		public static final int TYPE_OBJECT = 3;
 		public static final int TYPE_ARRAY = 4;
 		public static final int TYPE_PAGE = 5;
+		public static final int TYPE_ORIGIN_OBJECT = 6; // object
+		public static final int TYPE_ORIGIN_ARRAY = 7; // list
 
 		public Integer getType() {
 			return type;
@@ -1871,6 +1872,15 @@ public abstract class JavaParser extends AbstractParser {
 
 		// 响应内容
 		List<RamlJsonParam> getParams() {
+			if (this.javaTool.javaParser.getConfig().responseTrim) {
+				return this.getTimeParams();
+			} else {
+				return this.getOriginParams();
+			}
+		}
+
+		// 响应内容,去除公用的信息
+		List<RamlJsonParam> getTimeParams() {
 			JSONObject jsonObject = new JSONObject(schema);
 
 			Set<String> keys = jsonObject.getJSONObject(Schema.PROPERTIES).keySet();
@@ -1948,7 +1958,30 @@ public abstract class JavaParser extends AbstractParser {
 			// deal
 			className = prefixResponseClassName + StringUtils.capitalize(className);
 			return this._getParams(obj);
+		}
 
+		// 响应内容,去除公用的信息
+		List<RamlJsonParam> getOriginParams() {
+			JSONObject jsonObject = new JSONObject(schema);
+			String type = jsonObject.getString(Schema.TYPE);
+
+			switch (type) {
+			case "array":
+				// array
+				this.type = TYPE_ORIGIN_ARRAY;
+				this.exampleData = new JSONArray(example).toString().replaceAll("\\\"", "\\\\\"");
+				className = prefixResponseClassName;
+				jsonObject = jsonObject.getJSONObject(Schema.ITEMS);
+				return this._getParams(jsonObject);
+			case "object":
+				// object
+				this.type = TYPE_ORIGIN_OBJECT;
+				this.exampleData = new JSONObject(example).toString().replaceAll("\\\"", "\\\\\"");
+				className = prefixResponseClassName;
+				return this._getParams(jsonObject);
+			default:
+				throw new RuntimeException();
+			}
 		}
 
 		// 响应内容,添加数据转换
@@ -2206,9 +2239,9 @@ public abstract class JavaParser extends AbstractParser {
 	}
 
 	public static class Config {
-		private String testUriPrefix = ""; // 测试访问路径前缀
 		private boolean createEntity = true; // 是否生成entity
 		private boolean forece = false; // 是否强制生成(service、mapper、xml)
+		private boolean responseTrim = true; // 去除响应的公用信息
 
 		private String projectPackageName; // 项目包名
 		private String author; // 作者
@@ -2227,16 +2260,16 @@ public abstract class JavaParser extends AbstractParser {
 
 		private Class<?> restResponse; // rest风格的响应类
 
-		public void setTestUriPrefix(String testUriPrefix) {
-			this.testUriPrefix = testUriPrefix;
-		}
-
 		public void setCreateEntity(boolean createEntity) {
 			this.createEntity = createEntity;
 		}
 
 		public void setForece(boolean forece) {
 			this.forece = forece;
+		}
+
+		public void setResponseTrim(boolean responseTrim) {
+			this.responseTrim = responseTrim;
 		}
 
 		public void setProjectPackageName(String projectPackageName) {

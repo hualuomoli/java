@@ -45,4 +45,9 @@ public abstract class AppRestResponse {
 		return rest.getPageData(pageName, pageDataName, page);
 	}
 
+	// 数据转换成json输出
+	public static String getOriginData(Object obj) {
+		return rest.getOriginData(obj);
+	}
+
 }

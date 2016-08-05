@@ -19,10 +19,10 @@ public interface ${mapperJavaName} {
 
 	<#list methods as method>
 	<#if method.response.resJson.type != 2>
-	<#if method.response.resJson.type == 3>
+	<#if method.response.resJson.type == 3 || method.response.resJson.type == 6>
 	<#-- object -->
 	${method.response.className}
-	<#elseif method.response.resJson.type == 4>
+	<#elseif method.response.resJson.type == 4 || method.response.resJson.type == 7>
 	<#-- list -->
 	java.util.List<${method.response.className}>
 	<#elseif method.response.resJson.type == 5>

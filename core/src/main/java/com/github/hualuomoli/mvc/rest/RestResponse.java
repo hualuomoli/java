@@ -41,7 +41,7 @@ public abstract class RestResponse {
 	String getNoData() {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
-		return JsonUtils.toJson(map);
+		return this.toJson(map);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class RestResponse {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, errorData.code);
 		map.put(getConfig().msgName, errorData.msg);
-		return JsonUtils.toJson(map);
+		return this.toJson(map);
 	}
 
 	String getObjectData(String objectName, Object object) {
@@ -83,7 +83,7 @@ public abstract class RestResponse {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 		map.put(objectName, object);
-		return JsonUtils.toJson(map);
+		return this.toJson(map);
 	}
 
 	String getListData(String listName, List<?> list) {
@@ -114,7 +114,7 @@ public abstract class RestResponse {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 		map.put(listName, list);
-		return JsonUtils.toJson(map);
+		return this.toJson(map);
 	}
 
 	String getPageData(String pageName, String pageDataName, Page page) {
@@ -160,7 +160,17 @@ public abstract class RestResponse {
 
 		map.put(pageName, pageMap);
 
-		return JsonUtils.toJson(map);
+		return this.toJson(map);
+	}
+
+	// 数据转换成json输出
+	String getOriginData(Object obj) {
+		return this.toJson(obj);
+	}
+
+	// 转换成json输出
+	protected String toJson(Object obj) {
+		return JsonUtils.toJson(obj);
 	}
 
 	// 是否强制转换

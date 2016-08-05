@@ -29,7 +29,7 @@ import com.github.hualuomoli.mvc.annotation.RequestVersion;
  * @Version ${version}
  */
 @RequestVersion(value = "${version}")
-@RequestMapping(value = "${prefix}${uri}")
+@RequestMapping(value = "${uri}")
 @RestController(value = "${packageName}.${controllerJavaName}")
 public class ${controllerJavaName} {
 	
@@ -93,6 +93,14 @@ public class ${controllerJavaName} {
 		<#-- page -->
 		Page page = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
 		return ${restResponseClassName}.getPageData("${method.response.resJson.pageName}", "${method.response.resJson.resultName}", page);
+		<#elseif method.response.resJson.type == 6>
+		<#-- origin object -->
+		${method.response.className} ${method.response.className?uncap_first} = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getOriginData(${method.response.className?uncap_first});
+		<#elseif method.response.resJson.type == 7>
+		<#-- origin list -->
+		java.util.List<${method.response.className}> list = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
+		return ${restResponseClassName}.getOriginData(list);
 		</#if>
 		
 	}

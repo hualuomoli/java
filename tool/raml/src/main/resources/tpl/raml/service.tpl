@@ -41,10 +41,10 @@ public class ${serviceJavaName} {
 	<#if method.response.resJson.type == 2>
 	<#-- no data -->
 	void
-	<#elseif method.response.resJson.type == 3>
+	<#elseif method.response.resJson.type == 3 || method.response.resJson.type == 6>
 	<#-- object -->
 	${method.response.className}
-	<#elseif method.response.resJson.type == 4>
+	<#elseif method.response.resJson.type == 4 || method.response.resJson.type == 7>
 	<#-- list -->
 	java.util.List<${method.response.className}>
 	<#elseif method.response.resJson.type == 5>
@@ -53,11 +53,11 @@ public class ${serviceJavaName} {
 	</#if>
 	${method.methodName}(${method.request.className} ${method.request.className?uncap_first}) {
 		// TODO
-		<#if method.response.resJson.type == 3>
+		<#if method.response.resJson.type == 3 || method.response.resJson.type == 6>
 		<#-- object -->
 		${method.response.className} obj = JsonUtils.parseObject("${method.response.resJson.exampleData}", ${method.response.className}.class);
 		return obj;
-		<#elseif method.response.resJson.type == 4>
+		<#elseif method.response.resJson.type == 4 || method.response.resJson.type == 7>
 		<#-- list -->
 		java.util.List<${method.response.className}> list = JsonUtils.parseList("${method.response.resJson.exampleData}", ${method.response.className}.class);
 		return list;
