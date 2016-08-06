@@ -150,6 +150,10 @@ public abstract class JavaParser extends AbstractParser {
 		// 当前资源下的请求
 		Map<ActionType, Action> actions = resource.getActions();
 		for (Action action : actions.values()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("parse resource {}", Tool.getResourceFullUri(resource));
+				logger.debug("parse action {}", action.getType().toString());
+			}
 			JavaTool tool = new JavaTool(this, action, "");
 			List<RamlMethod> list = tool.parse();
 			ramlMethodList.addAll(list);
@@ -160,6 +164,10 @@ public abstract class JavaParser extends AbstractParser {
 		for (Resource r : resources) {
 			Map<ActionType, Action> as = r.getActions();
 			for (Action a : as.values()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("parse resource {}", Tool.getResourceFullUri(r));
+					logger.debug("parse action {}", a.getType().toString());
+				}
 				JavaTool tool = new JavaTool(this, a, r.getRelativeUri());
 				List<RamlMethod> list = tool.parse();
 				ramlMethodList.addAll(list);
@@ -775,11 +783,6 @@ public abstract class JavaParser extends AbstractParser {
 			this.javaTool = javaTool;
 			this.action = javaTool.action;
 			this.methodName = javaTool.methodName;
-
-			if (logger.isDebugEnabled()) {
-				logger.debug("resource {}", Tool.getResourceFullUri(action.getResource()));
-				logger.debug("method {}", action.getType().toString().toLowerCase());
-			}
 
 		}
 
