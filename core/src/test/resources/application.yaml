@@ -18,9 +18,16 @@ upload:
   maxSize: 10240000
   encoding: UTF8
 
-static:
-  resources: /static/**,/static/,31556926
-  cachePeriod: 31556926
+resources:
+  - resource:
+  	url: /css/**
+  	location: /css/
+  - resource:
+  	url: /js/**
+  	location: /js/
+  - resource:
+  	url: /images/**
+  	location: /images/
   
 # spring mvc request version
 version:

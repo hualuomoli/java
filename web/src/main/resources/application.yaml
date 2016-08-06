@@ -1,5 +1,3 @@
-bmap:
-  security: vXTj298s3IPbRKdqaAED0AU3aY3rmPyh
 jdbc:
   driverClassName: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost:3306/hualuomoli?useUnicode=true&characterEncoding=utf-8
@@ -20,26 +18,18 @@ upload:
   maxSize: 10240000
   encoding: UTF8
 
-static:
-  resources: /static/**,/static/,31556926
-  cachePeriod: 31556926
+resources:
+  - resource:
+  	url: /css/**
+  	location: /css/
+  - resource:
+  	url: /js/**
+  	location: /js/
+  - resource:
+  	url: /images/**
+  	location: /images/
   
 # spring mvc request version
 version:
   name: content-version
   default: ""
-
-filters:
-  corses:
-    - cors:
-      allowOrigin: file://
-      maxAge: 3600
-      allowCredentials: true
-      allowMethods: PUT,POST,GET,DELETE,OPTIONS
-      allowHeaders: x-requested-with,Content-Type,*
-    - cors:
-      allowOrigin: "null"
-    - cors:
-      allowOrigin: http://localhost:3000
-    - cors:
-      allowOrigin: http://127.0.0.1:3000
