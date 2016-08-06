@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.constant.Charset;
 import com.github.hualuomoli.commons.util.JsonUtils;
+import com.github.hualuomoli.commons.util.YamlUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -29,14 +30,12 @@ public class RedisCacheTest {
 
 	@BeforeClass
 	public static void beforeClass() {
-		String host = YamlRedisConfig.getInstance().getValue("host");
-		String port = YamlRedisConfig.getInstance().getValue("port");
-		String password = YamlRedisConfig.getInstance().getValue("password");
+		Redis redis = YamlUtils.getInstance().getObject("redis", Redis.class);
 		// 连接redis服务器
-		Jedis jedis = new Jedis(host, Integer.parseInt(port));
+		Jedis jedis = new Jedis(redis.host, Integer.parseInt(redis.port));
 		// 权限认证
-		if (StringUtils.isNotBlank(password)) {
-			jedis.auth(password);
+		if (StringUtils.isNotBlank(redis.password)) {
+			jedis.auth(redis.password);
 		}
 		cache = new RedisCache();
 		cache.setPrefix("_redis");
@@ -217,6 +216,40 @@ public class RedisCacheTest {
 	@Test
 	public void test13Empty() {
 		cache.empty();
+	}
+
+	public static final class Redis {
+		private String host;
+		private String port;
+		private String password;
+
+		public Redis() {
+		}
+
+		public String getHost() {
+			return host;
+		}
+
+		public void setHost(String host) {
+			this.host = host;
+		}
+
+		public String getPort() {
+			return port;
+		}
+
+		public void setPort(String port) {
+			this.port = port;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
 	}
 
 }

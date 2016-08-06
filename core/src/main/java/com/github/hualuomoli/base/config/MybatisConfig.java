@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
-import com.github.hualuomoli.base.YamlBaseConfig;
 import com.github.hualuomoli.base.plugin.mybatis.dialect.db.MySQLDialect;
 import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.PaginationInterceptor;
 import com.github.hualuomoli.commons.util.ResourceUtils;
+import com.github.hualuomoli.commons.util.YamlUtils;
 
 /**
  * Mybatis配置
@@ -31,7 +31,7 @@ public class MybatisConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(MybatisConfig.class);
 
-	private String mapperLocations = YamlBaseConfig.getInstance().getValue("mybatis.mapperLocations");
+	private String mapperLocations = YamlUtils.getInstance().getString("mybatis", "mapperLocations");
 
 	@Resource(name = "dataSource")
 	DataSource dataSource;

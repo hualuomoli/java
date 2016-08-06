@@ -2,13 +2,13 @@ package com.github.hualuomoli.commons.bmap;
 
 import java.util.Map;
 
-import com.github.hualuomoli.commons.YamlCommonConfig;
 import com.github.hualuomoli.commons.bmap.decode.DecodeParam;
 import com.github.hualuomoli.commons.bmap.decode.DecodeResult;
 import com.github.hualuomoli.commons.bmap.encode.EncodeParam;
 import com.github.hualuomoli.commons.bmap.encode.EncodeResult;
 import com.github.hualuomoli.commons.util.HttpURLUtils;
 import com.github.hualuomoli.commons.util.JsonUtils;
+import com.github.hualuomoli.commons.util.YamlUtils;
 import com.google.common.collect.Maps;
 
 /**
@@ -20,7 +20,7 @@ public class BMapUtils {
 
 	private static final String URL = "http://api.map.baidu.com/geocoder/v2/";
 	private static final String resultType = "json";
-	private static final String security = YamlCommonConfig.getInstance().getValue(new String[] { "bmap", "security" });
+	private static final String security = YamlUtils.getInstance().getString("bmap", "security");
 
 	/**
 	 * 根据名称获取坐标

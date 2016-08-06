@@ -1,0 +1,15 @@
+# 发送
+sender:
+  username: admin
+  password: admin
+  brokerURL: failover:(tcp://127.0.0.1:61616)
+# 接收
+receiver:
+  username: user
+  password: user
+  brokerURL: failover:(tcp://127.0.0.1:61616)
+# 集群
+colony:
+  username: admin
+  password: admin
+  brokerURL: failover:(tcp://127.0.0.1:61616,tcp://127.0.0.1:61617)  

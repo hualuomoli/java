@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 
-import com.github.hualuomoli.mvc.YamlMvcConfig;
+import com.github.hualuomoli.commons.util.YamlUtils;
 
 /**
  * 根据版本号请求
@@ -16,8 +16,8 @@ public class VersionRequestCondition implements RequestCondition<VersionRequestC
 
 	// 路径中版本的前缀,如v1.0.0.1
 	private static final String VERSION_PATTERN = "^[vV]?(\\d+\\.)*\\d+$";
-	private static final String VERSION_NAME = YamlMvcConfig.getInstance().getValue("version.name"); // version的名称
-	private static final String VERSION_DEFAULT = YamlMvcConfig.getInstance().getValue("version.default"); // 默认版本号
+	private static final String VERSION_NAME = YamlUtils.getInstance().getString("version", "name"); // version的名称
+	private static final String VERSION_DEFAULT = YamlUtils.getInstance().getString("version", "default"); // 默认版本号
 
 	private String version; // 版本
 	private String[] array; // 版本值

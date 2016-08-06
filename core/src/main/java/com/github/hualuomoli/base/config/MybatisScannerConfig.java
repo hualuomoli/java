@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.hualuomoli.base.YamlBaseConfig;
+import com.github.hualuomoli.commons.util.YamlUtils;
 
 /**
  * Mybatis扫描配置,需要与mybatis的其他配置分开
@@ -25,8 +25,8 @@ public class MybatisScannerConfig {
 	public MapperScannerConfigurer loadMapperScannerConfigurer() throws ClassNotFoundException {
 		logger.info("instance mapperScannerConfigurer.");
 
-		String basePackage = YamlBaseConfig.getInstance().getValue("mybatis.basePackage");
-		String annotationClassName = YamlBaseConfig.getInstance().getValue("mybatis.annotationClass");
+		String basePackage = YamlUtils.getInstance().getString("mybatis", "basePackage");
+		String annotationClassName = YamlUtils.getInstance().getString("mybatis", "annotationClass");
 		Class<? extends Annotation> annotationClass = (Class<? extends Annotation>) Class.forName(annotationClassName);
 
 		if (logger.isDebugEnabled()) {

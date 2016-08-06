@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.github.hualuomoli.mvc.YamlMvcConfig;
+import com.github.hualuomoli.commons.util.YamlUtils;
 
 @Configuration
 public class ViewConfig {
@@ -15,8 +15,8 @@ public class ViewConfig {
 	private static final Logger logger = LoggerFactory.getLogger(ViewConfig.class);
 
 	// 视图
-	private String prefix = YamlMvcConfig.getInstance().getValue("view.prefix");
-	private String suffix = YamlMvcConfig.getInstance().getValue("view.suffix");
+	private String prefix = YamlUtils.getInstance().getString("view", "prefix");
+	private String suffix = YamlUtils.getInstance().getString("view", "suffix");
 
 	// 视图
 	@Bean

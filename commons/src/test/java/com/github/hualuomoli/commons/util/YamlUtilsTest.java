@@ -5,28 +5,30 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.hualuomoli.commons.util.YamlConfig.Config;
+
 public class YamlUtilsTest {
 
 	@Test
 	public void testGetValue() {
-		YamlUtils utils = YamlUtils.getInstance("test1.yaml");
+		Config config = YamlConfig.load("test1.yaml");
 		// value
-		String name = utils.getValue("project", "name");
+		String name = config.getString("project", "name");
 		Assert.assertEquals("commons", name);
 	}
 
 	@Test
 	public void testGetConfigValue() {
-		YamlUtils utils = YamlUtils.getInstance("test1.yaml");
+		Config config = YamlConfig.load("test1.yaml");
 		// value
-		String name = utils.getConfig("project").getValue("name");
+		String name = config.getString("project", "name");
 		Assert.assertEquals("commons", name);
 		// object
-		User user = utils.getConfig("project").getObject("user", User.class);
+		User user = config.getObject("user", User.class, "project");
 		Assert.assertEquals("hualuomoli", user.getUsername());
 		Assert.assertEquals("花落莫离", user.getNickname());
 		// list
-		List<Server> serverList = utils.getConfig("project").getList("servers", Server.class);
+		List<Server> serverList = config.getList("servers", Server.class, "project");
 		Assert.assertEquals(2, serverList.size());
 		Assert.assertEquals(1001, serverList.get(0).getPort().intValue());
 		Assert.assertEquals("http://localhost", serverList.get(0).getAddress());
@@ -37,23 +39,23 @@ public class YamlUtilsTest {
 
 	@Test
 	public void testGetFiles() {
-		YamlUtils utils = YamlUtils.getInstance("test1.yaml", "test2.yaml");
+		Config config = YamlConfig.load("test1.yaml", "test2.yaml");
 		// data in test2
-		String location = utils.getConfig("project").getValue("location");
+		String location = config.getString("project", "location");
 		Assert.assertEquals("E:/projects/commons", location);
 
 		// 重写 test1中的值
-		String name = utils.getConfig("project").getValue("name");
+		String name = config.getString("project", "name");
 		Assert.assertEquals("hualuomoli", name);
 
 		// 原 test1中的数据是否存在
 		// object
-		User user = utils.getConfig("project").getObject("user", User.class);
+		User user = config.getObject("user", User.class, "project");
 		Assert.assertEquals("hualuomoli", user.getUsername());
 		Assert.assertEquals("花落莫离", user.getNickname());
 		// list
 		// list
-		List<Server> serverList = utils.getConfig("project").getList("servers", Server.class);
+		List<Server> serverList = config.getList("servers", Server.class, "project");
 		Assert.assertEquals(2, serverList.size());
 		Assert.assertEquals(1001, serverList.get(0).getPort().intValue());
 		Assert.assertEquals("http://localhost", serverList.get(0).getAddress());

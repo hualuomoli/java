@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
+import com.github.hualuomoli.commons.util.YamlUtils;
 import com.github.hualuomoli.plugin.mq.DefaultMessageListener;
 import com.github.hualuomoli.plugin.mq.MessageDealer;
-import com.github.hualuomoli.plugin.mq.YamlActiveMQConfig;
 
 /**
  * 使用Annotation自动注册Bean
@@ -26,30 +26,26 @@ public class TopicDealerConfig {
 	private static final Logger logger = LoggerFactory.getLogger(TopicDealerConfig.class);
 
 	public ActiveMQConnectionFactory connectionFactoryUser1() {
-		String userName = YamlActiveMQConfig.getInstance().getValue("receiver.username");
-		String password = YamlActiveMQConfig.getInstance().getValue("receiver.password");
-		String brokerURL = YamlActiveMQConfig.getInstance().getValue("receiver.brokerURL");
+		Conn conn = YamlUtils.getInstance().getObject("sender", Conn.class);
 		if (logger.isInfoEnabled()) {
-			logger.info("userName {}", userName);
-			logger.info("password {}", password);
-			logger.info("brokerURL {}", brokerURL);
+			logger.info("userName {}", conn.getUserName());
+			logger.info("password {}", conn.getPassword());
+			logger.info("brokerURL {}", conn.getBrokerURL());
 		}
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(userName, password, brokerURL);
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(conn.getUserName(), conn.getPassword(), conn.getBrokerURL());
 		connectionFactory.setClientID("user1");
 
 		return connectionFactory;
 	}
 
 	public ActiveMQConnectionFactory connectionFactoryUser2() {
-		String userName = YamlActiveMQConfig.getInstance().getValue("receiver.username");
-		String password = YamlActiveMQConfig.getInstance().getValue("receiver.password");
-		String brokerURL = YamlActiveMQConfig.getInstance().getValue("receiver.brokerURL");
+		Conn conn = YamlUtils.getInstance().getObject("sender", Conn.class);
 		if (logger.isInfoEnabled()) {
-			logger.info("userName {}", userName);
-			logger.info("password {}", password);
-			logger.info("brokerURL {}", brokerURL);
+			logger.info("userName {}", conn.getUserName());
+			logger.info("password {}", conn.getPassword());
+			logger.info("brokerURL {}", conn.getBrokerURL());
 		}
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(userName, password, brokerURL);
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(conn.getUserName(), conn.getPassword(), conn.getBrokerURL());
 		connectionFactory.setClientID("user2");
 
 		return connectionFactory;

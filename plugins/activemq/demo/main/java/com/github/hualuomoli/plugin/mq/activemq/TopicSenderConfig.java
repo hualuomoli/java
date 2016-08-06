@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
 
+import com.github.hualuomoli.commons.util.YamlUtils;
 import com.github.hualuomoli.plugin.mq.ActiveMqMessageSender;
 import com.github.hualuomoli.plugin.mq.MessageSender;
-import com.github.hualuomoli.plugin.mq.YamlActiveMQConfig;
 
 @Configuration
 public class TopicSenderConfig {
@@ -21,15 +21,13 @@ public class TopicSenderConfig {
 	private static final Logger logger = LoggerFactory.getLogger(TopicSenderConfig.class);
 
 	public ActiveMQConnectionFactory connectionFactory() {
-		String userName = YamlActiveMQConfig.getInstance().getValue("sender.username");
-		String password = YamlActiveMQConfig.getInstance().getValue("sender.password");
-		String brokerURL = YamlActiveMQConfig.getInstance().getValue("sender.brokerURL");
+		Conn conn = YamlUtils.getInstance().getObject("sender", Conn.class);
 		if (logger.isInfoEnabled()) {
-			logger.info("userName {}", userName);
-			logger.info("password {}", password);
-			logger.info("brokerURL {}", brokerURL);
+			logger.info("userName {}", conn.getUserName());
+			logger.info("password {}", conn.getPassword());
+			logger.info("brokerURL {}", conn.getBrokerURL());
 		}
-		return new ActiveMQConnectionFactory(userName, password, brokerURL);
+		return new ActiveMQConnectionFactory(conn.getUserName(), conn.getPassword(), conn.getBrokerURL());
 	}
 
 	public PooledConnectionFactory pooledConnectionFactory() {
