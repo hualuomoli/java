@@ -75,6 +75,32 @@ public class YamlConfig {
 		}
 
 		/**
+		 * 获取 String，键使用点(.)分割
+		 * @param key 键
+		 * @return String
+		 */
+		public String getStringBySeparator(String key) {
+			return this.getStringBySeparator(key, ".");
+		}
+
+		/**
+		 * 获取 String
+		 * @param key 键
+		 * @param separator 分隔符
+		 * @return String
+		 */
+		public String getStringBySeparator(String key, String separator) {
+			String str = null;
+			for (int i = datas.size() - 1; i >= 0; i--) {
+				str = datas.get(i).getStringBySeparator(key, separator);
+				if (str != null) {
+					return str;
+				}
+			}
+			return null;
+		}
+
+		/**
 		 * 获取 String
 		 * @param name 名称
 		 * @param cls 类型
@@ -157,10 +183,20 @@ public class YamlConfig {
 
 		/**
 		 * 获取 String
+		 * @param key 键
+		 * @param separator 分隔符
+		 * @return String
+		 */
+		public String getStringBySeparator(String key, String separator) {
+			return this.getString(StringUtils.split(key, separator));
+		}
+
+		/**
+		 * 获取 String
 		 * @param name 名称
 		 * @param cls 类型
 		 * @param keys 前缀键值
-		 * @return Object
+		 * @return String
 		 */
 		@SuppressWarnings("unchecked")
 		public String getString(String... keys) {
