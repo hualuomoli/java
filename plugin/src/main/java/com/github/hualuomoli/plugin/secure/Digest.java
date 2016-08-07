@@ -97,10 +97,14 @@ public abstract class Digest implements Security {
 
 	@Override
 	public boolean valid(String origin, String signData) {
-		String salt = signData.substring(0, saltNumber * 2);
+		try {
+			String salt = signData.substring(0, saltNumber * 2);
 
-		String data = DigestUtils.digest(origin, algorithm, DigestUtils.decodeHex(salt), iterations);
-		return StringUtils.equals(salt + data, signData);
+			String data = DigestUtils.digest(origin, algorithm, DigestUtils.decodeHex(salt), iterations);
+			return StringUtils.equals(salt + data, signData);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
