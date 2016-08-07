@@ -23,6 +23,9 @@ resources:
     url: /static/**
     location: /static/
   - resource:
+    url: /files/**
+    location: /files/
+  - resource:
     url: /css/**
     location: /css/
   - resource:
