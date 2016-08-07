@@ -1,4 +1,4 @@
-package com.github.hualuomoli.filter;
+package com.github.hualuomoli.mvc.filter;
 
 import java.io.IOException;
 

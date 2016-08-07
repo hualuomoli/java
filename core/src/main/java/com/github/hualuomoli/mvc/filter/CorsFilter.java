@@ -1,10 +1,11 @@
-package com.github.hualuomoli.filter;
+package com.github.hualuomoli.mvc.filter;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,9 @@ public class CorsFilter extends MvcFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
-	private List<Cors> corses = YamlUtils.getInstance().getList("corses", Cors.class, "filters");
+	private boolean valid = BooleanUtils.toBooleanObject(YamlUtils.getInstance().getString("filter", "cors", "valid"));
+	private List<Cors> corses = YamlUtils.getInstance().getList("servers", Cors.class, "filter", "cors");
+
 	private static final String DEFAULT_MAX_AGE = "3600"; // Access-Control-Max-Age
 	private static final String DEFAULT_ALLOW_CREDENTIALS = "true"; // Access-Control-Allow-Credentials
 	private static final String DEFAULT_ALLOW_METHODS = "PUT,POST,GET,DELETE,OPTIONS"; // Access-Control-Allow-Methods
@@ -28,17 +31,21 @@ public class CorsFilter extends MvcFilter {
 
 	@Override
 	public void filter(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		// 不适用跨域
+		if (!valid) {
+			return;
+		}
+
+		// 来源服务器
 		String origin = req.getHeader("origin");
 
-		// call this server by browser, postman, mocha,
-		// origin is null, not use cross domain
+		// 不适用跨域
 		if (StringUtils.isBlank(origin)) {
 			return;
 		}
 
-		// show log
 		if (logger.isDebugEnabled()) {
-			logger.debug("origin {}", origin);
+			logger.debug("cors origin server {}", origin);
 		}
 
 		addCors(req, res, origin);
@@ -53,8 +60,13 @@ public class CorsFilter extends MvcFilter {
 		}
 		Cors c = null;
 		for (Cors cors : corses) {
+			// 任意的域
+			if (StringUtils.equals(cors.allowOrigin, "*")) {
+				c = cors;
+				break;
+			}
+			// 允许的域
 			if (StringUtils.equals(cors.allowOrigin, origin)) {
-				// 允许
 				c = cors;
 				break;
 			}

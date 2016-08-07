@@ -20,16 +20,28 @@ upload:
 
 resources:
   - resource:
-  	url: /css/**
-  	location: /css/
+    url: /static/**
+    location: /static/
   - resource:
-  	url: /js/**
-  	location: /js/
+    url: /css/**
+    location: /css/
   - resource:
-  	url: /images/**
-  	location: /images/
+    url: /js/**
+    location: /js/
+  - resource:
+    url: /images/**
+    location: /images/
+    
+filter:
+  # cors server
+  cors:
+    valid: true
+    servers:
+      - server:
+        allowOrigin: http://localhost:3000/
   
 # spring mvc request version
-version:
-  name: content-version
-  default: ""
+restful:
+  version:
+    name: content-version
+    default: ""

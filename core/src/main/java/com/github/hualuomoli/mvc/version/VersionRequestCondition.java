@@ -16,8 +16,8 @@ public class VersionRequestCondition implements RequestCondition<VersionRequestC
 
 	// 路径中版本的前缀,如v1.0.0.1
 	private static final String VERSION_PATTERN = "^[vV]?(\\d+\\.)*\\d+$";
-	private static final String VERSION_NAME = YamlUtils.getInstance().getString("version", "name"); // version的名称
-	private static final String VERSION_DEFAULT = YamlUtils.getInstance().getString("version", "default"); // 默认版本号
+	private static final String VERSION_NAME = YamlUtils.getInstance().getString("restful", "version", "name"); // version的名称
+	private static final String VERSION_DEFAULT = YamlUtils.getInstance().getString("restful", "version", "default"); // 默认版本号
 
 	private String version; // 版本
 	private String[] array; // 版本值

@@ -5,6 +5,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,6 +42,8 @@ public class AbstractContextControllerTest {
 	// andDo：添加ResultHandler结果处理器，比如调试时打印结果到控制台；
 	// andExpect：添加ResultMatcher验证规则，验证控制器执行完成后结果是否正确；
 	// andReturn：最后返回相应的MvcResult；然后进行自定义验证/进行下一步的异步处理；
+
+	protected static final Logger logger = LoggerFactory.getLogger(AbstractContextControllerTest.class);
 
 	private static final String characterEncoding = "UTF-8";
 

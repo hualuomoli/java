@@ -1,4 +1,4 @@
-package com.github.hualuomoli.demo.version;
+package com.github.hualuomoli.demo.version.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import com.github.hualuomoli.mvc.annotation.RequestVersion;
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
 
-@RestController(value = "com.github.hualuomoli.demo.version.VersionController")
+@RestController(value = "com.github.hualuomoli.demo.version.web.VersionController")
 @RequestMapping(value = "/demo/version")
 @RequestVersion
 public class VersionController {
