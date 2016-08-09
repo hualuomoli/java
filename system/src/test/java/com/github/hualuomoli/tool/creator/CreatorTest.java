@@ -57,8 +57,8 @@ public class CreatorTest {
 		clsList.add(Menu.class);
 		// role
 		clsList.add(Role.class);
-		// user
-		clsList.add(User.class);
+		// // user
+		// clsList.add(User.class);
 		// user-role
 		clsList.add(UserRole.class);
 		// role-menu
