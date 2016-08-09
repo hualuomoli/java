@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
-import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
@@ -31,8 +30,6 @@ public class MysqlDbDealer implements DbDealer {
 	private static final int DEFAULT_LENGTH_STRING = 32;
 
 	private DbConfig dbConfig;
-	private String tableName = "";
-	private String columnName = "";
 
 	@Override
 	public void setDbConfig(DbConfig dbConfig) {
@@ -69,10 +66,8 @@ public class MysqlDbDealer implements DbDealer {
 	// 获取表
 	private DBTable getDbTable(Class<?> cls, CreatorTable creatorTable) {
 
-		tableName = creatorTable.getDbName();
-
 		DBTable dBTable = new DBTable();
-		dBTable.setName(tableName);
+		dBTable.setName(creatorTable.getDbName());
 		dBTable.setComment(creatorTable.getComments());
 
 		List<DBColumn> columnList = Lists.newArrayList();
@@ -84,32 +79,11 @@ public class MysqlDbDealer implements DbDealer {
 
 		dBTable.setColumnList(columnList);
 
-		// 设置唯一
-		dBTable.setUnique(this.getUnique(columns));
-
 		return dBTable;
-	}
-
-	// 获取唯一键
-	private DBColumn getUnique(List<CreatorColumn> columns) {
-		for (CreatorColumn creatorColumn : columns) {
-
-			// 查找具有该注解的属性
-			Field field = creatorColumn.getField();
-			EntityUnique entityUnique = field.getAnnotation(EntityUnique.class);
-			if (entityUnique == null) {
-				return null;
-			}
-			// 找到
-			return this.getDBColumn(creatorColumn);
-		}
-		return null;
 	}
 
 	// 获取列
 	private DBColumn getDBColumn(CreatorColumn creatorColumn) {
-
-		columnName = creatorColumn.getDbName();
 
 		DBColumn dBColumn = null;
 
@@ -121,7 +95,7 @@ public class MysqlDbDealer implements DbDealer {
 			dBColumn = this.getDBColumn(field, entityColumn);
 		}
 
-		dBColumn.setName(columnName);
+		dBColumn.setName(creatorColumn.getDbName());
 
 		return dBColumn;
 	}
@@ -274,7 +248,7 @@ public class MysqlDbDealer implements DbDealer {
 
 		// 实体类的属性
 		Class<?> ralationClass = field.getType();
-		List<Field> ralationFields = CreatorUtils.getFields(ralationClass);
+		List<Field> ralationFields = CreatorUtils.Attribute.getFields(ralationClass);
 		Field ralationField = null;
 		for (Field field2 : ralationFields) {
 			if (StringUtils.equals(ralation, field2.getName())) {
@@ -297,19 +271,6 @@ public class MysqlDbDealer implements DbDealer {
 			dBColumn.setType("varchar");
 			dBColumn.setLength("(" + ralationEntityColumn.length() + ")");
 		}
-
-		// // 设置外键
-		// ForeignKey foreignKey = new ForeignKey();
-		// foreignKey.srcTable = tableName;
-		// foreignKey.srcColumn = columnName;
-		// EntityTable ralationEntityTable = ralationClass.getAnnotation(EntityTable.class);
-		// if (ralationEntityTable == null || StringUtils.isBlank(ralationEntityTable.name())) {
-		// foreignKey.destTable = field.getName();
-		// } else {
-		// foreignKey.destTable = ralationEntityTable.name();
-		// }
-		// foreignKey.destColumn = ralation;
-		// foreignKeyList.add(foreignKey);
 
 		return dBColumn;
 	}

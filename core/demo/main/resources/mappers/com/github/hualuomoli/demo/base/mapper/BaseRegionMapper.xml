@@ -3,48 +3,24 @@
 <mapper namespace="com.github.hualuomoli.demo.base.mapper.BaseRegionMapper">
 
   <sql id="columns">
-    `id`          as "id"        ,
-    `version`     as "version"   ,
-    `code`        as "code"      ,
-    `name`        as "name"      ,
-    `type`        as "type"      ,
-    `create_by`   as "createBy"  ,
-    `create_date` as "createDate",
-    `update_by`   as "updateBy"  ,
-    `update_date` as "updateDate",
-    `status`      as "status"    
+    `id`   as "id"  ,
+    `code` as "code",
+    `name` as "name",
+    `type` as "type"
   </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
-      and `id`          = #{id}        
-    </if>
-    <if test="version != null"> 
-      and `version`     = #{version}   
+      and `id`   = #{id}  
     </if>
     <if test="code != null and code != ''"> 
-      and `code`        = #{code}      
+      and `code` = #{code}
     </if>
     <if test="name != null and name != ''"> 
-      and `name`        = #{name}      
+      and `name` = #{name}
     </if>
     <if test="type != null"> 
-      and `type`        = #{type}      
-    </if>
-    <if test="createBy != null and createBy != ''"> 
-      and `create_by`   = #{createBy}  
-    </if>
-    <if test="createDate != null"> 
-      and `create_date` = #{createDate}
-    </if>
-    <if test="updateBy != null and updateBy != ''"> 
-      and `update_by`   = #{updateBy}  
-    </if>
-    <if test="updateDate != null"> 
-      and `update_date` = #{updateDate}
-    </if>
-    <if test="status != null"> 
-      and `status`      = #{status}    
+      and `type` = #{type}
     </if>
 	<!-- 比较查询 -->
   </sql>
@@ -58,87 +34,45 @@
   
   <insert id="insert">
     insert into `t_region` (
-      `id`         ,
-      `version`    ,
-      `code`       ,
-      `name`       ,
-      `type`       ,
-      `create_by`  ,
-      `create_date`,
-      `update_by`  ,
-      `update_date`,
-      `status`     
+      `id`  ,
+      `code`,
+      `name`,
+      `type`
     ) values (
-      #{id}        ,
-      #{version}   ,
-      #{code}      ,
-      #{name}      ,
-      #{type}      ,
-      #{createBy}  ,
-      #{createDate},
-      #{updateBy}  ,
-      #{updateDate},
-      #{status}    
+      #{id}  ,
+      #{code},
+      #{name},
+      #{type}
     )
   </insert>
   
   <insert id="batchInsert">
     insert into `t_region` (
-      `id`         ,
-      `version`    ,
-      `code`       ,
-      `name`       ,
-      `type`       ,
-      `create_by`  ,
-      `create_date`,
-      `update_by`  ,
-      `update_date`,
-      `status`     
+      `id`  ,
+      `code`,
+      `name`,
+      `type`
     ) 
      <foreach collection="list" item="obj" separator="union all">
             select
-        #{obj.id}        ,
-        #{obj.version}   ,
-        #{obj.code}      ,
-        #{obj.name}      ,
-        #{obj.type}      ,
-        #{obj.createBy}  ,
-        #{obj.createDate},
-        #{obj.updateBy}  ,
-        #{obj.updateDate},
-        #{obj.status}    
+        #{obj.id}  ,
+        #{obj.code},
+        #{obj.name},
+        #{obj.type}
          </foreach>
   </insert>
   
   <update id="update">
     update `t_region`
     <set>
-      <if test="version != null"> 
-        `version`     = #{version}   ,
-      </if>
       <if test="code != null"> 
-        `code`        = #{code}      ,
+        `code` = #{code},
       </if>
       <if test="name != null"> 
-        `name`        = #{name}      ,
+        `name` = #{name},
       </if>
       <if test="type != null"> 
-        `type`        = #{type}      ,
-      </if>
-      <if test="createBy != null"> 
-        `create_by`   = #{createBy}  ,
-      </if>
-      <if test="createDate != null"> 
-        `create_date` = #{createDate},
-      </if>
-      <if test="updateBy != null"> 
-        `update_by`   = #{updateBy}  ,
-      </if>
-      <if test="updateDate != null"> 
-        `update_date` = #{updateDate},
-      </if>
-      <if test="status != null"> 
-        `status`      = #{status}    ,
+        `type` = #{type},
       </if>
     </set>
     where id =  #{id}

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.hualuomoli.base.annotation.entity.EntityUnique;
+import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
@@ -54,46 +54,28 @@ public class MysqlFileDealer implements FileDealer {
 
 		List<CreatorColumn> unionUniqueList = Lists.newArrayList();
 
-		EntityUnique entityUnique = cls.getAnnotation(EntityUnique.class);
-		if (entityUnique == null) {
+		EntityTable entityTable = cls.getAnnotation(EntityTable.class);
+		if (entityTable == null) {
 			return unionUniqueList;
 		}
-		boolean union = entityUnique.union();
-		String[] columnNames = entityUnique.columnNmaes();
+		String[] columnNames = entityTable.unique();
 		if (columnNames == null || columnNames.length == 0) {
 			return unionUniqueList;
 		}
 
-		if (union) {
-			// 联合唯一
-			List<CreatorColumn> columns = creatorTable.getColumns();
-			for (String columnName : columnNames) {
-				boolean success = false;
-				for (CreatorColumn creatorColumn : columns) {
-					String name = creatorColumn.getField().getName();
-					if (StringUtils.equals(name, columnName)) {
-						unionUniqueList.add(creatorColumn);
-						success = true;
-						break;
-					}
-				}
-				if (!success) {
-					throw new RuntimeException("can not find field " + columnName);
-				}
-			}
-		} else {
-			// 唯一
-			if (columnNames.length != 1) {
-				throw new RuntimeException("唯一键只能有一个,如果是关联唯一,请设置 union = true");
-			}
-			String columnName = columnNames[0];
-			List<CreatorColumn> columns = creatorTable.getColumns();
+		List<CreatorColumn> columns = creatorTable.getColumns();
+		for (String columnName : columnNames) {
+			boolean success = false;
 			for (CreatorColumn creatorColumn : columns) {
 				String name = creatorColumn.getField().getName();
 				if (StringUtils.equals(name, columnName)) {
 					unionUniqueList.add(creatorColumn);
+					success = true;
 					break;
 				}
+			}
+			if (!success) {
+				throw new RuntimeException("can not find field " + columnName);
 			}
 		}
 

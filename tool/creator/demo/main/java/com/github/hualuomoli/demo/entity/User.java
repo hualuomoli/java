@@ -5,11 +5,11 @@ import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-@EntityTable(name = "t_user")
+@EntityTable(comment = "用户", name = "t_user")
 public class User extends CommonField {
 
 	private String id;
-	@EntityColumn(length = 20)
+	@EntityColumn(comment = "用户名", length = 20)
 	private String username;
 	private String nickname;
 	private Integer number;

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.system.base.mapper.BaseUserMapper">
+
+  <sql id="columns">
+    `id`          as "id"        ,
+    `username`    as "username"  ,
+    `phone`       as "phone"     ,
+    `email`       as "email"     ,
+    `password`    as "password"  ,
+    `nickname`    as "nickname"  ,
+    `create_by`   as "createBy"  ,
+    `create_date` as "createDate",
+    `update_by`   as "updateBy"  ,
+    `update_date` as "updateDate",
+    `status`      as "status"    
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`          = #{id}        
+    </if>
+    <if test="username != null and username != ''"> 
+      and `username`    = #{username}  
+    </if>
+    <if test="phone != null and phone != ''"> 
+      and `phone`       = #{phone}     
+    </if>
+    <if test="email != null and email != ''"> 
+      and `email`       = #{email}     
+    </if>
+    <if test="password != null and password != ''"> 
+      and `password`    = #{password}  
+    </if>
+    <if test="nickname != null and nickname != ''"> 
+      and `nickname`    = #{nickname}  
+    </if>
+    <if test="createBy != null and createBy != ''"> 
+      and `create_by`   = #{createBy}  
+    </if>
+    <if test="createDate != null"> 
+      and `create_date` = #{createDate}
+    </if>
+    <if test="updateBy != null and updateBy != ''"> 
+      and `update_by`   = #{updateBy}  
+    </if>
+    <if test="updateDate != null"> 
+      and `update_date` = #{updateDate}
+    </if>
+    <if test="status != null"> 
+      and `status`      = #{status}    
+    </if>
+	<!-- 比较查询 -->
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.system.base.entity.BaseUser">
+    select 
+      <include refid="columns" />
+    from `sys_user`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `sys_user` (
+      `id`         ,
+      `username`   ,
+      `phone`      ,
+      `email`      ,
+      `password`   ,
+      `nickname`   ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     
+    ) values (
+      #{id}        ,
+      #{username}  ,
+      #{phone}     ,
+      #{email}     ,
+      #{password}  ,
+      #{nickname}  ,
+      #{createBy}  ,
+      #{createDate},
+      #{updateBy}  ,
+      #{updateDate},
+      #{status}    
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `sys_user` (
+      `id`         ,
+      `username`   ,
+      `phone`      ,
+      `email`      ,
+      `password`   ,
+      `nickname`   ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}        ,
+        #{obj.username}  ,
+        #{obj.phone}     ,
+        #{obj.email}     ,
+        #{obj.password}  ,
+        #{obj.nickname}  ,
+        #{obj.createBy}  ,
+        #{obj.createDate},
+        #{obj.updateBy}  ,
+        #{obj.updateDate},
+        #{obj.status}    
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `sys_user`
+    <set>
+      <if test="username != null"> 
+        `username`    = #{username}  ,
+      </if>
+      <if test="phone != null"> 
+        `phone`       = #{phone}     ,
+      </if>
+      <if test="email != null"> 
+        `email`       = #{email}     ,
+      </if>
+      <if test="password != null"> 
+        `password`    = #{password}  ,
+      </if>
+      <if test="nickname != null"> 
+        `nickname`    = #{nickname}  ,
+      </if>
+      <if test="createBy != null"> 
+        `create_by`   = #{createBy}  ,
+      </if>
+      <if test="createDate != null"> 
+        `create_date` = #{createDate},
+      </if>
+      <if test="updateBy != null"> 
+        `update_by`   = #{updateBy}  ,
+      </if>
+      <if test="updateDate != null"> 
+        `update_date` = #{updateDate},
+      </if>
+      <if test="status != null"> 
+        `status`      = #{status}    ,
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `sys_user` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `sys_user`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.system.base.entity.BaseUser">
+    select
+      <include refid="columns" />
+    from `sys_user`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

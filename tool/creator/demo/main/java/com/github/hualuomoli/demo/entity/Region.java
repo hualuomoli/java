@@ -1,8 +1,7 @@
 package com.github.hualuomoli.demo.entity;
 
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityUnique;
-import com.github.hualuomoli.base.entity.CommonField;
+import com.github.hualuomoli.base.entity.BaseField;
 
 /**
  * 区域
@@ -10,9 +9,8 @@ import com.github.hualuomoli.base.entity.CommonField;
  *
  */
 @SuppressWarnings("serial")
-@EntityTable
-@EntityUnique(union = true, columnNmaes = { "code", "type" })
-public class Region extends CommonField {
+@EntityTable(comment = "地区", unique = { "code", "type" })
+public class Region extends BaseField {
 
 	private String code; // 编码
 	private String name; // 名称

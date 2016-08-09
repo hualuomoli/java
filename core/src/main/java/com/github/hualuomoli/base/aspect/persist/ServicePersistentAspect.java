@@ -18,13 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.hualuomoli.LoginUserService;
-import com.github.hualuomoli.base.Persistent;
+import com.github.hualuomoli.base.BasePersistent;
+import com.github.hualuomoli.base.CommonPersistent;
 import com.github.hualuomoli.base.annotation.persistent.PreBatchInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreDelete;
 import com.github.hualuomoli.base.annotation.persistent.PreInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.constant.Status;
-import com.github.hualuomoli.commons.util.JsonUtils;
 import com.github.hualuomoli.commons.util.RandomUtils;
 
 // service 持久化 预处理
@@ -45,9 +45,6 @@ public class ServicePersistentAspect {
 	@Around(value = "pointcut()", argNames = "args")
 	public Object doBefore(ProceedingJoinPoint joinPoint) throws Throwable {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("arounding.............");
-		}
 		Object ret = null;
 
 		// 参数
@@ -65,13 +62,6 @@ public class ServicePersistentAspect {
 			ret = joinPoint.proceed(args);
 		}
 
-		if (logger.isDebugEnabled()) {
-			if (ret != null) {
-				logger.debug("return value {}", JsonUtils.toJson(ret));
-			}
-			logger.debug("arounded...");
-		}
-
 		return ret;
 
 	}
@@ -82,7 +72,7 @@ public class ServicePersistentAspect {
 	 * @param args 参数
 	 * @param method 方法
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private Object[] prePersistent(JoinPoint joinPoint, Object[] args, Method method) {
 
 		// 参数注解,判断每个参数的注解
@@ -106,21 +96,21 @@ public class ServicePersistentAspect {
 			// 注解处理参数
 			for (Annotation annotation : annotations) {
 
-				if (annotation.annotationType() == PreInsert.class && Persistent.class.isAssignableFrom(parameter.getClass())) {
+				if (annotation.annotationType() == PreInsert.class && BasePersistent.class.isAssignableFrom(parameter.getClass())) {
 					// 插入前预处理
-					args[i] = this._doPreInsert((Persistent) parameter);
+					args[i] = this._doPreInsert((BasePersistent) parameter);
 					break;
-				} else if (annotation.annotationType() == PreUpdate.class && Persistent.class.isAssignableFrom(parameter.getClass())) {
+				} else if (annotation.annotationType() == PreUpdate.class && CommonPersistent.class.isAssignableFrom(parameter.getClass())) {
 					// 修改前预处理
-					args[i] = this._doPreUpdate((Persistent) parameter);
+					args[i] = this._doPreUpdate((CommonPersistent) parameter);
 					break;
-				} else if (annotation.annotationType() == PreDelete.class && Persistent.class.isAssignableFrom(parameter.getClass())) {
+				} else if (annotation.annotationType() == PreDelete.class && CommonPersistent.class.isAssignableFrom(parameter.getClass())) {
 					// 逻辑删除前预处理
-					args[i] = this._doPreDelete((Persistent) parameter);
+					args[i] = this._doPreDelete((CommonPersistent) parameter);
 					break;
 				} else if (annotation.annotationType() == PreBatchInsert.class && Collection.class.isAssignableFrom(parameter.getClass())) {
 					// 批量插入前持久化预处理
-					args[i] = this._doPreBatchInsert((Collection<Persistent>) parameter);
+					args[i] = this._doPreBatchInsert((Collection) parameter);
 					break;
 				}
 			}
@@ -134,91 +124,118 @@ public class ServicePersistentAspect {
 	/**
 	 * 插入前预处理
 	 */
-	private Persistent _doPreInsert(Persistent persistent) {
+	private Object _doPreInsert(BasePersistent parameter) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("插入前预处理");
 		}
-		String username = loginUserService.getUsername();
-		Date currentDate = loginUserService.getCurrentDate();
 
-		persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getUUID() : persistent.getId());
-		persistent.setVersion(1);
-		persistent.setCreateBy(username);
-		persistent.setCreateDate(currentDate);
-		persistent.setUpdateBy(username);
-		persistent.setUpdateDate(currentDate);
-		persistent.setStatus(Status.NOMAL.getValue());
-		return persistent;
+		// id
+		if (StringUtils.isBlank(parameter.getId())) {
+			parameter.setId(RandomUtils.getUUID());
+		}
+
+		// common
+		if (parameter instanceof CommonPersistent) {
+			String username = loginUserService.getUsername();
+			Date currentDate = loginUserService.getCurrentDate();
+
+			CommonPersistent commonPersistent = (CommonPersistent) parameter;
+			commonPersistent.setCreateBy(username);
+			commonPersistent.setCreateDate(currentDate);
+			commonPersistent.setUpdateBy(username);
+			commonPersistent.setUpdateDate(currentDate);
+			commonPersistent.setStatus(Status.NOMAL.getValue());
+		}
+
+		return parameter;
 
 	}
 
 	/**
 	 * 修改前预处理
 	 */
-	private Persistent _doPreUpdate(Persistent persistent) {
+	private Object _doPreUpdate(CommonPersistent parameter) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("修改前预处理");
 		}
+
+		// common
 		String username = loginUserService.getUsername();
 		Date currentDate = loginUserService.getCurrentDate();
 
-		persistent.setCreateBy(null);
-		persistent.setCreateDate(null);
-		persistent.setUpdateBy(username);
-		persistent.setUpdateDate(currentDate);
-		persistent.setStatus(Status.NOMAL.getValue()); // 只有正常数据才可以修改
+		parameter.setCreateBy(null);
+		parameter.setCreateDate(null);
+		parameter.setUpdateBy(username);
+		parameter.setUpdateDate(currentDate);
+		parameter.setStatus(Status.NOMAL.getValue());// 只有正常数据才可以修改
 
-		return persistent;
+		return parameter;
 
 	}
 
 	/**
 	 * 删除前预处理
 	 */
-	private Persistent _doPreDelete(Persistent persistent) {
+	private Object _doPreDelete(CommonPersistent parameter) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("删除前预处理");
 		}
+
+		// common
 		String username = loginUserService.getUsername();
 		Date currentDate = loginUserService.getCurrentDate();
 
-		// 删除只设置ID
-		String id = persistent.getId();
+		CommonPersistent deleteObject;
 		try {
-			persistent = persistent.getClass().newInstance();
-			persistent.setId(id);
-
-			persistent.setUpdateBy(username);
-			persistent.setUpdateDate(currentDate);
-			persistent.setStatus(Status.DELETED.getValue()); // 设置为删除状态
-
-			return persistent;
+			deleteObject = parameter.getClass().newInstance();
+			deleteObject.setId(parameter.getId());
 		} catch (Exception e) {
-			return persistent;
+			throw new RuntimeException();
 		}
+
+		deleteObject.setUpdateBy(username);
+		deleteObject.setUpdateDate(currentDate);
+		deleteObject.setStatus(Status.DELETED.getValue()); // 设置为删除状态
+		return deleteObject;
 
 	}
 
 	/**
 	 * 批量插入前预处理
 	 */
-	private Collection<Persistent> _doPreBatchInsert(Collection<Persistent> persistents) {
+	@SuppressWarnings({ "rawtypes" })
+	private Object _doPreBatchInsert(Collection parameter) {
+
+		if (parameter.size() == 0) {
+			return parameter;
+		}
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("批量插入前预处理");
 		}
+
 		String username = loginUserService.getUsername();
 		Date currentDate = loginUserService.getCurrentDate();
 
-		for (Persistent persistent : persistents) {
-			persistent.setId(StringUtils.isBlank(persistent.getId()) ? RandomUtils.getUUID() : persistent.getId());
-			persistent.setCreateBy(username);
-			persistent.setCreateDate(currentDate);
-			persistent.setUpdateBy(username);
-			persistent.setUpdateDate(currentDate);
-			persistent.setStatus(Status.NOMAL.getValue());
+		for (Object object : parameter) {
+			if (object instanceof BasePersistent) {
+				BasePersistent basePersistent = (BasePersistent) object;
+				if (StringUtils.isBlank(basePersistent.getId())) {
+					basePersistent.setId(RandomUtils.getUUID());
+				}
+				// common
+				if (object instanceof CommonPersistent) {
+					CommonPersistent commonPersistent = (CommonPersistent) object;
+					commonPersistent.setCreateBy(username);
+					commonPersistent.setCreateDate(currentDate);
+					commonPersistent.setUpdateBy(username);
+					commonPersistent.setUpdateDate(currentDate);
+					commonPersistent.setStatus(Status.NOMAL.getValue());
+				}
+			}
 		}
 
-		return persistents;
+		return parameter;
 
 	}
 

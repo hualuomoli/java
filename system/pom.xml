@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.hualuomoli</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.6</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>system</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+
+	</properties>
+
+	<dependencies>
+		<!-- core -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- core-extend -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>core-extend</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- tool-creator -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>tool-creator</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

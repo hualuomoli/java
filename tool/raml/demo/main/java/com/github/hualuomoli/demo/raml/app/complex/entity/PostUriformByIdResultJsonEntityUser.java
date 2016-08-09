@@ -17,18 +17,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class PostUriformByIdResultJsonEntityUser {
   
-  private String username;
   private PostUriformByIdResultJsonEntityAddress address;
   private String nickname;
   private java.util.List<PostUriformByIdResultJsonEntityOrder> orders;
+  private String username;
   
-  public String getUsername(){
-    return username;
-  }
-  
-  public void setUsername(String username){
-    this.username = username;
-  }
   public PostUriformByIdResultJsonEntityAddress getAddress(){
     return address;
   }
@@ -49,6 +42,13 @@ public class PostUriformByIdResultJsonEntityUser {
   
   public void setOrders(java.util.List<PostUriformByIdResultJsonEntityOrder> orders){
     this.orders = orders;
+  }
+  public String getUsername(){
+    return username;
+  }
+  
+  public void setUsername(String username){
+    this.username = username;
   }
   
 }

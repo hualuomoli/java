@@ -18,10 +18,15 @@ public @interface EntityTable {
 	String name() default "";
 
 	// 注释
-	String comment() default "";
+	String comment();
 
-	// 是否预处理,如果预处理,需要提供id,createBy,createDate,updateBy,updateDate,status的属性
-	// 子类实现Persistent接口
-	boolean pre() default false;
+	// 高并发
+	boolean higher() default false;
+
+	// 忽略属性
+	String[] ignores() default {};
+
+	// 唯一属性
+	String[] unique() default {};
 
 }

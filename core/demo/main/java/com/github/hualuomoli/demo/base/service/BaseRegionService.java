@@ -26,9 +26,7 @@ public interface BaseRegionService {
 
 	int update(BaseRegion baseRegion);
 	
-	int logicalDelete(BaseRegion baseRegion);
-
-	int logicalDelete(String id);
+	
 
 	int delete(BaseRegion baseRegion);
 	

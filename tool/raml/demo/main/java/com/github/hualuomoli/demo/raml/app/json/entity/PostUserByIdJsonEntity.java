@@ -19,18 +19,18 @@ import com.github.hualuomoli.mvc.validator.EntityValidator;
 public class PostUserByIdJsonEntity implements EntityValidator {
   
   private String id;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date birthDay = DateUtils.parse("2016-05-13");
   @NotNull(message = "性别 - sex 必填")
   @NotBlank(message = "性别 - sex不能为空")
   private String sex;
-  @NotNull(message = "用户名 - username 必填")
-  @NotBlank(message = "用户名 - username不能为空")
-  private String username;
   @NotNull(message = "昵称 - nickname 必填")
   @NotBlank(message = "昵称 - nickname不能为空")
   private String nickname;
   private Integer age;
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private Date birthDay = DateUtils.parse("2016-05-13");
+  @NotNull(message = "用户名 - username 必填")
+  @NotBlank(message = "用户名 - username不能为空")
+  private String username;
   
   public String getId(){
     return id;
@@ -40,19 +40,19 @@ public class PostUserByIdJsonEntity implements EntityValidator {
     this.id = id;
   }
   
+  public Date getBirthDay(){
+    return birthDay;
+  }
+  
+  public void setBirthDay(Date birthDay){
+    this.birthDay = birthDay;
+  }
   public String getSex(){
     return sex;
   }
   
   public void setSex(String sex){
     this.sex = sex;
-  }
-  public String getUsername(){
-    return username;
-  }
-  
-  public void setUsername(String username){
-    this.username = username;
   }
   public String getNickname(){
     return nickname;
@@ -68,12 +68,12 @@ public class PostUserByIdJsonEntity implements EntityValidator {
   public void setAge(Integer age){
     this.age = age;
   }
-  public Date getBirthDay(){
-    return birthDay;
+  public String getUsername(){
+    return username;
   }
   
-  public void setBirthDay(Date birthDay){
-    this.birthDay = birthDay;
+  public void setUsername(String username){
+    this.username = username;
   }
   
 }

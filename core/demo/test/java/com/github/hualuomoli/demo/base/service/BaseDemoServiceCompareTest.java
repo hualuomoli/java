@@ -178,7 +178,7 @@ public class BaseDemoServiceCompareTest extends AbstractContextServiceTest {
 		List<BaseDemo> list = null;
 		//
 		baseDemo = new BaseDemo();
-		baseDemo.setUserUsernameArray(new String[] { "tom1", "tom2" });
+		baseDemo.setUserArray(new String[] { "tom1", "tom2" });
 		list = demoService.findList(baseDemo);
 		Assert.assertSame(2, list.size());
 	}

@@ -25,9 +25,10 @@ public interface BaseDemoService {
 
 	int update(BaseDemo baseDemo);
 	
-	int logicalDelete(BaseDemo baseDemo);
+	 int logicalDelete(BaseDemo baseDemo);
 
-	int logicalDelete(String id);
+	 int logicalDelete(String id);
+	
 
 	int delete(BaseDemo baseDemo);
 	

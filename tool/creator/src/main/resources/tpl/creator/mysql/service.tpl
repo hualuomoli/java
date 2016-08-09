@@ -6,10 +6,11 @@ import java.util.List;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
+import com.github.hualuomoli.extend.service.TreeService.TreeDealer;
 import ${packageName}.base.entity.Base${javaName};
 
 // ${r"#"}Base${javaName}
-public interface Base${javaName}Service {
+public interface Base${javaName}Service<#if table.tree> extends TreeDealer<Base${javaName}></#if> {
 
 	Base${javaName} get(Base${javaName} base${javaName});
 	
@@ -29,9 +30,13 @@ public interface Base${javaName}Service {
 
 	int update(Base${javaName} base${javaName});
 	
-	int logicalDelete(Base${javaName} base${javaName});
+	<#if table.entityType == 1>
+	<#elseif table.entityType == 2>
+	 int logicalDelete(Base${javaName} base${javaName});
 
-	int logicalDelete(String id);
+	 int logicalDelete(String id);
+	</#if>
+	
 
 	int delete(Base${javaName} base${javaName});
 	

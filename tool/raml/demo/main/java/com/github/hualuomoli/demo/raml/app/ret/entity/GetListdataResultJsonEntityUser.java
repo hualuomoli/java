@@ -18,9 +18,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class GetListdataResultJsonEntityUser {
   
   private String sex;
-  private String username;
   private String nickname;
   private Integer age;
+  private String username;
   
   public String getSex(){
     return sex;
@@ -28,13 +28,6 @@ public class GetListdataResultJsonEntityUser {
   
   public void setSex(String sex){
     this.sex = sex;
-  }
-  public String getUsername(){
-    return username;
-  }
-  
-  public void setUsername(String username){
-    this.username = username;
   }
   public String getNickname(){
     return nickname;
@@ -49,6 +42,13 @@ public class GetListdataResultJsonEntityUser {
   
   public void setAge(Integer age){
     this.age = age;
+  }
+  public String getUsername(){
+    return username;
+  }
+  
+  public void setUsername(String username){
+    this.username = username;
   }
   
 }

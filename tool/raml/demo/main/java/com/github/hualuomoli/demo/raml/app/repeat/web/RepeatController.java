@@ -15,12 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.demo.raml.app.repeat.entity.PostJsonJsonEntity;
-import com.github.hualuomoli.demo.raml.app.repeat.entity.PostJsonResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostUrlencodedUrlEncodedEntity;
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostUrlencodedResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostFileFileEntity;
 import com.github.hualuomoli.demo.raml.app.repeat.entity.PostFileResultJsonEntity;
+import com.github.hualuomoli.demo.raml.app.repeat.entity.PostJsonJsonEntity;
+import com.github.hualuomoli.demo.raml.app.repeat.entity.PostJsonResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.repeat.service.RepeatService;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
@@ -38,22 +38,6 @@ public class RepeatController {
 	@Autowired
 	private RepeatService repeatService;
 	
-	/**
-	 * json
-	 */
-	@RequestMapping(value = "/json", method = RequestMethod.POST, consumes = { "application/json" }, produces = { "application/json" })
-	public String postJson(
-	@RequestBody 
-	PostJsonJsonEntity postJsonJsonEntity,
-	HttpServletRequest request, 
-	HttpServletResponse response
-	) {
-		// 设置属性
-		
-		PostJsonResultJsonEntityUser postJsonResultJsonEntityUser = repeatService.postJson(postJsonJsonEntity);
-		return AppRestResponse.getObjectData("user", postJsonResultJsonEntityUser);
-		
-	}
 	/**
 	 * 获取值
 	 */
@@ -86,6 +70,22 @@ public class RepeatController {
 		
 		repeatService.postFile(postFileFileEntity);
 		return AppRestResponse.getNoData();
+		
+	}
+	/**
+	 * json
+	 */
+	@RequestMapping(value = "/json", method = RequestMethod.POST, consumes = { "application/json" }, produces = { "application/json" })
+	public String postJson(
+	@RequestBody 
+	PostJsonJsonEntity postJsonJsonEntity,
+	HttpServletRequest request, 
+	HttpServletResponse response
+	) {
+		// 设置属性
+		
+		PostJsonResultJsonEntityUser postJsonResultJsonEntityUser = repeatService.postJson(postJsonJsonEntity);
+		return AppRestResponse.getObjectData("user", postJsonResultJsonEntityUser);
 		
 	}
 	

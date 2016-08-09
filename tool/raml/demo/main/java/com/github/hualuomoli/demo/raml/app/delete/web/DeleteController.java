@@ -15,10 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteNoparamEntity;
-import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteUriparamByIdEntity;
 import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteUriparamByIdResultJsonEntity;
+import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteNoparamEntity;
+import com.github.hualuomoli.demo.raml.app.delete.entity.DeleteNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.delete.service.DeleteService;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
@@ -38,21 +38,6 @@ public class DeleteController {
 	
 	/**
 	 * 
-	 */
-	@RequestMapping(value = "/noparam", method = RequestMethod.DELETE, produces = { "application/json" })
-	public String deleteNoparam(
-	DeleteNoparamEntity deleteNoparamEntity,
-	HttpServletRequest request, 
-	HttpServletResponse response
-	) {
-		// 设置属性
-		
-		deleteService.deleteNoparam(deleteNoparamEntity);
-		return AppRestResponse.getNoData();
-		
-	}
-	/**
-	 * 
 	 * @param id ID
 	 */
 	@RequestMapping(value = "/uriparam/{id}", method = RequestMethod.DELETE, produces = { "application/json" })
@@ -67,6 +52,21 @@ public class DeleteController {
 		deleteUriparamByIdEntity.setId(id);
 		
 		deleteService.deleteUriparamById(deleteUriparamByIdEntity);
+		return AppRestResponse.getNoData();
+		
+	}
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/noparam", method = RequestMethod.DELETE, produces = { "application/json" })
+	public String deleteNoparam(
+	DeleteNoparamEntity deleteNoparamEntity,
+	HttpServletRequest request, 
+	HttpServletResponse response
+	) {
+		// 设置属性
+		
+		deleteService.deleteNoparam(deleteNoparamEntity);
 		return AppRestResponse.getNoData();
 		
 	}

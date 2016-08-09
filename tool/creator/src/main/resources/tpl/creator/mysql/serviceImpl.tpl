@@ -93,6 +93,8 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 		return base${javaName}Mapper.update(base${javaName});
 	}
 
+	<#if table.entityType == 1>
+	<#elseif table.entityType == 2>
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(@PreDelete Base${javaName} base${javaName}) {
@@ -106,6 +108,7 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
+	</#if>
 
 	@Override
 	@Transactional(readOnly = false)

@@ -15,14 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostNoparamEntity;
-import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostUriparamByIdEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostUriparamByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostUriformparamByPageNumberPageSizeUrlEncodedEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostUriformparamByPageNumberPageSizeResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostFormparamUrlEncodedEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostFormparamResultJsonEntity;
+import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostNoparamEntity;
+import com.github.hualuomoli.demo.raml.app.urlEncoded.entity.PostNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.urlEncoded.service.UrlEncodedService;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
@@ -40,21 +40,6 @@ public class UrlEncodedController {
 	@Autowired
 	private UrlEncodedService urlEncodedService;
 	
-	/**
-	 * 提交
-	 */
-	@RequestMapping(value = "/noparam", method = RequestMethod.POST, produces = { "application/json" })
-	public String postNoparam(
-	PostNoparamEntity postNoparamEntity,
-	HttpServletRequest request, 
-	HttpServletResponse response
-	) {
-		// 设置属性
-		
-		urlEncodedService.postNoparam(postNoparamEntity);
-		return AppRestResponse.getNoData();
-		
-	}
 	/**
 	 * URI提交
 	 * @param id ID
@@ -109,6 +94,21 @@ public class UrlEncodedController {
 		// 设置属性
 		
 		urlEncodedService.postFormparam(postFormparamUrlEncodedEntity);
+		return AppRestResponse.getNoData();
+		
+	}
+	/**
+	 * 提交
+	 */
+	@RequestMapping(value = "/noparam", method = RequestMethod.POST, produces = { "application/json" })
+	public String postNoparam(
+	PostNoparamEntity postNoparamEntity,
+	HttpServletRequest request, 
+	HttpServletResponse response
+	) {
+		// 设置属性
+		
+		urlEncodedService.postNoparam(postNoparamEntity);
 		return AppRestResponse.getNoData();
 		
 	}

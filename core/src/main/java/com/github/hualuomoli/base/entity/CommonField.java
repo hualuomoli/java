@@ -1,20 +1,15 @@
 package com.github.hualuomoli.base.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
+import com.github.hualuomoli.base.CommonPersistent;
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 // 公共属性
-public class CommonField implements Serializable, com.github.hualuomoli.base.Persistent {
+@SuppressWarnings("serial")
+public abstract class CommonField extends BaseField implements CommonPersistent {
 
-	private static final long serialVersionUID = 4623441259087418777L;
-
-	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "主键", length = 32)
-	private String id;
-	@EntityColumn(name = "version", comment = "数据版本号")
-	private Integer version;
 	@EntityColumn(name = "create_by", type = EntityColumnType.STRING, comment = "创建人", length = 32, nullable = false)
 	private String createBy;
 	@EntityColumn(name = "create_date", type = EntityColumnType.TIMESTAMP, comment = "创建时间", nullable = false)
@@ -27,22 +22,6 @@ public class CommonField implements Serializable, com.github.hualuomoli.base.Per
 	private Integer status;
 
 	public CommonField() {
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(Integer version) {
-		this.version = version;
 	}
 
 	public String getCreateBy() {

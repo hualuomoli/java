@@ -2,9 +2,9 @@ package com.github.hualuomoli.demo.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.hualuomoli.base.Persistent;
-
-public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements Persistent {
+public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo
+ implements com.github.hualuomoli.base.BasePersistent, com.github.hualuomoli.base.CommonPersistent
+ {
 
 	/**  - 左like */
 	private java.lang.String nameLeftLike;
@@ -43,7 +43,7 @@ public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements 
 	/** 生日 - 小于等于 */
 	private java.util.Date birthDayLessEqual;
 	/** 用户 - 查询数组 */
-	private java.lang.String[] userUsernameArray;
+	private java.lang.String[] userArray;
 	
 	public BaseDemo(){
 	}
@@ -198,15 +198,15 @@ public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo implements 
 	public void setBirthDayLessEqual(java.util.Date birthDayLessEqual) {
 		this.birthDayLessEqual = birthDayLessEqual;
 	}
-	public java.lang.String[] getUserUsernameArray() {
-		return userUsernameArray;
+	public java.lang.String[] getUserArray() {
+		return userArray;
 	}
 	
-	public void setUserUsernameArray(java.lang.String[] userUsernameArray) {
-		if (userUsernameArray == null || userUsernameArray.length == 0) {
+	public void setUserArray(java.lang.String[] userArray) {
+		if (userArray == null || userArray.length == 0) {
 			return;
 		}
-		this.userUsernameArray = userUsernameArray;
+		this.userArray = userArray;
 	}
 
 }

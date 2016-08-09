@@ -1,8 +1,0 @@
-
-jdbc:
-  driverClassName: com.mysql.jdbc.Driver
-  url: jdbc:mysql://114.215.210.170:3306/test?useUnicode=true&characterEncoding=utf-8
-  username: root
-  password: Ausyri2016
-
-

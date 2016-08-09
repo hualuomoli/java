@@ -89,19 +89,6 @@ public class BaseRegionServiceImpl implements BaseRegionService {
 		return baseRegionMapper.update(baseRegion);
 	}
 
-	@Override
-	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseRegion baseRegion) {
-		return baseRegionMapper.update(baseRegion);
-	}
-	
-	@Override
-	@Transactional(readOnly = false)
-	public int logicalDelete(String id) {
-		BaseRegion temp = new BaseRegion();
-		temp.setId(id);
-		return this.logicalDelete(temp);
-	}
 
 	@Override
 	@Transactional(readOnly = false)

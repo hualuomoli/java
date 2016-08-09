@@ -15,14 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetObjectdataEntity;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetObjectdataResultJsonEntityUser;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetNodataEntity;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetNodataResultJsonEntity;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataEntity;
-import com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.ret.entity.GetListdataEntity;
 import com.github.hualuomoli.demo.raml.app.ret.entity.GetListdataResultJsonEntityUser;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetObjectdataEntity;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetObjectdataResultJsonEntityUser;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataEntity;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetPagedataResultJsonEntityUser;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetNodataEntity;
+import com.github.hualuomoli.demo.raml.app.ret.entity.GetNodataResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.ret.service.RetService;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
@@ -43,6 +43,21 @@ public class RetController {
 	/**
 	 * 
 	 */
+	@RequestMapping(value = "/listdata", method = RequestMethod.GET, produces = { "application/json" })
+	public String getListdata(
+	GetListdataEntity getListdataEntity,
+	HttpServletRequest request, 
+	HttpServletResponse response
+	) {
+		// 设置属性
+		
+		java.util.List<GetListdataResultJsonEntityUser> list = retService.getListdata(getListdataEntity);
+		return AppRestResponse.getListData("users", list);
+		
+	}
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/objectdata", method = RequestMethod.GET, produces = { "application/json" })
 	public String getObjectdata(
 	GetObjectdataEntity getObjectdataEntity,
@@ -53,21 +68,6 @@ public class RetController {
 		
 		GetObjectdataResultJsonEntityUser getObjectdataResultJsonEntityUser = retService.getObjectdata(getObjectdataEntity);
 		return AppRestResponse.getObjectData("user", getObjectdataResultJsonEntityUser);
-		
-	}
-	/**
-	 * 
-	 */
-	@RequestMapping(value = "/nodata", method = RequestMethod.GET, produces = { "application/json" })
-	public String getNodata(
-	GetNodataEntity getNodataEntity,
-	HttpServletRequest request, 
-	HttpServletResponse response
-	) {
-		// 设置属性
-		
-		retService.getNodata(getNodataEntity);
-		return AppRestResponse.getNoData();
 		
 	}
 	/**
@@ -88,16 +88,16 @@ public class RetController {
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/listdata", method = RequestMethod.GET, produces = { "application/json" })
-	public String getListdata(
-	GetListdataEntity getListdataEntity,
+	@RequestMapping(value = "/nodata", method = RequestMethod.GET, produces = { "application/json" })
+	public String getNodata(
+	GetNodataEntity getNodataEntity,
 	HttpServletRequest request, 
 	HttpServletResponse response
 	) {
 		// 设置属性
 		
-		java.util.List<GetListdataResultJsonEntityUser> list = retService.getListdata(getListdataEntity);
-		return AppRestResponse.getListData("users", list);
+		retService.getNodata(getNodataEntity);
+		return AppRestResponse.getNoData();
 		
 	}
 	

@@ -24,7 +24,7 @@ public @interface EntityColumn {
 	EntityColumnType type() default EntityColumnType.AUTO;
 
 	// 注释
-	String comment() default "";
+	String comment();
 
 	// 是否允许为空
 	boolean nullable() default true;

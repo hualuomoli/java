@@ -3,7 +3,6 @@ package com.github.hualuomoli.demo.raml.base.entity;
 import java.util.Date;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
-import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
@@ -13,7 +12,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
  * @Date 2016-05-19 10:25:26
  * @Version 1.0
  */
-@EntityTable
+@EntityTable(comment = "")
 public class Product {
 
 	@EntityColumn(comment = "商品号")

@@ -4,34 +4,32 @@ import java.util.Date;
 import java.util.List;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
+import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
-import com.github.hualuomoli.base.annotation.entity.EntityQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityUnique;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-@EntityTable(name = "t_demo", comment = "测试demo", pre = true)
-@EntityUnique(columnNmaes = { "name" })
+@EntityTable(name = "t_demo", comment = "测试demo", unique = { "name" })
 public class Demo extends CommonField {
 
-	@EntityQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)
+	@EntityColumnQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)
 	private String name;
-	@EntityColumn(type = EntityColumnType.CHAR, length = 1)
+	@EntityColumn(comment = "性别", type = EntityColumnType.CHAR, length = 1)
 	private String sex;
 	@EntityColumn(precision = 8, scale = 3, comment = "工资")
-	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
+	@EntityColumnQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
 	private Double salary;
 	@EntityColumn(precision = 3, defaultValue = "20", comment = "年龄")
-	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
+	@EntityColumnQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true, inArray = true)
 	private Integer age;
 	@EntityColumn(type = EntityColumnType.DATE, comment = "生日")
-	@EntityQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true)
+	@EntityColumnQuery(greaterThan = true, greaterEqual = true, lessThan = true, lessEqual = true)
 	private Date birthDay;
-	@EntityColumn(type = EntityColumnType.CLOB)
+	@EntityColumn(comment = "备注", type = EntityColumnType.CLOB)
 	private String remarks;
 	@EntityColumn(comment = "用户", relation = "username")
-	@EntityQuery(inArray = true)
+	@EntityColumnQuery(inArray = true)
 	private User user;
 	private Region region;
 	// 不会使用
@@ -96,20 +94,20 @@ public class Demo extends CommonField {
 		this.user = user;
 	}
 
-	public List<Address> getAddress() {
-		return address;
-	}
-
-	public void setAddress(List<Address> address) {
-		this.address = address;
-	}
-
 	public Region getRegion() {
 		return region;
 	}
 
 	public void setRegion(Region region) {
 		this.region = region;
+	}
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
 	}
 
 }

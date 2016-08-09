@@ -17,17 +17,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class GetObjectResultJsonEntityOrder {
   
-  private String id;
   private Double price;
   private String name;
+  private String id;
   
-  public String getId(){
-    return id;
-  }
-  
-  public void setId(String id){
-    this.id = id;
-  }
   public Double getPrice(){
     return price;
   }
@@ -41,6 +34,13 @@ public class GetObjectResultJsonEntityOrder {
   
   public void setName(String name){
     this.name = name;
+  }
+  public String getId(){
+    return id;
+  }
+  
+  public void setId(String id){
+    this.id = id;
   }
   
 }

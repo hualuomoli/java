@@ -3,7 +3,6 @@ package ${packageName};
 import java.util.Date;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
-import com.github.hualuomoli.base.annotation.entity.EntityIgnore;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
@@ -13,7 +12,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
  * @Date ${date}
  * @Version ${version}
  */
-@EntityTable
+@EntityTable(comment = "")
 public class ${entity.name} {
 
 	<#list entity.columnList as column>

@@ -17,25 +17,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class PostUriformByIdResultJsonEntityAddress {
   
-  private String name;
-  private String couty;
   private String province;
   private String city;
+  private String name;
+  private String couty;
   
-  public String getName(){
-    return name;
-  }
-  
-  public void setName(String name){
-    this.name = name;
-  }
-  public String getCouty(){
-    return couty;
-  }
-  
-  public void setCouty(String couty){
-    this.couty = couty;
-  }
   public String getProvince(){
     return province;
   }
@@ -49,6 +35,20 @@ public class PostUriformByIdResultJsonEntityAddress {
   
   public void setCity(String city){
     this.city = city;
+  }
+  public String getName(){
+    return name;
+  }
+  
+  public void setName(String name){
+    this.name = name;
+  }
+  public String getCouty(){
+    return couty;
+  }
+  
+  public void setCouty(String couty){
+    this.couty = couty;
   }
   
 }
