@@ -64,7 +64,7 @@ public class MenuController {
 	/**
 	 * 添加菜单
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String post(PostEntity postEntity) {
 
 		menuService.post(postEntity);
@@ -137,7 +137,7 @@ public class MenuController {
 	/**
 	 * 修改菜单
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String putById(PutByIdEntity putByIdEntity) {
 
 		menuService.putById(putByIdEntity);
@@ -197,7 +197,7 @@ public class MenuController {
 	/**
 	 * 修改父菜单
 	 */
-	@RequestMapping(value = "/{id}/parent", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "/{id}/parent", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String putByIdParent(PutByIdParentEntity putByIdParentEntity) {
 
 		menuService.putByIdParent(putByIdParentEntity);
@@ -231,7 +231,7 @@ public class MenuController {
 	/**
 	 * 修改排序
 	 */
-	@RequestMapping(value = "/sort", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "/sort", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String putSort(PutSortEntity putSortEntity) {
 
 		menuService.putSort(putSortEntity);

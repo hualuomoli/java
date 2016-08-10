@@ -29,6 +29,18 @@
 			<artifactId>core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- core-extend -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>core-extend</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- system -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>system</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<!-- tool-raml -->
 		<dependency>
 			<groupId>com.github.hualuomoli</groupId>

@@ -9,7 +9,6 @@ import com.github.hualuomoli.commons.util.ProjectUtils;
 import com.github.hualuomoli.system.entity.Menu;
 import com.github.hualuomoli.system.entity.Role;
 import com.github.hualuomoli.system.entity.RoleMenu;
-import com.github.hualuomoli.system.entity.User;
 import com.github.hualuomoli.system.entity.UserRole;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer.Config;
@@ -57,8 +56,6 @@ public class CreatorTest {
 		clsList.add(Menu.class);
 		// role
 		clsList.add(Role.class);
-		// // user
-		// clsList.add(User.class);
 		// user-role
 		clsList.add(UserRole.class);
 		// role-menu

@@ -36,7 +36,7 @@ public class RoleController {
 	/**
 	 * 添加角色
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String post(PostEntity postEntity) {
 
 		roleService.post(postEntity);
@@ -70,7 +70,7 @@ public class RoleController {
 	/**
 	 * 修改角色
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String put(PutEntity putEntity) {
 
 		roleService.put(putEntity);
@@ -152,7 +152,7 @@ public class RoleController {
 	/**
 	 * 设置角色的菜单
 	 */
-	@RequestMapping(value = "/{id}/menus", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded:" }, produces = { "application/json" })
+	@RequestMapping(value = "/{id}/menus", method = RequestMethod.PUT, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	public String putMenus(PutMenusEntity putMenusEntity) {
 
 		roleService.putMenus(putMenusEntity);
