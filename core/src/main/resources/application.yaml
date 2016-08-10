@@ -5,7 +5,7 @@ jdbc:
   password: ""
 
 mybatis:
-  mapperLocations: classpath*:mappers/**/*.xml
+  mapperLocations: classpath*:mappers/**/*Mapper.xml
   basePackage: com.github.hualuomoli
   annotationClass: org.springframework.stereotype.Repository
   
