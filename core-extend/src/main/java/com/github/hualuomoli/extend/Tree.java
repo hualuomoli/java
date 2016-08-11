@@ -36,6 +36,11 @@ public interface Tree extends Noticer {
 
 	void setFullName(String fullName);
 
+	// 级别
+	Integer getDataLevel();
+
+	void SetDataLevel(Integer dataLevel);
+
 	// 排序字段名称
 	String getDataSortName();
 

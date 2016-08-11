@@ -42,6 +42,8 @@ filter:
     servers:
       - server:
         allowOrigin: http://localhost:3000/
+      - server:
+        allowOrigin: file://
   
 # spring mvc request version
 restful:

@@ -10,6 +10,7 @@ CREATE TABLE `sys_menu` (
 	`router_state` varchar(100) COMMENT '菜单路由状态',
 	`permission` varchar(32) COMMENT '权限字符串',
 	`menu_sort` integer(11),
+	`menu_level` integer(11),
 	`create_by` varchar(32) NOT NULL COMMENT '创建人',
 	`create_date` timestamp NOT NULL COMMENT '创建时间',
 	`update_by` varchar(32) NOT NULL COMMENT '修改人',

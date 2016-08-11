@@ -442,7 +442,7 @@ public abstract class JavaParser extends AbstractParser {
 			description = jsonObject.getString(Schema.DESCRIPTION);
 		}
 		if (jsonObject.has(Schema.DEFAULT)) {
-			def = jsonObject.getString(Schema.DEFAULT);
+			def = String.valueOf(jsonObject.get(Schema.DEFAULT));
 		}
 
 		// type
@@ -588,7 +588,7 @@ public abstract class JavaParser extends AbstractParser {
 		if (jsonObject.has(Schema.EXAMPLE)) {
 			example = String.valueOf(jsonObject.get(Schema.EXAMPLE));
 		} else {
-			throw new RuntimeException("please set example for date.");
+			throw new RuntimeException("please set example for date." + jsonObject);
 		}
 
 		if (StringUtils.isBlank(example)) {
@@ -806,6 +806,7 @@ public abstract class JavaParser extends AbstractParser {
 				ramlMethod.setRequest(deleteRequest);
 				return Lists.newArrayList(ramlMethod);
 			case PUT:
+				throw new RuntimeException("please use post.");
 			case POST:
 				// 可能有多个
 				// 请求类型
@@ -1699,7 +1700,7 @@ public abstract class JavaParser extends AbstractParser {
 			if (jsonObject.has(Schema.EXAMPLE)) {
 				example = String.valueOf(jsonObject.get(Schema.EXAMPLE));
 			} else {
-				throw new RuntimeException("please set example for string.");
+				example = "";
 			}
 
 			String pattern = null;

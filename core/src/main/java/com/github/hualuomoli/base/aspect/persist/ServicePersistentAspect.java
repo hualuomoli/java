@@ -167,7 +167,7 @@ public class ServicePersistentAspect {
 		parameter.setCreateDate(null);
 		parameter.setUpdateBy(username);
 		parameter.setUpdateDate(currentDate);
-		parameter.setStatus(Status.NOMAL.getValue());// 只有正常数据才可以修改
+		// parameter.setStatus(Status.NOMAL.getValue());// 只有正常数据才可以修改
 
 		return parameter;
 

@@ -30,6 +30,7 @@ public class Menu extends CommonField implements Tree, Noticer {
 	@EntityColumn(comment = "权限字符串", length = 32)
 	private String permission; // 权限字符串
 	private Integer menuSort;
+	private Integer menuLevel;
 
 	public Menu() {
 	}
@@ -90,6 +91,14 @@ public class Menu extends CommonField implements Tree, Noticer {
 		this.menuSort = menuSort;
 	}
 
+	public Integer getMenuLevel() {
+		return menuLevel;
+	}
+
+	public void setMenuLevel(Integer menuLevel) {
+		this.menuLevel = menuLevel;
+	}
+
 	@Override
 	public void setId(String id) {
 		super.setId(id);
@@ -143,6 +152,16 @@ public class Menu extends CommonField implements Tree, Noticer {
 	@Override
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	@Override
+	public Integer getDataLevel() {
+		return this.menuLevel;
+	}
+
+	@Override
+	public void SetDataLevel(Integer dataLevel) {
+		this.menuLevel = dataLevel;
 	}
 
 	@Override

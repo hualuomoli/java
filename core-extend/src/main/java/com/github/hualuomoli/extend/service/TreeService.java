@@ -64,6 +64,7 @@ public class TreeService {
 		Config config = this.getNext(cls, destParentCode, dealer);
 		t.setDataCode(config.code);
 		t.setDataSort(config.sort);
+		t.SetDataLevel(config.level);
 		if (StringUtils.equals(destParentCode, Tree.ROOT_CODE)) {
 			t.setFullName(t.getDataName());
 		} else {
@@ -133,7 +134,8 @@ public class TreeService {
 
 		Config config = this.getNext(cls, destParentCode, dealer);
 
-		this.doUpdate(cls, t.getId(), config.code, destParentCode, config.sort, destParentFullName + t.getNameSeparator() + srcTemp.getDataName(), dealer);
+		this.doUpdate(cls, t.getId(), config.code, destParentCode, config.sort, config.level, destParentFullName + t.getNameSeparator() + srcTemp.getDataName(),
+				dealer);
 		// 更新子集
 		if (StringUtils.equals(srcParentCode, Tree.ROOT_CODE)) {
 			srcParentCode = "";
@@ -154,14 +156,14 @@ public class TreeService {
 		for (T child : children) {
 			String fullName = destParentFullName + nameSeparator + child.getDataName();
 			String dataCode = destParentCode + child.getDataCode().substring(srcParentCode.length());
-			this.doUpdate(cls, child.getId(), dataCode, destParentCode, child.getDataSort(), fullName, dealer);
+			this.doUpdate(cls, child.getId(), dataCode, destParentCode, child.getDataSort(), dataCode.length() / 2, fullName, dealer);
 			// 子集
 			this.updateChildre(cls, nameSeparator, srcParentFullName, destParentFullName, srcParentCode, destParentCode, dealer);
 		}
 	}
 
 	// 执行更新
-	private <T extends Tree> void doUpdate(Class<T> cls, String id, String dataCode, String parentCode, Integer dataSort, String fullName,
+	private <T extends Tree> void doUpdate(Class<T> cls, String id, String dataCode, String parentCode, Integer dataSort, Integer dataLevel, String fullName,
 			TreeDealer<T> dealer) {
 		// 设置当前结点
 		T data = this.getInstance(cls);
@@ -169,6 +171,7 @@ public class TreeService {
 		data.setParentCode(parentCode);
 		data.setDataCode(dataCode);
 		data.setDataSort(dataSort);
+		data.SetDataLevel(dataLevel);
 
 		// 修改、通知
 		dealer.update(data);
@@ -220,6 +223,7 @@ public class TreeService {
 			// 没有子集
 			config.code = pre + "01";
 			config.sort = 1;
+			config.level = pre.length() / 2 + 1;
 		} else {
 			// sort
 			Collections.sort(list, new Comparator<T>() {
@@ -231,6 +235,7 @@ public class TreeService {
 			});
 			//
 			config.sort = list.get(0).getDataSort() + 1;
+			config.level = list.get(0).getDataLevel();
 
 			// code
 			final int length = pre.length();
@@ -273,6 +278,7 @@ public class TreeService {
 	private class Config {
 		private String code;
 		private Integer sort;
+		private Integer level;
 	}
 
 }

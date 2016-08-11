@@ -67,20 +67,13 @@ public class UserService {
 
 		// user - role
 		List<BaseUserRole> userRoleList = baseUserRoleService.findList(baseUserRole);
+		if (userRoleList == null || userRoleList.size() == 0) {
+			return Lists.newArrayList();
+		}
 
 		List<String> codeList = Lists.newArrayList();
 		for (BaseUserRole bur : userRoleList) {
 			codeList.add(bur.getRoleCode());
-		}
-
-		// get role
-		BaseRole baseRole = new BaseRole();
-		baseRole.setRoleCodeArray(codeList.toArray(new String[] {}));
-
-		List<BaseRole> roleList = baseRoleService.findList(baseRole);
-		codeList = Lists.newArrayList();
-		for (BaseRole br : roleList) {
-			codeList.add(br.getRoleCode());
 		}
 
 		// role - menu
