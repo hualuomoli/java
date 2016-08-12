@@ -19,21 +19,34 @@ upload:
   encoding: UTF8
 
 resources:
-  - resource:
-    url: /static/**
-    location: /static/
-  - resource:
-    url: /files/**
-    location: /files/
-  - resource:
-    url: /css/**
-    location: /css/
-  - resource:
-    url: /js/**
-    location: /js/
-  - resource:
-    url: /images/**
-    location: /images/
+  # webapp目录下
+  #- resource:
+  #  url: /css/**
+  #  location: /css/
+
+  # 绝对路径
+  #- resource:
+  #  url: /files/**
+  #  location: file:E:/files/
+  #- resource:
+  #  url: /files/**
+  #  location: file:/E:/files/
+  
+  # 其他网络的资源
+  # http://pic.4j4j.cn/upload/pic/20130815/5e604404fe.jpg
+  #- resource:
+  #  url: /pic/**
+  #  location: http://pic.4j4j.cn/upload/pic/
+  
+    
+# 应用
+application:
+  # 项目访问URL
+  serverUrl: ""
+  # 上传文件保存路径
+  uploadFilePath: ""
+  # 上传文件访问URL
+  uploadFileUrl: "" 
     
 filter:
   # cors server
