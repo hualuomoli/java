@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.hualuomoli.commons.util.ProjectUtils;
-import com.github.hualuomoli.demo.extend.entity.Role;
 import com.github.hualuomoli.extend.entity.Menu;
+import com.github.hualuomoli.extend.entity.Role;
 import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.entity.UploadFile;
 import com.github.hualuomoli.extend.entity.UserRole;

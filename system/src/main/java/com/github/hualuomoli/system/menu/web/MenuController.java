@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.hualuomoli.extend.base.entity.BaseMenu;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.mvc.validator.EntityValidator;
-import com.github.hualuomoli.system.base.entity.BaseMenu;
 import com.github.hualuomoli.system.menu.service.MenuService;
 
 @RequestVersion

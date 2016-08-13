@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.hualuomoli.exception.CodeException;
-import com.github.hualuomoli.system.base.entity.BaseMenu;
-import com.github.hualuomoli.system.base.entity.BaseRole;
-import com.github.hualuomoli.system.base.entity.BaseRoleMenu;
-import com.github.hualuomoli.system.base.service.BaseMenuService;
-import com.github.hualuomoli.system.base.service.BaseRoleMenuService;
-import com.github.hualuomoli.system.base.service.BaseRoleService;
+import com.github.hualuomoli.extend.base.entity.BaseMenu;
+import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.base.entity.BaseRoleMenu;
+import com.github.hualuomoli.extend.base.service.BaseMenuService;
+import com.github.hualuomoli.extend.base.service.BaseRoleMenuService;
+import com.github.hualuomoli.extend.base.service.BaseRoleService;
 import com.github.hualuomoli.system.constant.Code;
 import com.github.hualuomoli.system.role.web.RoleController.DeleteEntity;
 import com.github.hualuomoli.system.role.web.RoleController.GetMenusEntity;

@@ -19,17 +19,23 @@
       and `role_name` = #{roleName}
     </if>
 	<!-- 比较查询 -->
+    <if test="roleCodeArray != null"> 
+      and
+      <foreach collection="roleCodeArray" open="(" close=")" separator="or" item="data">
+    		`role_code` = #{data}
+    	</foreach>
+    </if>
   </sql>
   
   <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseRole">
     select 
       <include refid="columns" />
-    from `s_role`
+    from `sys_role`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `s_role` (
+    insert into `sys_role` (
       `id`       ,
       `role_code`,
       `role_name`
@@ -41,7 +47,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `s_role` (
+    insert into `sys_role` (
       `id`       ,
       `role_code`,
       `role_name`
@@ -55,7 +61,7 @@
   </insert>
   
   <update id="update">
-    update `s_role`
+    update `sys_role`
     <set>
       <if test="roleCode != null"> 
         `role_code` = #{roleCode},
@@ -68,11 +74,11 @@
   </update>
   
   <delete id="delete">
-    delete from `s_role` where id =  #{id}
+    delete from `sys_role` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `s_role`
+    delete from `sys_role`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -83,7 +89,7 @@
   <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseRole">
     select
       <include refid="columns" />
-    from `s_role`
+    from `sys_role`
     <where>
       <include refid="querys" />
     </where>

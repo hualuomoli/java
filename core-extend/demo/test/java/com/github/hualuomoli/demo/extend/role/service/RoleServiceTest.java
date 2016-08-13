@@ -1,12 +1,12 @@
 package com.github.hualuomoli.demo.extend.role.service;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.hualuomoli.demo.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.base.service.BaseRoleService;
 import com.github.hualuomoli.extend.notice.Noticer;
 import com.github.hualuomoli.extend.notice.Notifer;
 import com.github.hualuomoli.extend.service.NoticeService;
@@ -14,10 +14,10 @@ import com.github.hualuomoli.test.AbstractContextServiceTest;
 
 public class RoleServiceTest extends AbstractContextServiceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+	private static final Logger logger = LoggerFactory.getLogger(BaseRoleService.class);
 
 	@Autowired
-	private RoleService roleService;
+	private BaseRoleService baseRoleService;
 	@Autowired
 	private NoticeService noticeService;
 
@@ -51,7 +51,10 @@ public class RoleServiceTest extends AbstractContextServiceTest {
 		baseRole.setId("1");
 		baseRole.setRoleCode("01");
 		baseRole.setRoleName("管理员");
-		roleService.update(baseRole);
+		baseRoleService.update(baseRole);
+
+		noticeService.notice(baseRole);
+
 	}
 
 	private static class NoticerDemo implements Noticer {

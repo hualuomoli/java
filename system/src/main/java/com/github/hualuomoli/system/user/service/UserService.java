@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.hualuomoli.LoginUserService;
-import com.github.hualuomoli.system.base.entity.BaseMenu;
-import com.github.hualuomoli.system.base.entity.BaseRole;
-import com.github.hualuomoli.system.base.entity.BaseRoleMenu;
-import com.github.hualuomoli.system.base.entity.BaseUserRole;
-import com.github.hualuomoli.system.base.service.BaseMenuService;
-import com.github.hualuomoli.system.base.service.BaseRoleMenuService;
-import com.github.hualuomoli.system.base.service.BaseRoleService;
-import com.github.hualuomoli.system.base.service.BaseUserRoleService;
+import com.github.hualuomoli.extend.base.entity.BaseMenu;
+import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.base.entity.BaseRoleMenu;
+import com.github.hualuomoli.extend.base.entity.BaseUserRole;
+import com.github.hualuomoli.extend.base.service.BaseMenuService;
+import com.github.hualuomoli.extend.base.service.BaseRoleMenuService;
+import com.github.hualuomoli.extend.base.service.BaseRoleService;
+import com.github.hualuomoli.extend.base.service.BaseUserRoleService;
 import com.google.common.collect.Lists;
 
 @Service(value = "com.github.hualuomoli.system.user.service.UserService")
