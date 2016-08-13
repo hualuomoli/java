@@ -41,6 +41,10 @@ resources:
   #  url: /files
   #  location: ../files
   #  type: project
+  #- resource:
+  #  url: /files
+  #  location: ./files
+  #  type: project
     
   
   # 其他网络的资源
