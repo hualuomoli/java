@@ -23,15 +23,17 @@ public class MybatisScannerConfig {
 	@SuppressWarnings("unchecked")
 	@Bean
 	public MapperScannerConfigurer loadMapperScannerConfigurer() throws ClassNotFoundException {
-		logger.info("instance mapperScannerConfigurer.");
+		if (logger.isInfoEnabled()) {
+			logger.info("instance mapperScannerConfigurer.");
+		}
 
 		String basePackage = YamlUtils.getInstance().getString("mybatis", "basePackage");
 		String annotationClassName = YamlUtils.getInstance().getString("mybatis", "annotationClass");
 		Class<? extends Annotation> annotationClass = (Class<? extends Annotation>) Class.forName(annotationClassName);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("basePackage {}", basePackage);
-			logger.debug("annotationClass {}", annotationClassName);
+		if (logger.isInfoEnabled()) {
+			logger.info("basePackage {}", basePackage);
+			logger.info("annotationClass {}", annotationClassName);
 		}
 
 		MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();

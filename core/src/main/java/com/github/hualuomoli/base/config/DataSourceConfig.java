@@ -27,11 +27,11 @@ public class DataSourceConfig {
 	@Bean(name = "dataSource", initMethod = "init", destroyMethod = "close")
 	public DataSource dataSource() {
 		logger.info("instance dataSource.");
-		if (logger.isDebugEnabled()) {
-			logger.debug("driverClassName {}", db.driverClassName);
-			logger.debug("url {}", db.url);
-			logger.debug("username {}", db.username);
-			logger.debug("password {}", db.password);
+		if (logger.isInfoEnabled()) {
+			logger.info("driverClassName {}", db.driverClassName);
+			logger.info("url {}", db.url);
+			logger.info("username {}", db.username);
+			logger.info("password {}", db.password);
 		}
 
 		DruidDataSource dataSource = new DruidDataSource();

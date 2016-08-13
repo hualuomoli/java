@@ -38,9 +38,8 @@ public class MybatisConfig {
 
 	@Bean(name = "sqlSessionFactory")
 	public SqlSessionFactoryBean loadSqlSessionFactoryBean() throws IOException {
-		logger.info("instance SqlSessionFactoryBean.");
-		if (logger.isDebugEnabled()) {
-			logger.debug("mapperLocations {}", mapperLocations);
+		if (logger.isInfoEnabled()) {
+			logger.info("mapperLocations {}", mapperLocations);
 		}
 
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
@@ -62,7 +61,9 @@ public class MybatisConfig {
 
 	@Bean(name = "transactionManager")
 	public DataSourceTransactionManager loadDataSourceTransactionManager() {
-		logger.info("instance transactionManager.");
+		if (logger.isInfoEnabled()) {
+			logger.info("instance transactionManager.");
+		}
 
 		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
 		transactionManager.setDataSource(dataSource);

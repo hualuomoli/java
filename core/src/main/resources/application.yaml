@@ -31,6 +31,17 @@ resources:
   #- resource:
   #  url: /files/**
   #  location: file:/E:/files/
+  #- resource:
+  #  url: /files/**
+  #  location: E:/files
+  #  type: file
+  
+  # 相对项目路径
+  #- resource:
+  #  url: /files
+  #  location: ../files
+  #  type: project
+    
   
   # 其他网络的资源
   # http://pic.4j4j.cn/upload/pic/20130815/5e604404fe.jpg

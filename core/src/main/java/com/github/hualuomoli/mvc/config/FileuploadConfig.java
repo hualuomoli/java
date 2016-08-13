@@ -27,9 +27,9 @@ public class FileuploadConfig {
 	@Bean
 	public MultipartResolver multipartResolver() {
 		logger.info("register multipartResolver");
-		if (logger.isDebugEnabled()) {
-			logger.debug("maxUploadSize {}", maxUploadSize);
-			logger.debug("defaultEncoding {}", defaultEncoding);
+		if (logger.isInfoEnabled()) {
+			logger.info("maxUploadSize {}", maxUploadSize);
+			logger.info("defaultEncoding {}", defaultEncoding);
 		}
 
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();

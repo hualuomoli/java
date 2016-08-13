@@ -22,9 +22,9 @@ public class ViewConfig {
 	@Bean
 	public ViewResolver viewResolver() {
 		logger.info("register ViewResolver");
-		if (logger.isDebugEnabled()) {
-			logger.debug("prefix {}", prefix);
-			logger.debug("suffix {}", suffix);
+		if (logger.isInfoEnabled()) {
+			logger.info("prefix {}", prefix);
+			logger.info("suffix {}", suffix);
 		}
 
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
