@@ -3,6 +3,7 @@ package com.github.hualuomoli.commons.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * YAML工具
@@ -220,6 +222,12 @@ public class YamlConfig {
 			}
 			// 获取name对应的数据
 			Object obj = tempMap.get(keys[keys.length - 1]);
+
+			if (logger.isDebugEnabled() && obj != null) {
+				String key = StringUtils.join(keys, ".");
+				logger.debug("{} = {}", key, obj);
+			}
+
 			return obj == null ? null : String.valueOf(obj);
 		}
 
@@ -243,7 +251,17 @@ public class YamlConfig {
 				return null;
 			}
 			// 获取数据
-			return JsonUtils.parseObject(JsonUtils.toJson(tempMap), cls);
+			T obj = JsonUtils.parseObject(JsonUtils.toJson(tempMap), cls);
+
+			if (logger.isDebugEnabled() && obj != null) {
+				HashSet<String> set = Sets.newHashSet(keys);
+				set.add(name);
+				String key = StringUtils.join(set, ".");
+				String value = JsonUtils.toJson(obj);
+				logger.debug("{} = {}", key, value);
+			}
+
+			return obj;
 		}
 
 		/**
@@ -265,7 +283,17 @@ public class YamlConfig {
 				return null;
 			}
 			// 获取数据
-			return JsonUtils.parseList(JsonUtils.toJson(list), cls);
+			List<T> retList = JsonUtils.parseList(JsonUtils.toJson(list), cls);
+
+			if (logger.isDebugEnabled() && retList != null) {
+				HashSet<String> set = Sets.newHashSet(keys);
+				set.add(name);
+				String key = StringUtils.join(set, ".");
+				String value = JsonUtils.toJson(retList);
+				logger.debug("{} = {}", key, value);
+			}
+
+			return retList;
 		}
 
 		/**

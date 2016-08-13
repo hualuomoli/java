@@ -43,3 +43,21 @@ CREATE TABLE `sys_role_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色具有的菜单和权限';
 
+DROP TABLE IF EXISTS `sys_upload_file`;
+CREATE TABLE `sys_upload_file` (
+	`id` varchar(32) COMMENT '主键',
+	`fieldname` varchar(100) COMMENT '上传表单名',
+	`original_filename` varchar(100) COMMENT '文件原始名称',
+	`size` integer(18) COMMENT '文件大小',
+	`mimetype` varchar(32) COMMENT '文件协议',
+	`file_md5` varchar(200) COMMENT '文件MD5',
+	`file_fullname` varchar(100) COMMENT '文件名(含后缀)',
+	`filename` varchar(100) COMMENT '文件名(不含后缀)',
+	`file_suffix` varchar(20) COMMENT '文件扩展名',
+	`file_absolutepath` varchar(200) COMMENT '文件绝对路径',
+	`url` varchar(200) COMMENT '文件访问URL',
+	`server_url` varchar(100) COMMENT '服务器URL',
+	`relative_url` varchar(100) COMMENT '相对服务器的URL',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件上传';
+

@@ -63,4 +63,56 @@ public class YamlUtilsTest {
 		Assert.assertEquals("http://www.baidu.com", serverList.get(1).getAddress());
 	}
 
+	public static class User {
+
+		private String username;
+		private String nickname;
+
+		public User() {
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getNickname() {
+			return nickname;
+		}
+
+		public void setNickname(String nickname) {
+			this.nickname = nickname;
+		}
+
+	}
+
+	public static class Server {
+
+		private String address;
+		private Integer port;
+
+		public Server() {
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
+		public Integer getPort() {
+			return port;
+		}
+
+		public void setPort(Integer port) {
+			this.port = port;
+		}
+
+	}
+
 }

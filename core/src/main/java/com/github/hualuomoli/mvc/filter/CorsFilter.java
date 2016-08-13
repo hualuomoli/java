@@ -99,20 +99,40 @@ public class CorsFilter extends MvcFilter {
 		public Cors() {
 		}
 
+		public String getAllowOrigin() {
+			return allowOrigin;
+		}
+
 		public void setAllowOrigin(String allowOrigin) {
 			this.allowOrigin = allowOrigin;
+		}
+
+		public String getMaxAge() {
+			return maxAge;
 		}
 
 		public void setMaxAge(String maxAge) {
 			this.maxAge = maxAge;
 		}
 
+		public String getAllowCredentials() {
+			return allowCredentials;
+		}
+
 		public void setAllowCredentials(String allowCredentials) {
 			this.allowCredentials = allowCredentials;
 		}
 
+		public String getAllowMethods() {
+			return allowMethods;
+		}
+
 		public void setAllowMethods(String allowMethods) {
 			this.allowMethods = allowMethods;
+		}
+
+		public String getAllowHeaders() {
+			return allowHeaders;
 		}
 
 		public void setAllowHeaders(String allowHeaders) {

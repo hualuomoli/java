@@ -1,4 +1,4 @@
-package com.github.hualuomoli.system.entity;
+package com.github.hualuomoli.extend.entity;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;

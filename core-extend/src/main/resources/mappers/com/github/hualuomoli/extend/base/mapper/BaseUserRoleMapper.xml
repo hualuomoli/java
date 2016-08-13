@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseUserRoleMapper">
+
+  <sql id="columns">
+    `id`        as "id"      ,
+    `username`  as "username",
+    `role_code` as "roleCode"
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`        = #{id}      
+    </if>
+    <if test="username != null and username != ''"> 
+      and `username`  = #{username}
+    </if>
+    <if test="roleCode != null and roleCode != ''"> 
+      and `role_code` = #{roleCode}
+    </if>
+	<!-- 比较查询 -->
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseUserRole">
+    select 
+      <include refid="columns" />
+    from `sys_user_role`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `sys_user_role` (
+      `id`       ,
+      `username` ,
+      `role_code`
+    ) values (
+      #{id}      ,
+      #{username},
+      #{roleCode}
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `sys_user_role` (
+      `id`       ,
+      `username` ,
+      `role_code`
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}      ,
+        #{obj.username},
+        #{obj.roleCode}
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `sys_user_role`
+    <set>
+      <if test="username != null"> 
+        `username`  = #{username},
+      </if>
+      <if test="roleCode != null"> 
+        `role_code` = #{roleCode},
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `sys_user_role` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `sys_user_role`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseUserRole">
+    select
+      <include refid="columns" />
+    from `sys_user_role`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

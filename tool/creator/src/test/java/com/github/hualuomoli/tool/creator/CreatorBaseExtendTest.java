@@ -2,15 +2,16 @@ package com.github.hualuomoli.tool.creator;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.github.hualuomoli.commons.util.ProjectUtils;
-import com.github.hualuomoli.system.entity.Menu;
-import com.github.hualuomoli.system.entity.Role;
-import com.github.hualuomoli.system.entity.RoleMenu;
-import com.github.hualuomoli.system.entity.UploadFile;
-import com.github.hualuomoli.system.entity.UserRole;
+import com.github.hualuomoli.demo.extend.entity.Role;
+import com.github.hualuomoli.extend.entity.Menu;
+import com.github.hualuomoli.extend.entity.RoleMenu;
+import com.github.hualuomoli.extend.entity.UploadFile;
+import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer.Config;
 import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlDbDealer;
@@ -18,7 +19,12 @@ import com.github.hualuomoli.tool.creator.dealer.mysql.MysqlFileDealer;
 import com.github.hualuomoli.tool.creator.util.CreatorUtils;
 import com.google.common.collect.Lists;
 
-public class CreatorTest {
+/**
+ * 生成base的文件
+ * @author hualuomoli
+ *
+ */
+public class CreatorBaseExtendTest {
 
 	private Creator creator;
 
@@ -26,12 +32,15 @@ public class CreatorTest {
 	public void before() {
 		String output = ProjectUtils.getProjectPath();
 
+		// to core
+		output = StringUtils.replace(output, "/tool/creator", "/core-extend");
+
 		CreatorAdaptor creatorAdaptor = new CreatorAdaptor();
 		Config creatorConfig = new Config();
 		creatorConfig.output = output;
 		creatorConfig.javaPath = "src/main/java/";
 		creatorConfig.resourcePath = "src/main/resources/";
-		creatorConfig.projectPackageName = "com.github.hualuomoli.system";
+		creatorConfig.projectPackageName = "com.github.hualuomoli.extend";
 		MysqlFileDealer fileDealer = new MysqlFileDealer();
 		fileDealer.setConfig(creatorConfig);
 
@@ -68,7 +77,6 @@ public class CreatorTest {
 
 		// create
 		creator.execute(clsList.toArray(new Class<?>[] {}));
-
 	}
 
 }
