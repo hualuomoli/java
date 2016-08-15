@@ -251,8 +251,14 @@
 	<repositories>
 
 		<repository>
+			<id>nexus</id>
+			<name>Repository for nexus</name>
+			<url>http://nexus.hualuomoli.cn:8081/nexus/content/groups/public/</url>
+		</repository>
+
+		<repository>
 			<id>local</id>
-			<name>Repository for local builds</name>
+			<name>Repository for local</name>
 			<url>http://localhost:8081/nexus/content/groups/public/</url>
 		</repository>
 
@@ -262,8 +268,14 @@
 	<pluginRepositories>
 
 		<pluginRepository>
+			<id>nexus</id>
+			<name>Repository for nexus</name>
+			<url>http://nexus.hualuomoli.cn:8081/nexus/content/groups/public/</url>
+		</pluginRepository>
+
+		<pluginRepository>
 			<id>local</id>
-			<name>Repository for local builds</name>
+			<name>Repository for local</name>
 			<url>http://localhost:8081/nexus/content/groups/public/</url>
 		</pluginRepository>
 
@@ -272,14 +284,14 @@
 	<!-- 发布仓库 -->
 	<distributionManagement>
 		<repository>
-			<id>local-repo</id>
-			<name>Repository for local builds</name>
-			<url>http://localhost:8081/nexus/content/repositories/local-repo</url>
+			<id>nexus-repo</id>
+			<name>Repository for nexus</name>
+			<url>http://nexus.hualuomoli.cn:8081/nexus/content/repositories/nexus-repo/</url>
 		</repository>
 		<snapshotRepository>
-			<id>local-repo-s</id>
-			<name>Snapshot for local builds</name>
-			<url>http://localhost:8081/nexus/content/repositories/local-repo-s</url>
+			<id>nexus-repo-s</id>
+			<name>Snapshot for nexus</name>
+			<url>http://nexus.hualuomoli.cn:8081/nexus/content/repositories/nexus-repo-s/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
