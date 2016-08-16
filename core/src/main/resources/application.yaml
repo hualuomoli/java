@@ -31,20 +31,14 @@ resources:
   #- resource:
   #  url: /files/**
   #  location: file:/E:/files/
-  #- resource:
-  #  url: /files/**
-  #  location: E:/files
-  #  type: file
   
   # 相对项目路径
   #- resource:
   #  url: /files
-  #  location: ../files
-  #  type: project
+  #  location: project:../files
   #- resource:
   #  url: /files
-  #  location: ./files
-  #  type: project
+  #  location: project:./files
     
   
   # 其他网络的资源
@@ -53,15 +47,20 @@ resources:
   #  url: /pic/**
   #  location: http://pic.4j4j.cn/upload/pic/
   
+  - resource:
+    url: /files
+    location: project:../files
+  
     
 # 应用
 application:
   # 项目访问URL
   serverUrl: ""
-  # 上传文件保存路径
-  uploadFilePath: ""
-  # 上传文件访问URL
-  uploadFileUrl: "" 
+  staticFiles:
+    - staticFile:
+      name: files
+      url: /files
+      location: project:../files
     
 filter:
   # cors server

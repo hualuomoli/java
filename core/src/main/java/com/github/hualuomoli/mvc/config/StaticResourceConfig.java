@@ -35,33 +35,18 @@ public class StaticResourceConfig extends WebMvcConfigurerAdapter {
 		for (Resource resource : list) {
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("config static resource {} {} --> {}", resource.type, resource.url, resource.location);
+				logger.debug("config static resource {} {} --> {}", resource.url, resource.location);
 			}
 
 			String location = resource.location;
 
-			switch (resource.type) {
-			case Resource.FILE:
+			if (location.startsWith("project:")) {
+				File file = new File(ProjectUtils.getProjectPath(), location.substring("project:".length()));
 				try {
-					location = new File(location).getCanonicalPath();
+					location = "file:" + file.getCanonicalPath().replaceAll("\\\\", "/") + "/";
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					e.printStackTrace();
 				}
-				location = "file:" + location + File.separator;
-				break;
-			case Resource.PROJECT:
-				try {
-					location = new File(ProjectUtils.getProjectPath(), location).getCanonicalPath();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-				location = "file:" + location + File.separator;
-				break;
-			case Resource.CLASSPATH:
-				location = "classpath:" + location;
-				break;
-			default:
-				// webapps
 			}
 
 			if (logger.isInfoEnabled()) {
@@ -73,13 +58,8 @@ public class StaticResourceConfig extends WebMvcConfigurerAdapter {
 
 	public static class Resource {
 
-		private static final String CLASSPATH = "classpath";
-		private static final String FILE = "file";
-		private static final String PROJECT = "project";
-
 		private String url; // 资源访问路径
 		private String location; // 文件路径
-		private String type = ""; // 类型
 
 		public Resource() {
 		}
@@ -98,14 +78,6 @@ public class StaticResourceConfig extends WebMvcConfigurerAdapter {
 
 		public void setLocation(String location) {
 			this.location = location;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
 		}
 
 	}

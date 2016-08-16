@@ -1,11 +1,15 @@
 package com.github.hualuomoli.util;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.commons.util.ProjectUtils;
 import com.github.hualuomoli.commons.util.YamlUtils;
+import com.google.common.collect.Maps;
 
 /**
  * 应用工具类
@@ -16,12 +20,13 @@ public class ApplicationUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationUtils.class);
 	private static final Object OBJECT = new Object();
+	public static final String FILES = "files";
 
 	private static String SERVER_URL = null;
-	private static String UPLOAD_FILE_PATH = null;
-	private static String UPLOAD_FILE_URL = null;
 
-	private static final Application application = YamlUtils.getInstance().getObject("application", Application.class);
+	private static final String serverUrl = YamlUtils.getInstance().getString("application", "serverUrl");
+	private static final List<StaticFile> staticFileList = YamlUtils.getInstance().getList("staticFiles", StaticFile.class, "application");
+	private static final Map<String, StaticFile> staticFileMap = Maps.newHashMap();
 
 	/**
 	 * 获取服务器地址
@@ -31,8 +36,8 @@ public class ApplicationUtils {
 		if (SERVER_URL == null) {
 			synchronized (OBJECT) {
 				if (SERVER_URL == null) {
-					if (StringUtils.isNotBlank(application.serverUrl)) {
-						SERVER_URL = application.serverUrl;
+					if (serverUrl != null) {
+						SERVER_URL = serverUrl;
 					} else {
 						SERVER_URL = ProjectUtils.getProjectUrl();
 					}
@@ -45,77 +50,77 @@ public class ApplicationUtils {
 		return SERVER_URL;
 	}
 
-	/**
-	 * 获取上传目录
-	 * @return 上传目录
-	 */
-	public static String getUploadFilePath() {
-		if (UPLOAD_FILE_PATH == null) {
+	// 获取静态资源
+	public static StaticFile getStaticFile(String name) {
+		StaticFile staticFile = staticFileMap.get(name);
+
+		if (staticFile == null) {
 			synchronized (OBJECT) {
-				if (UPLOAD_FILE_PATH == null) {
-					if (StringUtils.isNotBlank(application.uploadFilePath)) {
-						UPLOAD_FILE_PATH = application.uploadFilePath;
-					} else {
-						UPLOAD_FILE_PATH = ProjectUtils.getProjectStaticFilePath() + "/files";
+				if (staticFile == null) {
+					for (StaticFile sf : staticFileList) {
+						if (StringUtils.equals(sf.name, name)) {
+							StaticFile s = new StaticFile();
+							// url
+							if (!StringUtils.startsWith(sf.url, "http://")) {
+								s.url = ProjectUtils.getProjectUrl() + sf.url;
+							} else {
+								s.url = sf.url;
+							}
+							// location
+							if (sf.location.startsWith("file:")) {
+								s.location = sf.location.substring("file:".length());
+							} else if (sf.location.startsWith("project:")) {
+								s.location = ProjectUtils.getProjectPath() + "/" + sf.location.substring("project:".length());
+							} else {
+								s.location = sf.location;
+							}
+							// name
+							s.name = sf.name;
+
+							staticFile = s;
+							break;
+						}
+					}
+					//
+					if (staticFile != null) {
+						staticFileMap.put(name, staticFile);
 					}
 				}
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("upload file path = " + UPLOAD_FILE_PATH);
-		}
-		return UPLOAD_FILE_PATH;
+
+		return staticFile;
 	}
 
-	/**
-	 * 获取上传目录
-	 * @return 上传目录
-	 */
-	public static String getUploadFileUrl() {
-		if (UPLOAD_FILE_URL == null) {
-			synchronized (OBJECT) {
-				if (UPLOAD_FILE_URL == null) {
-					if (StringUtils.isNotBlank(application.uploadFileUrl)) {
-						UPLOAD_FILE_URL = application.uploadFileUrl;
-					} else {
-						UPLOAD_FILE_URL = getServerUrl() + "/files";
-					}
-				}
-			}
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("upload file url = " + UPLOAD_FILE_URL);
-		}
-		return UPLOAD_FILE_URL;
-	}
+	// 静态文件
+	public static class StaticFile {
 
-	public static class Application {
-		private String serverUrl; // 服务访问URL
-		private String uploadFilePath; // 文件保存目录
-		private String uploadFileUrl; // 文件访问路径
+		private String name;
+		private String url;
+		private String location;
 
-		public String getServerUrl() {
-			return serverUrl;
+		public String getName() {
+			return name;
 		}
 
-		public void setServerUrl(String serverUrl) {
-			this.serverUrl = serverUrl;
+		public void setName(String name) {
+			this.name = name;
 		}
 
-		public String getUploadFilePath() {
-			return uploadFilePath;
+		public String getUrl() {
+			return url;
 		}
 
-		public void setUploadFilePath(String uploadFilePath) {
-			this.uploadFilePath = uploadFilePath;
+		public void setUrl(String url) {
+			this.url = url;
 		}
 
-		public String getUploadFileUrl() {
-			return uploadFileUrl;
+		public String getLocation() {
+			return location;
 		}
 
-		public void setUploadFileUrl(String uploadFileUrl) {
-			this.uploadFileUrl = uploadFileUrl;
+		public void setLocation(String location) {
+			this.location = location;
 		}
 
 	}

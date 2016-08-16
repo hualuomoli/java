@@ -76,6 +76,10 @@ public class FileService {
 		File file = new File(dir.getAbsolutePath(), filename);
 		upload.transferTo(file);
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("save file {}", file.getAbsolutePath());
+		}
+
 		// 访问URL
 		String serverUrl = dealer.serverUrl();
 		String relativeUrl = dealer.relativeUrl(relativeFilepath, filename);
@@ -94,7 +98,7 @@ public class FileService {
 		uploadFile.setFileFullname(filename);
 		uploadFile.setFilename(filename.lastIndexOf(".") == -1 ? filename : filename.substring(0, filename.lastIndexOf(".")));
 		uploadFile.setFileSuffix(filename.lastIndexOf(".") == -1 ? "" : filename.substring(filename.lastIndexOf(".") + 1));
-		uploadFile.setFileAbsolutepath(filename);
+		uploadFile.setFileAbsolutepath(file.getAbsolutePath());
 
 		uploadFile.setUrl(url);
 		uploadFile.setServerUrl(serverUrl);
@@ -134,7 +138,7 @@ public class FileService {
 
 		@Override
 		public String savepath() {
-			return ApplicationUtils.getUploadFilePath();
+			return ApplicationUtils.getStaticFile(ApplicationUtils.FILES).getLocation();
 		}
 
 		@Override
@@ -152,7 +156,7 @@ public class FileService {
 
 		@Override
 		public String serverUrl() {
-			return ApplicationUtils.getUploadFileUrl();
+			return ApplicationUtils.getStaticFile(ApplicationUtils.FILES).getUrl();
 		}
 
 		@Override
@@ -162,7 +166,7 @@ public class FileService {
 
 		@Override
 		public String getUrl(String relativeFilepath, String filename) {
-			return ApplicationUtils.getUploadFileUrl() + File.separator + relativeFilepath + File.separator + filename;
+			return ApplicationUtils.getStaticFile(ApplicationUtils.FILES).getUrl() + File.separator + relativeFilepath + File.separator + filename;
 		}
 
 	}
