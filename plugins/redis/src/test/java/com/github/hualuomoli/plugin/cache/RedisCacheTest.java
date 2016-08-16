@@ -33,6 +33,8 @@ public class RedisCacheTest {
 		Redis redis = YamlUtils.getInstance().getObject("redis", Redis.class);
 		// 连接redis服务器
 		Jedis jedis = new Jedis(redis.host, Integer.parseInt(redis.port));
+		// 连接
+		jedis.connect();
 		// 权限认证
 		if (StringUtils.isNotBlank(redis.password)) {
 			jedis.auth(redis.password);
