@@ -20,6 +20,8 @@ public interface AsyncHttp {
 
 	PostClient post(String url, Object... uriParameters);
 
+	PayloadClient json(String url, Object... uriParameters);
+
 	DeleteClient delete(String url, Object... uriParameters);
 
 	FileUploadClient fileUpload(String url, Object... uriParameters);
@@ -52,8 +54,13 @@ public interface AsyncHttp {
 		// 设置参数
 		PostClient setParameter(String name, Object value);
 
+	}
+
+	// post
+	public static interface PayloadClient extends Client {
+
 		// 设置发送内容
-		PostClient setContent(String content);
+		PayloadClient setContent(String content);
 
 	}
 
@@ -84,13 +91,15 @@ public interface AsyncHttp {
 	// 响应
 	public static class Res {
 
-		private Integer statusCode; // 响应状态码
+		private int statusCode; // 响应状态码
 		private String content; // 内容
 		private Client client; // 处理者
 
 		private JSONObject json;
 
-		public Res(Integer statusCode, String content, Client client) {
+		private Exception e;
+
+		public Res(int statusCode, String content, Client client) {
 			this.statusCode = statusCode;
 			this.content = content;
 			this.client = client;
@@ -98,6 +107,30 @@ public interface AsyncHttp {
 				this.json = JSON.parseObject(content);
 			} catch (Exception e) {
 			}
+		}
+
+		public Res(Exception e) {
+			this.e = e;
+		}
+
+		public int getStatusCode() {
+			return statusCode;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
+		public Client getClient() {
+			return client;
+		}
+
+		public JSONObject getJson() {
+			return json;
+		}
+
+		public Exception getE() {
+			return e;
 		}
 
 		// 是否响应成功
@@ -114,22 +147,6 @@ public interface AsyncHttp {
 
 			return StringUtils.equals(String.valueOf(json.get(codeName)), codeSuccessValue);
 
-		}
-
-		public Integer getStatusCode() {
-			return statusCode;
-		}
-
-		public String getContent() {
-			return content;
-		}
-
-		public Client getClient() {
-			return client;
-		}
-
-		public JSONObject getJson() {
-			return json;
 		}
 
 		public <T> T getObject(String dataName, Class<T> cls) {

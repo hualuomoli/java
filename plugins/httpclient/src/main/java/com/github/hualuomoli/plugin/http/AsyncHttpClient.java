@@ -19,15 +19,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
-import com.github.hualuomoli.plugin.http.adaptor.AsyncHttpAdaptor;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -36,26 +38,34 @@ import com.google.common.collect.Maps;
  * @author hualuomoli
  *
  */
-public class AsyncHttpClient extends AsyncHttpAdaptor {
+public class AsyncHttpClient implements AsyncHttp {
+
+	private static final Logger logger = LoggerFactory.getLogger(AsyncHttpClient.class);
 
 	@Override
 	public GetClient get(String url, Object... uriParameters) {
-		return new HttpClientGetClient(this.getRealUrl(url, uriParameters));
+		return new HttpClientGetClient(Tool.getRealUrl(url, uriParameters));
 	}
 
 	@Override
 	public PostClient post(String url, Object... uriParameters) {
-		return new HttpClientPostClient(this.getRealUrl(url, uriParameters));
+		return new HttpClientPostClient(Tool.getRealUrl(url, uriParameters));
+	}
+
+	@Override
+	public PayloadClient json(String url, Object... uriParameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public DeleteClient delete(String url, Object... uriParameters) {
-		return new HttpClientDeleteClient(this.getRealUrl(url, uriParameters));
+		return new HttpClientDeleteClient(Tool.getRealUrl(url, uriParameters));
 	}
 
 	@Override
 	public FileUploadClient fileUpload(String url, Object... uriParameters) {
-		return new HttpClientFileUploadClient(this.getRealUrl(url, uriParameters));
+		return new HttpClientFileUploadClient(Tool.getRealUrl(url, uriParameters));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -86,9 +96,14 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 
 		}
 
+		protected void showLog() {
+
+		}
+
 		@Override
 		public void execute() {
 			try {
+				this.showLog();
 				this.preExecute();
 				HttpResponse response = httpclient.execute(request);
 
@@ -116,20 +131,24 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 				if (logger.isErrorEnabled()) {
 					logger.error("{}", e);
 				}
+				callback.onMessage(new Res(e));
 			}
 
 		}
 
 	}
 
+	// get
 	public static class HttpClientGetClient extends HttpClientAdaptor<HttpClientGetClient> implements GetClient {
 
 		private String url;
+		protected HttpGet httpGet;
+
 		private Map<String, Object> params = Maps.newHashMap();
 
 		public HttpClientGetClient(String realUrl) {
 			this.url = realUrl;
-			request = new HttpGet();
+			request = httpGet = new HttpGet();
 		}
 
 		@Override
@@ -139,14 +158,35 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 		}
 
 		@Override
+		protected void showLog() {
+			if (logger.isDebugEnabled()) {
+				String strParameter = "";
+				for (String name : params.keySet()) {
+					strParameter += "&" + name + "=" + String.valueOf(params.get(name));
+				}
+				if (strParameter.length() > 0) {
+					strParameter = strParameter.substring(1);
+				}
+				logger.debug("get请求");
+				logger.debug("\turl={}", url);
+				logger.debug("\tstrParameter={}", strParameter);
+			}
+		}
+
+		@Override
 		protected void preExecute() {
 			try {
+				String strParameter = "";
 				for (String name : params.keySet()) {
-					if (url.lastIndexOf("?") != -1) {
-						url += "&" + name + "=" + this.encode(params.get(name).toString());
-					} else {
-						url += "?" + name + "=" + this.encode(params.get(name).toString());
-					}
+					strParameter += "&" + name + "=" + this.encode(String.valueOf(params.get(name)));
+				}
+				if (strParameter.length() > 0) {
+					strParameter = strParameter.substring(1);
+				}
+				if (url.indexOf("?") > 0) {
+					url = url + "&" + strParameter;
+				} else {
+					url = url + "?" + strParameter;
 				}
 				request.setURI(new URI(url));
 			} catch (URISyntaxException e) {
@@ -167,12 +207,16 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 
 	}
 
+	// post
 	public static class HttpClientPostClient extends HttpClientAdaptor<HttpClientPostClient> implements PostClient {
 
-		private Map<String, Object> params = Maps.newHashMap();
+		private String url;
 		private HttpPost httpPost;
 
+		private Map<String, Object> params = Maps.newHashMap();
+
 		public HttpClientPostClient(String realUrl) {
+			url = realUrl;
 			request = httpPost = new HttpPost(realUrl);
 		}
 
@@ -183,9 +227,19 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 		}
 
 		@Override
-		public PostClient setContent(String content) {
-			// TODO Auto-generated method stub
-			return this;
+		protected void showLog() {
+			if (logger.isDebugEnabled()) {
+				String strParameter = "";
+				for (String name : params.keySet()) {
+					strParameter += "&" + name + "=" + String.valueOf(params.get(name));
+				}
+				if (strParameter.length() > 0) {
+					strParameter = strParameter.substring(1);
+				}
+				logger.debug("post请求");
+				logger.debug("\turl={}", url);
+				logger.debug("\tstrParameter={}", strParameter);
+			}
 		}
 
 		@Override
@@ -205,21 +259,74 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 
 	}
 
-	public static class HttpClientDeleteClient extends HttpClientAdaptor<HttpClientPostClient> implements DeleteClient {
+	// payload
+	public static class HttpClientPayloadClient extends HttpClientAdaptor<HttpClientPayloadClient> implements PayloadClient {
 
-		public HttpClientDeleteClient(String realUrl) {
-			request = new HttpDelete(realUrl);
+		private String content;
+
+		private String url;
+		private HttpPost httpPost;
+
+		public HttpClientPayloadClient(String realUrl) {
+			url = realUrl;
+			request = httpPost = new HttpPost(realUrl);
+		}
+
+		@Override
+		public PayloadClient setContent(String content) {
+			this.content = content;
+			return this;
+		}
+
+		@Override
+		protected void showLog() {
+			if (logger.isDebugEnabled()) {
+				logger.debug("payload请求");
+				logger.debug("\turl={}", url);
+				logger.debug("\tcontent={}", content);
+			}
+		}
+
+		@Override
+		protected void preExecute() {
+			StringEntity se = new StringEntity(content, ContentType.APPLICATION_JSON);
+			httpPost.setEntity(se);
 		}
 
 	}
 
+	// delete
+	public static class HttpClientDeleteClient extends HttpClientAdaptor<HttpClientPostClient> implements DeleteClient {
+
+		private String url;
+		protected HttpDelete httpDelete;
+
+		public HttpClientDeleteClient(String realUrl) {
+			url = realUrl;
+			request = httpDelete = new HttpDelete(realUrl);
+		}
+
+		@Override
+		protected void showLog() {
+			if (logger.isDebugEnabled()) {
+				logger.debug("delete请求");
+				logger.debug("\turl={}", url);
+			}
+		}
+
+	}
+
+	// fileupload
 	public static class HttpClientFileUploadClient extends HttpClientAdaptor<HttpClientFileUploadClient> implements FileUploadClient {
 
-		private HttpPost httpPost;
 		private Map<String, Object> params = Maps.newHashMap();
 		private Map<String, File> files = Maps.newHashMap();
 
+		private String url;
+		private HttpPost httpPost;
+
 		public HttpClientFileUploadClient(String realUrl) {
+			url = realUrl;
 			request = httpPost = new HttpPost(realUrl);
 		}
 
@@ -233,6 +340,26 @@ public class AsyncHttpClient extends AsyncHttpAdaptor {
 		public FileUploadClient setUploadFile(String name, File file) {
 			files.put(name, file);
 			return this;
+		}
+
+		@Override
+		protected void showLog() {
+			if (logger.isDebugEnabled()) {
+				String strParameter = "";
+				for (String name : params.keySet()) {
+					strParameter += "&" + name + "=" + String.valueOf(params.get(name));
+				}
+				if (strParameter.length() > 0) {
+					strParameter = strParameter.substring(1);
+				}
+				logger.debug("fileupload请求");
+				logger.debug("\turl={}", url);
+				logger.debug("\tstrParameter={}", strParameter);
+				// file
+				for (String name : files.keySet()) {
+					logger.debug("\t{}={}", name, files.get(name).getAbsolutePath());
+				}
+			}
 		}
 
 		@Override
