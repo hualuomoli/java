@@ -52,7 +52,8 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 		Enumeration<String> parameterNames = req.getParameterNames();
 		while (parameterNames.hasMoreElements()) {
 			String name = parameterNames.nextElement();
-			logger.debug("\t\t{} = {}", name, req.getParameter(name));
+			String[] values = req.getParameterValues(name);
+			logger.debug("\t\t{} = {}", name, values);
 		}
 	}
 
