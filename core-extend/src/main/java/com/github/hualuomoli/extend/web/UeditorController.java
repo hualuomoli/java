@@ -32,7 +32,7 @@ public class UeditorController {
 	// 富文本编辑器,上传文件
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "multipart/form-data" }, produces = { "application/json" })
 	@ResponseBody
-	public String ueditor(@RequestParam(value = "uploadFile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
+	public String ueditor(@RequestParam(value = "upfile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
 
 		// 处理者
 		BaseUploadFile baseUploadFile = fileService.save(uploadFile);
