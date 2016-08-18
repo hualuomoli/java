@@ -20,6 +20,9 @@ import com.github.hualuomoli.demo.raml.app.def.entity.PostPostByIdResultJsonEnti
 import com.github.hualuomoli.demo.raml.app.def.entity.PostPostjsonByIdJsonEntity;
 import com.github.hualuomoli.demo.raml.app.def.entity.PostPostjsonByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.def.service.DefService;
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**

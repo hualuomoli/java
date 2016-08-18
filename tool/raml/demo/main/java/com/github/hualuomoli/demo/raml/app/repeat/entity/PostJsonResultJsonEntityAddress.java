@@ -17,26 +17,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class PostJsonResultJsonEntityAddress {
   
-  private String province;
-  private String city;
   private String name;
   private String couty;
+  private String province;
   private String[] phones;
+  private String city;
   
-  public String getProvince(){
-    return province;
-  }
-  
-  public void setProvince(String province){
-    this.province = province;
-  }
-  public String getCity(){
-    return city;
-  }
-  
-  public void setCity(String city){
-    this.city = city;
-  }
   public String getName(){
     return name;
   }
@@ -51,12 +37,26 @@ public class PostJsonResultJsonEntityAddress {
   public void setCouty(String couty){
     this.couty = couty;
   }
+  public String getProvince(){
+    return province;
+  }
+  
+  public void setProvince(String province){
+    this.province = province;
+  }
   public String[] getPhones(){
     return phones;
   }
   
   public void setPhones(String[] phones){
     this.phones = phones;
+  }
+  public String getCity(){
+    return city;
+  }
+  
+  public void setCity(String city){
+    this.city = city;
   }
   
 }

@@ -20,6 +20,9 @@ import ${packageName}.entity.${method.request.className};
 import ${packageName}.entity.${method.response.className};
 </#list>
 import ${packageName}.service.${serviceJavaName};
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
@@ -47,6 +50,9 @@ public class ${controllerJavaName} {
 	 * @param ${fileParam.name} ${fileParam.comment}
 	</#list>
 	 */
+	<#list method.headerParams as headerParam>
+	${headerParam}
+	</#list>
 	@RequestMapping(value = "${method.methodMimeType.uri}", method = RequestMethod.${method.methodMimeType.method}<#if method.methodMimeType.consumes??>, consumes = { "${method.methodMimeType.consumes}" }</#if><#if method.methodMimeType.produces??>, produces = { "${method.methodMimeType.produces}" }</#if>)
 	public String ${method.methodName}(
 	<#list method.uriParams as uriParam>

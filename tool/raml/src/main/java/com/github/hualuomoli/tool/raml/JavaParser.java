@@ -20,6 +20,7 @@ import org.raml.model.Resource;
 import org.raml.model.Response;
 import org.raml.model.parameter.AbstractParam;
 import org.raml.model.parameter.FormParameter;
+import org.raml.model.parameter.Header;
 import org.raml.model.parameter.QueryParameter;
 import org.raml.model.parameter.UriParameter;
 
@@ -693,6 +694,7 @@ public abstract class JavaParser extends AbstractParser {
 			ramlMethod.setDescription(description);
 			ramlMethod.setUriParams(this._getUriParams());
 			ramlMethod.setFileParams(this._getFileParams());
+			ramlMethod.setHeaderParams(this._getHeaderParams());
 			// mimeType
 			RamlMethodMimeType methodMimeType = new RamlMethodMimeType();
 			methodMimeType.setUri(relativeUri);
@@ -767,6 +769,48 @@ public abstract class JavaParser extends AbstractParser {
 			}
 
 			return params;
+		}
+
+		// Header参数
+		private List<String> _getHeaderParams() {
+			List<String> securityes = Lists.newArrayList();
+
+			Map<String, Header> headers = action.getHeaders();
+			if (headers == null || headers.size() == 0) {
+				return securityes;
+			}
+
+			for (Header header : headers.values()) {
+
+				String displayName = header.getDisplayName();
+				String security = "";
+				switch (displayName) {
+				case HEADER_TOKEN:
+					security = "@RequestToken";
+					break;
+				case HEADER_ROLE:
+					String roleExample = header.getExample();
+					if (StringUtils.isBlank(roleExample)) {
+						throw new RuntimeException("role example must not be null.");
+					}
+					String[] array = roleExample.split("[,]");
+					String values = StringUtils.join(array, "\", \"");
+					security = "@RequestRole(value = {\"" + values + "\"})";
+					break;
+				case HEADER_PERMISSION:
+					String permissionExample = header.getExample();
+					if (StringUtils.isBlank(permissionExample)) {
+						throw new RuntimeException("permission example must not be null.");
+					}
+					security = "@RequestPermission(value = \"" + permissionExample + "\")";
+					break;
+				default:
+					throw new RuntimeException("can not support header name " + displayName);
+				}
+				securityes.add(security);
+			}
+
+			return securityes;
 		}
 
 	}

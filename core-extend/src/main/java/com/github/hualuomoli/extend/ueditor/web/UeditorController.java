@@ -1,4 +1,4 @@
-package com.github.hualuomoli.extend.web;
+package com.github.hualuomoli.extend.ueditor.web;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.commons.util.JsonUtils;
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
-import com.github.hualuomoli.extend.service.FileService;
+import com.github.hualuomoli.extend.file.service.FileService;
 import com.google.common.collect.Maps;
 
 /**
@@ -23,16 +23,16 @@ import com.google.common.collect.Maps;
  *
  */
 @RequestMapping(value = "/ueditor")
-@Controller(value = "com.github.hualuomoli.extend.web.UeditorController")
+@Controller(value = "com.github.hualuomoli.extend.ueditor.web.UeditorController")
 public class UeditorController {
 
 	@Autowired
 	private FileService fileService;
 
 	// 富文本编辑器,上传文件
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "multipart/form-data" }, produces = { "application/json" })
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = { "multipart/form-data" }, produces = { "application/json" })
 	@ResponseBody
-	public String ueditor(@RequestParam(value = "upfile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
+	public String upload(@RequestParam(value = "upfile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
 
 		// 处理者
 		BaseUploadFile baseUploadFile = fileService.save(uploadFile);
@@ -48,7 +48,7 @@ public class UeditorController {
 	}
 
 	// 图片地址替换
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
 	@ResponseBody
 	public String ueditor(HttpServletRequest request) {
 

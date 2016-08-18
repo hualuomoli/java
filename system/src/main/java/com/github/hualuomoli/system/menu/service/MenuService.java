@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
 import com.github.hualuomoli.extend.base.service.BaseMenuService;
-import com.github.hualuomoli.extend.service.TreeService;
+import com.github.hualuomoli.extend.tree.service.TreeService;
 import com.github.hualuomoli.system.constant.DataType;
 import com.github.hualuomoli.system.menu.web.MenuController.DeleteEntity;
 import com.github.hualuomoli.system.menu.web.MenuController.GetChildrenByParentCodeEntity;

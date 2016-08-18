@@ -15,15 +15,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.demo.raml.app.get.entity.GetQueryparamEntity;
-import com.github.hualuomoli.demo.raml.app.get.entity.GetQueryparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.get.entity.GetUriparamByIdEntity;
 import com.github.hualuomoli.demo.raml.app.get.entity.GetUriparamByIdResultJsonEntity;
-import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamEntity;
-import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamResultJsonEntity;
+import com.github.hualuomoli.demo.raml.app.get.entity.GetQueryparamEntity;
+import com.github.hualuomoli.demo.raml.app.get.entity.GetQueryparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.get.entity.GetUriqueryparamByPageNumberPageSizeEntity;
 import com.github.hualuomoli.demo.raml.app.get.entity.GetUriqueryparamByPageNumberPageSizeResultJsonEntity;
+import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamEntity;
+import com.github.hualuomoli.demo.raml.app.get.entity.GetNoparamResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.get.service.GetService;
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
@@ -40,21 +43,6 @@ public class GetController {
 	@Autowired
 	private GetService getService;
 	
-	/**
-	 * 
-	 */
-	@RequestMapping(value = "/queryparam", method = RequestMethod.GET, produces = { "application/json" })
-	public String getQueryparam(
-	GetQueryparamEntity getQueryparamEntity,
-	HttpServletRequest request, 
-	HttpServletResponse response
-	) {
-		// 设置属性
-		
-		getService.getQueryparam(getQueryparamEntity);
-		return AppRestResponse.getNoData();
-		
-	}
 	/**
 	 * 
 	 * @param id ID
@@ -77,15 +65,15 @@ public class GetController {
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/noparam", method = RequestMethod.GET, produces = { "application/json" })
-	public String getNoparam(
-	GetNoparamEntity getNoparamEntity,
+	@RequestMapping(value = "/queryparam", method = RequestMethod.GET, produces = { "application/json" })
+	public String getQueryparam(
+	GetQueryparamEntity getQueryparamEntity,
 	HttpServletRequest request, 
 	HttpServletResponse response
 	) {
 		// 设置属性
 		
-		getService.getNoparam(getNoparamEntity);
+		getService.getQueryparam(getQueryparamEntity);
 		return AppRestResponse.getNoData();
 		
 	}
@@ -109,6 +97,21 @@ public class GetController {
 		getUriqueryparamByPageNumberPageSizeEntity.setPageNumber(pageNumber);
 		
 		getService.getUriqueryparamByPageNumberPageSize(getUriqueryparamByPageNumberPageSizeEntity);
+		return AppRestResponse.getNoData();
+		
+	}
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/noparam", method = RequestMethod.GET, produces = { "application/json" })
+	public String getNoparam(
+	GetNoparamEntity getNoparamEntity,
+	HttpServletRequest request, 
+	HttpServletResponse response
+	) {
+		// 设置属性
+		
+		getService.getNoparam(getNoparamEntity);
 		return AppRestResponse.getNoData();
 		
 	}

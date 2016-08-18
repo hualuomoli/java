@@ -18,6 +18,9 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.complex.entity.PostUriformByIdJsonEntity;
 import com.github.hualuomoli.demo.raml.app.complex.entity.PostUriformByIdResultJsonEntityUser;
 import com.github.hualuomoli.demo.raml.app.complex.service.ComplexService;
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**

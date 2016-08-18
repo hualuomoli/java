@@ -18,6 +18,9 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdFileEntity;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.multipart.service.MultipartService;
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**

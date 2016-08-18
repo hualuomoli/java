@@ -3,6 +3,7 @@ package com.github.hualuomoli.extend.entity;
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.BaseField;
+import com.github.hualuomoli.extend.notice.Noticer;
 
 /**
  * 用户拥有的角色
@@ -11,7 +12,7 @@ import com.github.hualuomoli.base.entity.BaseField;
  */
 @SuppressWarnings("serial")
 @EntityTable(comment = "用户与角色的关系")
-public class UserRole extends BaseField {
+public class UserRole extends BaseField implements Noticer {
 
 	@EntityColumn(name = "username", comment = "用户名")
 	private String username;

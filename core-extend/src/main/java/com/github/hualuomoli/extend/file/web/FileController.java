@@ -1,4 +1,4 @@
-package com.github.hualuomoli.extend.web;
+package com.github.hualuomoli.extend.file.web;
 
 import java.util.List;
 import java.util.Map;
@@ -18,28 +18,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
-import com.github.hualuomoli.extend.dealer.FileUploadDealer;
-import com.github.hualuomoli.extend.service.FileService;
+import com.github.hualuomoli.extend.file.dealer.FileUploadDealer;
+import com.github.hualuomoli.extend.file.service.FileService;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.google.common.collect.Lists;
 
 /**
- * 上传
+ * 文件
  * @author hualuomoli
  *
  */
-@RequestMapping(value = "/upload")
-@Controller(value = "com.github.hualuomoli.extend.web.FileUploadController")
-public class FileUploadController implements ApplicationContextAware {
+@RequestMapping(value = "/file")
+@Controller(value = "com.github.hualuomoli.extend.file.web.FileController")
+public class FileController implements ApplicationContextAware {
 
 	private List<FileUploadDealer> dealerList = Lists.newArrayList();
 	@Autowired
 	private FileService fileService;
 
 	// 上传
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "multipart/form-data" }, produces = { "application/json" })
+	@RequestToken
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = { "multipart/form-data" }, produces = { "application/json" })
 	@ResponseBody
-	public String post(@RequestParam(value = "uploadFile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
+	public String upload(@RequestParam(value = "uploadFile", required = true) MultipartFile uploadFile, HttpServletRequest request) {
 		String headerUploadType = request.getHeader("upload-type");
 
 		// 处理者

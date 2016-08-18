@@ -17,24 +17,24 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class PostUriformByIdResultJsonEntityOrder {
   
+  private String id;
   @JSONField(format = "yyyy-MM-dd")
   private Date date;
-  private String id;
   private java.util.List<PostUriformByIdResultJsonEntityProduct> products;
   
-  public Date getDate(){
-    return date;
-  }
-  
-  public void setDate(Date date){
-    this.date = date;
-  }
   public String getId(){
     return id;
   }
   
   public void setId(String id){
     this.id = id;
+  }
+  public Date getDate(){
+    return date;
+  }
+  
+  public void setDate(Date date){
+    this.date = date;
   }
   public java.util.List<PostUriformByIdResultJsonEntityProduct> getProducts(){
     return products;

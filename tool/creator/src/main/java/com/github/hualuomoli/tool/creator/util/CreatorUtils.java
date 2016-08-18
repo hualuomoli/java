@@ -18,7 +18,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.BaseField;
 import com.github.hualuomoli.base.entity.CommonField;
-import com.github.hualuomoli.extend.Tree;
+import com.github.hualuomoli.extend.tree.service.Tree;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumnQuery;
 import com.github.hualuomoli.tool.creator.entity.CreatorTable;

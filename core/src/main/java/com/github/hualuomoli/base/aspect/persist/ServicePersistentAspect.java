@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.github.hualuomoli.LoginUserService;
 import com.github.hualuomoli.base.BasePersistent;
 import com.github.hualuomoli.base.CommonPersistent;
 import com.github.hualuomoli.base.annotation.persistent.PreBatchInsert;
@@ -26,6 +25,7 @@ import com.github.hualuomoli.base.annotation.persistent.PreInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.commons.util.RandomUtils;
+import com.github.hualuomoli.login.service.LoginUserService;
 
 // service 持久化 预处理
 @Aspect

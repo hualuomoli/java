@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.github.hualuomoli.extend.annotation.persistent.BasicDataNotice;
 import com.github.hualuomoli.extend.notice.Noticer;
-import com.github.hualuomoli.extend.service.NoticeService;
+import com.github.hualuomoli.extend.notice.service.NoticeService;
 
 // service 持久化 预处理
 @Aspect

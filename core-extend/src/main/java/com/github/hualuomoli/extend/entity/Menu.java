@@ -4,8 +4,8 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.CommonField;
-import com.github.hualuomoli.extend.Tree;
 import com.github.hualuomoli.extend.notice.Noticer;
+import com.github.hualuomoli.extend.tree.service.Tree;
 
 /**
  * 菜单

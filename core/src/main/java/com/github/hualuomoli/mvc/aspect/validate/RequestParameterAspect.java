@@ -4,8 +4,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.github.hualuomoli.mvc.validator.EntityValidator;
@@ -13,10 +11,9 @@ import com.github.hualuomoli.mvc.validator.EntityValidatorUtils;
 
 // 请求参数合法性
 @Aspect
-@Component(value = "com.github.hualuomoli.mvc.aspect.validate.ValidRequestParameterAspect")
-public class ValidRequestParameterAspect {
+@Component(value = "com.github.hualuomoli.mvc.aspect.validate.RequestParameterAspect")
+public class RequestParameterAspect {
 
-	private static final Logger logger = LoggerFactory.getLogger(ValidRequestParameterAspect.class);
 	private static final Class<?> validatorClass = EntityValidator.class;
 
 	// 切点到controller
@@ -26,9 +23,6 @@ public class ValidRequestParameterAspect {
 
 	@Before("pointcut()")
 	public void doBefore(JoinPoint joinPoint) {
-		if (!logger.isDebugEnabled()) {
-			return;
-		}
 
 		Object[] args = joinPoint.getArgs();
 		if (args == null || args.length == 0) {

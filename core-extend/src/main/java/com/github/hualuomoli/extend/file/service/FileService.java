@@ -1,4 +1,4 @@
-package com.github.hualuomoli.extend.service;
+package com.github.hualuomoli.extend.file.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
 import com.github.hualuomoli.extend.base.service.BaseUploadFileService;
 import com.github.hualuomoli.util.ApplicationUtils;
 
-@Service(value = "com.github.hualuomoli.extend.service.FileService")
+@Service(value = "com.github.hualuomoli.extend.file.service.FileService")
 @Transactional(readOnly = true)
 public class FileService {
 

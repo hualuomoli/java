@@ -1,7 +1,7 @@
-package com.github.hualuomoli.extend.dealer;
+package com.github.hualuomoli.extend.file.dealer;
 
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
-import com.github.hualuomoli.extend.service.FileService.Dealer;
+import com.github.hualuomoli.extend.file.service.FileService.Dealer;
 
 /**
  * 文件处理者

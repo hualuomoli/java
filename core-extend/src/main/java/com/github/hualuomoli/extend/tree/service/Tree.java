@@ -1,4 +1,4 @@
-package com.github.hualuomoli.extend;
+package com.github.hualuomoli.extend.tree.service;
 
 import com.github.hualuomoli.extend.notice.Noticer;
 

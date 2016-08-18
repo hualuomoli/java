@@ -1466,3 +1466,27 @@ traits:
                       "user"
                     ]
                   }
+  
+  /header:
+    displayName: header
+    description: 增加header验证
+    
+    /get:
+    
+      get:
+        description: 查询
+        headers:
+          token:
+            displayName: token
+            description: 登录用户令牌
+            type: string
+          role:
+            displayName: role
+            description: 角色
+            example: system,app
+          permission:
+            displayName: permission
+            description: 权限
+            example: system:menu:view
+        is:
+          - success:

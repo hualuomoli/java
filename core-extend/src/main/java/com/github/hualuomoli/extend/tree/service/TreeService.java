@@ -1,4 +1,4 @@
-package com.github.hualuomoli.extend.service;
+package com.github.hualuomoli.extend.tree.service;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.hualuomoli.extend.Tree;
+import com.github.hualuomoli.extend.notice.service.NoticeService;
 
-@Service(value = "com.github.hualuomoli.extend.service.TreeService")
+@Service(value = "com.github.hualuomoli.extend.tree.service.TreeService")
 @Transactional(readOnly = true)
 public class TreeService {
 

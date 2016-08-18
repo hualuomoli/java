@@ -17,6 +17,7 @@ public class RamlMethod implements Serializable {
 	private String description; // 注释
 	private List<RamlParam> uriParams; // URI参数
 	private List<RamlParam> fileParams; // File参数
+	private List<String> headerParams; // header信息
 
 	private RamlRequest request; // 请求实体类名称
 	private RamlResponse response; // 响应实体类名称(如果不需要返回内容,该值为空)
@@ -80,6 +81,14 @@ public class RamlMethod implements Serializable {
 
 	public void setMethodMimeType(RamlMethodMimeType methodMimeType) {
 		this.methodMimeType = methodMimeType;
+	}
+
+	public List<String> getHeaderParams() {
+		return headerParams;
+	}
+
+	public void setHeaderParams(List<String> headerParams) {
+		this.headerParams = headerParams;
 	}
 
 	// public String getHasResult() {

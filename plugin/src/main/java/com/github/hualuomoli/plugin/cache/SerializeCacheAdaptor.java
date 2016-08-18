@@ -167,11 +167,7 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 
 	@Override
 	public <T extends Serializable> T getSerializableAndRefresh(String key) {
-		T t = this.getSerializable(key);
-		if (t != null) {
-			this.setSerializableValue(key, t, this.getDefaultExpire());
-		}
-		return t;
+		return SerializeUtils.unserialize(this.getAndRefresh(key));
 	}
 
 	@Override
@@ -218,7 +214,7 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 	public abstract byte[] getValue(String key);
 
 	// 获取序列化值
-	public <T extends Serializable> T getSerializableValue(String key) {
+	protected <T extends Serializable> T getSerializableValue(String key) {
 		return SerializeUtils.unserialize(this.getValue(key));
 	}
 
