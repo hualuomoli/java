@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
 import com.github.hualuomoli.extend.base.entity.BaseRole;
 import com.github.hualuomoli.extend.rest.AppRestResponse;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 import com.github.hualuomoli.system.user.service.UserService;
 
@@ -35,6 +36,7 @@ public class UserController {
 	/**
 	 * 查询用户的菜单
 	 */
+	@RequestToken
 	@RequestMapping(value = "/menu", method = RequestMethod.GET, produces = { "applicaiton/json" })
 	public String getMenu() {
 
