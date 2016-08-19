@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseUserMapper">
+
+  <sql id="columns">
+    `id`       as "id"      ,
+    `username` as "username",
+    `phone`    as "phone"   ,
+    `email`    as "email"   ,
+    `password` as "password"
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`       = #{id}      
+    </if>
+    <if test="username != null and username != ''"> 
+      and `username` = #{username}
+    </if>
+    <if test="phone != null and phone != ''"> 
+      and `phone`    = #{phone}   
+    </if>
+    <if test="email != null and email != ''"> 
+      and `email`    = #{email}   
+    </if>
+    <if test="password != null and password != ''"> 
+      and `password` = #{password}
+    </if>
+	<!-- 比较查询 -->
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseUser">
+    select 
+      <include refid="columns" />
+    from `sys_user`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `sys_user` (
+      `id`      ,
+      `username`,
+      `phone`   ,
+      `email`   ,
+      `password`
+    ) values (
+      #{id}      ,
+      #{username},
+      #{phone}   ,
+      #{email}   ,
+      #{password}
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `sys_user` (
+      `id`      ,
+      `username`,
+      `phone`   ,
+      `email`   ,
+      `password`
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}      ,
+        #{obj.username},
+        #{obj.phone}   ,
+        #{obj.email}   ,
+        #{obj.password}
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `sys_user`
+    <set>
+      <if test="username != null"> 
+        `username` = #{username},
+      </if>
+      <if test="phone != null"> 
+        `phone`    = #{phone}   ,
+      </if>
+      <if test="email != null"> 
+        `email`    = #{email}   ,
+      </if>
+      <if test="password != null"> 
+        `password` = #{password},
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `sys_user` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `sys_user`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseUser">
+    select
+      <include refid="columns" />
+    from `sys_user`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

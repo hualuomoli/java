@@ -77,3 +77,11 @@ restful:
   version:
     name: content-version
     default: ""
+
+# 安全
+digest:
+  # 密码
+  password:
+    algorithm: sha1
+    saltNumber: 8
+    iterations: 10

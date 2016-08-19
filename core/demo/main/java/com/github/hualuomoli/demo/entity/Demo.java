@@ -10,7 +10,7 @@ import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.CommonField;
 
 @SuppressWarnings("serial")
-@EntityTable(name = "t_demo", comment = "测试demo", unique = { "name" })
+@EntityTable(name = "test_demo", comment = "测试demo", unique = { "name" })
 public class Demo extends CommonField {
 
 	@EntityColumnQuery(leftLike = true, rightLike = true, bothLike = true, inArray = true)

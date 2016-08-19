@@ -1,10 +1,10 @@
-package com.github.hualuomoli.mvc.rest;
+package com.github.hualuomoli.extend.rest;
 
 import java.util.List;
 
 import com.github.hualuomoli.base.entity.Page;
-import com.github.hualuomoli.mvc.rest.RestResponse.Config;
-import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
+import com.github.hualuomoli.extend.rest.RestResponse.Config;
+import com.github.hualuomoli.extend.rest.RestResponse.ErrorData;
 
 /**
  * APP的REST风格返回
@@ -14,7 +14,7 @@ import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
  */
 public abstract class AppRestResponse {
 
-	private static Config config = new RestResponse.Config(0, "code", "msg", "data", "datas", "total", "pageNumber", "pageSize", "dataList");
+	private static Config config = new RestResponse.Config(0, "code", "msg", "total", "pageNumber", "pageSize");
 
 	private static RestResponse rest = null;
 
@@ -57,8 +57,8 @@ public abstract class AppRestResponse {
 	}
 
 	// 数据转换成json输出
-	public static String getOriginData(Object obj) {
-		return getInstance().getOriginData(obj);
+	public static String toJson(Object obj) {
+		return getInstance().toJson(obj);
 	}
 
 }

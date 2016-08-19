@@ -4,7 +4,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.hualuomoli.commons.util.ProjectUtils;
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.tool.raml.JavaParser.Config;
 
 public class JavaParserOriginTest {

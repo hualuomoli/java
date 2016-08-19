@@ -50,7 +50,7 @@ public class CreatorBaseTest {
 		creatorAdaptor.setDbDealer(dbDealer);
 		creator = creatorAdaptor;
 
-		CreatorUtils.setPrefix("t");
+		CreatorUtils.setPrefix("test");
 
 	}
 

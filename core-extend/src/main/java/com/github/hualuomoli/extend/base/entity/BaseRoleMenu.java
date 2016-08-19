@@ -3,7 +3,7 @@ package com.github.hualuomoli.extend.base.entity;
 import org.apache.commons.lang3.StringUtils;
 
 public class BaseRoleMenu extends com.github.hualuomoli.extend.entity.RoleMenu
- implements com.github.hualuomoli.base.BasePersistent
+ implements com.github.hualuomoli.base.persistent.BasePersistent
  {
 
 	/** 角色编码 - 查询数组 */

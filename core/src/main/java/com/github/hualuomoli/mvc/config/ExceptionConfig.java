@@ -114,21 +114,7 @@ public class ExceptionConfig {
 
 	// 输出JSON
 	private void flushJson(HttpServletResponse response, CodeError codeError) {
-
-		// 设置响应头
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");
-
-		// 设置数据
-		Map<String, Object> map = Maps.newHashMap();
-		map.put("code", codeError.getCode());
-		map.put("msg", codeError.getMessage());
-		String data = JsonUtils.toJson(map);
-		// 输出
-		try {
-			response.getOutputStream().write(data.getBytes());
-		} catch (IOException e1) {
-		}
+		this.flushJson(response, codeError.getCode(), codeError.getMessage());
 	}
 
 	// 输出JSON

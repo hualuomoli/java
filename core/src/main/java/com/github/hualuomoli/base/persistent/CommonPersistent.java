@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base;
+package com.github.hualuomoli.base.persistent;
 
 import java.util.Date;
 

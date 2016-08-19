@@ -8,7 +8,9 @@ package com.github.hualuomoli.extend.constant;
 public enum DataType {
 
 	MENU_TYPE_MENU(1, "菜单"), // 菜单
-	MENU_TYPE_PERMISSION(1, "权限"),// 权限
+	MENU_TYPE_PERMISSION(2, "权限"), // 权限
+	USER_SEX_MALE(1, "M"), // 男
+	USER_SEX_FEMALE(2, "F"),// 女
 	;
 
 	private Integer value;

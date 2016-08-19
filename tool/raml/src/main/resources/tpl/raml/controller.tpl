@@ -102,11 +102,11 @@ public class ${controllerJavaName} {
 		<#elseif method.response.resJson.type == 6>
 		<#-- origin object -->
 		${method.response.className} ${method.response.className?uncap_first} = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
-		return ${restResponseClassName}.getOriginData(${method.response.className?uncap_first});
+		return ${restResponseClassName}.toJson(${method.response.className?uncap_first});
 		<#elseif method.response.resJson.type == 7>
 		<#-- origin list -->
 		java.util.List<${method.response.className}> list = ${serviceJavaName?uncap_first}.${method.methodName}(${method.request.className?uncap_first});
-		return ${restResponseClassName}.getOriginData(list);
+		return ${restResponseClassName}.toJson(list);
 		</#if>
 		
 	}

@@ -137,12 +137,12 @@
   <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
     select 
       <include refid="columns" />
-    from `t_demo`
+    from `test_demo`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `t_demo` (
+    insert into `test_demo` (
       `id`           ,
       `name`         ,
       `sex`          ,
@@ -176,7 +176,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `t_demo` (
+    insert into `test_demo` (
       `id`           ,
       `name`         ,
       `sex`          ,
@@ -212,7 +212,7 @@
   </insert>
   
   <update id="update">
-    update `t_demo`
+    update `test_demo`
     <set>
       <if test="name != null"> 
         `name`          = #{name}         ,
@@ -258,11 +258,11 @@
   </update>
   
   <delete id="delete">
-    delete from `t_demo` where id =  #{id}
+    delete from `test_demo` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `t_demo`
+    delete from `test_demo`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -273,7 +273,7 @@
   <select id="findList" resultType="com.github.hualuomoli.demo.base.entity.BaseDemo">
     select
       <include refid="columns" />
-    from `t_demo`
+    from `test_demo`
     <where>
       <include refid="querys" />
     </where>

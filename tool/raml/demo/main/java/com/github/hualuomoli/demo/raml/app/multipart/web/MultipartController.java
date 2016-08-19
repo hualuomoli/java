@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdFileEntity;
 import com.github.hualuomoli.demo.raml.app.multipart.entity.PostFileByIdResultJsonEntity;

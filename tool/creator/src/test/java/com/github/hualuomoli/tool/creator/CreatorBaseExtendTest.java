@@ -11,6 +11,7 @@ import com.github.hualuomoli.extend.entity.Menu;
 import com.github.hualuomoli.extend.entity.Role;
 import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.entity.UploadFile;
+import com.github.hualuomoli.extend.entity.User;
 import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer.DbConfig;
 import com.github.hualuomoli.tool.creator.dealer.FileDealer.Config;
@@ -62,6 +63,8 @@ public class CreatorBaseExtendTest {
 	public void testExecute() {
 		List<Class<?>> clsList = Lists.newArrayList();
 
+		// user
+		clsList.add(User.class);
 		// menu
 		clsList.add(Menu.class);
 		// role

@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
 import com.github.hualuomoli.extend.file.dealer.FileUploadDealer;
 import com.github.hualuomoli.extend.file.service.FileService;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.mvc.annotation.RequestToken;
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.google.common.collect.Lists;
 
 /**

@@ -7,7 +7,6 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseRole;
-import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
 
 // #BaseRole
 public interface BaseRoleService {

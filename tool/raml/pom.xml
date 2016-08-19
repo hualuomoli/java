@@ -31,6 +31,12 @@
 			<artifactId>core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- core-extend -->
+		<dependency>
+			<groupId>com.github.hualuomoli</groupId>
+			<artifactId>core-extend</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<!-- Raml -->
 		<dependency>

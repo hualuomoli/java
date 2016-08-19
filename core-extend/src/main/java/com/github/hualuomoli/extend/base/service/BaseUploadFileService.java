@@ -7,7 +7,6 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
-import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
 
 // #BaseUploadFile
 public interface BaseUploadFileService {

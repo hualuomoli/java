@@ -48,12 +48,12 @@
   <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseUser">
     select 
       <include refid="columns" />
-    from `t_user`
+    from `test_user`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `t_user` (
+    insert into `test_user` (
       `id`         ,
       `username`   ,
       `nickname`   ,
@@ -77,7 +77,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `t_user` (
+    insert into `test_user` (
       `id`         ,
       `username`   ,
       `nickname`   ,
@@ -103,7 +103,7 @@
   </insert>
   
   <update id="update">
-    update `t_user`
+    update `test_user`
     <set>
       <if test="username != null"> 
         `username`    = #{username}  ,
@@ -134,11 +134,11 @@
   </update>
   
   <delete id="delete">
-    delete from `t_user` where id =  #{id}
+    delete from `test_user` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `t_user`
+    delete from `test_user`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -149,7 +149,7 @@
   <select id="findList" resultType="com.github.hualuomoli.demo.base.entity.BaseUser">
     select
       <include refid="columns" />
-    from `t_user`
+    from `test_user`
     <where>
       <include refid="querys" />
     </where>

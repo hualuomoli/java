@@ -3,7 +3,7 @@ package com.github.hualuomoli.extend.base.entity;
 import org.apache.commons.lang3.StringUtils;
 
 public class BaseMenu extends com.github.hualuomoli.extend.entity.Menu
- implements com.github.hualuomoli.base.BasePersistent, com.github.hualuomoli.base.CommonPersistent
+ implements com.github.hualuomoli.base.persistent.BasePersistent, com.github.hualuomoli.base.persistent.CommonPersistent
  {
 
 	/**  - 查询数组 */

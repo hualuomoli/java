@@ -17,10 +17,17 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class GetObjectResultJsonEntityAddress {
   
+  private String county;
   private String province;
   private String city;
-  private String county;
   
+  public String getCounty(){
+    return county;
+  }
+  
+  public void setCounty(String county){
+    this.county = county;
+  }
   public String getProvince(){
     return province;
   }
@@ -34,13 +41,6 @@ public class GetObjectResultJsonEntityAddress {
   
   public void setCity(String city){
     this.city = city;
-  }
-  public String getCounty(){
-    return county;
-  }
-  
-  public void setCounty(String county){
-    this.county = county;
   }
   
 }

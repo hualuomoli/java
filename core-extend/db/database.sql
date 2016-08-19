@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user` (
+	`id` varchar(32) COMMENT '主键',
+	`username` varchar(32) COMMENT '用户名',
+	`phone` varchar(20) COMMENT '用户手机号',
+	`email` varchar(32) COMMENT '用户邮箱',
+	`password` varchar(64) COMMENT '用户密码',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录用户';
+
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
 	`id` varchar(32) COMMENT '主键',

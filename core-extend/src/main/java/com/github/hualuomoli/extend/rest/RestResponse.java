@@ -1,15 +1,10 @@
-package com.github.hualuomoli.mvc.rest;
+package com.github.hualuomoli.extend.rest;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.BooleanUtils;
-
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.commons.util.JsonUtils;
-import com.github.hualuomoli.commons.util.ServletUtils;
 import com.google.common.collect.Maps;
 
 /**
@@ -59,14 +54,6 @@ public abstract class RestResponse {
 		return this.toJson(map);
 	}
 
-	String getObjectData(String objectName, Object object) {
-		if (force()) {
-			return this._getObjectData(getConfig().objectName, object);
-		} else {
-			return this._getObjectData(objectName, object);
-		}
-	}
-
 	/**
 	 * {
 	 *   "code": "0",
@@ -79,19 +66,11 @@ public abstract class RestResponse {
 	 */
 	// getObjectData("user", user);
 	// 返回数据对应JSON字符串
-	private String _getObjectData(String objectName, Object object) {
+	public String getObjectData(String objectName, Object object) {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 		map.put(objectName, object);
 		return this.toJson(map);
-	}
-
-	String getListData(String listName, List<?> list) {
-		if (force()) {
-			return this._getListData(getConfig().listName, list);
-		} else {
-			return this._getListData(listName, list);
-		}
 	}
 
 	/**
@@ -110,19 +89,11 @@ public abstract class RestResponse {
 	 */
 	// getListData("citys", list);
 	// 返回集合数据对应JSON字符串
-	private String _getListData(String listName, List<?> list) {
+	public String getListData(String listName, List<?> list) {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 		map.put(listName, list);
 		return this.toJson(map);
-	}
-
-	String getPageData(String pageName, String pageDataName, Page page) {
-		if (force()) {
-			return this._getPageData(pageName, getConfig().pageDataName, page);
-		} else {
-			return this._getPageData(pageName, pageDataName, page);
-		}
 	}
 
 	/**
@@ -148,7 +119,7 @@ public abstract class RestResponse {
 	 */
 	// getPageData("page", "addresses", page)
 	// 返回分页数据对应JSON字符串
-	private String _getPageData(String pageName, String pageDataName, Page page) {
+	public String getPageData(String pageName, String pageDataName, Page page) {
 		Map<String, Object> map = Maps.newHashMap();
 		map.put(getConfig().codeName, getConfig().successs);
 
@@ -163,21 +134,9 @@ public abstract class RestResponse {
 		return this.toJson(map);
 	}
 
-	// 数据转换成json输出
-	String getOriginData(Object obj) {
-		return this.toJson(obj);
-	}
-
 	// 转换成json输出
-	protected String toJson(Object obj) {
+	public String toJson(Object obj) {
 		return JsonUtils.toJson(obj);
-	}
-
-	// 是否强制转换
-	protected boolean force() {
-		HttpServletRequest request = ServletUtils.getRequest();
-		String force = request.getHeader("force");
-		return BooleanUtils.toBoolean(force);
 	}
 
 	// 配置信息
@@ -185,24 +144,17 @@ public abstract class RestResponse {
 		private Integer successs;
 		private String codeName;
 		private String msgName;
-		private String objectName;
-		private String listName;
 		private String pageTotalName;
 		private String pageNumberName;
 		private String pageSizeName;
-		private String pageDataName;
 
-		public Config(Integer successs, String codeName, String msgName, String objectName, String listName, String pageTotalName, String pageNumberName,
-				String pageSizeName, String pageDataName) {
+		public Config(Integer successs, String codeName, String msgName, String pageTotalName, String pageNumberName, String pageSizeName) {
 			this.successs = successs;
 			this.codeName = codeName;
 			this.msgName = msgName;
-			this.objectName = objectName;
-			this.listName = listName;
 			this.pageTotalName = pageTotalName;
 			this.pageNumberName = pageNumberName;
 			this.pageSizeName = pageSizeName;
-			this.pageDataName = pageDataName;
 		}
 
 	}

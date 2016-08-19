@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
-import com.github.hualuomoli.mvc.rest.RestResponse.ErrorData;
 
 @RestController(value = "com.github.hualuomoli.demo.version.web.VersionController")
 @RequestMapping(value = "/demo/version")
@@ -20,7 +18,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String init() {
 		logger.debug("default version");
-		return AppRestResponse.getErrorData(new ErrorData(0, "this is default version"));
+		return "0";
 	}
 
 	// version 1.0
@@ -28,7 +26,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String v1() {
 		logger.debug("version 1.0.0");
-		return AppRestResponse.getErrorData(new ErrorData(1, "this is v1.0.0"));
+		return "v1.0.0";
 	}
 
 	// version 3.2.1
@@ -36,7 +34,7 @@ public class VersionController {
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String v3_2_1() {
 		logger.debug("version 3.2.1");
-		return AppRestResponse.getErrorData(new ErrorData(3, "this is v3.2.1"));
+		return "v3.2.1";
 	}
 
 }

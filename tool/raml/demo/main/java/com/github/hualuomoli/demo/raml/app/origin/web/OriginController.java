@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.demo.raml.app.origin.entity.GetListEntity;
 import com.github.hualuomoli.demo.raml.app.origin.entity.GetListResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.origin.entity.GetObjectEntity;
 import com.github.hualuomoli.demo.raml.app.origin.entity.GetObjectResultJsonEntity;
 import com.github.hualuomoli.demo.raml.app.origin.service.OriginService;
+import com.github.hualuomoli.mvc.annotation.RequestPermission;
+import com.github.hualuomoli.mvc.annotation.RequestRole;
+import com.github.hualuomoli.mvc.annotation.RequestToken;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
 
 /**
@@ -48,7 +51,7 @@ public class OriginController {
 		// 设置属性
 		
 		java.util.List<GetListResultJsonEntity> list = originService.getList(getListEntity);
-		return AppRestResponse.getOriginData(list);
+		return AppRestResponse.toJson(list);
 		
 	}
 	/**
@@ -63,7 +66,7 @@ public class OriginController {
 		// 设置属性
 		
 		GetObjectResultJsonEntity getObjectResultJsonEntity = originService.getObject(getObjectEntity);
-		return AppRestResponse.getOriginData(getObjectResultJsonEntity);
+		return AppRestResponse.toJson(getObjectResultJsonEntity);
 		
 	}
 	

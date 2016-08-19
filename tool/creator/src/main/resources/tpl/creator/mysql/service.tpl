@@ -7,7 +7,9 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import ${packageName}.base.entity.Base${javaName};
+<#if table.tree>
 import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
+</#if>
 
 // ${r"#"}Base${javaName}
 public interface Base${javaName}Service<#if table.tree> extends TreeDealer<Base${javaName}></#if> {

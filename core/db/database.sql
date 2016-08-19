@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `t_demo`;
-CREATE TABLE `t_demo` (
+DROP TABLE IF EXISTS `test_demo`;
+CREATE TABLE `test_demo` (
 	`id` varchar(32) COMMENT '主键',
 	`name` varchar(32),
 	`sex` char(1) COMMENT '性别',
@@ -17,8 +17,8 @@ CREATE TABLE `t_demo` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试demo';
 
-DROP TABLE IF EXISTS `t_user`;
-CREATE TABLE `t_user` (
+DROP TABLE IF EXISTS `test_user`;
+CREATE TABLE `test_user` (
 	`id` varchar(32),
 	`username` varchar(20) COMMENT '用户名',
 	`nickname` varchar(32),
@@ -31,8 +31,8 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户';
 
-DROP TABLE IF EXISTS `t_region`;
-CREATE TABLE `t_region` (
+DROP TABLE IF EXISTS `test_region`;
+CREATE TABLE `test_region` (
 	`id` varchar(32) COMMENT '主键',
 	`code` varchar(32),
 	`name` varchar(32),

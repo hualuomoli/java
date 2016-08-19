@@ -6,6 +6,8 @@ public enum Code implements CodeError {
 
 	ROLE_NOT_FOUND(101, "角色不存在"), //
 	ROLE_ALREADY_EXISTS(102, "角色编码已存在"), //
+	USER_NOT_FOUND(201, "用户不存在"), //
+	USER_INVALID_USERNAME_OR_PASSWORD(202, "用户名或密码错误"), //
 	;
 
 	private Integer code;

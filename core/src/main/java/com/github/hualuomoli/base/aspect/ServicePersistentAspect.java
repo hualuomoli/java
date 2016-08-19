@@ -1,4 +1,4 @@
-package com.github.hualuomoli.base.aspect.persist;
+package com.github.hualuomoli.base.aspect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -17,19 +17,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.github.hualuomoli.base.BasePersistent;
-import com.github.hualuomoli.base.CommonPersistent;
 import com.github.hualuomoli.base.annotation.persistent.PreBatchInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreDelete;
 import com.github.hualuomoli.base.annotation.persistent.PreInsert;
 import com.github.hualuomoli.base.annotation.persistent.PreUpdate;
 import com.github.hualuomoli.base.constant.Status;
+import com.github.hualuomoli.base.persistent.BasePersistent;
+import com.github.hualuomoli.base.persistent.CommonPersistent;
 import com.github.hualuomoli.commons.util.RandomUtils;
 import com.github.hualuomoli.login.service.LoginUserService;
 
 // service 持久化 预处理
 @Aspect
-@Component(value = "com.github.hualuomoli.base.aspect.persist.ServicePretreatmentAspect")
+@Component(value = "com.github.hualuomoli.base.aspect.ServicePretreatmentAspect")
 public class ServicePersistentAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServicePersistentAspect.class);

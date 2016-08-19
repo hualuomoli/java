@@ -28,12 +28,12 @@
   <select id="get" resultType="com.github.hualuomoli.demo.base.entity.BaseRegion">
     select 
       <include refid="columns" />
-    from `t_region`
+    from `test_region`
     where id =  #{id}
   </select>
   
   <insert id="insert">
-    insert into `t_region` (
+    insert into `test_region` (
       `id`  ,
       `code`,
       `name`,
@@ -47,7 +47,7 @@
   </insert>
   
   <insert id="batchInsert">
-    insert into `t_region` (
+    insert into `test_region` (
       `id`  ,
       `code`,
       `name`,
@@ -63,7 +63,7 @@
   </insert>
   
   <update id="update">
-    update `t_region`
+    update `test_region`
     <set>
       <if test="code != null"> 
         `code` = #{code},
@@ -79,11 +79,11 @@
   </update>
   
   <delete id="delete">
-    delete from `t_region` where id =  #{id}
+    delete from `test_region` where id =  #{id}
   </delete>
   
   <delete id="deleteByIds">
-    delete from `t_region`
+    delete from `test_region`
     <where>
           <foreach collection="ids" item="id" separator="or">
               id = #{id}
@@ -94,7 +94,7 @@
   <select id="findList" resultType="com.github.hualuomoli.demo.base.entity.BaseRegion">
     select
       <include refid="columns" />
-    from `t_region`
+    from `test_region`
     <where>
       <include refid="querys" />
     </where>

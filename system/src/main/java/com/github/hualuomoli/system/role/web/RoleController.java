@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
 import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.mvc.annotation.RequestVersion;
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
 import com.github.hualuomoli.system.role.service.RoleService;
 
 @RequestVersion

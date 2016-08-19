@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.hualuomoli.mvc.rest.AppRestResponse;
+import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.mvc.validator.EntityValidator;
 
 @RestController(value = "com.github.hualuomoli.demo.cors.CorsController")

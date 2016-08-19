@@ -2,9 +2,9 @@ package com.github.hualuomoli.base.entity;
 
 import java.io.Serializable;
 
-import com.github.hualuomoli.base.BasePersistent;
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
+import com.github.hualuomoli.base.persistent.BasePersistent;
 
 // 公共属性
 @SuppressWarnings("serial")
