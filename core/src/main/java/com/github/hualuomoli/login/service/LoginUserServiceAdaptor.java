@@ -58,6 +58,12 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 	}
 
 	@Override
+	public void removeToken() {
+		String token = this.getToken();
+		this.getCache().remove(PREFIX_TOKEN + token);
+	}
+
+	@Override
 	public Date getCurrentDate() {
 		return new Date();
 	}

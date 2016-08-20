@@ -41,7 +41,7 @@ public class ExceptionConfig {
 	@ExceptionHandler(value = CodeException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public void invalidEntity(HttpServletResponse response, CodeException e) {
-		this.flushJson(response, e.getCodeError());
+		this.flushJson(response, e.getCodeError().getCode(), e.getCodeError().getMessage());
 	}
 
 	// 实体类不合法
@@ -77,9 +77,7 @@ public class ExceptionConfig {
 	@ResponseStatus(HttpStatus.OK)
 	public void runtimeException(HttpServletResponse response, RuntimeException e) {
 
-		if (logger.isDebugEnabled()) {
-			this.flushHtml(response, e);
-		} else if (logger.isWarnEnabled()) {
+		if (logger.isWarnEnabled()) {
 			logger.warn("{}", e);
 			this.flushJson(response, HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 		} else {
@@ -110,11 +108,6 @@ public class ExceptionConfig {
 		} catch (IOException e1) {
 		}
 
-	}
-
-	// 输出JSON
-	private void flushJson(HttpServletResponse response, CodeError codeError) {
-		this.flushJson(response, codeError.getCode(), codeError.getMessage());
 	}
 
 	// 输出JSON
