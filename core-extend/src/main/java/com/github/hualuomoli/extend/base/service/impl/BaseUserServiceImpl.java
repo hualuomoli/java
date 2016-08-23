@@ -41,6 +41,21 @@ public class BaseUserServiceImpl implements BaseUserService {
 		return baseUserMapper.get(id);
 	}
 	
+	@Override
+	public BaseUser getUnique(
+		java.lang.String username
+	) {
+		BaseUser baseUser = new BaseUser();
+		baseUser.setUsername(username);
+		List<BaseUser> list = this.findList(baseUser);
+		if (list == null || list.size() == 0) {
+			return null;
+		}
+		if (list.size() != 1) {
+			throw new MoreDataFoundException();
+		}
+		return list.get(0);
+	}
 
 	@Override
 	@Transactional(readOnly = false)

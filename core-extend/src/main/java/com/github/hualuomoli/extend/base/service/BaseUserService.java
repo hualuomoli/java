@@ -15,6 +15,9 @@ public interface BaseUserService {
 	
 	BaseUser get(String id);
 	
+	BaseUser getUnique(
+		java.lang.String username
+	);
 	
 	int insert(BaseUser baseUser);
 	

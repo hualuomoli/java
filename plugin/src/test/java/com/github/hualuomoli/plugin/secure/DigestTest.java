@@ -26,43 +26,43 @@ public class DigestTest {
 
 	@Test
 	public void testEncryptByteArray() {
-		byte[] data = digest.encrypt(str.getBytes(charset));
+		byte[] data = digest.sign(str.getBytes(charset));
 		boolean success = digest.valid(str.getBytes(charset), data);
 		Assert.assertTrue("valid", success);
 	}
 
 	@Test
 	public void testEncryptString() {
-		String data = digest.encrypt(str);
-		boolean success = digest.valid(str, data);
+		String data = digest.signString(str);
+		boolean success = digest.validString(str, data);
 		Assert.assertTrue("valid", success);
 	}
 
 	@Test
 	public void testSignByteArray() {
-		byte[] data = digest.encrypt(str.getBytes(charset));
+		byte[] data = digest.sign(str.getBytes(charset));
 		boolean success = digest.valid(str.getBytes(charset), data);
 		Assert.assertTrue("valid", success);
 	}
 
 	@Test
 	public void testSignString() {
-		String data = digest.encrypt(str);
-		boolean success = digest.valid(str, data);
+		String data = digest.signString(str);
+		boolean success = digest.validString(str, data);
 		Assert.assertTrue("valid", success);
 	}
 
 	@Test
 	public void testValidByteArrayByteArray() {
-		byte[] data = digest.encrypt(str.getBytes(charset));
+		byte[] data = digest.sign(str.getBytes(charset));
 		boolean success = digest.valid(str.getBytes(charset), data);
 		Assert.assertTrue("valid", success);
 	}
 
 	@Test
 	public void testValidStringString() {
-		String data = digest.encrypt(str);
-		boolean success = digest.valid(str, data);
+		String data = digest.signString(str);
+		boolean success = digest.validString(str, data);
 		Assert.assertTrue("valid", success);
 	}
 

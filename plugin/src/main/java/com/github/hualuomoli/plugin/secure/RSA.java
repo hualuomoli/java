@@ -1,7 +1,5 @@
 package com.github.hualuomoli.plugin.secure;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -11,37 +9,23 @@ import javax.crypto.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.hualuomoli.commons.util.Base64Utils;
-
 /**
  * RSA
  * @author hualuomoli
  *
  */
-public abstract class RSA implements Security {
+public abstract class RSA extends EncryptionAdaptor implements Signature, Encryption {
 
 	private static final Logger logger = LoggerFactory.getLogger(RSA.class);
 
-	// 编码集
-	private Charset charset = com.github.hualuomoli.commons.constant.Charset.UTF8;
 	// 签名和验签算法
 	private String algorithm = "SHA1withRSA";
 
-	// 转换使用的名称,该值为RSA
+	// 加解密算法
 	private final String transformation = "RSA";
-	// 加密解密,输入的最长值
-	private int inputLen = 1024;
-
-	public void setCharset(Charset charset) {
-		this.charset = charset;
-	}
 
 	public void setAlgorithm(String algorithm) {
 		this.algorithm = algorithm;
-	}
-
-	public void setInputLen(int inputLen) {
-		this.inputLen = inputLen;
 	}
 
 	// 获取私钥
@@ -72,21 +56,27 @@ public abstract class RSA implements Security {
 	}
 
 	@Override
-	public String sign(String origin) {
-		byte[] array = this.sign(origin.getBytes(this.charset));
-		if (array == null) {
-			return null;
-		}
-		return Base64Utils.encodeBase64String(array);
+	public byte[] sign(String origin) {
+		return this.sign(SecureUtils.dataToBytes(origin));
 	}
 
 	@Override
-	public boolean valid(byte[] origin, byte[] cipherData) {
+	public String signString(byte[] origin) {
+		return SecureUtils.bytesToBase64String(this.sign(origin));
+	}
+
+	@Override
+	public String signString(String origin) {
+		return this.signString(SecureUtils.dataToBytes(origin));
+	}
+
+	@Override
+	public boolean valid(byte[] origin, byte[] signData) {
 		try {
 			java.security.Signature signature = java.security.Signature.getInstance(this.algorithm);
 			signature.initVerify(this.getPublicKey());
 			signature.update(origin);
-			return signature.verify(cipherData);
+			return signature.verify(signData);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
@@ -96,8 +86,8 @@ public abstract class RSA implements Security {
 	}
 
 	@Override
-	public boolean valid(String origin, String cipherData) {
-		return this.valid(origin.getBytes(this.charset), Base64Utils.decodeBase64(cipherData));
+	public boolean validString(String origin, String signData) {
+		return this.valid(SecureUtils.dataToBytes(origin), SecureUtils.base64StringToBytes(signData));
 	}
 
 	@Override
@@ -105,7 +95,7 @@ public abstract class RSA implements Security {
 		try {
 			Cipher cipher = Cipher.getInstance(this.transformation);
 			cipher.init(Cipher.ENCRYPT_MODE, this.getEncryptKey());
-			return this.doFinal(cipher, origin, this.inputLen / 8 - 11);
+			return this.doEncrypt(cipher, origin);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
@@ -115,12 +105,18 @@ public abstract class RSA implements Security {
 	}
 
 	@Override
-	public String encrypt(String origin) {
-		byte[] array = this.encrypt(origin.getBytes(this.charset));
-		if (array == null) {
-			return null;
-		}
-		return Base64Utils.encodeBase64String(array);
+	public byte[] encrypt(String origin) {
+		return this.encrypt(SecureUtils.dataToBytes(origin));
+	}
+
+	@Override
+	public String encryptString(byte[] origin) {
+		return SecureUtils.bytesToBase64String(this.encrypt(origin));
+	}
+
+	@Override
+	public String encryptString(String origin) {
+		return this.encryptString(SecureUtils.dataToBytes(origin));
 	}
 
 	@Override
@@ -128,7 +124,7 @@ public abstract class RSA implements Security {
 		try {
 			Cipher cipher = Cipher.getInstance(this.transformation);
 			cipher.init(Cipher.DECRYPT_MODE, this.getDecryptKey());
-			return this.doFinal(cipher, cipherData, this.inputLen / 8);
+			return this.doDecrypt(cipher, cipherData);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error("{}", e);
@@ -138,36 +134,18 @@ public abstract class RSA implements Security {
 	}
 
 	@Override
-	public String decrypt(String cipherData) {
-		byte[] array = this.decrypt(Base64Utils.decodeBase64(cipherData));
-		if (array == null) {
-			return null;
-		}
-		return new String(array, this.charset);
+	public byte[] decrypt(String cipherData) {
+		return this.decrypt(SecureUtils.base64StringToBytes(cipherData));
 	}
 
-	/** 执行加解密 */
-	private byte[] doFinal(Cipher cipher, byte[] input, int maxLength) throws Exception {
-		int length = input.length;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int offSet = 0;
-		byte[] cache;
-		int i = 0;
-		// 对数据分段解密
-		while (length - offSet > 0) {
-			if (length - offSet > maxLength) {
-				cache = cipher.doFinal(input, offSet, maxLength);
-			} else {
-				cache = cipher.doFinal(input, offSet, length - offSet);
-			}
-			out.write(cache, 0, cache.length);
-			i++;
-			offSet = i * maxLength;
-		}
-		byte[] output = out.toByteArray();
-		out.close();
+	@Override
+	public String decryptString(byte[] cipherData) {
+		return SecureUtils.newString(this.decrypt(cipherData));
+	}
 
-		return output;
+	@Override
+	public String decryptString(String cipherData) {
+		return this.decryptString(SecureUtils.base64StringToBytes(cipherData));
 	}
 
 }

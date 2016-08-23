@@ -39,41 +39,41 @@ public class RSATest {
 
 	@Test
 	public void testSignPassword() {
-		String sign = rsa.sign(password);
+		String sign = rsa.signString(password);
 		logger.debug("password {}", sign);
-		boolean success = rsa.valid(password, sign);
+		boolean success = rsa.validString(password, sign);
 		Assert.assertTrue(success);
 	}
 
 	@Test
 	public void testSign() {
-		String sign = rsa.sign(origin);
+		String sign = rsa.signString(origin);
 		logger.debug("sign {}", sign);
-		boolean success = rsa.valid(origin, sign);
+		boolean success = rsa.validString(origin, sign);
 		Assert.assertTrue(success);
 	}
 
 	@Test
 	public void testSignLongContent() {
-		String sign = rsa.sign(content);
+		String sign = rsa.signString(content);
 		logger.debug("sign {}", sign);
-		boolean success = rsa.valid(content, sign);
+		boolean success = rsa.validString(content, sign);
 		Assert.assertTrue(success);
 	}
 
 	@Test
 	public void testEncrypt() {
-		String cipherData = rsa.encrypt(origin);
+		String cipherData = rsa.encryptString(origin);
 		logger.debug("cipher {}", cipherData);
-		String check = rsa.decrypt(cipherData);
+		String check = rsa.decryptString(cipherData);
 		Assert.assertEquals(origin, check);
 	}
 
 	@Test
 	public void testEncryptLongContent() {
-		String cipherData = rsa.encrypt(content);
+		String cipherData = rsa.encryptString(content);
 		logger.debug("cipher {}", cipherData);
-		String check = rsa.decrypt(cipherData);
+		String check = rsa.decryptString(cipherData);
 		Assert.assertEquals(content, check);
 	}
 

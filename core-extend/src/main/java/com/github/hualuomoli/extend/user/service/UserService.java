@@ -176,12 +176,12 @@ public class UserService {
 
 	// 密码加密
 	public String encryptPassword(String origin) {
-		return passwordDigest.encrypt(origin);
+		return passwordDigest.signString(origin);
 	}
 
 	// 验证密码
 	public boolean checkPassword(String origin, String encryptPassword) {
-		return passwordDigest.valid(origin, encryptPassword);
+		return passwordDigest.validString(origin, encryptPassword);
 	}
 
 	public static class PasswordDigest extends Digest {
