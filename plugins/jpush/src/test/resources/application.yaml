@@ -1,0 +1,26 @@
+jpush:
+
+  # 设备
+  devices: 
+    - android
+    - iosdev
+    - ios
+  
+  # 应用
+  apps:
+    # 应用1
+    - app:
+      masterSecret: 50ce2bae8a85fe59b699a58c
+      appKey: 7a823bd6f9f4a2baa75269b5
+      maxRetryTimes: 3
+      supports: 
+        - news
+        - whell
+  
+    # 应用2
+    - app:
+      masterSecret: 86813f8e1dc7db833de02f2b
+      appKey: 4b49cc8e2e1ea9d873222d4c
+      maxRetryTimes: 3
+      supports: 
+        - news

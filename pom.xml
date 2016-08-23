@@ -16,6 +16,7 @@
 		<module>./plugins/redis</module>
 		<module>./plugins/activemq</module>
 		<module>./plugins/httpclient</module>
+		<module>./plugins/jpush</module>
 		<module>./tool/raml</module>
 		<module>./tool/creator</module>
 		<module>./system</module>
