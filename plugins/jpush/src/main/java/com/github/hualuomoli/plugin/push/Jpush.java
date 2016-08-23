@@ -18,8 +18,13 @@ public abstract class Jpush implements Push {
 
 	protected static final Logger logger = LoggerFactory.getLogger(Jpush.class);
 
-	protected JPushClient jPushClient;
+	private String appName;
+	private JPushClient jPushClient;
 	private Set<String> supports;
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
 
 	public void setjPushClient(JPushClient jPushClient) {
 		this.jPushClient = jPushClient;
@@ -43,6 +48,12 @@ public abstract class Jpush implements Push {
 		if (!this.support(type)) {
 			return;
 		}
+		if (logger.isInfoEnabled()) {
+			String deviceName = this.getClass().getSimpleName();
+			deviceName = deviceName.substring(0, deviceName.length() - "jpush".length()).toLowerCase();
+
+			logger.info("deviceName={}, appName={}, bussinessType={}", deviceName, appName, type);
+		}
 		this.doPush(this.buildAllNotification(alert, title, extras));
 	}
 
@@ -54,7 +65,7 @@ public abstract class Jpush implements Push {
 		try {
 			this.jPushClient.sendPush(pushPayload);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
+			if (logger.isDebugEnabled()) {
 				logger.error("{}", e);
 			}
 		}
