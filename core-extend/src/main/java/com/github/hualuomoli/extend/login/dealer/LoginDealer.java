@@ -1,9 +1,10 @@
 package com.github.hualuomoli.extend.login.dealer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.github.hualuomoli.extend.base.entity.BaseUser;
-import com.github.hualuomoli.extend.login.LoginController.LoginUser;
+import com.github.hualuomoli.extend.login.web.LoginController.LoginUser;
 
 /**
  * 登录处理器
@@ -22,6 +23,6 @@ public interface LoginDealer {
 	String error(LoginUser loginUser);
 
 	// 登录成功处理
-	String success(BaseUser baseUser, HttpServletRequest request);
+	String success(BaseUser baseUser, HttpServletRequest request, HttpServletResponse response);
 
 }

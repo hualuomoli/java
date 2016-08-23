@@ -49,6 +49,11 @@ public class UserConfig {
 				return Sets.newHashSet();
 			}
 
+			@Override
+			public void removeToken() {
+
+			}
+
 		};
 	}
 

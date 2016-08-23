@@ -1,6 +1,7 @@
-package com.github.hualuomoli.extend.login;
+package com.github.hualuomoli.extend.login.web;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import com.github.hualuomoli.extend.login.service.LoginService;
 import com.github.hualuomoli.mvc.validator.EntityValidator;
 
 @RequestMapping(value = "/login")
-@RestController(value = "com.github.hualuomoli.extend.login.LoginController")
+@RestController(value = "com.github.hualuomoli.extend.login.web.LoginController")
 public class LoginController {
 
 	@Autowired
@@ -21,8 +22,8 @@ public class LoginController {
 	 * 登录,登录用户可以是用户名/邮箱/手机号码
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/x-www-form-urlencoded" }, produces = { "application/json" })
-	public String login(LoginUser loginUser, HttpServletRequest request) {
-		return loginService.login(loginUser, request);
+	public String login(LoginUser loginUser, HttpServletRequest request, HttpServletResponse response) {
+		return loginService.login(loginUser, request, response);
 	}
 
 	public static class LoginUser implements EntityValidator {

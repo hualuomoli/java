@@ -57,10 +57,12 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 		if (StringUtils.isBlank(token)) {
 			// get from cookie
 			Cookie[] cookies = req.getCookies();
-			for (Cookie cookie : cookies) {
-				if (StringUtils.equals(cookie.getName(), name)) {
-					token = cookie.getValue();
-					break;
+			if (cookies != null && cookies.length > 0) {
+				for (Cookie cookie : cookies) {
+					if (StringUtils.equals(cookie.getName(), name)) {
+						token = cookie.getValue();
+						break;
+					}
 				}
 			}
 		}

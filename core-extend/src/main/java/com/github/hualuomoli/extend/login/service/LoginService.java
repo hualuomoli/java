@@ -3,8 +3,11 @@ package com.github.hualuomoli.extend.login.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,8 +20,8 @@ import com.github.hualuomoli.exception.CodeException;
 import com.github.hualuomoli.extend.base.entity.BaseUser;
 import com.github.hualuomoli.extend.constant.Code;
 import com.github.hualuomoli.extend.constant.DataRegex;
-import com.github.hualuomoli.extend.login.LoginController.LoginUser;
 import com.github.hualuomoli.extend.login.dealer.LoginDealer;
+import com.github.hualuomoli.extend.login.web.LoginController.LoginUser;
 import com.github.hualuomoli.extend.rest.AppRestResponse;
 import com.github.hualuomoli.extend.user.service.UserService;
 import com.github.hualuomoli.login.service.LoginUserService;
@@ -35,7 +38,7 @@ public class LoginService implements ApplicationContextAware {
 	@Autowired
 	private UserService userService;
 
-	public String login(LoginUser loginUser, HttpServletRequest request) {
+	public String login(LoginUser loginUser, HttpServletRequest request, HttpServletResponse response) {
 
 		// 处理者
 		LoginDealer dealer = this.getLoginDealer(request);
@@ -59,11 +62,12 @@ public class LoginService implements ApplicationContextAware {
 			return dealer.error();
 		}
 		// 密码错误
-		if (!userService.checkPassword(loginUser.getPassword(), baseUser.getPassword())) {
+		if (!StringUtils.equals(loginUser.getPassword(), baseUser.getPassword())
+				&& !userService.checkPassword(loginUser.getPassword(), baseUser.getPassword())) {
 			return dealer.error(loginUser);
 		}
 		// 登录成功
-		return dealer.success(baseUser, request);
+		return dealer.success(baseUser, request, response);
 	}
 
 	// 获取处理者
@@ -112,7 +116,7 @@ public class LoginService implements ApplicationContextAware {
 		}
 
 		@Override
-		public String success(BaseUser BaseUser, HttpServletRequest request) {
+		public String success(BaseUser BaseUser, HttpServletRequest request, HttpServletResponse response) {
 
 			// 获取token
 			String token = RandomUtils.getUUID();
@@ -120,6 +124,10 @@ public class LoginService implements ApplicationContextAware {
 			String username = BaseUser.getUsername();
 			// 添加到缓存
 			loginUserService.setUsername(token, username);
+
+			// 添加到token，cookie
+			response.addCookie(new Cookie("token", token));
+			response.addHeader("token", token);
 
 			// 返回
 			TokenMessage tokenMessage = new TokenMessage();

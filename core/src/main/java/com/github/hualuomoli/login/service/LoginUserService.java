@@ -25,6 +25,9 @@ public interface LoginUserService {
 	// 设置用户
 	void setUsername(String token, String username);
 
+	// 移除token
+	void removeToken();
+
 	// 刷新
 	void refreshUsername();
 
