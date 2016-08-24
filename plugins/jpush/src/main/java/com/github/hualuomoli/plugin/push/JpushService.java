@@ -14,7 +14,7 @@ import cn.jpush.api.JPushClient;
 
 public class JpushService implements Push {
 
-	private static final Logger logger = LoggerFactory.getLogger(JPushTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(JpushService.class);
 	private static List<Jpush> list = Lists.newArrayList();
 
 	static {
