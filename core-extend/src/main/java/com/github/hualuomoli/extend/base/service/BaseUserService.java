@@ -25,6 +25,9 @@ public interface BaseUserService {
 
 	int update(BaseUser baseUser);
 	
+	 int logicalDelete(BaseUser baseUser);
+
+	 int logicalDelete(String id);
 	
 
 	int delete(BaseUser baseUser);

@@ -2,9 +2,7 @@ package com.github.hualuomoli.extend.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class BaseRole extends com.github.hualuomoli.extend.entity.Role
- implements com.github.hualuomoli.base.persistent.BasePersistent
- {
+public class BaseRole extends com.github.hualuomoli.extend.entity.Role {
 
 	/** 角色编码 - 查询数组 */
 	private java.lang.String[] roleCodeArray;

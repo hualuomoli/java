@@ -10,26 +10,23 @@ import java.util.HashSet;
  */
 public interface LoginUserService {
 
-	// 获取登录用户名,如果用户未登录,使用system
+	// 获取登录用户名,如果未登录用户操作,请手动设置
 	String getUsername();
 
-	// 获取登录的用户名,如果用户未登录,抛出异常
-	String getLoginUsername();
-
 	// 登录用户的角色
-	HashSet<String> getLoginUserRoles();
+	HashSet<String> getUserRoles();
 
 	// 登录用户的权限
-	HashSet<String> getLoginUserPermissions();
+	HashSet<String> getUserPermissions();
 
-	// 设置用户
-	void setUsername(String token, String username);
+	// 登录(设置用户)
+	void login(String token, String username);
 
-	// 移除token
-	void removeToken();
+	// 登出(移除token)
+	void logout();
 
 	// 刷新
-	void refreshUsername();
+	void refresh();
 
 	// 获取当前时间
 	Date getCurrentDate();

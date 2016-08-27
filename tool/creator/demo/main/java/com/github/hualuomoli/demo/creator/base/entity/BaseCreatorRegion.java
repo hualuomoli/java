@@ -2,9 +2,7 @@ package com.github.hualuomoli.demo.creator.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class BaseCreatorRegion extends com.github.hualuomoli.demo.creator.entity.CreatorRegion
- implements com.github.hualuomoli.base.persistent.BasePersistent
- {
+public class BaseCreatorRegion extends com.github.hualuomoli.demo.creator.entity.CreatorRegion {
 
 	
 	public BaseCreatorRegion(){

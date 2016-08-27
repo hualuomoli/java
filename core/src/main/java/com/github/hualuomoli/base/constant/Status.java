@@ -11,6 +11,7 @@ public enum Status {
 	DELETED(2, "已删除"), // 已删除
 	DISABLE(3, "禁用"), // 禁用
 	ABANDON(4, "废弃"), // 废弃
+	PENDING(5, "待审批"), // 待审批
 	;
 
 	private Integer value;

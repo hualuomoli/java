@@ -8,6 +8,7 @@ public enum Code implements CodeError {
 	ROLE_ALREADY_EXISTS(102, "角色编码已存在"), //
 	USER_NOT_FOUND(201, "用户不存在"), //
 	USER_INVALID_USERNAME_OR_PASSWORD(202, "用户名或密码错误"), //
+	USER_NOT_NOMAL(203, "用户非正常状态"), //
 	;
 
 	private Integer code;

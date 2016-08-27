@@ -11,7 +11,8 @@
     `create_date` as "createDate",
     `update_by`   as "updateBy"  ,
     `update_date` as "updateDate",
-    `status`      as "status"    
+    `status`      as "status"    ,
+    `status_name` as "statusName"
   </sql>
   
   <sql id="querys">
@@ -42,6 +43,9 @@
     <if test="status != null"> 
       and `status`      = #{status}    
     </if>
+    <if test="statusName != null and statusName != ''"> 
+      and `status_name` = #{statusName}
+    </if>
 	<!-- 比较查询 -->
   </sql>
   
@@ -62,7 +66,8 @@
       `create_date`,
       `update_by`  ,
       `update_date`,
-      `status`     
+      `status`     ,
+      `status_name`
     ) values (
       #{id}        ,
       #{username}  ,
@@ -72,7 +77,8 @@
       #{createDate},
       #{updateBy}  ,
       #{updateDate},
-      #{status}    
+      #{status}    ,
+      #{statusName}
     )
   </insert>
   
@@ -86,7 +92,8 @@
       `create_date`,
       `update_by`  ,
       `update_date`,
-      `status`     
+      `status`     ,
+      `status_name`
     ) 
      <foreach collection="list" item="obj" separator="union all">
             select
@@ -98,7 +105,8 @@
         #{obj.createDate},
         #{obj.updateBy}  ,
         #{obj.updateDate},
-        #{obj.status}    
+        #{obj.status}    ,
+        #{obj.statusName}
          </foreach>
   </insert>
   
@@ -128,6 +136,9 @@
       </if>
       <if test="status != null"> 
         `status`      = #{status}    ,
+      </if>
+      <if test="statusName != null"> 
+        `status_name` = #{statusName},
       </if>
     </set>
     where id =  #{id}

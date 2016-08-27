@@ -1,6 +1,5 @@
 package com.github.hualuomoli.extend.login.service;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.hualuomoli.commons.util.ServletUtils;
-import com.github.hualuomoli.exception.AuthException;
 import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.extend.notice.Noticer;
@@ -28,7 +26,6 @@ import com.google.common.collect.Maps;
 @Service(value = "com.github.hualuomoli.extend.login.service.DefaultLoginUserService")
 public class DefaultLoginUserService extends LoginUserServiceAdaptor implements LoginUserService, Notifer {
 
-	private static final String PREFIX_TOKEN = "_token_";
 	private static final String PREFIX_ROLE = "_role_";
 	private static final String PREFIX_PERMISSION = "_permission_";
 
@@ -70,33 +67,8 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	}
 
 	@Override
-	public String getUsername() {
-		try {
-			return this.getLoginUsername();
-		} catch (Exception e) {
-		}
-		return "system";
-	}
-
-	@Override
-	public String getLoginUsername() {
-		// 未登录
-		String token = this.getToken();
-		if (StringUtils.isBlank(token)) {
-			throw AuthException.NO_LOGIN;
-		}
-		// 登陆超时
-		String username = this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token);
-		if (StringUtils.isBlank(username)) {
-			throw AuthException.OVER_TIME;
-		}
-
-		return username;
-	}
-
-	@Override
-	public HashSet<String> getLoginUserRoles() {
-		String username = this.getLoginUsername();
+	public HashSet<String> getUserRoles() {
+		String username = this.getUsername();
 		HashSet<String> roles = this.getCache().getSerializable(PREFIX_ROLE + username);
 		if (roles == null || roles.size() == 0) {
 			roles = userService.getUserRoles(username);
@@ -108,8 +80,8 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	}
 
 	@Override
-	public HashSet<String> getLoginUserPermissions() {
-		String username = this.getLoginUsername();
+	public HashSet<String> getUserPermissions() {
+		String username = this.getUsername();
 		HashSet<String> permissions = this.getCache().getSerializable(PREFIX_PERMISSION + username);
 		if (permissions == null || permissions.size() == 0) {
 			permissions = userService.getUserPermission(username);
@@ -118,21 +90,6 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 			}
 		}
 		return permissions;
-	}
-
-	@Override
-	public void setUsername(String token, String username) {
-		this.getCache().setSerializable(PREFIX_TOKEN + token, username);
-	}
-
-	@Override
-	public void refreshUsername() {
-		this.getLoginUsername();
-	}
-
-	@Override
-	public Date getCurrentDate() {
-		return new Date();
 	}
 
 	@Override

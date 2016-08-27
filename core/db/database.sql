@@ -14,6 +14,7 @@ CREATE TABLE `test_demo` (
 	`update_by` varchar(32) NOT NULL COMMENT '修改人',
 	`update_date` timestamp NOT NULL COMMENT '修改时间',
 	`status` integer(11) NOT NULL COMMENT '数据状态',
+	`status_name` varchar(32) NOT NULL COMMENT '数据状态名称',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试demo';
 
@@ -28,6 +29,7 @@ CREATE TABLE `test_user` (
 	`update_by` varchar(32) NOT NULL COMMENT '修改人',
 	`update_date` timestamp NOT NULL COMMENT '修改时间',
 	`status` integer(11) NOT NULL COMMENT '数据状态',
+	`status_name` varchar(32) NOT NULL COMMENT '数据状态名称',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户';
 

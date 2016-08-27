@@ -2,9 +2,7 @@ package com.github.hualuomoli.extend.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class BaseMenu extends com.github.hualuomoli.extend.entity.Menu
- implements com.github.hualuomoli.base.persistent.BasePersistent, com.github.hualuomoli.base.persistent.CommonPersistent
- {
+public class BaseMenu extends com.github.hualuomoli.extend.entity.Menu {
 
 	/**  - 查询数组 */
 	private java.lang.String[] menuCodeArray;

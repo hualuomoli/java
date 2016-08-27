@@ -4,11 +4,10 @@ import java.io.Serializable;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
-import com.github.hualuomoli.base.persistent.BasePersistent;
 
 // 公共属性
 @SuppressWarnings("serial")
-public abstract class BaseField implements Serializable, BasePersistent {
+public abstract class BaseField implements Serializable {
 
 	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "主键", length = 32)
 	private String id;

@@ -3,28 +3,60 @@
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseUserMapper">
 
   <sql id="columns">
-    `id`       as "id"      ,
-    `username` as "username",
-    `phone`    as "phone"   ,
-    `email`    as "email"   ,
-    `password` as "password"
+    `id`          as "id"        ,
+    `username`    as "username"  ,
+    `phone`       as "phone"     ,
+    `email`       as "email"     ,
+    `password`    as "password"  ,
+    `type`        as "type"      ,
+    `type_name`   as "typeName"  ,
+    `create_by`   as "createBy"  ,
+    `create_date` as "createDate",
+    `update_by`   as "updateBy"  ,
+    `update_date` as "updateDate",
+    `status`      as "status"    ,
+    `status_name` as "statusName"
   </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
-      and `id`       = #{id}      
+      and `id`          = #{id}        
     </if>
     <if test="username != null and username != ''"> 
-      and `username` = #{username}
+      and `username`    = #{username}  
     </if>
     <if test="phone != null and phone != ''"> 
-      and `phone`    = #{phone}   
+      and `phone`       = #{phone}     
     </if>
     <if test="email != null and email != ''"> 
-      and `email`    = #{email}   
+      and `email`       = #{email}     
     </if>
     <if test="password != null and password != ''"> 
-      and `password` = #{password}
+      and `password`    = #{password}  
+    </if>
+    <if test="type != null"> 
+      and `type`        = #{type}      
+    </if>
+    <if test="typeName != null and typeName != ''"> 
+      and `type_name`   = #{typeName}  
+    </if>
+    <if test="createBy != null and createBy != ''"> 
+      and `create_by`   = #{createBy}  
+    </if>
+    <if test="createDate != null"> 
+      and `create_date` = #{createDate}
+    </if>
+    <if test="updateBy != null and updateBy != ''"> 
+      and `update_by`   = #{updateBy}  
+    </if>
+    <if test="updateDate != null"> 
+      and `update_date` = #{updateDate}
+    </if>
+    <if test="status != null"> 
+      and `status`      = #{status}    
+    </if>
+    <if test="statusName != null and statusName != ''"> 
+      and `status_name` = #{statusName}
     </if>
 	<!-- 比较查询 -->
   </sql>
@@ -38,35 +70,67 @@
   
   <insert id="insert">
     insert into `sys_user` (
-      `id`      ,
-      `username`,
-      `phone`   ,
-      `email`   ,
-      `password`
+      `id`         ,
+      `username`   ,
+      `phone`      ,
+      `email`      ,
+      `password`   ,
+      `type`       ,
+      `type_name`  ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     ,
+      `status_name`
     ) values (
-      #{id}      ,
-      #{username},
-      #{phone}   ,
-      #{email}   ,
-      #{password}
+      #{id}        ,
+      #{username}  ,
+      #{phone}     ,
+      #{email}     ,
+      #{password}  ,
+      #{type}      ,
+      #{typeName}  ,
+      #{createBy}  ,
+      #{createDate},
+      #{updateBy}  ,
+      #{updateDate},
+      #{status}    ,
+      #{statusName}
     )
   </insert>
   
   <insert id="batchInsert">
     insert into `sys_user` (
-      `id`      ,
-      `username`,
-      `phone`   ,
-      `email`   ,
-      `password`
+      `id`         ,
+      `username`   ,
+      `phone`      ,
+      `email`      ,
+      `password`   ,
+      `type`       ,
+      `type_name`  ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     ,
+      `status_name`
     ) 
      <foreach collection="list" item="obj" separator="union all">
             select
-        #{obj.id}      ,
-        #{obj.username},
-        #{obj.phone}   ,
-        #{obj.email}   ,
-        #{obj.password}
+        #{obj.id}        ,
+        #{obj.username}  ,
+        #{obj.phone}     ,
+        #{obj.email}     ,
+        #{obj.password}  ,
+        #{obj.type}      ,
+        #{obj.typeName}  ,
+        #{obj.createBy}  ,
+        #{obj.createDate},
+        #{obj.updateBy}  ,
+        #{obj.updateDate},
+        #{obj.status}    ,
+        #{obj.statusName}
          </foreach>
   </insert>
   
@@ -74,16 +138,40 @@
     update `sys_user`
     <set>
       <if test="username != null"> 
-        `username` = #{username},
+        `username`    = #{username}  ,
       </if>
       <if test="phone != null"> 
-        `phone`    = #{phone}   ,
+        `phone`       = #{phone}     ,
       </if>
       <if test="email != null"> 
-        `email`    = #{email}   ,
+        `email`       = #{email}     ,
       </if>
       <if test="password != null"> 
-        `password` = #{password},
+        `password`    = #{password}  ,
+      </if>
+      <if test="type != null"> 
+        `type`        = #{type}      ,
+      </if>
+      <if test="typeName != null"> 
+        `type_name`   = #{typeName}  ,
+      </if>
+      <if test="createBy != null"> 
+        `create_by`   = #{createBy}  ,
+      </if>
+      <if test="createDate != null"> 
+        `create_date` = #{createDate},
+      </if>
+      <if test="updateBy != null"> 
+        `update_by`   = #{updateBy}  ,
+      </if>
+      <if test="updateDate != null"> 
+        `update_date` = #{updateDate},
+      </if>
+      <if test="status != null"> 
+        `status`      = #{status}    ,
+      </if>
+      <if test="statusName != null"> 
+        `status_name` = #{statusName},
       </if>
     </set>
     where id =  #{id}

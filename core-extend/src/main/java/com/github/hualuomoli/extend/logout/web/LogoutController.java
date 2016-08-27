@@ -21,7 +21,7 @@ public class LogoutController {
 
 	@RequestMapping(value = "", produces = { "application/json" })
 	public String logout() {
-		loginUserService.removeToken();
+		loginUserService.logout();
 		return AppRestResponse.getNoData();
 	}
 

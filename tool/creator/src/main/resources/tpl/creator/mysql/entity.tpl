@@ -2,13 +2,7 @@ package ${packageName}.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Base${javaName} extends ${entityPackageName}.${javaName}
-<#if table.entityType == 1>
- implements com.github.hualuomoli.base.persistent.BasePersistent
-<#elseif table.entityType == 2>
- implements com.github.hualuomoli.base.persistent.BasePersistent, com.github.hualuomoli.base.persistent.CommonPersistent
-</#if>
- {
+public class Base${javaName} extends ${entityPackageName}.${javaName} {
 
 	<#list table.queryColumns as queryColumn>
 	/** ${queryColumn.comment!''} */

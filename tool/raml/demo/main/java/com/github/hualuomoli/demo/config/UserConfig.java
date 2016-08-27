@@ -22,11 +22,11 @@ public class UserConfig {
 			}
 
 			@Override
-			public void setUsername(String key, String username) {
+			public void login(String key, String username) {
 			}
 
 			@Override
-			public void refreshUsername() {
+			public void refresh() {
 			}
 
 			@Override
@@ -35,22 +35,17 @@ public class UserConfig {
 			}
 
 			@Override
-			public String getLoginUsername() {
-				return "system";
-			}
-
-			@Override
-			public HashSet<String> getLoginUserRoles() {
+			public HashSet<String> getUserRoles() {
 				return Sets.newHashSet();
 			}
 
 			@Override
-			public HashSet<String> getLoginUserPermissions() {
+			public HashSet<String> getUserPermissions() {
 				return Sets.newHashSet();
 			}
 
 			@Override
-			public void removeToken() {
+			public void logout() {
 
 			}
 

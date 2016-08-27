@@ -24,22 +24,13 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 
 	@Override
 	public String getUsername() {
-		try {
-			return this.getLoginUsername();
-		} catch (Exception e) {
-		}
-		return "system";
-	}
-
-	@Override
-	public String getLoginUsername() {
 		// 未登录
 		String token = this.getToken();
 		if (StringUtils.isBlank(token)) {
 			throw AuthException.NO_LOGIN;
 		}
 		// 登陆超时
-		String username = this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token);
+		String username = this.getCache().getSerializable(PREFIX_TOKEN + token);
 		if (StringUtils.isBlank(username)) {
 			throw AuthException.OVER_TIME;
 		}
@@ -48,17 +39,22 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 	}
 
 	@Override
-	public void setUsername(String token, String username) {
+	public void login(String token, String username) {
 		this.getCache().setSerializable(PREFIX_TOKEN + token, username);
 	}
 
 	@Override
-	public void refreshUsername() {
-		this.getLoginUsername();
+	public void refresh() {
+		// 未登录
+		String token = this.getToken();
+		if (StringUtils.isBlank(token)) {
+			throw AuthException.NO_LOGIN;
+		}
+		this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token);
 	}
 
 	@Override
-	public void removeToken() {
+	public void logout() {
 		String token = this.getToken();
 		this.getCache().remove(PREFIX_TOKEN + token);
 	}

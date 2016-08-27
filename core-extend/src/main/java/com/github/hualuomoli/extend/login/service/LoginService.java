@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.commons.util.RandomUtils;
 import com.github.hualuomoli.exception.CodeException;
 import com.github.hualuomoli.extend.base.entity.BaseUser;
@@ -59,12 +60,16 @@ public class LoginService implements ApplicationContextAware {
 
 		// 用户未找到
 		if (baseUser == null) {
-			return dealer.error();
+			return dealer.notFound(request, response);
 		}
 		// 密码错误
 		if (!StringUtils.equals(loginUser.getPassword(), baseUser.getPassword())
 				&& !userService.checkPassword(loginUser.getPassword(), baseUser.getPassword())) {
-			return dealer.error(loginUser);
+			return dealer.invalidUsernameOrPassword(request, response);
+		}
+		// 非正常用户
+		if (baseUser.getStatus() != Status.NOMAL.getValue()) {
+			return dealer.notNomalStatus(baseUser, request, response);
 		}
 		// 登录成功
 		return dealer.success(baseUser, request, response);
@@ -106,13 +111,17 @@ public class LoginService implements ApplicationContextAware {
 		}
 
 		@Override
-		public String error() {
+		public String notFound(HttpServletRequest request, HttpServletResponse response) {
 			throw new CodeException(Code.USER_NOT_FOUND);
 		}
 
 		@Override
-		public String error(LoginUser loginUser) {
+		public String invalidUsernameOrPassword(HttpServletRequest request, HttpServletResponse response) {
 			throw new CodeException(Code.USER_INVALID_USERNAME_OR_PASSWORD);
+		}
+
+		public String notNomalStatus(BaseUser baseUser, HttpServletRequest request, HttpServletResponse response) {
+			throw new CodeException(Code.USER_NOT_NOMAL);
 		}
 
 		@Override
@@ -123,7 +132,7 @@ public class LoginService implements ApplicationContextAware {
 			// 用户
 			String username = BaseUser.getUsername();
 			// 添加到缓存
-			loginUserService.setUsername(token, username);
+			loginUserService.login(token, username);
 
 			// 添加到token，cookie
 			response.addCookie(new Cookie("token", token));

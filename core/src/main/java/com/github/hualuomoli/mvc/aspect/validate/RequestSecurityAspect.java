@@ -60,7 +60,7 @@ public class RequestSecurityAspect {
 	private void checkToken(Method method) {
 		RequestToken token = method.getAnnotation(RequestToken.class);
 		if (token != null) {
-			loginUserService.getLoginUsername();
+			loginUserService.getUsername();
 		}
 	}
 
@@ -69,7 +69,7 @@ public class RequestSecurityAspect {
 		RequestRole requestRole = method.getAnnotation(RequestRole.class);
 		if (requestRole != null) {
 			String[] values = requestRole.value();
-			Set<String> roles = loginUserService.getLoginUserRoles();
+			Set<String> roles = loginUserService.getUserRoles();
 			for (String value : values) {
 				if (roles.contains(value)) {
 					return;
@@ -87,7 +87,7 @@ public class RequestSecurityAspect {
 		RequestPermission requestPermission = method.getAnnotation(RequestPermission.class);
 		if (requestPermission != null) {
 			String permission = requestPermission.value();
-			Set<String> permissions = loginUserService.getLoginUserPermissions();
+			Set<String> permissions = loginUserService.getUserPermissions();
 			if (!permissions.contains(permission)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("用户没有权限 {}", permission);

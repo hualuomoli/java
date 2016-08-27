@@ -87,6 +87,19 @@ public class BaseUserServiceImpl implements BaseUserService {
 		return baseUserMapper.update(baseUser);
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public int logicalDelete(@PreDelete BaseUser baseUser) {
+		return baseUserMapper.update(baseUser);
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public int logicalDelete(String id) {
+		BaseUser temp = new BaseUser();
+		temp.setId(id);
+		return this.logicalDelete(temp);
+	}
 
 	@Override
 	@Transactional(readOnly = false)

@@ -2,9 +2,7 @@ package com.github.hualuomoli.demo.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo
- implements com.github.hualuomoli.base.persistent.BasePersistent, com.github.hualuomoli.base.persistent.CommonPersistent
- {
+public class BaseDemo extends com.github.hualuomoli.demo.entity.Demo {
 
 	/**  - 左like */
 	private java.lang.String nameLeftLike;
