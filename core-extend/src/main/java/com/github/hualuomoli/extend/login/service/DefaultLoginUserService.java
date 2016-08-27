@@ -3,14 +3,9 @@ package com.github.hualuomoli.extend.login.service;
 import java.util.HashSet;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.hualuomoli.commons.util.ServletUtils;
 import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.extend.notice.Noticer;
@@ -37,33 +32,6 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	// 缓存
 	protected SerializeCache getCache() {
 		return cache;
-	}
-
-	// 获取token
-	protected String getToken() {
-		String name = "token";
-		String token = null;
-		HttpServletRequest req = ServletUtils.getRequest();
-		// get from request
-		token = req.getParameter(name);
-
-		if (StringUtils.isBlank(token)) {
-			// get from token
-			token = req.getHeader(name);
-		}
-		if (StringUtils.isBlank(token)) {
-			// get from cookie
-			Cookie[] cookies = req.getCookies();
-			if (cookies != null && cookies.length > 0) {
-				for (Cookie cookie : cookies) {
-					if (StringUtils.equals(cookie.getName(), name)) {
-						token = cookie.getValue();
-						break;
-					}
-				}
-			}
-		}
-		return token;
 	}
 
 	@Override
