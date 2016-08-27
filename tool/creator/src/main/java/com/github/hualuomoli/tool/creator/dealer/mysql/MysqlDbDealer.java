@@ -175,7 +175,7 @@ public class MysqlDbDealer implements DbDealer {
 				break;
 			case "java.lang.String":
 				dBColumn.setType("varchar");
-				dBColumn.setLength("(32)");
+				dBColumn.setLength("(" + (entityColumn.length() == 0 ? DEFAULT_LENGTH_STRING : entityColumn.length()) + ")");
 				break;
 			default:
 				// 关联关系
