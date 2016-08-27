@@ -1,10 +1,7 @@
 package com.github.hualuomoli.demo.raml.base.entity;
 
-import java.util.Date;
-
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
  * @Description 默认值
@@ -26,43 +23,44 @@ public class Address {
 	@EntityColumn(comment = "省份")
 	private String province;
 
-
-	public String getCity(){
+	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city){
+	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getCouty(){
+
+	public String getCouty() {
 		return couty;
 	}
 
-	public void setCouty(String couty){
+	public void setCouty(String couty) {
 		this.couty = couty;
 	}
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name){
+	public void setName(String name) {
 		this.name = name;
 	}
-	public String[] getPhones(){
+
+	public String[] getPhones() {
 		return phones;
 	}
 
-	public void setPhones(String[] phones){
+	public void setPhones(String[] phones) {
 		this.phones = phones;
 	}
-	public String getProvince(){
+
+	public String getProvince() {
 		return province;
 	}
 
-	public void setProvince(String province){
+	public void setProvince(String province) {
 		this.province = province;
 	}
-
-
 
 }

@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseUserMapper">
 
-  <sql id="columns">
-    `id`          as "id"        ,
-    `username`    as "username"  ,
-    `phone`       as "phone"     ,
-    `email`       as "email"     ,
-    `password`    as "password"  ,
-    `type`        as "type"      ,
-    `type_name`   as "typeName"  ,
-    `create_by`   as "createBy"  ,
-    `create_date` as "createDate",
-    `update_by`   as "updateBy"  ,
-    `update_date` as "updateDate",
-    `status`      as "status"    ,
-    `status_name` as "statusName"
-  </sql>
+  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseUser">
+    <result column="id"          property="id" />
+    <result column="username"    property="username" />
+    <result column="phone"       property="phone" />
+    <result column="email"       property="email" />
+    <result column="password"    property="password" />
+    <result column="type"        property="type" />
+    <result column="type_name"   property="typeName" />
+    <result column="create_by"   property="createBy" />
+    <result column="create_date" property="createDate" />
+    <result column="update_by"   property="updateBy" />
+    <result column="update_date" property="updateDate" />
+    <result column="status"      property="status" />
+    <result column="status_name" property="statusName" />
+  </resultMap>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -61,10 +61,8 @@
 	<!-- 比较查询 -->
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseUser">
-    select 
-      <include refid="columns" />
-    from `sys_user`
+  <select id="get" resultMap="dataMap">
+    select * from `sys_user`
     where id =  #{id}
   </select>
   
@@ -99,7 +97,7 @@
       #{statusName}
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `sys_user` (
       `id`         ,
@@ -117,7 +115,7 @@
       `status_name`
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
+     	select
         #{obj.id}        ,
         #{obj.username}  ,
         #{obj.phone}     ,
@@ -190,10 +188,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseUser">
-    select
-      <include refid="columns" />
-    from `sys_user`
+  <select id="findList" resultMap="dataMap">
+    select * from `sys_user`
     <where>
       <include refid="querys" />
     </where>

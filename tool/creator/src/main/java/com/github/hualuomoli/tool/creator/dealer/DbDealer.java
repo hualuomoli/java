@@ -22,6 +22,7 @@ public interface DbDealer {
 
 		public String output = ProjectUtils.getProjectPath();
 		public String dbPath = "db/";
+		public String dbName = "database.sql";
 
 	}
 

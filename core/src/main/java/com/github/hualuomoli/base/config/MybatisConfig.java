@@ -32,12 +32,14 @@ public class MybatisConfig {
 	private static final Logger logger = LoggerFactory.getLogger(MybatisConfig.class);
 
 	private String mapperLocations = YamlUtils.getInstance().getString("mybatis", "mapperLocations");
+	// private List<String> typeHandlerClasses = YamlUtils.getInstance().getList("typeHandlers", String.class,
+	// "mybatis");
 
 	@Resource(name = "dataSource")
 	DataSource dataSource;
 
 	@Bean(name = "sqlSessionFactory")
-	public SqlSessionFactoryBean loadSqlSessionFactoryBean() throws IOException {
+	public SqlSessionFactoryBean loadSqlSessionFactoryBean() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (logger.isInfoEnabled()) {
 			logger.info("mapperLocations {}", mapperLocations);
 		}
@@ -45,6 +47,18 @@ public class MybatisConfig {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource);
 		sqlSessionFactoryBean.setMapperLocations(ResourceUtils.loadPattern(mapperLocations));
+
+		// 自定义处理解析类
+		// if (typeHandlerClasses != null && typeHandlerClasses.size() > 0) {
+		// List<TypeHandler<?>> typeHandlers = Lists.newArrayList();
+		// for (String typeHandlerClass : typeHandlerClasses) {
+		// if (logger.isDebugEnabled()) {
+		// logger.debug("typeHandler={}", typeHandlerClass);
+		// }
+		// typeHandlers.add((TypeHandler<?>) Class.forName(typeHandlerClass).newInstance());
+		// }
+		// sqlSessionFactoryBean.setTypeHandlers(typeHandlers.toArray(new TypeHandler<?>[] {}));
+		// }
 
 		// 分页插件
 		PaginationInterceptor paginationInterceptor = new PaginationInterceptor();

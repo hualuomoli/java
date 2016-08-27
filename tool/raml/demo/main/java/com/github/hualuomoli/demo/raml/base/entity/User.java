@@ -1,10 +1,7 @@
 package com.github.hualuomoli.demo.raml.base.entity;
 
-import java.util.Date;
-
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
  * @Description 默认值
@@ -27,49 +24,52 @@ public class User {
 	private Address address;
 	private Order orders;
 
-	public Integer getAge(){
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(Integer age){
+	public void setAge(Integer age) {
 		this.age = age;
 	}
-	public String getNickname(){
+
+	public String getNickname() {
 		return nickname;
 	}
 
-	public void setNickname(String nickname){
+	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public String getSex(){
+
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex){
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	public String getUsername(){
+
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username){
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public Address getAddress(){
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address){
+	public void setAddress(Address address) {
 		this.address = address;
 	}
-	public Order getOrders(){
+
+	public Order getOrders() {
 		return orders;
 	}
 
-	public void setOrders(Order orders){
+	public void setOrders(Order orders) {
 		this.orders = orders;
 	}
-
 
 }

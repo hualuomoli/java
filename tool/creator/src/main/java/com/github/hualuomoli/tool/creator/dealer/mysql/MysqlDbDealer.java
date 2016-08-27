@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.type.JdbcType;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 import com.github.hualuomoli.commons.util.TemplateUtils;
 import com.github.hualuomoli.tool.creator.dealer.DbDealer;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
@@ -59,7 +59,7 @@ public class MysqlDbDealer implements DbDealer {
 		}
 
 		// 输出
-		TemplateUtils.processByResource(tplPath, "db.tpl", map, new File(dir.getAbsolutePath(), "database.sql"));
+		TemplateUtils.processByResource(tplPath, "db.tpl", map, new File(dir.getAbsolutePath(), this.dbConfig.dbName));
 
 	}
 
@@ -108,96 +108,84 @@ public class MysqlDbDealer implements DbDealer {
 		dBColumn.setNullable(entityColumn.nullable() ? "Y" : "N");
 
 		String fieldClassName = field.getType().getName();
-		EntityColumnType type = entityColumn.type();
+		JdbcType type = entityColumn.type();
 
 		int length = entityColumn.length();
 		int precision = entityColumn.precision();
 		int scale = entityColumn.scale();
 		String defaultValue = entityColumn.defaultValue();
 
-		// 列类型
-		switch (fieldClassName) {
-		case "java.lang.Integer":
-		case "int":
+		switch (type) {
+		case INTEGER:
 			dBColumn.setType("integer");
-			dBColumn.setLength("(" + (length == 0 ? precision == 0 ? DEFAULT_LENGTH_INTEGER : precision : length) + ")");
-			if (StringUtils.isNotBlank(defaultValue)) {
-				dBColumn.setDefaultValue(defaultValue);
-			}
+			dBColumn.setLength("(" + (length == 0 ? precision : length) + ")");
 			break;
-		case "java.lang.Long":
-		case "long":
+		case BIGINT:
 			dBColumn.setType("integer");
-			dBColumn.setLength("(" + (length == 0 ? precision == 0 ? DEFAULT_LENGTH_LONG : precision : length) + ")");
-			if (StringUtils.isNotBlank(defaultValue)) {
-				dBColumn.setDefaultValue(defaultValue);
-			}
+			dBColumn.setLength("(" + (length == 0 ? precision : length) + ")");
 			break;
-		case "java.lang.Double":
-		case "double":
+		case DOUBLE:
 			dBColumn.setType("double");
-			dBColumn.setLength(
-					"(" + (precision == 0 ? DEFAULT_LENGTH_DOUBLE_PRECISION : precision) + "," + (scale == 0 ? DEFAULT_LENGTH_DOUBLE_SCALE : scale) + ")");
-			if (StringUtils.isNotBlank(defaultValue)) {
-				dBColumn.setDefaultValue(defaultValue);
-			}
+			dBColumn.setLength("(" + precision + "," + scale + ")");
 			break;
-		case "java.util.Date":
-			switch (type) {
-			case TIMESTAMP:
+		case CHAR:
+			dBColumn.setType("char");
+			dBColumn.setLength("(1)");
+			break;
+		case VARCHAR:
+			dBColumn.setType("varchar");
+			dBColumn.setLength("(" + entityColumn.length() + ")");
+			break;
+		case LONGVARCHAR:
+			dBColumn.setType("text");
+			dBColumn.setLength("");
+			break;
+		case CLOB:
+			dBColumn.setType("longtext");
+			dBColumn.setLength("");
+			break;
+		case TIMESTAMP:
+			dBColumn.setType("timestamp");
+			break;
+		case DATE:
+			dBColumn.setType("date");
+			break;
+		case TIME:
+			dBColumn.setType("time");
+			break;
+		case NULL:
+			switch (fieldClassName) {
+			case "java.lang.Integer":
+			case "int":
+				dBColumn.setType("integer");
+				dBColumn.setLength("(" + DEFAULT_LENGTH_INTEGER + ")");
+				break;
+			case "java.lang.Long":
+			case "long":
+				dBColumn.setType("integer");
+				dBColumn.setLength("(" + DEFAULT_LENGTH_LONG + ")");
+				break;
+			case "java.lang.Double":
+			case "double":
+				dBColumn.setType("double");
+				dBColumn.setLength("(" + DEFAULT_LENGTH_DOUBLE_PRECISION + "," + scale + ")");
+				break;
+			case "java.util.Date":
 				dBColumn.setType("timestamp");
 				break;
-			case DATE_TIME:
-				dBColumn.setType("datetime");
-				break;
-			case DATE:
-				dBColumn.setType("date");
-				break;
-			case TIME:
-				dBColumn.setType("time");
+			case "java.lang.String":
+				dBColumn.setType("varchar");
+				dBColumn.setLength("(32)");
 				break;
 			default:
-				dBColumn.setType("timestamp");
-			}
-			if (StringUtils.isNotBlank(defaultValue)) {
-				dBColumn.setDefaultValue(defaultValue);
-			}
-			break;
-		case "java.lang.String":
-			switch (type) {
-			case CHAR:
-				dBColumn.setType("char");
-				dBColumn.setLength("(1)");
+				// 关联关系
+				String ralation = entityColumn.relation();
+				dBColumn = this.getRalationDBColumn(field, ralation);
 				break;
-			case CLOB:
-				dBColumn.setType("longtext");
-				dBColumn.setLength("");
-				break;
-			case TEXT:
-				dBColumn.setType("text");
-				dBColumn.setLength("");
-				break;
-			case LONG_TEXT:
-				dBColumn.setType("longtext");
-				dBColumn.setLength("");
-				break;
-			default:
-				if (length >= 2000) {
-					dBColumn.setType("text");
-					dBColumn.setLength("");
-				} else {
-					dBColumn.setType("varchar");
-					dBColumn.setLength("(" + (length == 0 ? DEFAULT_LENGTH_STRING : length) + ")");
-				}
-			}
-			if (StringUtils.isNotBlank(defaultValue)) {
-				dBColumn.setDefaultValue("\"" + defaultValue + "\"");
 			}
 			break;
 		default:
-			// 关联关系
-			String ralation = entityColumn.relation();
-			dBColumn = this.getRalationDBColumn(field, ralation);
+			throw new RuntimeException("can not support type " + type);
 		}
 
 		return dBColumn;

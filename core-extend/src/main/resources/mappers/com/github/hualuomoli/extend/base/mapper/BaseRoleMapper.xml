@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseRoleMapper">
 
-  <sql id="columns">
-    `id`        as "id"      ,
-    `role_code` as "roleCode",
-    `role_name` as "roleName"
-  </sql>
+  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseRole">
+    <result column="id"        property="id" />
+    <result column="role_code" property="roleCode" />
+    <result column="role_name" property="roleName" />
+  </resultMap>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -27,10 +27,8 @@
     </if>
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseRole">
-    select 
-      <include refid="columns" />
-    from `sys_role`
+  <select id="get" resultMap="dataMap">
+    select * from `sys_role`
     where id =  #{id}
   </select>
   
@@ -45,7 +43,7 @@
       #{roleName}
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `sys_role` (
       `id`       ,
@@ -53,7 +51,7 @@
       `role_name`
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
+     	select
         #{obj.id}      ,
         #{obj.roleCode},
         #{obj.roleName}
@@ -86,10 +84,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseRole">
-    select
-      <include refid="columns" />
-    from `sys_role`
+  <select id="findList" resultMap="dataMap">
+    select * from `sys_role`
     <where>
       <include refid="querys" />
     </where>

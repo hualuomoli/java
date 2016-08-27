@@ -2,20 +2,21 @@ package com.github.hualuomoli.base.entity;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.JdbcType;
+
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 // 公共属性
 @SuppressWarnings("serial")
 public abstract class CommonField extends BaseField {
 
-	@EntityColumn(name = "create_by", type = EntityColumnType.STRING, comment = "创建人", length = 32, nullable = false)
+	@EntityColumn(name = "create_by", type = JdbcType.VARCHAR, comment = "创建人", length = 32, nullable = false)
 	private String createBy;
-	@EntityColumn(name = "create_date", type = EntityColumnType.TIMESTAMP, comment = "创建时间", nullable = false)
+	@EntityColumn(name = "create_date", type = JdbcType.TIMESTAMP, comment = "创建时间", nullable = false)
 	private Date createDate;
-	@EntityColumn(name = "update_by", type = EntityColumnType.STRING, comment = "修改人", length = 32, nullable = false)
+	@EntityColumn(name = "update_by", type = JdbcType.VARCHAR, comment = "修改人", length = 32, nullable = false)
 	private String updateBy;
-	@EntityColumn(name = "update_date", type = EntityColumnType.TIMESTAMP, comment = "修改时间", nullable = false)
+	@EntityColumn(name = "update_date", type = JdbcType.TIMESTAMP, comment = "修改时间", nullable = false)
 	private Date updateDate;
 	@EntityColumn(name = "status", comment = "数据状态", nullable = false)
 	private Integer status;

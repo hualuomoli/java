@@ -75,7 +75,7 @@ filter:
 # spring mvc request version
 restful:
   version:
-    name: content-version
+    name: api-version
     default: ""
 
 # 安全

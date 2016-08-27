@@ -2,23 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorDemoMapper">
 
-  <sql id="columns">
-    `id`            as "id"           ,
-    `name`          as "name"         ,
-    `sex`           as "sex"          ,
-    `salary`        as "salary"       ,
-    `age`           as "age"          ,
-    `birth_day`     as "birthDay"     ,
-    `remarks`       as "remarks"      ,
-    `user_username` as "user.username",
-    `region_id`     as "region.id"    ,
-    `create_by`     as "createBy"     ,
-    `create_date`   as "createDate"   ,
-    `update_by`     as "updateBy"     ,
-    `update_date`   as "updateDate"   ,
-    `status`        as "status"       ,
-    `status_name`   as "statusName"   
-  </sql>
+  <resultMap id="dataMap" type="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo">
+    <result column="id"            property="id" />
+    <result column="name"          property="name" />
+    <result column="sex"           property="sex" />
+    <result column="salary"        property="salary" />
+    <result column="age"           property="age" />
+    <result column="birth_day"     property="birthDay" />
+    <result column="remarks"       property="remarks" />
+    <result column="user_username" property="user.username" />
+    <result column="region_id"     property="region.id" />
+    <result column="create_by"     property="createBy" />
+    <result column="create_date"   property="createDate" />
+    <result column="update_by"     property="updateBy" />
+    <result column="update_date"   property="updateDate" />
+    <result column="status"        property="status" />
+    <result column="status_name"   property="statusName" />
+  </resultMap>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -138,10 +138,8 @@
     </if>
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo">
-    select 
-      <include refid="columns" />
-    from `t_creator_demo`
+  <select id="get" resultMap="dataMap">
+    select * from `t_creator_demo`
     where id =  #{id}
   </select>
   
@@ -180,7 +178,7 @@
       #{statusName}   
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `t_creator_demo` (
       `id`           ,
@@ -200,7 +198,7 @@
       `status_name`  
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
+     	select
         #{obj.id}           ,
         #{obj.name}         ,
         #{obj.sex}          ,
@@ -281,10 +279,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo">
-    select
-      <include refid="columns" />
-    from `t_creator_demo`
+  <select id="findList" resultMap="dataMap">
+    select * from `t_creator_demo`
     <where>
       <include refid="querys" />
     </where>

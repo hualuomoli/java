@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.ibatis.type.JdbcType;
+
 /**
  * 列信息
  * @author hualuomoli
@@ -21,7 +23,7 @@ public @interface EntityColumn {
 	String relation() default "id";
 
 	// 数据类型
-	EntityColumnType type() default EntityColumnType.AUTO;
+	JdbcType type() default JdbcType.NULL;
 
 	// 注释
 	String comment();

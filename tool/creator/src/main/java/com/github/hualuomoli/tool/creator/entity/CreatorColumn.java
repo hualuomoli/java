@@ -23,9 +23,12 @@ public class CreatorColumn {
 
 	// 其他信息
 	private String comment;// 注释
+	private boolean custom; // 是否是自定义类型
 	private boolean string; // 是否是字符串
 	private boolean entity; // 是否是其他entity
 	private String relation; // 关联属性
+
+	private String typeHandler; // 类型解析处理handler
 
 	public CreatorColumn() {
 	}
@@ -124,6 +127,22 @@ public class CreatorColumn {
 
 	public void setJavaTypeName(String javaTypeName) {
 		this.javaTypeName = javaTypeName;
+	}
+
+	public String getTypeHandler() {
+		return typeHandler;
+	}
+
+	public void setTypeHandler(String typeHandler) {
+		this.typeHandler = typeHandler;
+	}
+
+	public boolean isCustom() {
+		return custom;
+	}
+
+	public void setCustom(boolean custom) {
+		this.custom = custom;
 	}
 
 }

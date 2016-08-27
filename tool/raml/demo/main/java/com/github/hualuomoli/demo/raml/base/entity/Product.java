@@ -1,10 +1,7 @@
 package com.github.hualuomoli.demo.raml.base.entity;
 
-import java.util.Date;
-
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
  * @Description 默认值
@@ -20,22 +17,20 @@ public class Product {
 	@EntityColumn(comment = "商品名")
 	private String name;
 
-
-	public String getId(){
+	public String getId() {
 		return id;
 	}
 
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name){
+	public void setName(String name) {
 		this.name = name;
 	}
-
-
 
 }

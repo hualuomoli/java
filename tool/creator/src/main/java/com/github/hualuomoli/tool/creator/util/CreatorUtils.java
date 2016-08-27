@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
+import com.github.hualuomoli.base.annotation.entity.EntityColumnCustom;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.BaseField;
@@ -438,10 +439,18 @@ public class CreatorUtils {
 					attribute.setDbName(dbName);
 					attribute.setDbNameLength(attribute.getDbName().length());
 				} else {
-					logger.warn("无法识别的类型 {} {}", field.getName(), field.getType().getName());
-					throw new RuntimeException("can not support type " + field.getType().getName());
+					EntityColumnCustom custom = field.getAnnotation(EntityColumnCustom.class);
+					if (custom != null) {
+						// number
+						attribute.setDbName(dbName);
+						attribute.setDbNameLength(attribute.getDbName().length());
+						attribute.setTypeHandler(custom.typeHander().getName());
+						attribute.setCustom(true);
+					} else {
+						logger.warn("无法识别的类型 {} {}", field.getName(), field.getType().getName());
+						throw new RuntimeException("can not support type " + field.getType().getName());
+					}
 				}
-
 				attribute.setComment(annotation == null ? "" : annotation.comment());
 
 				// 添加

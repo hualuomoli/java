@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorRegionMapper">
 
-  <sql id="columns">
-    `id`   as "id"  ,
-    `code` as "code",
-    `name` as "name",
-    `type` as "type"
-  </sql>
+  <resultMap id="dataMap" type="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion">
+    <result column="id"   property="id" />
+    <result column="code" property="code" />
+    <result column="name" property="name" />
+    <result column="type" property="type" />
+  </resultMap>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -25,10 +25,8 @@
 	<!-- 比较查询 -->
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion">
-    select 
-      <include refid="columns" />
-    from `t_creator_region`
+  <select id="get" resultMap="dataMap">
+    select * from `t_creator_region`
     where id =  #{id}
   </select>
   
@@ -45,7 +43,7 @@
       #{type}
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `t_creator_region` (
       `id`  ,
@@ -54,7 +52,7 @@
       `type`
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
+     	select
         #{obj.id}  ,
         #{obj.code},
         #{obj.name},
@@ -91,10 +89,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion">
-    select
-      <include refid="columns" />
-    from `t_creator_region`
+  <select id="findList" resultMap="dataMap">
+    select * from `t_creator_region`
     <where>
       <include refid="querys" />
     </where>

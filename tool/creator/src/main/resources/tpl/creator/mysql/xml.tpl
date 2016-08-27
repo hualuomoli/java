@@ -2,17 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.base.mapper.Base${javaName}Mapper">
 
-  <sql id="columns">
+  <resultMap id="dataMap" type="${packageName}.base.entity.Base${javaName}">
   <#list table.columns as column>
-    <#if column.entity>
+  	<#if column.entity>
     <#-- 实体类 -->
-    `${column.dbName}`${column.dbBlanks} as "${column.javaName}.${column.relation}"${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
+    <result column="${column.dbName}"${column.dbBlanks} property="${column.javaName}.${column.relation}" />
+     <#elseif column.custom>
+    <#-- 自定义类型 -->
+    <result column="${column.dbName}"${column.dbBlanks} property="${column.javaName}" typeHandler="${column.typeHandler}" />
     <#else>
     <#-- 普通类型 -->
-    `${column.dbName}`${column.dbBlanks} as "${column.javaName}"${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
+    <result column="${column.dbName}"${column.dbBlanks} property="${column.javaName}" />
     </#if>
   </#list>
-  </sql>
+  </resultMap>
   
   <sql id="querys">
   <#list table.columns as column>
@@ -25,6 +28,11 @@
     <#-- 字符串 -->
     <if test="${column.javaName} != null and ${column.javaName} != ''"> 
       and `${column.dbName}`${column.dbBlanks} = ${r"#{"}${column.javaName}${r"}"}${column.javaBlanks}
+    </if>
+    <#elseif column.custom>
+    <#-- 自定义类型 -->
+    <if test="${column.javaName} != null"> 
+      and `${column.dbName}`${column.dbBlanks} = ${r"#{"}${column.javaName}, typeHandler=${column.typeHandler}${r"}"}${column.javaBlanks}
     </if>
     <#else>
     <#-- 非字符串普通类型 -->
@@ -58,23 +66,16 @@
   </sql>
   
   <#-- 根据主键查询 -->
-  <select id="get" resultType="${packageName}.base.entity.Base${javaName}">
-    select 
-      <include refid="columns" />
-    from `${table.dbName}`
+  <select id="get" resultMap="dataMap">
+    select * from `${table.dbName}`
     where id =  ${r"#{"}id${r"}"}
   </select>
   
   <insert id="insert">
     insert into `${table.dbName}` (
     <#list table.columns as column>
-      <#if column.entity>
       <#-- 实体类 -->
       `${column.dbName}`${column.dbBlanks}<#if table.columns?size - column_index gt 1>,</#if>
-      <#else>
-      <#-- 普通类型 -->
-      `${column.dbName}`${column.dbBlanks}<#if table.columns?size - column_index gt 1>,</#if>
-      </#if>
     </#list>  
     ) values (
     <#list table.columns as column>
@@ -82,32 +83,34 @@
       <#-- 实体类 -->
       ${r"#{"}${column.javaName}.${column.relation}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
       <#else>
+      <#if column.custom>
+      <#-- 自定义类型 -->
+      ${r"#{"}${column.javaName}, typeHandler=${column.typeHandler}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
+      <#else>
       <#-- 普通类型 -->
       ${r"#{"}${column.javaName}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
+      </#if>
       </#if>
     </#list>
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `${table.dbName}` (
     <#list table.columns as column>
-      <#if column.entity>
-      <#-- 实体类 -->
       `${column.dbName}`${column.dbBlanks}<#if table.columns?size - column_index gt 1>,</#if>
-      <#else>
-      <#-- 普通类型 -->
-      `${column.dbName}`${column.dbBlanks}<#if table.columns?size - column_index gt 1>,</#if>
-      </#if>
     </#list>  
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
-          <#list table.columns as column>
-            <#if column.entity>
+     	select
+        <#list table.columns as column>
+        <#if column.entity>
         <#-- 实体类 -->
         ${r"#{"}obj.${column.javaName}.${column.relation}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
-        <#else>
+        <#elseif column.custom>
+	    <#-- 自定义类型 -->
+        ${r"#{"}obj.${column.javaName}, typeHandler=${column.typeHandler}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
+	    <#else>
         <#-- 普通类型 -->
         ${r"#{"}obj.${column.javaName}${r"}"}${column.javaBlanks}<#if table.columns?size - column_index gt 1>,</#if>
         </#if>
@@ -129,6 +132,11 @@
       <#-- 字符串 -->
       <if test="${column.javaName} != null"> 
         `${column.dbName}`${column.dbBlanks} = ${r"#{"}${column.javaName}${r"}"}${column.javaBlanks},
+      </if>
+      <#elseif column.custom>
+      <#-- 自定义类型-->
+      <if test="${column.javaName} != null"> 
+        `${column.dbName}`${column.dbBlanks} = ${r"#{"}${column.javaName}, typeHandler=${column.typeHandler}${r"}"}${column.javaBlanks},
       </if>
       <#else>
       <#-- 普通类型 -->
@@ -155,10 +163,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="${packageName}.base.entity.Base${javaName}">
-    select
-      <include refid="columns" />
-    from `${table.dbName}`
+  <select id="findList" resultMap="dataMap">
+    select * from `${table.dbName}`
     <where>
       <include refid="querys" />
     </where>

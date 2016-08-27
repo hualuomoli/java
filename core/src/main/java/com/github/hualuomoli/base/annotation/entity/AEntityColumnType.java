@@ -5,7 +5,7 @@ package com.github.hualuomoli.base.annotation.entity;
  * @author hualuomoli
  *
  */
-public enum EntityColumnType {
+public enum AEntityColumnType {
 
 	AUTO(), // 自动转换
 	CHAR(), // 单个字符
@@ -19,7 +19,7 @@ public enum EntityColumnType {
 	CLOB(), // 大字符
 	;
 
-	private EntityColumnType() {
+	private AEntityColumnType() {
 	}
 
 }

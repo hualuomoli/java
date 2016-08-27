@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseUploadFileMapper">
 
-  <sql id="columns">
-    `id`                as "id"              ,
-    `fieldname`         as "fieldname"       ,
-    `original_filename` as "originalFilename",
-    `size`              as "size"            ,
-    `mimetype`          as "mimetype"        ,
-    `file_md5`          as "fileMd5"         ,
-    `file_fullname`     as "fileFullname"    ,
-    `filename`          as "filename"        ,
-    `file_suffix`       as "fileSuffix"      ,
-    `file_absolutepath` as "fileAbsolutepath",
-    `url`               as "url"             ,
-    `server_url`        as "serverUrl"       ,
-    `relative_url`      as "relativeUrl"     
-  </sql>
+  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseUploadFile">
+    <result column="id"                property="id" />
+    <result column="fieldname"         property="fieldname" />
+    <result column="original_filename" property="originalFilename" />
+    <result column="size"              property="size" />
+    <result column="mimetype"          property="mimetype" />
+    <result column="file_md5"          property="fileMd5" />
+    <result column="file_fullname"     property="fileFullname" />
+    <result column="filename"          property="filename" />
+    <result column="file_suffix"       property="fileSuffix" />
+    <result column="file_absolutepath" property="fileAbsolutepath" />
+    <result column="url"               property="url" />
+    <result column="server_url"        property="serverUrl" />
+    <result column="relative_url"      property="relativeUrl" />
+  </resultMap>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -61,10 +61,8 @@
 	<!-- 比较查询 -->
   </sql>
   
-  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseUploadFile">
-    select 
-      <include refid="columns" />
-    from `sys_upload_file`
+  <select id="get" resultMap="dataMap">
+    select * from `sys_upload_file`
     where id =  #{id}
   </select>
   
@@ -99,7 +97,7 @@
       #{relativeUrl}     
     )
   </insert>
-  
+
   <insert id="batchInsert">
     insert into `sys_upload_file` (
       `id`               ,
@@ -117,7 +115,7 @@
       `relative_url`     
     ) 
      <foreach collection="list" item="obj" separator="union all">
-            select
+     	select
         #{obj.id}              ,
         #{obj.fieldname}       ,
         #{obj.originalFilename},
@@ -190,10 +188,8 @@
       </where>
   </delete>
   
-  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseUploadFile">
-    select
-      <include refid="columns" />
-    from `sys_upload_file`
+  <select id="findList" resultMap="dataMap">
+    select * from `sys_upload_file`
     <where>
       <include refid="querys" />
     </where>

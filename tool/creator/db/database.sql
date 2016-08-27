@@ -4,7 +4,7 @@ CREATE TABLE `t_creator_demo` (
 	`name` varchar(32),
 	`sex` char(1) COMMENT '性别',
 	`salary` double(8,3) COMMENT '工资',
-	`age` integer(3) DEFAULT 20 COMMENT '年龄',
+	`age` integer(11) COMMENT '年龄',
 	`birth_day` date COMMENT '生日',
 	`remarks` longtext COMMENT '备注',
 	`user_username` varchar(20),
@@ -21,7 +21,7 @@ CREATE TABLE `t_creator_demo` (
 DROP TABLE IF EXISTS `t_creator_user`;
 CREATE TABLE `t_creator_user` (
 	`id` varchar(32),
-	`username` varchar(20) COMMENT '用户名',
+	`username` varchar(32) COMMENT '用户名',
 	`nickname` varchar(32),
 	`number` integer(11),
 	`create_by` varchar(32) NOT NULL COMMENT '创建人',

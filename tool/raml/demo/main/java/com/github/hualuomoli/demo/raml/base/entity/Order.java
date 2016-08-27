@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 /**
  * @Description 默认值
@@ -22,28 +21,28 @@ public class Order {
 
 	private Product products;
 
-	public Date getDate(){
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Date date){
+	public void setDate(Date date) {
 		this.date = date;
 	}
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Product getProducts(){
+	public Product getProducts() {
 		return products;
 	}
 
-	public void setProducts(Product products){
+	public void setProducts(Product products) {
 		this.products = products;
 	}
-
 
 }

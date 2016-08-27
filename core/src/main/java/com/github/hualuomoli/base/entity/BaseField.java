@@ -2,14 +2,15 @@ package com.github.hualuomoli.base.entity;
 
 import java.io.Serializable;
 
+import org.apache.ibatis.type.JdbcType;
+
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
-import com.github.hualuomoli.base.annotation.entity.EntityColumnType;
 
 // 公共属性
 @SuppressWarnings("serial")
 public abstract class BaseField implements Serializable {
 
-	@EntityColumn(name = "id", type = EntityColumnType.STRING, comment = "主键", length = 32)
+	@EntityColumn(name = "id", type = JdbcType.VARCHAR, comment = "主键", length = 32)
 	private String id;
 
 	public BaseField() {
