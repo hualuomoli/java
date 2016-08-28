@@ -31,7 +31,7 @@ public class CodeException extends RuntimeException {
 	// 错误
 	public static interface CodeError {
 
-		// 错误编码
+		// 错误编码[五位](1开头平台使用)
 		Integer getCode();
 
 		// 错误名称

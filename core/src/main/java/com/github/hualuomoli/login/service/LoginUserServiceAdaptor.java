@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.hualuomoli.commons.util.ServletUtils;
+import com.github.hualuomoli.constant.Code;
 import com.github.hualuomoli.exception.AuthException;
+import com.github.hualuomoli.exception.CodeException;
 import com.github.hualuomoli.plugin.cache.SerializeCache;
 
 /**
@@ -50,22 +52,17 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 		return token;
 	}
 
-	// 默认的用户名
-	protected String getDefaultUsername() {
-		return "SYSTEM_MANAGER";
-	}
-
 	@Override
 	public String getUsername() {
 		// 未登录
 		String token = this.getToken();
 		if (StringUtils.isBlank(token)) {
-			return this.getDefaultUsername();
+			throw new CodeException(Code.TOKEN_EMPTY);
 		}
 		// 登陆超时
 		String username = this.getCache().getSerializable(PREFIX_TOKEN + token);
 		if (StringUtils.isBlank(username)) {
-			return this.getDefaultUsername();
+			throw new CodeException(Code.TOKEN_OVER_TIME);
 		}
 
 		return username;
