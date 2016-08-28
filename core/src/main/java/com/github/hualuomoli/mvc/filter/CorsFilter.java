@@ -21,7 +21,6 @@ public class CorsFilter extends MvcFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
-	private boolean valid = BooleanUtils.toBooleanObject(YamlUtils.getInstance().getString("filter", "cors", "valid"));
 	private List<Cors> corses = YamlUtils.getInstance().getList("servers", Cors.class, "filter", "cors");
 
 	private static final String DEFAULT_MAX_AGE = "3600"; // Access-Control-Max-Age
@@ -31,10 +30,6 @@ public class CorsFilter extends MvcFilter {
 
 	@Override
 	public void filter(HttpServletRequest req, HttpServletResponse res) throws Exception {
-		// 不适用跨域
-		if (!valid) {
-			return;
-		}
 
 		// 来源服务器
 		String origin = req.getHeader("origin");

@@ -65,7 +65,6 @@ application:
 filter:
   # cors server
   cors:
-    valid: true
     servers:
       - server:
         allowOrigin: http://localhost:3000/
