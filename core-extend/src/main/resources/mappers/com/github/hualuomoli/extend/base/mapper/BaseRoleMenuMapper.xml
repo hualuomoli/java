@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseRoleMenuMapper">
 
-  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseRoleMenu">
-    <result column="id"        property="id" />
-    <result column="role_code" property="roleCode" />
-    <result column="menu_code" property="menuCode" />
-  </resultMap>
+  <sql id="columns">
+    `id`        as "id"      ,
+    `role_code` as "roleCode",
+    `menu_code` as "menuCode"
+  </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -27,8 +27,10 @@
     </if>
   </sql>
   
-  <select id="get" resultMap="dataMap">
-    select * from `sys_role_menu`
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseRoleMenu">
+    select 
+      <include refid="columns" />
+    from `sys_role_menu`
     where id =  #{id}
   </select>
   
@@ -43,7 +45,7 @@
       #{menuCode}
     )
   </insert>
-
+  
   <insert id="batchInsert">
     insert into `sys_role_menu` (
       `id`       ,
@@ -51,7 +53,7 @@
       `menu_code`
     ) 
      <foreach collection="list" item="obj" separator="union all">
-     	select
+            select
         #{obj.id}      ,
         #{obj.roleCode},
         #{obj.menuCode}
@@ -84,8 +86,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultMap="dataMap">
-    select * from `sys_role_menu`
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseRoleMenu">
+    select
+      <include refid="columns" />
+    from `sys_role_menu`
     <where>
       <include refid="querys" />
     </where>

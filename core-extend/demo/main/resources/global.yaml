@@ -1,0 +1,6 @@
+mybatis:
+  typeHandlers: 
+  - com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler
+  - com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler
+  - com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler
+  

@@ -2,25 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseMenuMapper">
 
-  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseMenu">
-    <result column="id"           property="id" />
-    <result column="menu_code"    property="menuCode" />
-    <result column="menu_name"    property="menuName" />
-    <result column="parent_code"  property="parentCode" />
-    <result column="full_name"    property="fullName" />
-    <result column="menu_type"    property="menuType" />
-    <result column="icon"         property="icon" />
-    <result column="router_state" property="routerState" />
-    <result column="permission"   property="permission" />
-    <result column="menu_sort"    property="menuSort" />
-    <result column="menu_level"   property="menuLevel" />
-    <result column="create_by"    property="createBy" />
-    <result column="create_date"  property="createDate" />
-    <result column="update_by"    property="updateBy" />
-    <result column="update_date"  property="updateDate" />
-    <result column="status"       property="status" />
-    <result column="status_name"  property="statusName" />
-  </resultMap>
+  <sql id="columns">
+    `id`           as "id"         ,
+    `menu_code`    as "menuCode"   ,
+    `menu_name`    as "menuName"   ,
+    `parent_code`  as "parentCode" ,
+    `full_name`    as "fullName"   ,
+    `menu_type`    as "menuType"   ,
+    `icon`         as "icon"       ,
+    `router_state` as "routerState",
+    `permission`   as "permission" ,
+    `menu_sort`    as "menuSort"   ,
+    `menu_level`   as "menuLevel"  ,
+    `create_by`    as "createBy"   ,
+    `create_date`  as "createDate" ,
+    `update_by`    as "updateBy"   ,
+    `update_date`  as "updateDate" ,
+    `status`       as "status"     ,
+    `status_name`  as "statusName" 
+  </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -83,8 +83,10 @@
     </if>
   </sql>
   
-  <select id="get" resultMap="dataMap">
-    select * from `sys_menu`
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseMenu">
+    select 
+      <include refid="columns" />
+    from `sys_menu`
     where id =  #{id}
   </select>
   
@@ -127,7 +129,7 @@
       #{statusName} 
     )
   </insert>
-
+  
   <insert id="batchInsert">
     insert into `sys_menu` (
       `id`          ,
@@ -149,7 +151,7 @@
       `status_name` 
     ) 
      <foreach collection="list" item="obj" separator="union all">
-     	select
+            select
         #{obj.id}         ,
         #{obj.menuCode}   ,
         #{obj.menuName}   ,
@@ -238,8 +240,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultMap="dataMap">
-    select * from `sys_menu`
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseMenu">
+    select
+      <include refid="columns" />
+    from `sys_menu`
     <where>
       <include refid="querys" />
     </where>

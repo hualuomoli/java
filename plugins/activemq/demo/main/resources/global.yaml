@@ -1,0 +1,10 @@
+activemq:
+  sender:
+    username: ausyri
+    password: ausyri
+    brokerURL: failover:(tcp://114.215.210.170:61616)
+  receiver:
+    username: demo
+    password: demo
+    brokerURL: failover:(tcp://114.215.210.170:61616)
+  

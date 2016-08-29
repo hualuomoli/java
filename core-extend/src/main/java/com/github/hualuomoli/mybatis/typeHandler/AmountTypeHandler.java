@@ -11,7 +11,7 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 
 import com.github.hualuomoli.lang.Amount;
 
-@MappedJdbcTypes(JdbcType.BIGINT)
+@MappedJdbcTypes(value = { JdbcType.BIGINT }, includeNullJdbcType = true)
 public class AmountTypeHandler extends BaseTypeHandler<Amount> {
 
 	@Override

@@ -21,7 +21,7 @@ CREATE TABLE `t_creator_demo` (
 DROP TABLE IF EXISTS `t_creator_user`;
 CREATE TABLE `t_creator_user` (
 	`id` varchar(32),
-	`username` varchar(32) COMMENT '用户名',
+	`username` varchar(20) COMMENT '用户名',
 	`nickname` varchar(32),
 	`number` integer(11),
 	`create_by` varchar(32) NOT NULL COMMENT '创建人',

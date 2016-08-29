@@ -8,6 +8,8 @@ mybatis:
   mapperLocations: classpath*:mappers/**/*Mapper.xml
   basePackage: com.github.hualuomoli
   annotationClass: org.springframework.stereotype.Repository
+  # typeHandlers:
+  
   
 view:
   prefix: /WEB-INF/views/
