@@ -80,3 +80,23 @@ CREATE TABLE `sys_upload_file` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件上传';
 
+DROP TABLE IF EXISTS `sys_sms`;
+CREATE TABLE `sys_sms` (
+	`id` varchar(32) COMMENT '主键',
+	`phone` varchar(32) NOT NULL COMMENT '手机号码',
+	`check_code` varchar(32) NOT NULL COMMENT '验证码',
+	`content` varchar(200) NOT NULL COMMENT '短信内容',
+	`type` integer(11) NOT NULL COMMENT '短信类别',
+	`valid_time` varchar(32) COMMENT '短信有效时长中文描述',
+	`valid_date` timestamp COMMENT '短信有效终止时间',
+	`state` integer(11) COMMENT '短信状态',
+	`state_name` varchar(32) COMMENT '短信状态描述',
+	`create_by` varchar(32) NOT NULL COMMENT '创建人',
+	`create_date` timestamp NOT NULL COMMENT '创建时间',
+	`update_by` varchar(32) NOT NULL COMMENT '修改人',
+	`update_date` timestamp NOT NULL COMMENT '修改时间',
+	`status` integer(11) NOT NULL COMMENT '数据状态',
+	`status_name` varchar(32) NOT NULL COMMENT '数据状态名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='短信';
+

@@ -166,8 +166,22 @@ public abstract class SerializeCacheAdaptor implements SerializeCache {
 	}
 
 	@Override
+	public byte[] getAndRefresh(String key, int expire) {
+		byte[] bytes = this.get(key);
+		if (bytes != null && bytes.length > 0) {
+			this.set(key, bytes, expire);
+		}
+		return bytes;
+	}
+
+	@Override
 	public <T extends Serializable> T getSerializableAndRefresh(String key) {
 		return SerializeUtils.unserialize(this.getAndRefresh(key));
+	}
+
+	@Override
+	public <T extends Serializable> T getSerializableAndRefresh(String key, int expire) {
+		return SerializeUtils.unserialize(this.getAndRefresh(key, expire));
 	}
 
 	@Override

@@ -32,4 +32,7 @@ public interface SerializeCache extends Cache {
 	/** 获取值并重新刷新缓存 */
 	<T extends Serializable> T getSerializableAndRefresh(String key);
 
+	/** 获取值并重新刷新缓存 */
+	<T extends Serializable> T getSerializableAndRefresh(String key, int expire);
+
 }

@@ -22,11 +22,17 @@ public interface LoginUserService {
 	// 登录(设置用户)
 	void login(String token, String username);
 
+	// 登录(设置用户)
+	void login(String token, String username, Integer userType);
+
 	// 登出(移除token)
 	void logout();
 
 	// 刷新
 	void refresh();
+
+	// 刷新
+	void refresh(Integer userType);
 
 	// 获取当前时间
 	Date getCurrentDate();

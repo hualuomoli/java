@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseSmsMapper">
+
+  <sql id="columns">
+    `id`          as "id"        ,
+    `phone`       as "phone"     ,
+    `check_code`  as "checkCode" ,
+    `content`     as "content"   ,
+    `type`        as "type"      ,
+    `valid_time`  as "validTime" ,
+    `valid_date`  as "validDate" ,
+    `state`       as "state"     ,
+    `state_name`  as "stateName" ,
+    `create_by`   as "createBy"  ,
+    `create_date` as "createDate",
+    `update_by`   as "updateBy"  ,
+    `update_date` as "updateDate",
+    `status`      as "status"    ,
+    `status_name` as "statusName"
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`          = #{id}        
+    </if>
+    <if test="phone != null and phone != ''"> 
+      and `phone`       = #{phone}     
+    </if>
+    <if test="checkCode != null and checkCode != ''"> 
+      and `check_code`  = #{checkCode} 
+    </if>
+    <if test="content != null and content != ''"> 
+      and `content`     = #{content}   
+    </if>
+    <if test="type != null"> 
+      and `type`        = #{type}      
+    </if>
+    <if test="validTime != null and validTime != ''"> 
+      and `valid_time`  = #{validTime} 
+    </if>
+    <if test="validDate != null"> 
+      and `valid_date`  = #{validDate} 
+    </if>
+    <if test="state != null"> 
+      and `state`       = #{state}     
+    </if>
+    <if test="stateName != null and stateName != ''"> 
+      and `state_name`  = #{stateName} 
+    </if>
+    <if test="createBy != null and createBy != ''"> 
+      and `create_by`   = #{createBy}  
+    </if>
+    <if test="createDate != null"> 
+      and `create_date` = #{createDate}
+    </if>
+    <if test="updateBy != null and updateBy != ''"> 
+      and `update_by`   = #{updateBy}  
+    </if>
+    <if test="updateDate != null"> 
+      and `update_date` = #{updateDate}
+    </if>
+    <if test="status != null"> 
+      and `status`      = #{status}    
+    </if>
+    <if test="statusName != null and statusName != ''"> 
+      and `status_name` = #{statusName}
+    </if>
+	<!-- 比较查询 -->
+    <if test="validDateGreaterThan != null"> 
+      and `valid_date` <![CDATA[>]]> #{validDateGreaterThan}
+    </if>
+    <if test="validDateGreaterEqual != null"> 
+      and `valid_date` <![CDATA[>=]]> #{validDateGreaterEqual}
+    </if>
+    <if test="validDateLessThan != null"> 
+      and `valid_date` <![CDATA[<]]> #{validDateLessThan}
+    </if>
+    <if test="validDateLessEqual != null"> 
+      and `valid_date` <![CDATA[<=]]> #{validDateLessEqual}
+    </if>
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseSms">
+    select 
+      <include refid="columns" />
+    from `sys_sms`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `sys_sms` (
+      `id`         ,
+      `phone`      ,
+      `check_code` ,
+      `content`    ,
+      `type`       ,
+      `valid_time` ,
+      `valid_date` ,
+      `state`      ,
+      `state_name` ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     ,
+      `status_name`
+    ) values (
+      #{id}        ,
+      #{phone}     ,
+      #{checkCode} ,
+      #{content}   ,
+      #{type}      ,
+      #{validTime} ,
+      #{validDate} ,
+      #{state}     ,
+      #{stateName} ,
+      #{createBy}  ,
+      #{createDate},
+      #{updateBy}  ,
+      #{updateDate},
+      #{status}    ,
+      #{statusName}
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `sys_sms` (
+      `id`         ,
+      `phone`      ,
+      `check_code` ,
+      `content`    ,
+      `type`       ,
+      `valid_time` ,
+      `valid_date` ,
+      `state`      ,
+      `state_name` ,
+      `create_by`  ,
+      `create_date`,
+      `update_by`  ,
+      `update_date`,
+      `status`     ,
+      `status_name`
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}        ,
+        #{obj.phone}     ,
+        #{obj.checkCode} ,
+        #{obj.content}   ,
+        #{obj.type}      ,
+        #{obj.validTime} ,
+        #{obj.validDate} ,
+        #{obj.state}     ,
+        #{obj.stateName} ,
+        #{obj.createBy}  ,
+        #{obj.createDate},
+        #{obj.updateBy}  ,
+        #{obj.updateDate},
+        #{obj.status}    ,
+        #{obj.statusName}
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `sys_sms`
+    <set>
+      <if test="phone != null"> 
+        `phone`       = #{phone}     ,
+      </if>
+      <if test="checkCode != null"> 
+        `check_code`  = #{checkCode} ,
+      </if>
+      <if test="content != null"> 
+        `content`     = #{content}   ,
+      </if>
+      <if test="type != null"> 
+        `type`        = #{type}      ,
+      </if>
+      <if test="validTime != null"> 
+        `valid_time`  = #{validTime} ,
+      </if>
+      <if test="validDate != null"> 
+        `valid_date`  = #{validDate} ,
+      </if>
+      <if test="state != null"> 
+        `state`       = #{state}     ,
+      </if>
+      <if test="stateName != null"> 
+        `state_name`  = #{stateName} ,
+      </if>
+      <if test="createBy != null"> 
+        `create_by`   = #{createBy}  ,
+      </if>
+      <if test="createDate != null"> 
+        `create_date` = #{createDate},
+      </if>
+      <if test="updateBy != null"> 
+        `update_by`   = #{updateBy}  ,
+      </if>
+      <if test="updateDate != null"> 
+        `update_date` = #{updateDate},
+      </if>
+      <if test="status != null"> 
+        `status`      = #{status}    ,
+      </if>
+      <if test="statusName != null"> 
+        `status_name` = #{statusName},
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `sys_sms` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `sys_sms`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseSms">
+    select
+      <include refid="columns" />
+    from `sys_sms`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

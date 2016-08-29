@@ -1,6 +1,7 @@
 package com.github.hualuomoli.login.service;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import com.github.hualuomoli.constant.Code;
 import com.github.hualuomoli.exception.AuthException;
 import com.github.hualuomoli.exception.CodeException;
 import com.github.hualuomoli.plugin.cache.SerializeCache;
+import com.google.common.collect.Maps;
 
 /**
  * 基本实现
@@ -20,8 +22,15 @@ import com.github.hualuomoli.plugin.cache.SerializeCache;
  */
 public abstract class LoginUserServiceAdaptor implements LoginUserService {
 
-	private static final String PREFIX_TOKEN = "_token_";
+	private static final String PREFIX_TOKEN = "token_";
 	private static final String TOKEN_NAME = "token";
+
+	private static Map<Integer, Integer> userTypeExpireMap = Maps.newHashMap();
+
+	// 添加用户类型的有效时间
+	public static void addUserTypeExpire(Integer userType, Integer expire) {
+		userTypeExpireMap.put(userType, expire);
+	}
 
 	// 缓存
 	protected abstract SerializeCache getCache();
@@ -74,6 +83,16 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 	}
 
 	@Override
+	public void login(String token, String username, Integer userType) {
+		Integer expire = userTypeExpireMap.get(userType);
+		if (expire == null) {
+			this.getCache().setSerializable(PREFIX_TOKEN + token, username);
+		} else {
+			this.getCache().setSerializable(PREFIX_TOKEN + token, username, expire);
+		}
+	}
+
+	@Override
 	public void refresh() {
 		// 未登录
 		String token = this.getToken();
@@ -81,6 +100,21 @@ public abstract class LoginUserServiceAdaptor implements LoginUserService {
 			throw AuthException.NO_LOGIN;
 		}
 		this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token);
+	}
+
+	@Override
+	public void refresh(Integer userType) {
+		// 未登录
+		String token = this.getToken();
+		if (StringUtils.isBlank(token)) {
+			throw AuthException.NO_LOGIN;
+		}
+		Integer expire = userTypeExpireMap.get(userType);
+		if (expire == null) {
+			this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token);
+		} else {
+			this.getCache().getSerializableAndRefresh(PREFIX_TOKEN + token, expire);
+		}
 	}
 
 	@Override

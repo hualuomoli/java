@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.hualuomoli.extend.base.entity.BaseUser;
 import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.extend.notice.Noticer;
@@ -21,8 +22,9 @@ import com.google.common.collect.Maps;
 @Service(value = "com.github.hualuomoli.extend.login.service.DefaultLoginUserService")
 public class DefaultLoginUserService extends LoginUserServiceAdaptor implements LoginUserService, Notifer {
 
-	private static final String PREFIX_ROLE = "_role_";
-	private static final String PREFIX_PERMISSION = "_permission_";
+	private static final String PREFIX_USER = "user_";
+	private static final String PREFIX_ROLE = "role_";
+	private static final String PREFIX_PERMISSION = "permission_";
 
 	private SerializeCache cache = new DefaultSerializeCache();
 
@@ -32,6 +34,29 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	// 缓存
 	protected SerializeCache getCache() {
 		return cache;
+	}
+
+	// 获取登录用户信息
+	protected BaseUser getUser() {
+		String username = this.getUsername();
+		String key = PREFIX_USER + username;
+
+		// 获取用户
+		BaseUser baseUser = this.getCache().getSerializable(key);
+
+		// 如果用户不存在,从数据库获取
+		if (baseUser == null) {
+			baseUser = userService.getByUsername(username);
+			// 设置到缓存
+			this.getCache().setSerializable(key, baseUser);
+		}
+		return baseUser;
+	}
+
+	// 清空登录用户信息
+	protected void clear(BaseUser baseUser) {
+		String key = PREFIX_USER + baseUser.getUsername();
+		this.getCache().remove(key);
 	}
 
 	@Override

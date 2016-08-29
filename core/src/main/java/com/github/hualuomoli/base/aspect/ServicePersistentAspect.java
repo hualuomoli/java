@@ -138,7 +138,7 @@ public class ServicePersistentAspect {
 		}
 		// createBy
 		if (StringUtils.isBlank(parameter.getCreateBy())) {
-			parameter.setCreateBy(loginUserService.getUsername());
+			parameter.setCreateBy(this.getUsername());
 		}
 		// createDate
 		if (parameter.getCreateDate() == null) {
@@ -146,7 +146,7 @@ public class ServicePersistentAspect {
 		}
 		// updateBy
 		if (StringUtils.isBlank(parameter.getUpdateBy())) {
-			parameter.setUpdateBy(loginUserService.getUsername());
+			parameter.setUpdateBy(this.getUsername());
 		}
 		// updateDate
 		if (parameter.getUpdateDate() == null) {
@@ -193,7 +193,7 @@ public class ServicePersistentAspect {
 		parameter.setCreateDate(null);
 		// updateBy
 		if (StringUtils.isBlank(parameter.getUpdateBy())) {
-			parameter.setUpdateBy(loginUserService.getUsername());
+			parameter.setUpdateBy(this.getUsername());
 		}
 		// updateDate
 		if (parameter.getUpdateDate() == null) {
@@ -221,7 +221,7 @@ public class ServicePersistentAspect {
 		}
 
 		if (StringUtils.isBlank(parameter.getUpdateBy())) {
-			deleteObject.setUpdateBy(loginUserService.getUsername());
+			deleteObject.setUpdateBy(this.getUsername());
 		}
 		if (parameter.getUpdateDate() == null) {
 			deleteObject.setUpdateDate(loginUserService.getCurrentDate());
@@ -254,6 +254,15 @@ public class ServicePersistentAspect {
 		}
 
 		return collection;
+	}
+
+	// 获取用户,如果用户未登录,使用默认用户名
+	private String getUsername() {
+		try {
+			return loginUserService.getUsername();
+		} catch (Exception e) {
+			return "hualuomoli";
+		}
 	}
 
 }
