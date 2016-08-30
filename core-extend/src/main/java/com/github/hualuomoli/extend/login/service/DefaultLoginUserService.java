@@ -37,7 +37,7 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	}
 
 	// 获取登录用户信息
-	protected BaseUser getUser() {
+	public BaseUser getUser() {
 		String username = this.getUsername();
 		String key = PREFIX_USER + username;
 
@@ -54,7 +54,7 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	}
 
 	// 清空登录用户信息
-	protected void clear(BaseUser baseUser) {
+	public void clear(BaseUser baseUser) {
 		String key = PREFIX_USER + baseUser.getUsername();
 		this.getCache().remove(key);
 	}
