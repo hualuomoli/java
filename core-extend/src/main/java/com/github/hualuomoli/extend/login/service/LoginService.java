@@ -125,14 +125,14 @@ public class LoginService implements ApplicationContextAware {
 		}
 
 		@Override
-		public String success(BaseUser BaseUser, HttpServletRequest request, HttpServletResponse response) {
+		public String success(BaseUser baseUser, HttpServletRequest request, HttpServletResponse response) {
 
 			// 获取token
 			String token = RandomUtils.getUUID();
 			// 用户
-			String username = BaseUser.getUsername();
+			String username = baseUser.getUsername();
 			// 添加到缓存
-			loginUserService.login(token, username);
+			loginUserService.login(token, username, baseUser.getType());
 
 			// 添加到token，cookie
 			response.addCookie(new Cookie("token", token));
