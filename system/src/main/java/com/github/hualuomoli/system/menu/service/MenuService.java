@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.hualuomoli.base.constant.Status;
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
 import com.github.hualuomoli.extend.base.service.BaseMenuService;
-import com.github.hualuomoli.extend.tree.service.TreeService;
 import com.github.hualuomoli.system.constant.DataType;
 import com.github.hualuomoli.system.menu.web.MenuController.DeleteEntity;
 import com.github.hualuomoli.system.menu.web.MenuController.GetChildrenByParentCodeEntity;
@@ -27,8 +26,6 @@ public class MenuService {
 
 	@Autowired
 	private BaseMenuService baseMenuService;
-	@Autowired
-	private TreeService treeService;
 
 	/**
 	 * 查询所有有效的菜单
@@ -83,7 +80,6 @@ public class MenuService {
 			baseMenu.setRouterState(postEntity.getRouterState());
 			baseMenu.setPermission(postEntity.getPermission());
 			baseMenu.setParentCode(StringUtils.isBlank(postEntity.getParentCode()) ? DataType.MENU_ROOT_VALUE.getName() : postEntity.getParentCode());
-			treeService.addTreeMessage(baseMenu, parentCode, baseMenuService);
 
 			baseMenuService.insert(baseMenu);
 		}
@@ -115,7 +111,6 @@ public class MenuService {
 	public void putByIdParent(PutByIdParentEntity putByIdParentEntity) {
 		BaseMenu baseMenu = new BaseMenu();
 		baseMenu.setId(putByIdParentEntity.getId());
-		treeService.updateParent(baseMenu, putByIdParentEntity.getParentCode(), baseMenuService);
 	}
 
 	/**
@@ -123,9 +118,6 @@ public class MenuService {
 	 */
 	@Transactional(readOnly = false)
 	public void putSort(PutSortEntity putSortEntity) {
-		synchronized (OBJECT) {
-			treeService.updateSort(BaseMenu.class, putSortEntity.getSrcId(), putSortEntity.getDestId(), baseMenuService);
-		}
 
 	}
 

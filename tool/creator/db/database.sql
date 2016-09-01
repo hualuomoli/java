@@ -6,7 +6,7 @@ CREATE TABLE `t_creator_demo` (
 	`salary` double(8,3) COMMENT '工资',
 	`age` integer(11) COMMENT '年龄',
 	`birth_day` date COMMENT '生日',
-	`remarks` longtext COMMENT '备注',
+	`remarks` clob COMMENT '备注',
 	`user_username` varchar(20),
 	`region_id` varchar(32),
 	`create_by` varchar(32) NOT NULL COMMENT '创建人',

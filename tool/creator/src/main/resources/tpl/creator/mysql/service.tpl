@@ -13,7 +13,7 @@ import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
 </#if>
 
 // ${r"#"}Base${javaName}
-public interface Base${javaName}Service<#if table.tree> extends TreeDealer<Base${javaName}></#if> {
+public interface Base${javaName}Service {
 
 	Base${javaName} get(${javaName} ${javaName?uncap_first});
 	

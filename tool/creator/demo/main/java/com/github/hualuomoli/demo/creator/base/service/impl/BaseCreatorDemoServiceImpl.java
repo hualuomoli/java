@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo;
+import com.github.hualuomoli.demo.creator.entity.CreatorDemo;
 import com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorDemoMapper;
 import com.github.hualuomoli.demo.creator.base.service.BaseCreatorDemoService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseCreatorDemoServiceImpl implements BaseCreatorDemoService {
 	private BaseCreatorDemoMapper baseCreatorDemoMapper;
 	
 	@Override
-	public BaseCreatorDemo get(BaseCreatorDemo baseCreatorDemo) {
-		return this.get(baseCreatorDemo.getId());
+	public BaseCreatorDemo get(CreatorDemo creatorDemo) {
+		return this.get(creatorDemo.getId());
 	}
 	
 	@Override
@@ -59,20 +60,20 @@ public class BaseCreatorDemoServiceImpl implements BaseCreatorDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseCreatorDemo baseCreatorDemo) {
-		return baseCreatorDemoMapper.insert(baseCreatorDemo);
+	public int insert(@PreInsert CreatorDemo creatorDemo) {
+		return baseCreatorDemoMapper.insert(creatorDemo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseCreatorDemo> list) {
+	public <T extends CreatorDemo> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseCreatorDemo> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -83,28 +84,28 @@ public class BaseCreatorDemoServiceImpl implements BaseCreatorDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseCreatorDemo baseCreatorDemo) {
-		return baseCreatorDemoMapper.update(baseCreatorDemo);
+	public int update(@PreUpdate CreatorDemo creatorDemo) {
+		return baseCreatorDemoMapper.update(creatorDemo);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseCreatorDemo baseCreatorDemo) {
-		return baseCreatorDemoMapper.update(baseCreatorDemo);
+	public int logicalDelete(@PreDelete CreatorDemo creatorDemo) {
+		return baseCreatorDemoMapper.update(creatorDemo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseCreatorDemo temp = new BaseCreatorDemo();
+		CreatorDemo temp = new CreatorDemo();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseCreatorDemo baseCreatorDemo) {
-		return this.delete(baseCreatorDemo.getId());
+	public int delete(CreatorDemo creatorDemo) {
+		return this.delete(creatorDemo.getId());
 	}
 	
 	@Override

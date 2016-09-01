@@ -6,14 +6,13 @@
     `id`           as "id"         ,
     `menu_code`    as "menuCode"   ,
     `menu_name`    as "menuName"   ,
-    `parent_code`  as "parentCode" ,
-    `full_name`    as "fullName"   ,
     `menu_type`    as "menuType"   ,
     `icon`         as "icon"       ,
     `router_state` as "routerState",
     `permission`   as "permission" ,
-    `menu_sort`    as "menuSort"   ,
-    `menu_level`   as "menuLevel"  ,
+    `parent_code`  as "parentCode" ,
+    `data_sort`    as "dataSort"   ,
+    `data_level`   as "dataLevel"  ,
     `create_by`    as "createBy"   ,
     `create_date`  as "createDate" ,
     `update_by`    as "updateBy"   ,
@@ -32,12 +31,6 @@
     <if test="menuName != null and menuName != ''"> 
       and `menu_name`    = #{menuName}   
     </if>
-    <if test="parentCode != null and parentCode != ''"> 
-      and `parent_code`  = #{parentCode} 
-    </if>
-    <if test="fullName != null and fullName != ''"> 
-      and `full_name`    = #{fullName}   
-    </if>
     <if test="menuType != null"> 
       and `menu_type`    = #{menuType}   
     </if>
@@ -50,11 +43,14 @@
     <if test="permission != null and permission != ''"> 
       and `permission`   = #{permission} 
     </if>
-    <if test="menuSort != null"> 
-      and `menu_sort`    = #{menuSort}   
+    <if test="parentCode != null and parentCode != ''"> 
+      and `parent_code`  = #{parentCode} 
     </if>
-    <if test="menuLevel != null"> 
-      and `menu_level`   = #{menuLevel}  
+    <if test="dataSort != null"> 
+      and `data_sort`    = #{dataSort}   
+    </if>
+    <if test="dataLevel != null"> 
+      and `data_level`   = #{dataLevel}  
     </if>
     <if test="createBy != null and createBy != ''"> 
       and `create_by`    = #{createBy}   
@@ -95,14 +91,13 @@
       `id`          ,
       `menu_code`   ,
       `menu_name`   ,
-      `parent_code` ,
-      `full_name`   ,
       `menu_type`   ,
       `icon`        ,
       `router_state`,
       `permission`  ,
-      `menu_sort`   ,
-      `menu_level`  ,
+      `parent_code` ,
+      `data_sort`   ,
+      `data_level`  ,
       `create_by`   ,
       `create_date` ,
       `update_by`   ,
@@ -113,14 +108,13 @@
       #{id}         ,
       #{menuCode}   ,
       #{menuName}   ,
-      #{parentCode} ,
-      #{fullName}   ,
       #{menuType}   ,
       #{icon}       ,
       #{routerState},
       #{permission} ,
-      #{menuSort}   ,
-      #{menuLevel}  ,
+      #{parentCode} ,
+      #{dataSort}   ,
+      #{dataLevel}  ,
       #{createBy}   ,
       #{createDate} ,
       #{updateBy}   ,
@@ -135,14 +129,13 @@
       `id`          ,
       `menu_code`   ,
       `menu_name`   ,
-      `parent_code` ,
-      `full_name`   ,
       `menu_type`   ,
       `icon`        ,
       `router_state`,
       `permission`  ,
-      `menu_sort`   ,
-      `menu_level`  ,
+      `parent_code` ,
+      `data_sort`   ,
+      `data_level`  ,
       `create_by`   ,
       `create_date` ,
       `update_by`   ,
@@ -155,14 +148,13 @@
         #{obj.id}         ,
         #{obj.menuCode}   ,
         #{obj.menuName}   ,
-        #{obj.parentCode} ,
-        #{obj.fullName}   ,
         #{obj.menuType}   ,
         #{obj.icon}       ,
         #{obj.routerState},
         #{obj.permission} ,
-        #{obj.menuSort}   ,
-        #{obj.menuLevel}  ,
+        #{obj.parentCode} ,
+        #{obj.dataSort}   ,
+        #{obj.dataLevel}  ,
         #{obj.createBy}   ,
         #{obj.createDate} ,
         #{obj.updateBy}   ,
@@ -181,12 +173,6 @@
       <if test="menuName != null"> 
         `menu_name`    = #{menuName}   ,
       </if>
-      <if test="parentCode != null"> 
-        `parent_code`  = #{parentCode} ,
-      </if>
-      <if test="fullName != null"> 
-        `full_name`    = #{fullName}   ,
-      </if>
       <if test="menuType != null"> 
         `menu_type`    = #{menuType}   ,
       </if>
@@ -199,11 +185,14 @@
       <if test="permission != null"> 
         `permission`   = #{permission} ,
       </if>
-      <if test="menuSort != null"> 
-        `menu_sort`    = #{menuSort}   ,
+      <if test="parentCode != null"> 
+        `parent_code`  = #{parentCode} ,
       </if>
-      <if test="menuLevel != null"> 
-        `menu_level`   = #{menuLevel}  ,
+      <if test="dataSort != null"> 
+        `data_sort`    = #{dataSort}   ,
+      </if>
+      <if test="dataLevel != null"> 
+        `data_level`   = #{dataLevel}  ,
       </if>
       <if test="createBy != null"> 
         `create_by`    = #{createBy}   ,

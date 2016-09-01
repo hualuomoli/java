@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
+import com.github.hualuomoli.extend.entity.Menu;
 
 // #BaseMenu
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseMenuMapper")
@@ -15,11 +16,11 @@ public interface BaseMenuMapper {
 	
 	BaseMenu get(String id);
 
-	int insert(BaseMenu baseMenu);
+	int insert(Menu menu);
 	
-	int batchInsert(@Param(value = "list") List<BaseMenu> list);
+	<T extends Menu> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseMenu baseMenu);
+	int update(Menu menu);
 
 	
 	int delete(String id);

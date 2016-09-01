@@ -4,16 +4,16 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.BaseField;
-import com.github.hualuomoli.extend.notice.Noticer;
 
 @SuppressWarnings("serial")
 @EntityTable(comment = "角色具有的菜单和权限")
-public class RoleMenu extends BaseField implements Noticer {
+public class RoleMenu extends BaseField {
 
 	@EntityColumn(name = "role_code", comment = "角色编码")
 	@EntityColumnQuery(inArray = true)
 	private String roleCode;
 	@EntityColumn(name = "menu_code", comment = "菜单编码")
+	@EntityColumnQuery(inArray = true)
 	private String menuCode;
 
 	public RoleMenu() {

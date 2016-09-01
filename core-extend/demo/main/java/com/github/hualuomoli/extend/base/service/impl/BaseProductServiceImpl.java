@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseProduct;
+import com.github.hualuomoli.extend.entity.Product;
 import com.github.hualuomoli.extend.base.mapper.BaseProductMapper;
 import com.github.hualuomoli.extend.base.service.BaseProductService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseProductServiceImpl implements BaseProductService {
 	private BaseProductMapper baseProductMapper;
 	
 	@Override
-	public BaseProduct get(BaseProduct baseProduct) {
-		return this.get(baseProduct.getId());
+	public BaseProduct get(Product product) {
+		return this.get(product.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseProductServiceImpl implements BaseProductService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseProduct baseProduct) {
-		return baseProductMapper.insert(baseProduct);
+	public int insert(@PreInsert Product product) {
+		return baseProductMapper.insert(product);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseProduct> list) {
+	public <T extends Product> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseProduct> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,28 +69,28 @@ public class BaseProductServiceImpl implements BaseProductService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseProduct baseProduct) {
-		return baseProductMapper.update(baseProduct);
+	public int update(@PreUpdate Product product) {
+		return baseProductMapper.update(product);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseProduct baseProduct) {
-		return baseProductMapper.update(baseProduct);
+	public int logicalDelete(@PreDelete Product product) {
+		return baseProductMapper.update(product);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseProduct temp = new BaseProduct();
+		Product temp = new Product();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseProduct baseProduct) {
-		return this.delete(baseProduct.getId());
+	public int delete(Product product) {
+		return this.delete(product.getId());
 	}
 	
 	@Override

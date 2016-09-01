@@ -7,24 +7,25 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
+import com.github.hualuomoli.extend.entity.UploadFile;
 
 // #BaseUploadFile
 public interface BaseUploadFileService {
 
-	BaseUploadFile get(BaseUploadFile baseUploadFile);
+	BaseUploadFile get(UploadFile uploadFile);
 	
 	BaseUploadFile get(String id);
 	
 	
-	int insert(BaseUploadFile baseUploadFile);
+	int insert(UploadFile uploadFile);
 	
-	int batchInsert(List<BaseUploadFile> list);
+	<T extends UploadFile> int batchInsert(List<T> list);
 
-	int update(BaseUploadFile baseUploadFile);
+	int update(UploadFile uploadFile);
 	
 	
 
-	int delete(BaseUploadFile baseUploadFile);
+	int delete(UploadFile uploadFile);
 	
 	int delete(String id);
 	

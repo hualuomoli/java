@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseUser;
+import com.github.hualuomoli.extend.entity.User;
 
 // #BaseUser
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseUserMapper")
@@ -15,11 +16,11 @@ public interface BaseUserMapper {
 	
 	BaseUser get(String id);
 
-	int insert(BaseUser baseUser);
+	int insert(User user);
 	
-	int batchInsert(@Param(value = "list") List<BaseUser> list);
+	<T extends User> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseUser baseUser);
+	int update(User user);
 
 	
 	int delete(String id);

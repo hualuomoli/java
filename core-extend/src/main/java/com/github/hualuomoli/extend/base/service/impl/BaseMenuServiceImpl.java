@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
+import com.github.hualuomoli.extend.entity.Menu;
 import com.github.hualuomoli.extend.base.mapper.BaseMenuMapper;
 import com.github.hualuomoli.extend.base.service.BaseMenuService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseMenuServiceImpl implements BaseMenuService {
 	private BaseMenuMapper baseMenuMapper;
 	
 	@Override
-	public BaseMenu get(BaseMenu baseMenu) {
-		return this.get(baseMenu.getId());
+	public BaseMenu get(Menu menu) {
+		return this.get(menu.getId());
 	}
 	
 	@Override
@@ -59,20 +60,20 @@ public class BaseMenuServiceImpl implements BaseMenuService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseMenu baseMenu) {
-		return baseMenuMapper.insert(baseMenu);
+	public int insert(@PreInsert Menu menu) {
+		return baseMenuMapper.insert(menu);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseMenu> list) {
+	public <T extends Menu> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseMenu> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -83,28 +84,28 @@ public class BaseMenuServiceImpl implements BaseMenuService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseMenu baseMenu) {
-		return baseMenuMapper.update(baseMenu);
+	public int update(@PreUpdate Menu menu) {
+		return baseMenuMapper.update(menu);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseMenu baseMenu) {
-		return baseMenuMapper.update(baseMenu);
+	public int logicalDelete(@PreDelete Menu menu) {
+		return baseMenuMapper.update(menu);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseMenu temp = new BaseMenu();
+		Menu temp = new Menu();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseMenu baseMenu) {
-		return this.delete(baseMenu.getId());
+	public int delete(Menu menu) {
+		return this.delete(menu.getId());
 	}
 	
 	@Override

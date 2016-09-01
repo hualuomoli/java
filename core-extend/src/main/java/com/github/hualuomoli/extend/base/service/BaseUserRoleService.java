@@ -7,24 +7,25 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseUserRole;
+import com.github.hualuomoli.extend.entity.UserRole;
 
 // #BaseUserRole
 public interface BaseUserRoleService {
 
-	BaseUserRole get(BaseUserRole baseUserRole);
+	BaseUserRole get(UserRole userRole);
 	
 	BaseUserRole get(String id);
 	
 	
-	int insert(BaseUserRole baseUserRole);
+	int insert(UserRole userRole);
 	
-	int batchInsert(List<BaseUserRole> list);
+	<T extends UserRole> int batchInsert(List<T> list);
 
-	int update(BaseUserRole baseUserRole);
+	int update(UserRole userRole);
 	
 	
 
-	int delete(BaseUserRole baseUserRole);
+	int delete(UserRole userRole);
 	
 	int delete(String id);
 	

@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorUser;
+import com.github.hualuomoli.demo.creator.entity.CreatorUser;
 import com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorUserMapper;
 import com.github.hualuomoli.demo.creator.base.service.BaseCreatorUserService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseCreatorUserServiceImpl implements BaseCreatorUserService {
 	private BaseCreatorUserMapper baseCreatorUserMapper;
 	
 	@Override
-	public BaseCreatorUser get(BaseCreatorUser baseCreatorUser) {
-		return this.get(baseCreatorUser.getId());
+	public BaseCreatorUser get(CreatorUser creatorUser) {
+		return this.get(creatorUser.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseCreatorUserServiceImpl implements BaseCreatorUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseCreatorUser baseCreatorUser) {
-		return baseCreatorUserMapper.insert(baseCreatorUser);
+	public int insert(@PreInsert CreatorUser creatorUser) {
+		return baseCreatorUserMapper.insert(creatorUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseCreatorUser> list) {
+	public <T extends CreatorUser> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseCreatorUser> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,28 +69,28 @@ public class BaseCreatorUserServiceImpl implements BaseCreatorUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseCreatorUser baseCreatorUser) {
-		return baseCreatorUserMapper.update(baseCreatorUser);
+	public int update(@PreUpdate CreatorUser creatorUser) {
+		return baseCreatorUserMapper.update(creatorUser);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseCreatorUser baseCreatorUser) {
-		return baseCreatorUserMapper.update(baseCreatorUser);
+	public int logicalDelete(@PreDelete CreatorUser creatorUser) {
+		return baseCreatorUserMapper.update(creatorUser);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseCreatorUser temp = new BaseCreatorUser();
+		CreatorUser temp = new CreatorUser();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseCreatorUser baseCreatorUser) {
-		return this.delete(baseCreatorUser.getId());
+	public int delete(CreatorUser creatorUser) {
+		return this.delete(creatorUser.getId());
 	}
 	
 	@Override

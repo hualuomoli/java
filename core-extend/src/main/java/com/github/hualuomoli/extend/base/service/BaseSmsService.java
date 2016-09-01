@@ -7,27 +7,28 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseSms;
+import com.github.hualuomoli.extend.entity.Sms;
 
 // #BaseSms
 public interface BaseSmsService {
 
-	BaseSms get(BaseSms baseSms);
+	BaseSms get(Sms sms);
 	
 	BaseSms get(String id);
 	
 	
-	int insert(BaseSms baseSms);
+	int insert(Sms sms);
 	
-	int batchInsert(List<BaseSms> list);
+	<T extends Sms> int batchInsert(List<T> list);
 
-	int update(BaseSms baseSms);
+	int update(Sms sms);
 	
-	 int logicalDelete(BaseSms baseSms);
+	 int logicalDelete(Sms sms);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseSms baseSms);
+	int delete(Sms sms);
 	
 	int delete(String id);
 	

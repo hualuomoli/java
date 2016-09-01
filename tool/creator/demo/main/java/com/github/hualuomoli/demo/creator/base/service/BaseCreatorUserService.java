@@ -7,27 +7,28 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorUser;
+import com.github.hualuomoli.demo.creator.entity.CreatorUser;
 
 // #BaseCreatorUser
 public interface BaseCreatorUserService {
 
-	BaseCreatorUser get(BaseCreatorUser baseCreatorUser);
+	BaseCreatorUser get(CreatorUser creatorUser);
 	
 	BaseCreatorUser get(String id);
 	
 	
-	int insert(BaseCreatorUser baseCreatorUser);
+	int insert(CreatorUser creatorUser);
 	
-	int batchInsert(List<BaseCreatorUser> list);
+	<T extends CreatorUser> int batchInsert(List<T> list);
 
-	int update(BaseCreatorUser baseCreatorUser);
+	int update(CreatorUser creatorUser);
 	
-	 int logicalDelete(BaseCreatorUser baseCreatorUser);
+	 int logicalDelete(CreatorUser creatorUser);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseCreatorUser baseCreatorUser);
+	int delete(CreatorUser creatorUser);
 	
 	int delete(String id);
 	

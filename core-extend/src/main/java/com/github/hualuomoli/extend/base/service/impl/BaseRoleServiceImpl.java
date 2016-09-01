@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.entity.Role;
 import com.github.hualuomoli.extend.base.mapper.BaseRoleMapper;
 import com.github.hualuomoli.extend.base.service.BaseRoleService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseRoleServiceImpl implements BaseRoleService {
 	private BaseRoleMapper baseRoleMapper;
 	
 	@Override
-	public BaseRole get(BaseRole baseRole) {
-		return this.get(baseRole.getId());
+	public BaseRole get(Role role) {
+		return this.get(role.getId());
 	}
 	
 	@Override
@@ -59,20 +60,20 @@ public class BaseRoleServiceImpl implements BaseRoleService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseRole baseRole) {
-		return baseRoleMapper.insert(baseRole);
+	public int insert(@PreInsert Role role) {
+		return baseRoleMapper.insert(role);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseRole> list) {
+	public <T extends Role> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseRole> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -83,15 +84,28 @@ public class BaseRoleServiceImpl implements BaseRoleService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseRole baseRole) {
-		return baseRoleMapper.update(baseRole);
+	public int update(@PreUpdate Role role) {
+		return baseRoleMapper.update(role);
 	}
-
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseRole baseRole) {
-		return this.delete(baseRole.getId());
+	public int logicalDelete(@PreDelete Role role) {
+		return baseRoleMapper.update(role);
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public int logicalDelete(String id) {
+		Role temp = new Role();
+		temp.setId(id);
+		return this.logicalDelete(temp);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public int delete(Role role) {
+		return this.delete(role.getId());
 	}
 	
 	@Override

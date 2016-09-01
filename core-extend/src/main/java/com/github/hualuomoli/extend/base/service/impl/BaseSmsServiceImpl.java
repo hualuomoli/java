@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseSms;
+import com.github.hualuomoli.extend.entity.Sms;
 import com.github.hualuomoli.extend.base.mapper.BaseSmsMapper;
 import com.github.hualuomoli.extend.base.service.BaseSmsService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseSmsServiceImpl implements BaseSmsService {
 	private BaseSmsMapper baseSmsMapper;
 	
 	@Override
-	public BaseSms get(BaseSms baseSms) {
-		return this.get(baseSms.getId());
+	public BaseSms get(Sms sms) {
+		return this.get(sms.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseSmsServiceImpl implements BaseSmsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseSms baseSms) {
-		return baseSmsMapper.insert(baseSms);
+	public int insert(@PreInsert Sms sms) {
+		return baseSmsMapper.insert(sms);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseSms> list) {
+	public <T extends Sms> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseSms> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,28 +69,28 @@ public class BaseSmsServiceImpl implements BaseSmsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseSms baseSms) {
-		return baseSmsMapper.update(baseSms);
+	public int update(@PreUpdate Sms sms) {
+		return baseSmsMapper.update(sms);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseSms baseSms) {
-		return baseSmsMapper.update(baseSms);
+	public int logicalDelete(@PreDelete Sms sms) {
+		return baseSmsMapper.update(sms);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseSms temp = new BaseSms();
+		Sms temp = new Sms();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseSms baseSms) {
-		return this.delete(baseSms.getId());
+	public int delete(Sms sms) {
+		return this.delete(sms.getId());
 	}
 	
 	@Override

@@ -25,6 +25,12 @@
     		`role_code` = #{data}
     	</foreach>
     </if>
+    <if test="menuCodeArray != null"> 
+      and
+      <foreach collection="menuCodeArray" open="(" close=")" separator="or" item="data">
+    		`menu_code` = #{data}
+    	</foreach>
+    </if>
   </sql>
   
   <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseRoleMenu">

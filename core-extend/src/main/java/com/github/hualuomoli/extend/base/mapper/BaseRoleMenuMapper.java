@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseRoleMenu;
+import com.github.hualuomoli.extend.entity.RoleMenu;
 
 // #BaseRoleMenu
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseRoleMenuMapper")
@@ -15,11 +16,11 @@ public interface BaseRoleMenuMapper {
 	
 	BaseRoleMenu get(String id);
 
-	int insert(BaseRoleMenu baseRoleMenu);
+	int insert(RoleMenu roleMenu);
 	
-	int batchInsert(@Param(value = "list") List<BaseRoleMenu> list);
+	<T extends RoleMenu> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseRoleMenu baseRoleMenu);
+	int update(RoleMenu roleMenu);
 
 	
 	int delete(String id);
