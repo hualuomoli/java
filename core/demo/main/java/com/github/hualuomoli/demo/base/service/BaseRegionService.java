@@ -7,11 +7,12 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.demo.base.entity.BaseRegion;
+import com.github.hualuomoli.demo.entity.Region;
 
 // #BaseRegion
 public interface BaseRegionService {
 
-	BaseRegion get(BaseRegion baseRegion);
+	BaseRegion get(Region region);
 	
 	BaseRegion get(String id);
 	
@@ -20,15 +21,15 @@ public interface BaseRegionService {
 		java.lang.Integer type
 	);
 	
-	int insert(BaseRegion baseRegion);
+	int insert(Region region);
 	
-	int batchInsert(List<BaseRegion> list);
+	<T extends Region> int batchInsert(List<T> list);
 
-	int update(BaseRegion baseRegion);
+	int update(Region region);
 	
 	
 
-	int delete(BaseRegion baseRegion);
+	int delete(Region region);
 	
 	int delete(String id);
 	

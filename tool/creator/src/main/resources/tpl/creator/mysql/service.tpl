@@ -7,6 +7,7 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import ${packageName}.base.entity.Base${javaName};
+import ${entityPackageName}.${javaName};
 <#if table.tree>
 import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
 </#if>
@@ -14,7 +15,7 @@ import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
 // ${r"#"}Base${javaName}
 public interface Base${javaName}Service<#if table.tree> extends TreeDealer<Base${javaName}></#if> {
 
-	Base${javaName} get(Base${javaName} base${javaName});
+	Base${javaName} get(${javaName} ${javaName?uncap_first});
 	
 	Base${javaName} get(String id);
 	
@@ -26,21 +27,21 @@ public interface Base${javaName}Service<#if table.tree> extends TreeDealer<Base$
 	);
 	</#if>
 	
-	int insert(Base${javaName} base${javaName});
+	int insert(${javaName} ${javaName?uncap_first});
 	
-	int batchInsert(List<Base${javaName}> list);
+	<T extends ${javaName}> int batchInsert(List<T> list);
 
-	int update(Base${javaName} base${javaName});
+	int update(${javaName} ${javaName?uncap_first});
 	
 	<#if table.entityType == 1>
 	<#elseif table.entityType == 2>
-	 int logicalDelete(Base${javaName} base${javaName});
+	 int logicalDelete(${javaName} ${javaName?uncap_first});
 
 	 int logicalDelete(String id);
 	</#if>
 	
 
-	int delete(Base${javaName} base${javaName});
+	int delete(${javaName} ${javaName?uncap_first});
 	
 	int delete(String id);
 	

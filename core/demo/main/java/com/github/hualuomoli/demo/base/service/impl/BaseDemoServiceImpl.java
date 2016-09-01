@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.demo.entity.Demo;
 import com.github.hualuomoli.demo.base.mapper.BaseDemoMapper;
 import com.github.hualuomoli.demo.base.service.BaseDemoService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 	private BaseDemoMapper baseDemoMapper;
 	
 	@Override
-	public BaseDemo get(BaseDemo baseDemo) {
-		return this.get(baseDemo.getId());
+	public BaseDemo get(Demo demo) {
+		return this.get(demo.getId());
 	}
 	
 	@Override
@@ -59,20 +60,20 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseDemo baseDemo) {
-		return baseDemoMapper.insert(baseDemo);
+	public int insert(@PreInsert Demo demo) {
+		return baseDemoMapper.insert(demo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseDemo> list) {
+	public <T extends Demo> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseDemo> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -83,28 +84,28 @@ public class BaseDemoServiceImpl implements BaseDemoService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseDemo baseDemo) {
-		return baseDemoMapper.update(baseDemo);
+	public int update(@PreUpdate Demo demo) {
+		return baseDemoMapper.update(demo);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseDemo baseDemo) {
-		return baseDemoMapper.update(baseDemo);
+	public int logicalDelete(@PreDelete Demo demo) {
+		return baseDemoMapper.update(demo);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseDemo temp = new BaseDemo();
+		Demo temp = new Demo();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseDemo baseDemo) {
-		return this.delete(baseDemo.getId());
+	public int delete(Demo demo) {
+		return this.delete(demo.getId());
 	}
 	
 	@Override

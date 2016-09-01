@@ -7,27 +7,28 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.demo.base.entity.BaseUser;
+import com.github.hualuomoli.demo.entity.User;
 
 // #BaseUser
 public interface BaseUserService {
 
-	BaseUser get(BaseUser baseUser);
+	BaseUser get(User user);
 	
 	BaseUser get(String id);
 	
 	
-	int insert(BaseUser baseUser);
+	int insert(User user);
 	
-	int batchInsert(List<BaseUser> list);
+	<T extends User> int batchInsert(List<T> list);
 
-	int update(BaseUser baseUser);
+	int update(User user);
 	
-	 int logicalDelete(BaseUser baseUser);
+	 int logicalDelete(User user);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseUser baseUser);
+	int delete(User user);
 	
 	int delete(String id);
 	

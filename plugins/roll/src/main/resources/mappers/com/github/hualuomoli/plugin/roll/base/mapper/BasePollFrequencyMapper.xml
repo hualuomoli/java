@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.plugin.roll.base.mapper.BasePollFrequencyMapper">
+
+  <sql id="columns">
+    `id`               as "id"             ,
+    `data_id`          as "dataId"         ,
+    `frequency`        as "frequency"      ,
+    `remain_frequency` as "remainFrequency",
+    `execute_time`     as "executeTime"    ,
+    `priority`         as "priority"       ,
+    `lock_string`      as "lockString"     ,
+    `un_lock_time`     as "unLockTime"     
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`               = #{id}             
+    </if>
+    <if test="dataId != null and dataId != ''"> 
+      and `data_id`          = #{dataId}         
+    </if>
+    <if test="frequency != null and frequency != ''"> 
+      and `frequency`        = #{frequency}      
+    </if>
+    <if test="remainFrequency != null and remainFrequency != ''"> 
+      and `remain_frequency` = #{remainFrequency}
+    </if>
+    <if test="executeTime != null"> 
+      and `execute_time`     = #{executeTime}    
+    </if>
+    <if test="priority != null"> 
+      and `priority`         = #{priority}       
+    </if>
+    <if test="lockString != null and lockString != ''"> 
+      and `lock_string`      = #{lockString}     
+    </if>
+    <if test="unLockTime != null"> 
+      and `un_lock_time`     = #{unLockTime}     
+    </if>
+	<!-- 比较查询 -->
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.plugin.roll.base.entity.BasePollFrequency">
+    select 
+      <include refid="columns" />
+    from `pr_poll_frequency`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `pr_poll_frequency` (
+      `id`              ,
+      `data_id`         ,
+      `frequency`       ,
+      `remain_frequency`,
+      `execute_time`    ,
+      `priority`        ,
+      `lock_string`     ,
+      `un_lock_time`    
+    ) values (
+      #{id}             ,
+      #{dataId}         ,
+      #{frequency}      ,
+      #{remainFrequency},
+      #{executeTime}    ,
+      #{priority}       ,
+      #{lockString}     ,
+      #{unLockTime}     
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `pr_poll_frequency` (
+      `id`              ,
+      `data_id`         ,
+      `frequency`       ,
+      `remain_frequency`,
+      `execute_time`    ,
+      `priority`        ,
+      `lock_string`     ,
+      `un_lock_time`    
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}             ,
+        #{obj.dataId}         ,
+        #{obj.frequency}      ,
+        #{obj.remainFrequency},
+        #{obj.executeTime}    ,
+        #{obj.priority}       ,
+        #{obj.lockString}     ,
+        #{obj.unLockTime}     
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `pr_poll_frequency`
+    <set>
+      <if test="dataId != null"> 
+        `data_id`          = #{dataId}         ,
+      </if>
+      <if test="frequency != null"> 
+        `frequency`        = #{frequency}      ,
+      </if>
+      <if test="remainFrequency != null"> 
+        `remain_frequency` = #{remainFrequency},
+      </if>
+      <if test="executeTime != null"> 
+        `execute_time`     = #{executeTime}    ,
+      </if>
+      <if test="priority != null"> 
+        `priority`         = #{priority}       ,
+      </if>
+      <if test="lockString != null"> 
+        `lock_string`      = #{lockString}     ,
+      </if>
+      <if test="unLockTime != null"> 
+        `un_lock_time`     = #{unLockTime}     ,
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `pr_poll_frequency` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `pr_poll_frequency`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.plugin.roll.base.entity.BasePollFrequency">
+    select
+      <include refid="columns" />
+    from `pr_poll_frequency`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

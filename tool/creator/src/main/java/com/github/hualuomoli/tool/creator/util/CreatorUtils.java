@@ -438,6 +438,11 @@ public class CreatorUtils {
 					// 数据库列
 					attribute.setDbName(dbName);
 					attribute.setDbNameLength(attribute.getDbName().length());
+				} else if (field.getType().getSimpleName().equals("byte[]")) {
+					// 普通类型
+					// 数据库列
+					attribute.setDbName(dbName);
+					attribute.setDbNameLength(attribute.getDbName().length());
 				} else {
 					EntityColumnCustom custom = field.getAnnotation(EntityColumnCustom.class);
 					if (custom != null) {

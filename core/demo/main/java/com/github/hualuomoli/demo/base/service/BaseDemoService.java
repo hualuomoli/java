@@ -7,11 +7,12 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.demo.base.entity.BaseDemo;
+import com.github.hualuomoli.demo.entity.Demo;
 
 // #BaseDemo
 public interface BaseDemoService {
 
-	BaseDemo get(BaseDemo baseDemo);
+	BaseDemo get(Demo demo);
 	
 	BaseDemo get(String id);
 	
@@ -19,18 +20,18 @@ public interface BaseDemoService {
 		java.lang.String name
 	);
 	
-	int insert(BaseDemo baseDemo);
+	int insert(Demo demo);
 	
-	int batchInsert(List<BaseDemo> list);
+	<T extends Demo> int batchInsert(List<T> list);
 
-	int update(BaseDemo baseDemo);
+	int update(Demo demo);
 	
-	 int logicalDelete(BaseDemo baseDemo);
+	 int logicalDelete(Demo demo);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseDemo baseDemo);
+	int delete(Demo demo);
 	
 	int delete(String id);
 	
