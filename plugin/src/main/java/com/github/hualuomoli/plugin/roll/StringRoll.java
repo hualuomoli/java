@@ -12,7 +12,7 @@ public interface StringRoll {
 	 * @param data 		数据
 	 * @param dealer 	处理者
 	 */
-	<T extends StringDealer> void push(String data, Class<T> dealer);
+	<T extends StringDealer> void pushString(String data, Class<T> dealer);
 
 	/**
 	 * 添加数据轮询
@@ -20,7 +20,7 @@ public interface StringRoll {
 	 * @param dealer 	处理者
 	 * @param frequency 调度频度
 	 */
-	<T extends StringDealer> void push(String data, Class<T> dealer, String frequency);
+	<T extends StringDealer> void pushString(String data, Class<T> dealer, String frequency);
 
 	/**
 	 * 添加数据轮询
@@ -29,7 +29,7 @@ public interface StringRoll {
 	 * @param frequency 调度频度
 	 * @param priority	优先级
 	 */
-	<T extends StringDealer> void push(String data, Class<T> dealer, String frequency, Integer priority);
+	<T extends StringDealer> void pushString(String data, Class<T> dealer, String frequency, Integer priority);
 
 	// 字符串处理者
 	public static interface StringDealer {

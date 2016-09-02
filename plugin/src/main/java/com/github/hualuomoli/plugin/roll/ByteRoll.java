@@ -12,7 +12,7 @@ public interface ByteRoll {
 	 * @param data 		数据
 	 * @param dealer 	处理者
 	 */
-	<T extends ByteDealer> void push(byte[] data, Class<T> dealer);
+	<T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer);
 
 	/**
 	 * 添加数据轮询
@@ -20,7 +20,7 @@ public interface ByteRoll {
 	 * @param dealer 	处理者
 	 * @param frequency 调度频度
 	 */
-	<T extends ByteDealer> void push(byte[] data, Class<T> dealer, String frequency);
+	<T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer, String frequency);
 
 	/**
 	 * 添加数据轮询
@@ -29,7 +29,7 @@ public interface ByteRoll {
 	 * @param frequency 调度频度
 	 * @param priority	优先级
 	 */
-	<T extends ByteDealer> void push(byte[] data, Class<T> dealer, String frequency, Integer priority);
+	<T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer, String frequency, Integer priority);
 
 	// 字符串处理者
 	public static interface ByteDealer {

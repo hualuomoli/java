@@ -22,24 +22,24 @@ public class DefaultRollServiceTest extends AbstractContextServiceTest {
 	@Test
 	public void test01String() {
 		for (int i = 0; i < 10; i++) {
-			defaultRollService.push("1234", RollExecutorService.class, "1s,2s,3s,5s");
-			defaultRollService.push("5678", RollExecutorInstance.class, "1s,2s,3s,5s");
+			defaultRollService.pushString("1234", RollExecutorService.class, "1s,2s,3s,5s");
+			defaultRollService.pushString("5678", RollExecutorInstance.class, "1s,2s,3s,5s");
 		}
 	}
 
 	@Test
 	public void test02ByteArray() throws UnsupportedEncodingException {
 		for (int i = 0; i < 10; i++) {
-			defaultRollService.push("测试1245haha家里的附件是".getBytes("UTF-8"), RollExecutorService.class, "1s,2s,3s,5s");
-			defaultRollService.push("加拉斯加福禄寿werojdflk收到了附近洒到了".getBytes("UTF-8"), RollExecutorInstance.class, "1s,2s,3s,5s");
+			defaultRollService.pushBytes("测试1245haha家里的附件是".getBytes("UTF-8"), RollExecutorService.class, "1s,2s,3s,5s");
+			defaultRollService.pushBytes("加拉斯加福禄寿werojdflk收到了附近洒到了".getBytes("UTF-8"), RollExecutorInstance.class, "1s,2s,3s,5s");
 		}
 	}
 
 	@Test
 	public void test03Serializable() {
 		for (int i = 0; i < 10; i++) {
-			defaultRollService.push(new User("hualuomoli", "花落莫离"), RollExecutorService2.class, "1s,2s,3s,5s");
-			defaultRollService.push(new User("manager", "管理员"), RollExecutorInstance2.class, "1s,2s,3s,5s");
+			defaultRollService.pushSerializable(new User("hualuomoli", "花落莫离"), RollExecutorService.class, "1s,2s,3s,5s");
+			defaultRollService.pushSerializable(new User("manager", "管理员"), RollExecutorInstance.class, "1s,2s,3s,5s");
 		}
 	}
 
@@ -48,9 +48,9 @@ public class DefaultRollServiceTest extends AbstractContextServiceTest {
 		Calendar calendar = Calendar.getInstance();
 		for (int i = 0; i < 10; i++) {
 			calendar.add(Calendar.SECOND, 20);
-			defaultRollService.push(new Demo(20, calendar.getTime()), RollExecutorService3.class, "1s,2s,3s,5s");
+			defaultRollService.pushSerializable(new Demo(20, calendar.getTime()), RollExecutorService3.class, "1s,2s,3s,5s");
 			calendar.add(Calendar.SECOND, 50);
-			defaultRollService.push(new Demo(50, calendar.getTime()), RollExecutorInstance3.class, "1s,2s,3s,5s");
+			defaultRollService.pushSerializable(new Demo(50, calendar.getTime()), RollExecutorInstance3.class, "1s,2s,3s,5s");
 		}
 	}
 

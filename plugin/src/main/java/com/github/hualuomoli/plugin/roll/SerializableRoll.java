@@ -14,7 +14,7 @@ public interface SerializableRoll {
 	 * @param data 		数据
 	 * @param dealer 	处理者
 	 */
-	<T extends SerializableDealer> void push(Serializable data, Class<T> dealer);
+	<T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer);
 
 	/**
 	 * 添加数据轮询
@@ -22,7 +22,7 @@ public interface SerializableRoll {
 	 * @param dealer 	处理者
 	 * @param frequency 调度频度
 	 */
-	<T extends SerializableDealer> void push(Serializable data, Class<T> dealer, String frequency);
+	<T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer, String frequency);
 
 	/**
 	 * 添加数据轮询
@@ -31,7 +31,7 @@ public interface SerializableRoll {
 	 * @param frequency 调度频度
 	 * @param priority	优先级
 	 */
-	<T extends SerializableDealer> void push(Serializable data, Class<T> dealer, String frequency, Integer priority);
+	<T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer, String frequency, Integer priority);
 
 	// 字符串处理者
 	public static interface SerializableDealer {

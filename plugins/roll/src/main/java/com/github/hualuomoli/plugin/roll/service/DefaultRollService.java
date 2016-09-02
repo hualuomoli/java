@@ -74,20 +74,20 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends StringDealer> void push(String data, Class<T> dealer) {
-		this.push(data, dealer, DEFAULT_FREQUENCY);
+	public <T extends StringDealer> void pushString(String data, Class<T> dealer) {
+		this.pushString(data, dealer, DEFAULT_FREQUENCY);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends StringDealer> void push(String data, Class<T> dealer, String frequency) {
-		this.push(data, dealer, frequency, PRIORITY);
+	public <T extends StringDealer> void pushString(String data, Class<T> dealer, String frequency) {
+		this.pushString(data, dealer, frequency, PRIORITY);
 	}
 
 	// 数据
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends StringDealer> void push(String data, Class<T> dealer, String frequency, Integer priority) {
+	public <T extends StringDealer> void pushString(String data, Class<T> dealer, String frequency, Integer priority) {
 		PollData pollData = new PollData();
 		pollData.setDataType(PollData.DATA_TYPE_STRING);
 		pollData.setStringData(data);
@@ -97,20 +97,20 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends ByteDealer> void push(byte[] data, Class<T> dealer) {
-		this.push(data, dealer, DEFAULT_FREQUENCY);
+	public <T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer) {
+		this.pushBytes(data, dealer, DEFAULT_FREQUENCY);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends ByteDealer> void push(byte[] data, Class<T> dealer, String frequency) {
-		this.push(data, dealer, frequency, PRIORITY);
+	public <T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer, String frequency) {
+		this.pushBytes(data, dealer, frequency, PRIORITY);
 	}
 
 	// 数据
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends ByteDealer> void push(byte[] data, Class<T> dealer, String frequency, Integer priority) {
+	public <T extends ByteDealer> void pushBytes(byte[] data, Class<T> dealer, String frequency, Integer priority) {
 		PollData pollData = new PollData();
 		pollData.setDataType(PollData.DATA_TYPE_BYTES);
 		pollData.setByteData(data);
@@ -120,20 +120,20 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends SerializableDealer> void push(Serializable data, Class<T> dealer) {
-		this.push(data, dealer, DEFAULT_FREQUENCY);
+	public <T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer) {
+		this.pushSerializable(data, dealer, DEFAULT_FREQUENCY);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends SerializableDealer> void push(Serializable data, Class<T> dealer, String frequency) {
-		this.push(data, dealer, frequency, PRIORITY);
+	public <T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer, String frequency) {
+		this.pushSerializable(data, dealer, frequency, PRIORITY);
 	}
 
 	// 数据
 	@Override
 	@Transactional(readOnly = false)
-	public <T extends SerializableDealer> void push(Serializable data, Class<T> dealer, String frequency, Integer priority) {
+	public <T extends SerializableDealer> void pushSerializable(Serializable data, Class<T> dealer, String frequency, Integer priority) {
 		PollData pollData = new PollData();
 		pollData.setDataType(PollData.DATA_TYPE_SERIAL);
 		pollData.setByteData(SerializeUtils.serialize(data));
@@ -472,7 +472,7 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 		// 初始化
 		public void init(final Dealer<T> dealer) {
 
-			// 初始化处理着
+			// 处理着
 			for (int i = 0; i < threadSize; i++) {
 				new Thread(new Runnable() {
 
@@ -480,95 +480,183 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 					public void run() {
 
 						while (true) {
+
+							// 数据
+							T t = null;
+
+							// 处理前锁定
 							lock.lock();
 
+							// 防止内部错误,无法释放锁
 							try {
+								// 获取数据
+								t = this.pop();
 
-								// 如果没有数据,挂起
-								while (queue.isEmpty()) {
-									if (logger.isDebugEnabled()) {
-										logger.debug("{} waiting......", this.hashCode());
-									}
-									try {
-										// 数据为空,等待唤醒
-										notEmptyCondition.await();
-									} catch (InterruptedException e) {
-									}
-								}
-
-								// 处理
-								T t = queue.pop();
-								dealer.deal(t);
-
-								// 唤醒加载新数据
-								loadNewCondition.signal();
 							} finally {
+								// 释放锁
 								lock.unlock();
+							}
+
+							// 处理(有处理时间,先释放锁再处理)
+							this.deal(t);
+
+							// end
+						}
+					}
+
+					// 获取数据
+					private T pop() {
+						// 如果没有数据,当前线程挂起等待
+						while (queue.isEmpty()) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("{} waiting......", this.hashCode());
+							}
+							try {
+								// 有数据时被唤醒
+								notEmptyCondition.await();
+							} catch (InterruptedException e) {
+							}
+						}
+
+						// 获取需要处理的数据
+						T t = queue.pop();
+
+						// 唤醒加载新数据
+						loadNewCondition.signal();
+
+						return t;
+					}
+
+					// 处理数据
+					private void deal(T t) {
+						if (t == null) {
+							return;
+						}
+
+						try {
+							dealer.deal(t);
+						} catch (Exception e) {
+							if (logger.isWarnEnabled()) {
+								logger.warn("{}", e.getMessage());
 							}
 						}
 					}
+
 				}).start();
 			}
 
-			// 初始化加载者
+			// 加载者
 			new Thread(new Runnable() {
 
 				@Override
 				public void run() {
 
 					while (true) {
+
+						// 获取数据
+						List<T> list = this.load();
+
+						// 处理前锁定
 						lock.lock();
 
+						// 防止内部错误,无法释放锁
 						try {
-							// 队列数据未达到阈值,不加载
-							while (queue.size() - count > 0) {
-								if (logger.isDebugEnabled()) {
-									logger.debug("数据量个数{},无需从数据库加载", queue.size());
-								}
-								try {
-									// 等待
-									loadNewCondition.await();
-								} catch (InterruptedException e) {
-								}
-							}
 
-							// 添加数据
-							if (hasNew) {
-								// 有新数据的时候才加载
-								List<T> list = dealer.load();
-								if (list == null || list.size() == 0) {
-									hasNew = false;
-									heartCondition.signal();
-								} else {
+							// 添加新数据
+							this.push(list);
 
-									for (T t : list) {
-										queue.push(t);
-									}
-
-									if (logger.isInfoEnabled()) {
-										logger.info("load data {}, queueu {}", list.size(), queue.size());
-									}
-
-									// 等待队列非空
-									notEmptyCondition.signalAll();
-								}
-							}
 						} finally {
+							// 释放锁
 							lock.unlock();
 						}
 					}
 
 				}
+
+				private void push(List<T> list) {
+
+					// 不需要加载新数据或者没有新数据
+					if (list == null || list.size() == 0) {
+
+						try {
+							// 需要加载新数据时被唤醒
+							loadNewCondition.await();
+						} catch (InterruptedException e) {
+						}
+
+						System.out.println("\n\n\n\\n\n>>>>>>>>>>>>>\n\n\n\n\n\n\n");
+
+						// 没有需要处理的数据
+						hasNew = false;
+
+						// 唤醒心跳检测线程
+						heartCondition.signal();
+					}
+
+					// 添加到队列
+					for (T t : list) {
+						queue.push(t);
+					}
+
+					// 唤醒处理线程
+					notEmptyCondition.signalAll();
+				}
+
+				// 加载新数据
+				private List<T> load() {
+
+					// 没有使用该应用添加数据,添加数据/心跳检测时会修改该值
+					if (!hasNew) {
+						return null;
+					}
+
+					// 如果数据个数未达到加载新数据的阈值,当前线程挂起等待
+					if (queue.size() - count > 0) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("数据量个数{},无需从数据库加载", queue.size());
+						}
+						return null;
+					}
+
+					// 加载新数据
+					try {
+						List<T> list = dealer.load();
+						if (logger.isInfoEnabled()) {
+							logger.info("load data {}, queueu {}", list.size(), queue.size());
+						}
+						return list;
+					} catch (Exception e) {
+						if (logger.isWarnEnabled()) {
+							logger.warn("{}", e.getMessage());
+						}
+					}
+					return null;
+				}
+
 			}).start();
 
+			// 心跳检测
 			// 每隔一秒,心跳检测是否有需要通知的数据
 			new Thread(new Runnable() {
+
+				private boolean init = false;
 
 				@Override
 				public void run() {
 					while (true) {
 
+						// 休眠等待
+						this.sleep();
+
+						// 有新数据,等待下次验证
+						if (hasNew) {
+							continue;
+						}
+
+						// 处理前锁定
 						lock.lock();
+
+						// 防止内部错误,无法释放锁
 						try {
 
 							try {
@@ -577,26 +665,39 @@ public class DefaultRollService implements Roll, StringRoll, ByteRoll, Serializa
 							} catch (InterruptedException e) {
 							}
 
-							// 唤醒
-							if (!hasNew) {
-								// 没几秒心跳一次
-								if (logger.isDebugEnabled()) {
-									logger.debug("heart waiting....");
-								}
-								try {
-									Thread.sleep(1000 * heart);
-								} catch (InterruptedException e) {
-								}
-								hasNew = true;
-								loadNewCondition.signal();
-							}
+							// 有新数据
+							hasNew = true;
+
+							// 唤醒加载新数据
+							loadNewCondition.signal();
 
 						} finally {
+							// 释放锁
 							lock.unlock();
 						}
 
 					}
 				}
+
+				// 休眠等待
+				private void sleep() {
+
+					// 如果没有初始化,等待初始化完成后在进行休眠,防止线程等待影响应用启动
+					if (!init) {
+						init = true;
+						return;
+					}
+
+					// 每几秒心跳一次
+					if (logger.isDebugEnabled()) {
+						logger.debug("heart waiting....");
+					}
+					try {
+						Thread.sleep(1000 * heart);
+					} catch (InterruptedException e) {
+					}
+				}
+
 			}).start();
 
 		}
