@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseRoleMenu;
+import com.github.hualuomoli.extend.entity.RoleMenu;
 import com.github.hualuomoli.extend.base.mapper.BaseRoleMenuMapper;
 import com.github.hualuomoli.extend.base.service.BaseRoleMenuService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseRoleMenuServiceImpl implements BaseRoleMenuService {
 	private BaseRoleMenuMapper baseRoleMenuMapper;
 	
 	@Override
-	public BaseRoleMenu get(BaseRoleMenu baseRoleMenu) {
-		return this.get(baseRoleMenu.getId());
+	public BaseRoleMenu get(RoleMenu roleMenu) {
+		return this.get(roleMenu.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseRoleMenuServiceImpl implements BaseRoleMenuService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseRoleMenu baseRoleMenu) {
-		return baseRoleMenuMapper.insert(baseRoleMenu);
+	public int insert(@PreInsert RoleMenu roleMenu) {
+		return baseRoleMenuMapper.insert(roleMenu);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseRoleMenu> list) {
+	public <T extends RoleMenu> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseRoleMenu> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,15 +69,15 @@ public class BaseRoleMenuServiceImpl implements BaseRoleMenuService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseRoleMenu baseRoleMenu) {
-		return baseRoleMenuMapper.update(baseRoleMenu);
+	public int update(@PreUpdate RoleMenu roleMenu) {
+		return baseRoleMenuMapper.update(roleMenu);
 	}
 
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseRoleMenu baseRoleMenu) {
-		return this.delete(baseRoleMenu.getId());
+	public int delete(RoleMenu roleMenu) {
+		return this.delete(roleMenu.getId());
 	}
 	
 	@Override

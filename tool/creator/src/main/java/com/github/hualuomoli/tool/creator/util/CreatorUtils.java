@@ -19,7 +19,6 @@ import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
 import com.github.hualuomoli.base.entity.BaseField;
 import com.github.hualuomoli.base.entity.CommonField;
-import com.github.hualuomoli.extend.tree.service.Tree;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumn;
 import com.github.hualuomoli.tool.creator.entity.CreatorColumnQuery;
 import com.github.hualuomoli.tool.creator.entity.CreatorTable;
@@ -53,10 +52,6 @@ public class CreatorUtils {
 			creatorTable.setEntityType(CreatorTable.ENTITY_TYPE_BASE);
 		} else {
 			throw new RuntimeException("实体类必须继承 BaseField");
-		}
-
-		if (Tree.class.isAssignableFrom(entityCls)) {
-			creatorTable.setTree(true);
 		}
 
 		String dbName;
@@ -434,6 +429,11 @@ public class CreatorUtils {
 					attribute.setString(true);
 				} else if (field.getType().getName().startsWith("java.lang")//
 						|| field.getType().getName().equals("java.util.Date")) {
+					// 普通类型
+					// 数据库列
+					attribute.setDbName(dbName);
+					attribute.setDbNameLength(attribute.getDbName().length());
+				} else if (field.getType().getSimpleName().equals("byte[]")) {
 					// 普通类型
 					// 数据库列
 					attribute.setDbName(dbName);

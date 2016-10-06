@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseUserRole;
+import com.github.hualuomoli.extend.entity.UserRole;
 
 // #BaseUserRole
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseUserRoleMapper")
@@ -15,11 +16,11 @@ public interface BaseUserRoleMapper {
 	
 	BaseUserRole get(String id);
 
-	int insert(BaseUserRole baseUserRole);
+	int insert(UserRole userRole);
 	
-	int batchInsert(@Param(value = "list") List<BaseUserRole> list);
+	<T extends UserRole> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseUserRole baseUserRole);
+	int update(UserRole userRole);
 
 	
 	int delete(String id);

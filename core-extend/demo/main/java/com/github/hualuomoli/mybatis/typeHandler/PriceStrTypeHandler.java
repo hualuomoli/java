@@ -12,7 +12,7 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 
 import com.github.hualuomoli.lang.PriceStr;
 
-@MappedJdbcTypes(JdbcType.VARCHAR)
+@MappedJdbcTypes(value = { JdbcType.VARCHAR }, includeNullJdbcType = true)
 public class PriceStrTypeHandler extends BaseTypeHandler<PriceStr> {
 
 	@Override

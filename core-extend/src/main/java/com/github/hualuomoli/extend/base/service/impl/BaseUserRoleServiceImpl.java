@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseUserRole;
+import com.github.hualuomoli.extend.entity.UserRole;
 import com.github.hualuomoli.extend.base.mapper.BaseUserRoleMapper;
 import com.github.hualuomoli.extend.base.service.BaseUserRoleService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseUserRoleServiceImpl implements BaseUserRoleService {
 	private BaseUserRoleMapper baseUserRoleMapper;
 	
 	@Override
-	public BaseUserRole get(BaseUserRole baseUserRole) {
-		return this.get(baseUserRole.getId());
+	public BaseUserRole get(UserRole userRole) {
+		return this.get(userRole.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseUserRoleServiceImpl implements BaseUserRoleService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseUserRole baseUserRole) {
-		return baseUserRoleMapper.insert(baseUserRole);
+	public int insert(@PreInsert UserRole userRole) {
+		return baseUserRoleMapper.insert(userRole);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseUserRole> list) {
+	public <T extends UserRole> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseUserRole> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,15 +69,15 @@ public class BaseUserRoleServiceImpl implements BaseUserRoleService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseUserRole baseUserRole) {
-		return baseUserRoleMapper.update(baseUserRole);
+	public int update(@PreUpdate UserRole userRole) {
+		return baseUserRoleMapper.update(userRole);
 	}
 
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseUserRole baseUserRole) {
-		return this.delete(baseUserRole.getId());
+	public int delete(UserRole userRole) {
+		return this.delete(userRole.getId());
 	}
 	
 	@Override

@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
+import com.github.hualuomoli.extend.entity.UploadFile;
 import com.github.hualuomoli.extend.base.mapper.BaseUploadFileMapper;
 import com.github.hualuomoli.extend.base.service.BaseUploadFileService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseUploadFileServiceImpl implements BaseUploadFileService {
 	private BaseUploadFileMapper baseUploadFileMapper;
 	
 	@Override
-	public BaseUploadFile get(BaseUploadFile baseUploadFile) {
-		return this.get(baseUploadFile.getId());
+	public BaseUploadFile get(UploadFile uploadFile) {
+		return this.get(uploadFile.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseUploadFileServiceImpl implements BaseUploadFileService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseUploadFile baseUploadFile) {
-		return baseUploadFileMapper.insert(baseUploadFile);
+	public int insert(@PreInsert UploadFile uploadFile) {
+		return baseUploadFileMapper.insert(uploadFile);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseUploadFile> list) {
+	public <T extends UploadFile> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseUploadFile> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,15 +69,15 @@ public class BaseUploadFileServiceImpl implements BaseUploadFileService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseUploadFile baseUploadFile) {
-		return baseUploadFileMapper.update(baseUploadFile);
+	public int update(@PreUpdate UploadFile uploadFile) {
+		return baseUploadFileMapper.update(uploadFile);
 	}
 
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseUploadFile baseUploadFile) {
-		return this.delete(baseUploadFile.getId());
+	public int delete(UploadFile uploadFile) {
+		return this.delete(uploadFile.getId());
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseUploadFile;
+import com.github.hualuomoli.extend.entity.UploadFile;
 
 // #BaseUploadFile
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseUploadFileMapper")
@@ -15,11 +16,11 @@ public interface BaseUploadFileMapper {
 	
 	BaseUploadFile get(String id);
 
-	int insert(BaseUploadFile baseUploadFile);
+	int insert(UploadFile uploadFile);
 	
-	int batchInsert(@Param(value = "list") List<BaseUploadFile> list);
+	<T extends UploadFile> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseUploadFile baseUploadFile);
+	int update(UploadFile uploadFile);
 
 	
 	int delete(String id);

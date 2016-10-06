@@ -10,6 +10,7 @@ import com.github.hualuomoli.commons.util.ProjectUtils;
 import com.github.hualuomoli.extend.entity.Menu;
 import com.github.hualuomoli.extend.entity.Role;
 import com.github.hualuomoli.extend.entity.RoleMenu;
+import com.github.hualuomoli.extend.entity.Sms;
 import com.github.hualuomoli.extend.entity.UploadFile;
 import com.github.hualuomoli.extend.entity.User;
 import com.github.hualuomoli.extend.entity.UserRole;
@@ -75,6 +76,8 @@ public class CreatorBaseExtendTest {
 		clsList.add(RoleMenu.class);
 		// uploadFile
 		clsList.add(UploadFile.class);
+		// sms
+		clsList.add(Sms.class);
 
 		System.out.println(clsList.size());
 

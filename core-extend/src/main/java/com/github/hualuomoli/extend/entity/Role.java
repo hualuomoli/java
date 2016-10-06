@@ -3,8 +3,7 @@ package com.github.hualuomoli.extend.entity;
 import com.github.hualuomoli.base.annotation.entity.EntityColumn;
 import com.github.hualuomoli.base.annotation.entity.EntityColumnQuery;
 import com.github.hualuomoli.base.annotation.entity.EntityTable;
-import com.github.hualuomoli.base.entity.BaseField;
-import com.github.hualuomoli.extend.notice.Noticer;
+import com.github.hualuomoli.base.entity.CommonField;
 
 /**
  * 角色
@@ -13,7 +12,7 @@ import com.github.hualuomoli.extend.notice.Noticer;
  */
 @SuppressWarnings("serial")
 @EntityTable(comment = "角色", unique = { "roleCode" })
-public class Role extends BaseField implements Noticer {
+public class Role extends CommonField {
 
 	@EntityColumn(comment = "角色编码")
 	@EntityColumnQuery(inArray = true)

@@ -49,6 +49,16 @@ public class UserConfig {
 
 			}
 
+			@Override
+			public void login(String token, String username, Integer userType) {
+
+			}
+
+			@Override
+			public void refresh(Integer userType) {
+
+			}
+
 		};
 	}
 

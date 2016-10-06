@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import ${packageName}.base.entity.Base${javaName};
+import ${entityPackageName}.${javaName};
 import ${packageName}.base.mapper.Base${javaName}Mapper;
 import ${packageName}.base.service.Base${javaName}Service;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 	private Base${javaName}Mapper base${javaName}Mapper;
 	
 	@Override
-	public Base${javaName} get(Base${javaName} base${javaName}) {
-		return this.get(base${javaName}.getId());
+	public Base${javaName} get(${javaName} ${javaName?uncap_first}) {
+		return this.get(${javaName?uncap_first}.getId());
 	}
 	
 	@Override
@@ -65,20 +66,20 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.insert(base${javaName});
+	public int insert(@PreInsert ${javaName} ${javaName?uncap_first}) {
+		return base${javaName}Mapper.insert(${javaName?uncap_first});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<Base${javaName}> list) {
+	public <T extends ${javaName}> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<Base${javaName}> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -89,22 +90,22 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.update(base${javaName});
+	public int update(@PreUpdate ${javaName} ${javaName?uncap_first}) {
+		return base${javaName}Mapper.update(${javaName?uncap_first});
 	}
 
 	<#if table.entityType == 1>
 	<#elseif table.entityType == 2>
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete Base${javaName} base${javaName}) {
-		return base${javaName}Mapper.update(base${javaName});
+	public int logicalDelete(@PreDelete ${javaName} ${javaName?uncap_first}) {
+		return base${javaName}Mapper.update(${javaName?uncap_first});
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		Base${javaName} temp = new Base${javaName}();
+		${javaName} temp = new ${javaName?cap_first}();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
@@ -112,8 +113,8 @@ public class Base${javaName}ServiceImpl implements Base${javaName}Service {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(Base${javaName} base${javaName}) {
-		return this.delete(base${javaName}.getId());
+	public int delete(${javaName} ${javaName?uncap_first}) {
+		return this.delete(${javaName?uncap_first}.getId());
 	}
 	
 	@Override

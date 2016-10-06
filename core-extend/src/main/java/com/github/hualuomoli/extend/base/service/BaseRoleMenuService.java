@@ -7,24 +7,25 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseRoleMenu;
+import com.github.hualuomoli.extend.entity.RoleMenu;
 
 // #BaseRoleMenu
 public interface BaseRoleMenuService {
 
-	BaseRoleMenu get(BaseRoleMenu baseRoleMenu);
+	BaseRoleMenu get(RoleMenu roleMenu);
 	
 	BaseRoleMenu get(String id);
 	
 	
-	int insert(BaseRoleMenu baseRoleMenu);
+	int insert(RoleMenu roleMenu);
 	
-	int batchInsert(List<BaseRoleMenu> list);
+	<T extends RoleMenu> int batchInsert(List<T> list);
 
-	int update(BaseRoleMenu baseRoleMenu);
+	int update(RoleMenu roleMenu);
 	
 	
 
-	int delete(BaseRoleMenu baseRoleMenu);
+	int delete(RoleMenu roleMenu);
 	
 	int delete(String id);
 	

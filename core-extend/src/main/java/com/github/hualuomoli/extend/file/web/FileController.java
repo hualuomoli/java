@@ -72,6 +72,9 @@ public class FileController implements ApplicationContextAware {
 		if (dealerList == null || dealerList.size() == 0) {
 			return null;
 		}
+		if (StringUtils.isBlank(headerUploadType)) {
+			return null;
+		}
 		for (FileUploadDealer fileUploadDealer : dealerList) {
 			if (StringUtils.equals(headerUploadType, fileUploadDealer.supportHeader())) {
 				return fileUploadDealer;

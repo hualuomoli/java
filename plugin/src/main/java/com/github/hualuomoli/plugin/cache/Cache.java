@@ -33,6 +33,9 @@ public interface Cache {
 	/** 获取值并重新刷新缓存 */
 	byte[] getAndRefresh(String key);
 
+	/** 获取值并重新刷新缓存 */
+	byte[] getAndRefresh(String key, int expire);
+
 	/** 删除 */
 	boolean remove(String key);
 

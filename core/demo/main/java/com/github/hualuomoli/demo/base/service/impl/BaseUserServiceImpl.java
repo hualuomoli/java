@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.base.entity.BaseUser;
+import com.github.hualuomoli.demo.entity.User;
 import com.github.hualuomoli.demo.base.mapper.BaseUserMapper;
 import com.github.hualuomoli.demo.base.service.BaseUserService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseUserServiceImpl implements BaseUserService {
 	private BaseUserMapper baseUserMapper;
 	
 	@Override
-	public BaseUser get(BaseUser baseUser) {
-		return this.get(baseUser.getId());
+	public BaseUser get(User user) {
+		return this.get(user.getId());
 	}
 	
 	@Override
@@ -44,20 +45,20 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseUser baseUser) {
-		return baseUserMapper.insert(baseUser);
+	public int insert(@PreInsert User user) {
+		return baseUserMapper.insert(user);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseUser> list) {
+	public <T extends User> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseUser> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -68,28 +69,28 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseUser baseUser) {
-		return baseUserMapper.update(baseUser);
+	public int update(@PreUpdate User user) {
+		return baseUserMapper.update(user);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int logicalDelete(@PreDelete BaseUser baseUser) {
-		return baseUserMapper.update(baseUser);
+	public int logicalDelete(@PreDelete User user) {
+		return baseUserMapper.update(user);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public int logicalDelete(String id) {
-		BaseUser temp = new BaseUser();
+		User temp = new User();
 		temp.setId(id);
 		return this.logicalDelete(temp);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseUser baseUser) {
-		return this.delete(baseUser.getId());
+	public int delete(User user) {
+		return this.delete(user.getId());
 	}
 	
 	@Override

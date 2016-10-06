@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.base.entity.BaseRegion;
+import com.github.hualuomoli.demo.entity.Region;
 import com.github.hualuomoli.demo.base.mapper.BaseRegionMapper;
 import com.github.hualuomoli.demo.base.service.BaseRegionService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseRegionServiceImpl implements BaseRegionService {
 	private BaseRegionMapper baseRegionMapper;
 	
 	@Override
-	public BaseRegion get(BaseRegion baseRegion) {
-		return this.get(baseRegion.getId());
+	public BaseRegion get(Region region) {
+		return this.get(region.getId());
 	}
 	
 	@Override
@@ -61,20 +62,20 @@ public class BaseRegionServiceImpl implements BaseRegionService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseRegion baseRegion) {
-		return baseRegionMapper.insert(baseRegion);
+	public int insert(@PreInsert Region region) {
+		return baseRegionMapper.insert(region);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseRegion> list) {
+	public <T extends Region> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseRegion> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -85,15 +86,15 @@ public class BaseRegionServiceImpl implements BaseRegionService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseRegion baseRegion) {
-		return baseRegionMapper.update(baseRegion);
+	public int update(@PreUpdate Region region) {
+		return baseRegionMapper.update(region);
 	}
 
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseRegion baseRegion) {
-		return this.delete(baseRegion.getId());
+	public int delete(Region region) {
+		return this.delete(region.getId());
 	}
 	
 	@Override

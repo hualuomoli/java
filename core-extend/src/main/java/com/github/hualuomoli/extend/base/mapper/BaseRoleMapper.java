@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.extend.base.entity.BaseRole;
+import com.github.hualuomoli.extend.entity.Role;
 
 // #BaseRole
 @Repository(value = "com.github.hualuomoli.extend.base.mapper.BaseRoleMapper")
@@ -15,11 +16,11 @@ public interface BaseRoleMapper {
 	
 	BaseRole get(String id);
 
-	int insert(BaseRole baseRole);
+	int insert(Role role);
 	
-	int batchInsert(@Param(value = "list") List<BaseRole> list);
+	<T extends Role> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseRole baseRole);
+	int update(Role role);
 
 	
 	int delete(String id);

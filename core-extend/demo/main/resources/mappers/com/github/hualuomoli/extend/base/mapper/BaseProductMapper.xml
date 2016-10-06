@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseProductMapper">
 
-  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseProduct">
-    <result column="id"          property="id" />
-    <result column="name"        property="name" />
-    <result column="description" property="description" />
-    <result column="price"       property="price" typeHandler="com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler" />
-    <result column="price_str"   property="priceStr" typeHandler="com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler" />
-    <result column="amount"      property="amount" typeHandler="com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler" />
-    <result column="create_by"   property="createBy" />
-    <result column="create_date" property="createDate" />
-    <result column="update_by"   property="updateBy" />
-    <result column="update_date" property="updateDate" />
-    <result column="status"      property="status" />
-    <result column="status_name" property="statusName" />
-  </resultMap>
+  <sql id="columns">
+    `id`          as "id"         ,
+    `name`        as "name"       ,
+    `description` as "description",
+    `price`       as "price"      ,
+    `price_str`   as "priceStr"   ,
+    `amount`      as "amount"     ,
+    `create_by`   as "createBy"   ,
+    `create_date` as "createDate" ,
+    `update_by`   as "updateBy"   ,
+    `update_date` as "updateDate" ,
+    `status`      as "status"     ,
+    `status_name` as "statusName" 
+  </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -28,13 +28,13 @@
       and `description` = #{description}
     </if>
     <if test="price != null"> 
-      and `price`       = #{price, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler}      
+      and `price`       = #{price}      
     </if>
     <if test="priceStr != null"> 
-      and `price_str`   = #{priceStr, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler}   
+      and `price_str`   = #{priceStr}   
     </if>
     <if test="amount != null"> 
-      and `amount`      = #{amount, typeHandler=com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler}     
+      and `amount`      = #{amount}     
     </if>
     <if test="createBy != null and createBy != ''"> 
       and `create_by`   = #{createBy}   
@@ -57,8 +57,10 @@
 	<!-- 比较查询 -->
   </sql>
   
-  <select id="get" resultMap="dataMap">
-    select * from `test_product`
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseProduct">
+    select 
+      <include refid="columns" />
+    from `test_product`
     where id =  #{id}
   </select>
   
@@ -80,9 +82,9 @@
       #{id}         ,
       #{name}       ,
       #{description},
-      #{price, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler}      ,
-      #{priceStr, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler}   ,
-      #{amount, typeHandler=com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler}     ,
+      #{price}      ,
+      #{priceStr}   ,
+      #{amount}     ,
       #{createBy}   ,
       #{createDate} ,
       #{updateBy}   ,
@@ -91,7 +93,7 @@
       #{statusName} 
     )
   </insert>
-
+  
   <insert id="batchInsert">
     insert into `test_product` (
       `id`         ,
@@ -108,13 +110,13 @@
       `status_name`
     ) 
      <foreach collection="list" item="obj" separator="union all">
-     	select
+            select
         #{obj.id}         ,
         #{obj.name}       ,
         #{obj.description},
-        #{obj.price, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler}      ,
-        #{obj.priceStr, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler}   ,
-        #{obj.amount, typeHandler=com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler}     ,
+        #{obj.price}      ,
+        #{obj.priceStr}   ,
+        #{obj.amount}     ,
         #{obj.createBy}   ,
         #{obj.createDate} ,
         #{obj.updateBy}   ,
@@ -134,13 +136,13 @@
         `description` = #{description},
       </if>
       <if test="price != null"> 
-        `price`       = #{price, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceTypeHandler}      ,
+        `price`       = #{price}      ,
       </if>
       <if test="priceStr != null"> 
-        `price_str`   = #{priceStr, typeHandler=com.github.hualuomoli.mybatis.typeHandler.PriceStrTypeHandler}   ,
+        `price_str`   = #{priceStr}   ,
       </if>
       <if test="amount != null"> 
-        `amount`      = #{amount, typeHandler=com.github.hualuomoli.mybatis.typeHandler.AmountTypeHandler}     ,
+        `amount`      = #{amount}     ,
       </if>
       <if test="createBy != null"> 
         `create_by`   = #{createBy}   ,
@@ -177,8 +179,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultMap="dataMap">
-    select * from `test_product`
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseProduct">
+    select
+      <include refid="columns" />
+    from `test_product`
     <where>
       <include refid="querys" />
     </where>

@@ -19,6 +19,7 @@ import com.github.hualuomoli.base.plugin.mybatis.interceptor.pagination.Paginati
 import com.github.hualuomoli.commons.util.CollectionUtils;
 import com.github.hualuomoli.commons.util.CollectionUtils.Config;
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion;
+import com.github.hualuomoli.demo.creator.entity.CreatorRegion;
 import com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorRegionMapper;
 import com.github.hualuomoli.demo.creator.base.service.BaseCreatorRegionService;
 import com.github.hualuomoli.exception.MoreDataFoundException;
@@ -32,8 +33,8 @@ public class BaseCreatorRegionServiceImpl implements BaseCreatorRegionService {
 	private BaseCreatorRegionMapper baseCreatorRegionMapper;
 	
 	@Override
-	public BaseCreatorRegion get(BaseCreatorRegion baseCreatorRegion) {
-		return this.get(baseCreatorRegion.getId());
+	public BaseCreatorRegion get(CreatorRegion creatorRegion) {
+		return this.get(creatorRegion.getId());
 	}
 	
 	@Override
@@ -61,20 +62,20 @@ public class BaseCreatorRegionServiceImpl implements BaseCreatorRegionService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int insert(@PreInsert BaseCreatorRegion baseCreatorRegion) {
-		return baseCreatorRegionMapper.insert(baseCreatorRegion);
+	public int insert(@PreInsert CreatorRegion creatorRegion) {
+		return baseCreatorRegionMapper.insert(creatorRegion);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public int batchInsert(@PreBatchInsert  List<BaseCreatorRegion> list) {
+	public <T extends CreatorRegion> int batchInsert(@PreBatchInsert  List<T> list) {
 		if (list == null || list.size() == 0) {
 			return 0;
 		}	
 		Integer count = 0;
 		Config config = new Config(100);
 		while (true) {
-			List<BaseCreatorRegion> newList = CollectionUtils.fetchDatas(list, config);
+			List<T> newList = CollectionUtils.fetchDatas(list, config);
 			if (newList.size() == 0) {
 				break;
 			}
@@ -85,15 +86,15 @@ public class BaseCreatorRegionServiceImpl implements BaseCreatorRegionService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public int update(@PreUpdate BaseCreatorRegion baseCreatorRegion) {
-		return baseCreatorRegionMapper.update(baseCreatorRegion);
+	public int update(@PreUpdate CreatorRegion creatorRegion) {
+		return baseCreatorRegionMapper.update(creatorRegion);
 	}
 
 
 	@Override
 	@Transactional(readOnly = false)
-	public int delete(BaseCreatorRegion baseCreatorRegion) {
-		return this.delete(baseCreatorRegion.getId());
+	public int delete(CreatorRegion creatorRegion) {
+		return this.delete(creatorRegion.getId());
 	}
 	
 	@Override

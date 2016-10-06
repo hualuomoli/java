@@ -7,11 +7,12 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorRegion;
+import com.github.hualuomoli.demo.creator.entity.CreatorRegion;
 
 // #BaseCreatorRegion
 public interface BaseCreatorRegionService {
 
-	BaseCreatorRegion get(BaseCreatorRegion baseCreatorRegion);
+	BaseCreatorRegion get(CreatorRegion creatorRegion);
 	
 	BaseCreatorRegion get(String id);
 	
@@ -20,15 +21,15 @@ public interface BaseCreatorRegionService {
 		java.lang.Integer type
 	);
 	
-	int insert(BaseCreatorRegion baseCreatorRegion);
+	int insert(CreatorRegion creatorRegion);
 	
-	int batchInsert(List<BaseCreatorRegion> list);
+	<T extends CreatorRegion> int batchInsert(List<T> list);
 
-	int update(BaseCreatorRegion baseCreatorRegion);
+	int update(CreatorRegion creatorRegion);
 	
 	
 
-	int delete(BaseCreatorRegion baseCreatorRegion);
+	int delete(CreatorRegion creatorRegion);
 	
 	int delete(String id);
 	

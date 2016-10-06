@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.hualuomoli.demo.creator.base.entity.BaseCreatorDemo;
+import com.github.hualuomoli.demo.creator.entity.CreatorDemo;
 
 // #BaseCreatorDemo
 @Repository(value = "com.github.hualuomoli.demo.creator.base.mapper.BaseCreatorDemoMapper")
@@ -15,11 +16,11 @@ public interface BaseCreatorDemoMapper {
 	
 	BaseCreatorDemo get(String id);
 
-	int insert(BaseCreatorDemo baseCreatorDemo);
+	int insert(CreatorDemo creatorDemo);
 	
-	int batchInsert(@Param(value = "list") List<BaseCreatorDemo> list);
+	<T extends CreatorDemo> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(BaseCreatorDemo baseCreatorDemo);
+	int update(CreatorDemo creatorDemo);
 
 	
 	int delete(String id);

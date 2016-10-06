@@ -141,7 +141,11 @@ public class MysqlDbDealer implements DbDealer {
 			dBColumn.setLength("");
 			break;
 		case CLOB:
-			dBColumn.setType("longtext");
+			dBColumn.setType("clob");
+			dBColumn.setLength("");
+			break;
+		case BLOB:
+			dBColumn.setType("blob");
 			dBColumn.setLength("");
 			break;
 		case TIMESTAMP:

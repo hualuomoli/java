@@ -6,10 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.hualuomoli.extend.entity.RoleMenu;
-import com.github.hualuomoli.extend.entity.UserRole;
-import com.github.hualuomoli.extend.notice.Noticer;
-import com.github.hualuomoli.extend.notice.Notifer;
+import com.github.hualuomoli.extend.base.entity.BaseUser;
 import com.github.hualuomoli.extend.user.service.UserService;
 import com.github.hualuomoli.login.service.LoginUserService;
 import com.github.hualuomoli.login.service.LoginUserServiceAdaptor;
@@ -17,12 +14,12 @@ import com.github.hualuomoli.plugin.cache.SerializeCache;
 import com.github.hualuomoli.plugin.cache.SerializeCacheAdaptor;
 import com.google.common.collect.Maps;
 
-@SuppressWarnings("rawtypes")
 @Service(value = "com.github.hualuomoli.extend.login.service.DefaultLoginUserService")
-public class DefaultLoginUserService extends LoginUserServiceAdaptor implements LoginUserService, Notifer {
+public class DefaultLoginUserService extends LoginUserServiceAdaptor implements LoginUserService {
 
-	private static final String PREFIX_ROLE = "_role_";
-	private static final String PREFIX_PERMISSION = "_permission_";
+	private static final String PREFIX_USER = "user_";
+	private static final String PREFIX_ROLE = "role_";
+	private static final String PREFIX_PERMISSION = "permission_";
 
 	private SerializeCache cache = new DefaultSerializeCache();
 
@@ -32,6 +29,29 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 	// 缓存
 	protected SerializeCache getCache() {
 		return cache;
+	}
+
+	// 获取登录用户信息
+	public BaseUser getUser() {
+		String username = this.getUsername();
+		String key = PREFIX_USER + username;
+
+		// 获取用户
+		BaseUser baseUser = this.getCache().getSerializable(key);
+
+		// 如果用户不存在,从数据库获取
+		if (baseUser == null) {
+			baseUser = userService.getByUsername(username);
+			// 设置到缓存
+			this.getCache().setSerializable(key, baseUser);
+		}
+		return baseUser;
+	}
+
+	// 清空登录用户信息
+	public void clear(BaseUser baseUser) {
+		String key = PREFIX_USER + baseUser.getUsername();
+		this.getCache().remove(key);
 	}
 
 	@Override
@@ -58,33 +78,6 @@ public class DefaultLoginUserService extends LoginUserServiceAdaptor implements 
 			}
 		}
 		return permissions;
-	}
-
-	@Override
-	public boolean support(Class cls) {
-		if (cls == UserRole.class || cls == RoleMenu.class) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void notice(Noticer noticer) {
-		if (noticer instanceof UserRole) {
-			// menu
-			UserRole userRole = (UserRole) noticer;
-			String usrname = userRole.getUsername();
-			// remove
-			this.getCache().remove(PREFIX_ROLE + usrname);
-			this.getCache().remove(PREFIX_PERMISSION + usrname);
-		} else if (noticer instanceof RoleMenu) {
-			// menu
-			UserRole userRole = (UserRole) noticer;
-			String usrname = userRole.getUsername();
-			// remove
-			this.getCache().remove(PREFIX_PERMISSION + usrname);
-		}
-
 	}
 
 	// 默认的实现

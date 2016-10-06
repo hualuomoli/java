@@ -2,25 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hualuomoli.extend.base.mapper.BaseMenuMapper">
 
-  <resultMap id="dataMap" type="com.github.hualuomoli.extend.base.entity.BaseMenu">
-    <result column="id"           property="id" />
-    <result column="menu_code"    property="menuCode" />
-    <result column="menu_name"    property="menuName" />
-    <result column="parent_code"  property="parentCode" />
-    <result column="full_name"    property="fullName" />
-    <result column="menu_type"    property="menuType" />
-    <result column="icon"         property="icon" />
-    <result column="router_state" property="routerState" />
-    <result column="permission"   property="permission" />
-    <result column="menu_sort"    property="menuSort" />
-    <result column="menu_level"   property="menuLevel" />
-    <result column="create_by"    property="createBy" />
-    <result column="create_date"  property="createDate" />
-    <result column="update_by"    property="updateBy" />
-    <result column="update_date"  property="updateDate" />
-    <result column="status"       property="status" />
-    <result column="status_name"  property="statusName" />
-  </resultMap>
+  <sql id="columns">
+    `id`           as "id"         ,
+    `menu_code`    as "menuCode"   ,
+    `menu_name`    as "menuName"   ,
+    `menu_type`    as "menuType"   ,
+    `icon`         as "icon"       ,
+    `router_state` as "routerState",
+    `permission`   as "permission" ,
+    `parent_code`  as "parentCode" ,
+    `data_sort`    as "dataSort"   ,
+    `data_level`   as "dataLevel"  ,
+    `create_by`    as "createBy"   ,
+    `create_date`  as "createDate" ,
+    `update_by`    as "updateBy"   ,
+    `update_date`  as "updateDate" ,
+    `status`       as "status"     ,
+    `status_name`  as "statusName" 
+  </sql>
   
   <sql id="querys">
     <if test="id != null and id != ''"> 
@@ -31,12 +30,6 @@
     </if>
     <if test="menuName != null and menuName != ''"> 
       and `menu_name`    = #{menuName}   
-    </if>
-    <if test="parentCode != null and parentCode != ''"> 
-      and `parent_code`  = #{parentCode} 
-    </if>
-    <if test="fullName != null and fullName != ''"> 
-      and `full_name`    = #{fullName}   
     </if>
     <if test="menuType != null"> 
       and `menu_type`    = #{menuType}   
@@ -50,11 +43,14 @@
     <if test="permission != null and permission != ''"> 
       and `permission`   = #{permission} 
     </if>
-    <if test="menuSort != null"> 
-      and `menu_sort`    = #{menuSort}   
+    <if test="parentCode != null and parentCode != ''"> 
+      and `parent_code`  = #{parentCode} 
     </if>
-    <if test="menuLevel != null"> 
-      and `menu_level`   = #{menuLevel}  
+    <if test="dataSort != null"> 
+      and `data_sort`    = #{dataSort}   
+    </if>
+    <if test="dataLevel != null"> 
+      and `data_level`   = #{dataLevel}  
     </if>
     <if test="createBy != null and createBy != ''"> 
       and `create_by`    = #{createBy}   
@@ -83,8 +79,10 @@
     </if>
   </sql>
   
-  <select id="get" resultMap="dataMap">
-    select * from `sys_menu`
+  <select id="get" resultType="com.github.hualuomoli.extend.base.entity.BaseMenu">
+    select 
+      <include refid="columns" />
+    from `sys_menu`
     where id =  #{id}
   </select>
   
@@ -93,14 +91,13 @@
       `id`          ,
       `menu_code`   ,
       `menu_name`   ,
-      `parent_code` ,
-      `full_name`   ,
       `menu_type`   ,
       `icon`        ,
       `router_state`,
       `permission`  ,
-      `menu_sort`   ,
-      `menu_level`  ,
+      `parent_code` ,
+      `data_sort`   ,
+      `data_level`  ,
       `create_by`   ,
       `create_date` ,
       `update_by`   ,
@@ -111,14 +108,13 @@
       #{id}         ,
       #{menuCode}   ,
       #{menuName}   ,
-      #{parentCode} ,
-      #{fullName}   ,
       #{menuType}   ,
       #{icon}       ,
       #{routerState},
       #{permission} ,
-      #{menuSort}   ,
-      #{menuLevel}  ,
+      #{parentCode} ,
+      #{dataSort}   ,
+      #{dataLevel}  ,
       #{createBy}   ,
       #{createDate} ,
       #{updateBy}   ,
@@ -127,20 +123,19 @@
       #{statusName} 
     )
   </insert>
-
+  
   <insert id="batchInsert">
     insert into `sys_menu` (
       `id`          ,
       `menu_code`   ,
       `menu_name`   ,
-      `parent_code` ,
-      `full_name`   ,
       `menu_type`   ,
       `icon`        ,
       `router_state`,
       `permission`  ,
-      `menu_sort`   ,
-      `menu_level`  ,
+      `parent_code` ,
+      `data_sort`   ,
+      `data_level`  ,
       `create_by`   ,
       `create_date` ,
       `update_by`   ,
@@ -149,18 +144,17 @@
       `status_name` 
     ) 
      <foreach collection="list" item="obj" separator="union all">
-     	select
+            select
         #{obj.id}         ,
         #{obj.menuCode}   ,
         #{obj.menuName}   ,
-        #{obj.parentCode} ,
-        #{obj.fullName}   ,
         #{obj.menuType}   ,
         #{obj.icon}       ,
         #{obj.routerState},
         #{obj.permission} ,
-        #{obj.menuSort}   ,
-        #{obj.menuLevel}  ,
+        #{obj.parentCode} ,
+        #{obj.dataSort}   ,
+        #{obj.dataLevel}  ,
         #{obj.createBy}   ,
         #{obj.createDate} ,
         #{obj.updateBy}   ,
@@ -179,12 +173,6 @@
       <if test="menuName != null"> 
         `menu_name`    = #{menuName}   ,
       </if>
-      <if test="parentCode != null"> 
-        `parent_code`  = #{parentCode} ,
-      </if>
-      <if test="fullName != null"> 
-        `full_name`    = #{fullName}   ,
-      </if>
       <if test="menuType != null"> 
         `menu_type`    = #{menuType}   ,
       </if>
@@ -197,11 +185,14 @@
       <if test="permission != null"> 
         `permission`   = #{permission} ,
       </if>
-      <if test="menuSort != null"> 
-        `menu_sort`    = #{menuSort}   ,
+      <if test="parentCode != null"> 
+        `parent_code`  = #{parentCode} ,
       </if>
-      <if test="menuLevel != null"> 
-        `menu_level`   = #{menuLevel}  ,
+      <if test="dataSort != null"> 
+        `data_sort`    = #{dataSort}   ,
+      </if>
+      <if test="dataLevel != null"> 
+        `data_level`   = #{dataLevel}  ,
       </if>
       <if test="createBy != null"> 
         `create_by`    = #{createBy}   ,
@@ -238,8 +229,10 @@
       </where>
   </delete>
   
-  <select id="findList" resultMap="dataMap">
-    select * from `sys_menu`
+  <select id="findList" resultType="com.github.hualuomoli.extend.base.entity.BaseMenu">
+    select
+      <include refid="columns" />
+    from `sys_menu`
     <where>
       <include refid="querys" />
     </where>

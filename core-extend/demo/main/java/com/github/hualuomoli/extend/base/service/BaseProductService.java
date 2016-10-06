@@ -7,27 +7,28 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseProduct;
+import com.github.hualuomoli.extend.entity.Product;
 
 // #BaseProduct
 public interface BaseProductService {
 
-	BaseProduct get(BaseProduct baseProduct);
+	BaseProduct get(Product product);
 	
 	BaseProduct get(String id);
 	
 	
-	int insert(BaseProduct baseProduct);
+	int insert(Product product);
 	
-	int batchInsert(List<BaseProduct> list);
+	<T extends Product> int batchInsert(List<T> list);
 
-	int update(BaseProduct baseProduct);
+	int update(Product product);
 	
-	 int logicalDelete(BaseProduct baseProduct);
+	 int logicalDelete(Product product);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseProduct baseProduct);
+	int delete(Product product);
 	
 	int delete(String id);
 	

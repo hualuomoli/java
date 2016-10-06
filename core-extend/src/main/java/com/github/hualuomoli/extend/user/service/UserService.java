@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -156,6 +157,28 @@ public class UserService {
 			return list.get(0);
 		}
 		throw new RuntimeException("need one but find " + list.size());
+	}
+
+	// 设置登录用户名
+	public void setUsername(String id, String username) {
+		if (StringUtils.isBlank(username)) {
+			return;
+		}
+
+		BaseUser baseUser = baseUserService.get(id);
+		if (baseUser == null) {
+			return;
+		}
+
+		// 用户名已存在并且和id不同
+		if (StringUtils.isNotBlank(baseUser.getUsername()) && !StringUtils.equals(id, baseUser.getUsername())) {
+			return;
+		}
+
+		BaseUser user = new BaseUser();
+		user.setId(id);
+		user.setUsername(username);
+		baseUserService.update(user);
 	}
 
 	// 更新用户手机号码

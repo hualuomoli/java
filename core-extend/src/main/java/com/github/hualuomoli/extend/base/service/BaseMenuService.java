@@ -7,12 +7,12 @@ import com.github.hualuomoli.base.entity.Page;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Order;
 import com.github.hualuomoli.base.plugin.mybatis.entity.Pagination;
 import com.github.hualuomoli.extend.base.entity.BaseMenu;
-import com.github.hualuomoli.extend.tree.service.TreeService.TreeDealer;
+import com.github.hualuomoli.extend.entity.Menu;
 
 // #BaseMenu
-public interface BaseMenuService extends TreeDealer<BaseMenu> {
+public interface BaseMenuService {
 
-	BaseMenu get(BaseMenu baseMenu);
+	BaseMenu get(Menu menu);
 	
 	BaseMenu get(String id);
 	
@@ -20,18 +20,18 @@ public interface BaseMenuService extends TreeDealer<BaseMenu> {
 		java.lang.String menuCode
 	);
 	
-	int insert(BaseMenu baseMenu);
+	int insert(Menu menu);
 	
-	int batchInsert(List<BaseMenu> list);
+	<T extends Menu> int batchInsert(List<T> list);
 
-	int update(BaseMenu baseMenu);
+	int update(Menu menu);
 	
-	 int logicalDelete(BaseMenu baseMenu);
+	 int logicalDelete(Menu menu);
 
 	 int logicalDelete(String id);
 	
 
-	int delete(BaseMenu baseMenu);
+	int delete(Menu menu);
 	
 	int delete(String id);
 	

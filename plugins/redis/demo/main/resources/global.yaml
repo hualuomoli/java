@@ -1,0 +1,4 @@
+redis:
+  host: 114.215.210.170
+  port: 6379
+  password: AusyriRedis

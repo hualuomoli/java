@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.hualuomoli.plugin.roll.base.mapper.BasePollErrorHisMapper">
+
+  <sql id="columns">
+    `id`                as "id"             ,
+    `data_id`           as "dataId"         ,
+    `data_type`         as "dataType"       ,
+    `string_data`       as "stringData"     ,
+    `byte_data`         as "byteData"       ,
+    `dealer_class_name` as "dealerClassName",
+    `frequency`         as "frequency"      ,
+    `priority`          as "priority"       
+  </sql>
+  
+  <sql id="querys">
+    <if test="id != null and id != ''"> 
+      and `id`                = #{id}             
+    </if>
+    <if test="dataId != null and dataId != ''"> 
+      and `data_id`           = #{dataId}         
+    </if>
+    <if test="dataType != null"> 
+      and `data_type`         = #{dataType}       
+    </if>
+    <if test="stringData != null and stringData != ''"> 
+      and `string_data`       = #{stringData}     
+    </if>
+    <if test="byteData != null"> 
+      and `byte_data`         = #{byteData}       
+    </if>
+    <if test="dealerClassName != null and dealerClassName != ''"> 
+      and `dealer_class_name` = #{dealerClassName}
+    </if>
+    <if test="frequency != null and frequency != ''"> 
+      and `frequency`         = #{frequency}      
+    </if>
+    <if test="priority != null"> 
+      and `priority`          = #{priority}       
+    </if>
+	<!-- 比较查询 -->
+    <if test="dataIdArray != null"> 
+      and
+      <foreach collection="dataIdArray" open="(" close=")" separator="or" item="data">
+    		`data_id` = #{data}
+    	</foreach>
+    </if>
+  </sql>
+  
+  <select id="get" resultType="com.github.hualuomoli.plugin.roll.base.entity.BasePollErrorHis">
+    select 
+      <include refid="columns" />
+    from `pr_poll_error_his`
+    where id =  #{id}
+  </select>
+  
+  <insert id="insert">
+    insert into `pr_poll_error_his` (
+      `id`               ,
+      `data_id`          ,
+      `data_type`        ,
+      `string_data`      ,
+      `byte_data`        ,
+      `dealer_class_name`,
+      `frequency`        ,
+      `priority`         
+    ) values (
+      #{id}             ,
+      #{dataId}         ,
+      #{dataType}       ,
+      #{stringData}     ,
+      #{byteData}       ,
+      #{dealerClassName},
+      #{frequency}      ,
+      #{priority}       
+    )
+  </insert>
+  
+  <insert id="batchInsert">
+    insert into `pr_poll_error_his` (
+      `id`               ,
+      `data_id`          ,
+      `data_type`        ,
+      `string_data`      ,
+      `byte_data`        ,
+      `dealer_class_name`,
+      `frequency`        ,
+      `priority`         
+    ) 
+     <foreach collection="list" item="obj" separator="union all">
+            select
+        #{obj.id}             ,
+        #{obj.dataId}         ,
+        #{obj.dataType}       ,
+        #{obj.stringData}     ,
+        #{obj.byteData}       ,
+        #{obj.dealerClassName},
+        #{obj.frequency}      ,
+        #{obj.priority}       
+         </foreach>
+  </insert>
+  
+  <update id="update">
+    update `pr_poll_error_his`
+    <set>
+      <if test="dataId != null"> 
+        `data_id`           = #{dataId}         ,
+      </if>
+      <if test="dataType != null"> 
+        `data_type`         = #{dataType}       ,
+      </if>
+      <if test="stringData != null"> 
+        `string_data`       = #{stringData}     ,
+      </if>
+      <if test="byteData != null"> 
+        `byte_data`         = #{byteData}       ,
+      </if>
+      <if test="dealerClassName != null"> 
+        `dealer_class_name` = #{dealerClassName},
+      </if>
+      <if test="frequency != null"> 
+        `frequency`         = #{frequency}      ,
+      </if>
+      <if test="priority != null"> 
+        `priority`          = #{priority}       ,
+      </if>
+    </set>
+    where id =  #{id}
+  </update>
+  
+  <delete id="delete">
+    delete from `pr_poll_error_his` where id =  #{id}
+  </delete>
+  
+  <delete id="deleteByIds">
+    delete from `pr_poll_error_his`
+    <where>
+          <foreach collection="ids" item="id" separator="or">
+              id = #{id}
+          </foreach>
+      </where>
+  </delete>
+  
+  <select id="findList" resultType="com.github.hualuomoli.plugin.roll.base.entity.BasePollErrorHis">
+    select
+      <include refid="columns" />
+    from `pr_poll_error_his`
+    <where>
+      <include refid="querys" />
+    </where>
+  </select>
+  
+</mapper>

@@ -7,22 +7,23 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import ${packageName}.base.entity.Base${javaName};
+import ${entityPackageName}.${javaName};
 
 // ${r"#"}Base${javaName}
 @Repository(value = "${packageName}.base.mapper.Base${javaName}Mapper")
 public interface Base${javaName}Mapper {
 
-	<#-- Base${javaName} get(Base${javaName} base${javaName}); -->
+	<#-- Base${javaName} get(${javaName} ${javaName?uncap_first}); -->
 	
 	Base${javaName} get(String id);
 
-	int insert(Base${javaName} base${javaName});
+	int insert(${javaName} ${javaName?uncap_first});
 	
-	int batchInsert(@Param(value = "list") List<Base${javaName}> list);
+	<T extends ${javaName}> int batchInsert(@Param(value = "list") List<T> list);
 
-	int update(Base${javaName} base${javaName});
+	int update(${javaName} ${javaName?uncap_first});
 
-	<#-- int delete(Base${javaName} base${javaName}); -->
+	<#-- int delete(${javaName} ${javaName?uncap_first}); -->
 	
 	int delete(String id);
 	
